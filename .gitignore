@@ -1,0 +1,42 @@
+# ===== 环境配置（含数据库等凭据，严禁入库；.env.example 模板保留） =====
+**/.env
+
+# ===== 生产库完整 dump（含手机号/密码哈希/多渠道凭据，仅本地留存） =====
+# 结构与数据分离：database.schema.sql（仅 DDL）入库，database.sql（含数据）不入库
+/backend/database.sql
+
+# ===== 依赖 =====
+node_modules/
+vendor/
+
+# ===== 构建产物 / 运行时（日志、缓存，含 runtime/virtualpay.log） =====
+/wechat/unpackage/
+runtime/
+*.log
+
+# ===== 用户上传附件（保留目录结构，忽略文件内容） =====
+/backend/public/attachment/**
+!/backend/public/attachment/**/
+!/backend/public/attachment/**/.gitkeep
+
+# ===== IDE / 系统文件 =====
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+/backend/public/aa.php
+/backend/public/auth.php
+/backend/public/keys_from_generators.php
+/backend/public/keygen.php
+/backend/public/MP_verify_2T5ufw8b3QkDqyPI.txt
+/backend/public/protected_methods_class.php
+/backend/public/time.php
+/backend/public/h5/
+/backend/public/attachment/
+/backend/public/static/
+/backend/app/install/controller/install.lock
+/wechat/package-lock.json
+/backend/nginx/
+/backend/composer.lock
+/backend/web/

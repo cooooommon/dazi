@@ -1,0 +1,231 @@
+{
+    "name" : "城游搭子",
+    "appid" : "__UNI__020BCD8", // 改为自己的
+    "description" : "",
+    "versionName" : "1.0.6",
+    "versionCode" : 108,
+    "transformPx" : false,
+    "uniStatistics" : {
+        "enable" : false //全局关闭  
+    },
+    "mp-weixin" : {
+        "appid" : "wx0253be52582aa0aa",
+        "setting" : {
+            "urlCheck" : true,
+            "postcss" : true,
+            "minified" : true,
+            "es6" : true
+        },
+        "usingComponents" : true,
+        "optimization" : {
+            "subPackages" : true
+        },
+        "plugins" : {},
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "你的位置信息将用于小程序距离展示"
+            }
+        },
+        "requiredPrivateInfos" : [
+            "getLocation",
+            "chooseLocation",
+            "startLocationUpdate",
+            "onLocationChange"
+        ],
+        "navigateToMiniProgramAppIdList" : [],
+        "preloadRule" : {},
+        "uniStatistics" : {
+            "enable" : false
+        }
+    },
+    "h5" : {
+        "title" : "",
+        "domain" : "https://dazi.tunma.top/", // 改为自己的
+        "devServer" : {
+            "https" : true
+        },
+        // "devServer" : {
+        //     "disableHostCheck" : true,
+        //     "proxy" : {
+        //         "/api" : {
+        //             "target" : "https://massage.cncnconnect.com",
+        //             "changeOrigin" : true,
+        //             "secure" : false,
+        //             "pathRewrite" : {
+        //                 "^/api" : ""
+        //             }
+        //         }
+        //     }
+        // },
+        "router" : {
+            "base" : "/h5/"
+        },
+        "sdkConfigs" : {
+            "maps" : {
+                "qqmap" : {
+                    "key" : "7X2BZ-U5GL3-TZ63O-OC2SQ-NM36V-FFBFO" // 改为自己的 腾讯地图key
+                }
+            }
+        },
+        "template" : "index.html"
+    },
+    "app-plus" : {
+        "runmode" : "liberate",
+        /* 5+App特有相关 */
+        "compatible" : {
+            "ignoreVersion" : true //true表示忽略版本检查提示框，HBuilderX1.9.0及以上版本支持  
+        },
+        "usingComponents" : true,
+        "splashscreen" : {
+            "alwaysShowBeforeRender" : false,
+            "waiting" : true,
+            "autoclose" : true,
+            "delay" : 0
+        },
+        "modules" : {
+            "OAuth" : {},
+            "Geolocation" : {},
+            "Maps" : {},
+            "Payment" : {},
+            "Share" : {},
+            "VideoPlayer" : {},
+            "Camera" : {}
+        },
+        /* 模块配置 */
+        "distribute" : {
+            "sdkConfigs" : {
+                "oauth" : {
+                    "weixin" : {
+                        "appid" : "wx0253be52582aa0aa", // 改为自己的 微信开放平台应用信息
+                        "appsecret" : "34ab3a526ebfc54b21ad97cc4c67fee5", // 改为自己的
+                        "UniversalLinks" : "https://dazi.tunma.top/uni-universallinks/__UNI__307A9A7/" // 改为自己的
+                    },
+                    "apple" : {}
+                },
+                "geolocation" : {
+                    "amap" : {
+                        "__platform__" : [ "ios", "android" ],
+                        "appkey_ios" : "409bf2ae106a827e0dd1ad769391e4a8", // 改为自己的  谷歌地图
+                        "appkey_android" : "b73acbb0d077810836b709c12e51cf50", // 改为自己的
+                        "name" : " "
+                    },
+                    "system" : {
+                        "__platform__" : [ "ios", "android" ]
+                    }
+                },
+                "maps" : {
+                    "amap" : {
+                        "appkey_ios" : "409bf2ae106a827e0dd1ad769391e4a8", // 改为自己的  高德地图
+                        "appkey_android" : "b73acbb0d077810836b709c12e51cf50" // 改为自己的
+                    }
+                },
+                "payment" : {
+                    "weixin" : {
+                        "__platform__" : [ "ios", "android" ],
+                        "appid" : "wxd8784e94289d39fe", // 改为自己的
+                        "UniversalLinks" : "https://testapps.cncnconnect.com/uni-universallinks/__UNI__307A9A7/" // 改为自己的
+                    },
+                    "alipay" : {
+                        "__platform__" : [ "ios", "android" ]
+                    }
+                },
+                "share" : {
+                    "weixin" : {
+                        "appid" : "wxd8784e94289d39fe", // 改为自己的
+                        "UniversalLinks" : "https://testapps.cncnconnect.com/uni-universallinks/__UNI__307A9A7/" // 改为自己的
+                    }
+                },
+                "ad" : {}
+            },
+            "android" : {
+                "permissionExternalStorage" : {
+                    "request" : "none",
+                    "prompt" : "应用保存运行状态等信息，需要获取读写手机存储（系统提示为访问设备上的照片、媒体内容和文件）权限，请允许。"
+                },
+                "permissionPhoneState" : {
+                    "request" : "none",
+                    "prompt" : "为保证您正常、安全地使用，需要获取设备识别码（部分手机提示为获取手机号码）使用权限，请允许。"
+                },
+                "permissions" : [
+                    "<uses-feature android:name=\"android.hardware.camera\"/>",
+                    "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_LOCATION_EXTRA_COMMANDS\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_SURFACE_FLINGER\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
+                    "<uses-permission android:name=\"android.permission.CAMERA\"/>",
+                    "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.CLEAR_APP_USER_DATA\"/>",
+                    "<uses-permission android:name=\"android.permission.INTERNET\"/>",
+                    "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
+                    "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+                    "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+                ],
+                "abiFilters" : [ "armeabi-v7a", "arm64-v8a" ],
+                "autoSdkPermissions" : true
+            },
+            "icons" : {
+                // 改为自己的 logo
+                "android" : {
+                    "hdpi" : "unpackage/res/icons/72x72.png",
+                    "xhdpi" : "unpackage/res/icons/96x96.png",
+                    "xxhdpi" : "unpackage/res/icons/144x144.png",
+                    "xxxhdpi" : "unpackage/res/icons/192x192.png"
+                },
+                "ios" : {
+                    "appstore" : "unpackage/res/icons/1024x1024.png",
+                    "iphone" : {
+                        "app@2x" : "unpackage/res/icons/120x120.png",
+                        "app@3x" : "unpackage/res/icons/180x180.png",
+                        "spotlight@2x" : "unpackage/res/icons/80x80.png",
+                        "spotlight@3x" : "unpackage/res/icons/120x120.png",
+                        "settings@2x" : "unpackage/res/icons/58x58.png",
+                        "settings@3x" : "unpackage/res/icons/87x87.png",
+                        "notification@2x" : "unpackage/res/icons/40x40.png",
+                        "notification@3x" : "unpackage/res/icons/60x60.png"
+                    },
+                    "ipad" : {
+                        "app" : "unpackage/res/icons/76x76.png",
+                        "app@2x" : "unpackage/res/icons/152x152.png",
+                        "proapp@2x" : "unpackage/res/icons/167x167.png",
+                        "spotlight" : "unpackage/res/icons/40x40.png",
+                        "spotlight@2x" : "unpackage/res/icons/80x80.png",
+                        "settings" : "unpackage/res/icons/29x29.png",
+                        "settings@2x" : "unpackage/res/icons/58x58.png",
+                        "notification" : "unpackage/res/icons/20x20.png",
+                        "notification@2x" : "unpackage/res/icons/40x40.png"
+                    }
+                }
+            },
+            "ios" : {
+                "capabilities" : {
+                    "entitlements" : {
+                        "com.apple.developer.associated-domains" : [ "applinks:testapps.cncnconnect.com" ] // 改为自己的
+                    }
+                },
+                "dSYMs" : false,
+                "privacyDescription" : {
+                    // ios隐私信息访问许可描述
+                    "NSPhotoLibraryUsageDescription" : "允许手机存储权限读写相册，注册服务人员/退款时需从相册中选择图片",
+                    "NSPhotoLibraryAddUsageDescription" : "允许手机存储权限读写相册，用于保存图片",
+                    "NSCameraUsageDescription" : "需要访问相册，以便于上传服务人员资格证书、工作形象照等功能",
+                    "NSLocationWhenInUseUsageDescription" : "允许获取您的位置信息，以便获取您附近的服务人员，更好的为您服务",
+                    "NSLocationAlwaysUsageDescription" : "允许获取您的位置信息，以便获取您附近的服务人员，更好的为您服务",
+                    "NSLocationAlwaysAndWhenInUseUsageDescription" : "允许获取您的位置信息，以便获取您附近的服务人员，更好的为您服务"
+                }
+            }
+        }
+    },
+    "nativePlugins" : {},
+    "_spaceID" : "8a1db412-049f-4be6-894a-755ffe5ebe5b",
+    "locale" : "zh-Hans"
+}

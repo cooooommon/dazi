@@ -1,0 +1,60 @@
+/*flex布局,可以自己定义适合自己的*/
+.flex {
+	display: flex;
+}
+
+.flex-1 {
+	flex: 1;
+}
+
+.flex-column {
+	display: flex;
+	flex-direction: column;
+}
+
+.flex-warp {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.flex-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.flex-between {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.flex-x-center {
+	display: flex;
+	justify-content: center;
+}
+
+.flex-x-between {
+	display: flex;
+	justify-content: space-between;
+}
+
+.flex-y-center {
+	display: flex;
+	align-items: center;
+}
+
+.flex-y-start {
+	display: flex;
+	align-items: flex-start;
+}
+
+.flex-y-end {
+	display: flex;
+	align-items: flex-end;
+}
+
+.flex-y-baseline {
+	display: flex;
+	align-items: baseline;
+}

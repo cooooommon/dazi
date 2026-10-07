@@ -1,0 +1,54 @@
+/* 头像 */
+.avatar {
+	margin: 0;
+	padding: 0;
+	display: inline-flex;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+	background: #f4f6f8;
+	color: #fff;
+	white-space: nowrap;
+	position: relative;
+	width: 120rpx;
+	height: 120rpx;
+	background-size: cover;
+	background-position: center;
+	vertical-align: middle;
+}
+
+.avatar.lg {
+	width: 160rpx;
+	height: 160rpx;
+}
+
+.avatar.md {
+	width: 100rpx;
+	height: 100rpx;
+}
+
+.avatar.sm {
+	width: 80rpx;
+	height: 80rpx;
+}
+
+.avatar-group {
+	direction: ltl;
+	unicode-bidi: bidi-override;
+	display: inline-block;
+}
+
+.avatar-group .avatar {
+	width: 48rpx;
+	height: 48rpx;
+	font-size: 1em;
+	border-radius: 50%;
+	margin-left: -20rpx;
+	border: 4rpx solid white;
+	vertical-align: middle;
+	transform: rotateZ(360deg);
+}
+
+.avatar-group .avatar:nth-child(1) {
+	margin-left: 0rpx;
+}

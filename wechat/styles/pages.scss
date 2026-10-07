@@ -1,0 +1,421 @@
+/* 单选/多选按钮 */
+.pay-icon {
+	font-size: 40rpx;
+}
+
+/* 分享按钮 */
+.common-share-btn {
+	right: 30rpx;
+	bottom: 140rpx;
+	width: 90rpx;
+	height: 90rpx;
+	margin-bottom: calc(env(safe-area-inset-bottom) / 2);
+
+	.iconfont {
+		font-size: 40rpx;
+	}
+}
+
+.common-share-btn.detail {
+	bottom: 170rpx;
+}
+
+.map-info {
+	.iconjuli {
+		font-size: 42rpx;
+	}
+
+	.icon-down {
+		transform: scale(0.5);
+	}
+}
+
+/* 向导页面 */
+.pages-technician {
+
+
+	.technician-popup {
+		border-radius: 20rpx 20rpx 0 0;
+
+		.item-avatar {
+			width: 88rpx;
+			height: 88rpx;
+			background: #f4f6f8;
+		}
+
+		.icon-close {
+			font-size: 50rpx;
+		}
+
+		.technician-text {
+			max-height: 150rpx;
+		}
+
+		.list-content {
+			max-height: 50vh;
+
+			.list-message {
+				.item-avatar {
+					width: 52rpx;
+					height: 52rpx;
+					background: #f4f6f8;
+				}
+
+				.iconpingfen1 {
+					font-size: 28rpx;
+					margin-right: 5rpx;
+					font-size: 28rpx;
+				}
+			}
+		}
+
+		.order-btn {
+			width: 200rpx;
+			height: 72rpx;
+		}
+
+	}
+
+	.choose-city-popup {
+		padding: 0 32rpx 0 30rpx;
+
+		.city-img {
+			width: 688rpx;
+			height: 364rpx;
+		}
+
+		.text {
+			top: 256rpx;
+			left: 78rpx;
+			width: 606rpx;
+		}
+
+		.flex-between {
+			margin-top: 25rpx;
+
+			.item-btn {
+				width: 238rpx;
+				height: 85rpx;
+				background: #F9F9F9;
+			}
+		}
+
+	}
+}
+
+
+/* 订单相关页面 */
+.order-pages {
+
+	.address-info {
+		.address-icon {
+			width: 64rpx;
+			height: 64rpx;
+
+			.iconfont {
+				font-size: 38rpx;
+			}
+		}
+
+		.username {
+			font-size: 30rpx;
+		}
+	}
+
+
+	.store-info {
+		.store-copy-btn {
+			height: 32rpx;
+			line-height: 32rpx;
+			text-align: center;
+			padding: 3rpx 8rpx;
+			border: 1rpx solid #fff;
+			transform: rotateZ(360deg);
+		}
+
+		.item-icon {
+			width: 40rpx;
+			height: 40rpx;
+
+			.iconfont {
+				font-size: 28rpx;
+			}
+
+			.item-icon {
+				top: 0;
+				left: 0;
+				opacity: 0.1;
+			}
+		}
+	}
+
+
+
+	.item-child {
+		.bell-tag {
+			top: 0;
+			left: 0;
+			width: 120rpx;
+			height: 40rpx;
+			border-radius: 16rpx 0 16rpx 0;
+		}
+
+		.grayscale {
+
+			.c-title,
+			.c-warning {
+				color: #999;
+			}
+		}
+
+		.cover {
+			width: 155rpx;
+			height: 155rpx;
+		}
+
+		.refund-img {
+			width: 196rpx;
+			height: 196rpx;
+		}
+
+		.refund-img:nth-child(3n) {
+			margin-right: 0
+		}
+
+		.copy-btn {
+			width: 60rpx;
+			height: 32rpx;
+			background: #EEEEEE;
+			text-align: center;
+		}
+	}
+
+	.item-textarea {
+		width: 570rpx;
+		height: 300rpx;
+	}
+
+	.menu-list {
+		margin-top: -30rpx;
+
+		.menu-title {
+			height: 90rpx;
+
+			.iconfont {
+				font-size: 24rpx;
+			}
+		}
+
+		.menu-line {
+			width: 80%;
+			top: 76rpx;
+			left: 10%;
+		}
+
+		.item-child {
+			width: 20%;
+			margin: 10rpx 0;
+
+			.item-img {
+				width: 72rpx;
+				height: 72rpx;
+				z-index: 9;
+				border: 1px solid #666;
+
+				.iconfont {
+					font-size: 40rpx;
+				}
+			}
+		}
+
+	}
+
+	.add-bell {
+		.menu-line {
+			width: 70%;
+			top: 76rpx;
+			left: 15%;
+		}
+
+		.item-child {
+			width: 33.33%;
+		}
+
+	}
+
+	.footer-info {
+
+		bottom: 0;
+
+		.item-btn {
+			min-width: 150rpx;
+			height: 64rpx;
+			padding: 0 10rpx;
+			background: #EEEEEE;
+		}
+
+	}
+
+}
+
+
+/* 申请表单相关页面 */
+.apply-pages {
+	.apply-form {
+
+		.item-text {
+			width: 200rpx;
+			height: 30rpx;
+			line-height: 30rpx;
+			font-size: 30rpx;
+			color: #1F1F1F;
+		}
+
+		.item-input {
+			min-height: 30rpx;
+			line-height: 30rpx;
+			padding: 25rpx 0;
+			font-size: 26rpx;
+			color: #A9A9A9;
+		}
+
+		.item-input.text {
+			padding: 30rpx 0;
+		}
+
+		.item-textarea {
+			width: 630rpx;
+			height: 400rpx;
+			color: #A9A9A9;
+		}
+
+		.icon-switch,
+		.icon-switch-on {
+			font-size: 90rpx;
+			line-height: 46rpx;
+		}
+	}
+}
+
+/* 储值明细记录 */
+.stored-record-pages {
+	.list-time {
+		z-index: 99999;
+
+		.item-child {
+			width: 50%;
+			height: 95rpx;
+
+			.iconfont {
+				font-size: 28rpx;
+			}
+		}
+	}
+
+	movable-area,
+	movable-view {
+		width: 686rpx;
+		height: 148rpx;
+		overflow: hidden;
+	}
+
+	.touch-item {
+		font-size: 14px;
+		display: flex;
+		justify-content: space-between;
+		width: 686rpx;
+		height: 100%;
+		overflow: hidden
+	}
+
+	.content {
+		width: 100%;
+		-webkit-transition: all 0.4s;
+		transition: all 0.4s;
+		-webkit-transform: translateX(270rpx);
+		transform: translateX(270rpx);
+		margin-left: -270rpx;
+	}
+
+	.delete-btn {
+		width: 120rpx;
+		height: 100%;
+		color: #fff;
+		border-radius: 0 15rpx 15rpx 0;
+		-webkit-transform: translateX(270rpx);
+		transform: translateX(270rpx);
+		-webkit-transition: all 0.4s;
+		transition: all 0.4s;
+	}
+
+	.touch-move-active .content,
+	.touch-move-active .delete-btn {
+		-webkit-transform: translateX(0);
+		transform: translateX(0);
+	}
+
+	.popup-choose-time {
+		.item-child {
+			width: 50%;
+		}
+	}
+}
+
+.container {
+	width: 100%;
+}
+
+/* 向导等级 */
+.technician-level {
+	height: 333rpx;
+	background: linear-gradient(206deg, #464749 0%, #020202 30%, #000000 100%);
+	border-radius: 16rpx;
+	transform: rotateZ(360deg);
+	overflow: hidden;
+
+	.icon-level-icon {
+		font-size: 505rpx;
+		top: -86rpx;
+		left: 40rpx;
+		z-index: -1;
+	}
+
+	.level-icon-img {
+		top: 22rpx;
+		right: 41rpx;
+		width: 111rpx;
+		height: 111rpx;
+	}
+
+	.level-title {
+		font-size: 38rpx;
+		color: #F9F9F9;
+	}
+
+	.level-line {
+		width: 100%;
+		height: 20rpx;
+		background: #2D333C;
+	}
+
+	.level-line.cur {
+		top: 0;
+		left: 0;
+	}
+
+	.f-icontext {
+		color: rgba(255, 255, 255, 0.7);
+	}
+}
+
+
+/* 海报 */
+.hideCanvasView {
+	position: relative;
+
+	.hideCanvas {
+		position: absolute;
+		left: -9999rpx;
+		top: -9999rpx
+	}
+}

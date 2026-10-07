@@ -1,0 +1,100 @@
+/* ios_自定义navBar */
+.back-user-ios {
+	width: 87px;
+	height: 32px;
+	border-radius: 32px;
+	margin-top: 6px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #fff;
+	border: 1px solid #eeeeee;
+	margin-left: 24rpx;
+	transform: rotateZ(360deg);
+}
+
+.back-user-ios .back-user_avatar {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background: #f4f6f8;
+}
+
+.back-user-ios .back-user_text {
+	font-size: 11px;
+	line-height: 44px;
+	margin-left: 5px;
+}
+
+/* .nav_c_text {
+	line-height: 44px;
+	font-size: 16px;
+} */
+
+/* android_自定义navBar */
+.back-user-android {
+	/* #ifdef MP-BAIDU */
+	width: 74.5px;
+	height: 28px;
+	border-radius: 28px;
+	margin-top: 5px;
+	/* #endif */
+	/* #ifndef MP-BAIDU */
+	width: 87px;
+	height: 32px;
+	border-radius: 32px;
+	margin-top: 6px;
+	/* #endif */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #fff;
+	border: 1px solid #eeeeee;
+	margin-left: 24rpx;
+	transform: rotateZ(360deg);
+}
+
+
+.back-user-android .back-user_avatar {
+	/* #ifdef MP-BAIDU */
+	width: 20px;
+	height: 20px;
+	/* #endif */
+	/* #ifndef MP-BAIDU */
+	width: 24px;
+	height: 24px;
+	/* #endif */
+	border-radius: 50%;
+	background: #f4f6f8;
+}
+
+
+.back-user-android .back-user_text {
+	/* #ifdef MP-BAIDU */
+	font-size: 10px;
+	line-height: 28px;
+	margin-left: 3px;
+	/* #endif */
+	/* #ifndef MP-BAIDU */
+	font-size: 11px;
+	line-height: 44px;
+	margin-left: 5px;
+	/* #endif */
+}
+
+.back-user-ios.none,
+.back-user-android.none {
+	color: #fff;
+	background: none;
+}
+
+.nav_c_text {
+	/* #ifdef MP-BAIDU */
+	line-height: 36px;
+	font-size: 15px;
+	/* #endif */
+	/* #ifndef MP-BAIDU */
+	line-height: 44px;
+	font-size: 16px;
+	/* #endif */
+}

@@ -1,0 +1,35 @@
+.f_r_c_c{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.f_c{
+	display: flex;
+	flex-direction: column;
+}
+.f_c_m_c {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.f_r_sa_c {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.f_r_sb_c {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.f_r_m_c {
+	display: flex;
+	align-items: center;
+}
+
+.border-b {
+	border-bottom: 1px solid #EEEEEE;
+}

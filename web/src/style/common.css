@@ -1,0 +1,32 @@
+.page-search-form{
+    width: 100%;
+    padding: 20px 32px 0px 32px; 
+    margin-bottom: 20px;
+    border: 1px solid #E1E1E1; 
+}  
+.page-search-form .el-row{
+  width: 100%;
+}
+.page-search-form .el-input,
+.page-search-form .el-select{
+  width: 200px;
+}
+.el-button .iconfont {
+  font-size: 12px;
+  margin-right: 5px;
+}
+.lb-tips-text{
+  font-size: 12px; 
+  line-height:1.6;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.lb-space{
+  height:20px;
+  background: #f4f6f8;
+}
+.lb-border{
+  padding: 20px;
+  border: 1px solid #E1E1E1; 
+}
