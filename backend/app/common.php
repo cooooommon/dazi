@@ -175,7 +175,19 @@ function incCache($key, $step = 1, $uniacid = '7777', $time = null)
 
     $tag = 'longbing_card_'.$uniacid;
 
-    return Cache::tag($tag)->inc($key, $step, $time);
+    //首次创建时建立过期时间，之后自增由驱动继承该 TTL
+    //（进程中途中断时计数器能自行过期复位，避免一次性初始化被永久卡死）
+    if (!is_null($time) && !Cache::has($key)) {
+
+        Cache::set($key, 0, $time);
+    }
+
+    $result = Cache::inc($key, $step);
+
+    //登记到标签，使 clearCache($uniacid) 能一并清除
+    Cache::tag($tag)->append($key);
+
+    return $result;
 }
 
 //缓存自减
@@ -186,9 +198,12 @@ function decCache($key, $step = 1, $uniacid = '7777')
 
     $tag = 'longbing_card_'.$uniacid;
 
-    return Cache::tag($tag)->dec($key, $step);
+    $result = Cache::dec($key, $step);
 
-    return Cache::dec($key, $step);
+    //登记到标签，使 clearCache($uniacid) 能一并清除
+    Cache::tag($tag)->append($key);
+
+    return $result;
 }
 
 //判断缓存是否存在
