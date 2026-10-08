@@ -33,7 +33,7 @@
     "alibabacloud/dyvmsapi-20170525": "^2.1",
     "alipaysdk/easysdk": "^2.0",
     "alibabacloud/green": "^1.8",
-    "tp5er/tp5-databackup": "dev-master",
+    "tp5er/tp5-databackup": "dev-main",
     "ext-json": "*",
     "ext-openssl": "*",
     "ext-curl": "*"
