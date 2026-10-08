@@ -21,7 +21,7 @@
   ],
   "require": {
     "php": ">=7.1.0",
-    "topthink/framework": "^6.0.0",
+    "topthink/framework": "6.0.8",
     "topthink/think-orm": "^2.0",
     "antchain/twc": "^1.7",
     "alibabacloud/sdk": "^1.8",
