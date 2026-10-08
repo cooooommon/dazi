@@ -1105,7 +1105,7 @@ class IndexOrder extends ApiRest
 
         if ($order_insert['pay_type'] != 1) {
 
-            $this->errorMsg('订单状态错误');
+            $this->errorMsg('订单状态错误'.$order_insert['pay_type']);
 
         }
 
