@@ -40,3 +40,11 @@ desktop.ini
 /backend/nginx/
 /backend/composer.lock
 /backend/web/
+/backend/public/logs/
+
+# ===== 运维/部署本地文件（宝塔防跨站 .user.ini、微信域名校验文件、模块升级锁、站点备份与日志） =====
+/backend/.user.ini
+/backend/app/*/info/UpdateSql.lock
+/backend/config/backup.php
+/backend/public/MP_verify_*.txt
+/backend/public/logs/
