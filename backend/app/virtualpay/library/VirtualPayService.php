@@ -89,6 +89,29 @@ class VirtualPayService
 
         $buy_quantity = intdiv($numerator, 100);
 
+        //同一业务单此前拉起过的虚拟支付单：先查单结算兜底；
+        //若已支付成功（业务单已发货）则拒绝再次拉起，防止重复扣款
+        $old_orders = Db::name('virtualpay_order')
+            ->where(['uniacid' => $uniacid, 'order_code' => $order_code, 'type' => $type])
+            ->order('id', 'desc')
+            ->select()
+            ->toArray();
+
+        foreach ($old_orders as $old) {
+
+            if ($old['status'] == 0) {
+
+                self::queryAndDeliver($uniacid, $old);
+
+                $old['status'] = intval(Db::name('virtualpay_order')->where(['id' => $old['id']])->value('status'));
+            }
+
+            if ($old['status'] == 1) {
+
+                self::fail('订单已支付，请勿重复支付');
+            }
+        }
+
         if (empty($openid)) {
 
             self::fail('虚拟支付缺少用户 openid');

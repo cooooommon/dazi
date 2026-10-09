@@ -5,7 +5,6 @@ namespace app\virtualpay\controller;
 
 use app\ApiRest;
 use app\virtualpay\library\VirtualPayService;
-use think\App;
 use think\facade\Db;
 
 /**
@@ -13,13 +12,6 @@ use think\facade\Db;
  */
 class Index extends ApiRest
 {
-
-    protected $app;
-
-    public function __construct ( App $app )
-    {
-        $this->app = $app;
-    }
 
 
     /**
