@@ -1,33 +1,25 @@
-<!--
- * @Descripttion:
- * @Author: xiao li
- * @Date: 2020-07-06 12:17:06
- * @LastEditors: xiao li
- * @LastEditTime: 2023-01-05 11:31:05
--->
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
-    <meta name="renderer" content="webkit"/>
-    <meta name="force-rendering" content="webkit"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
-    <meta name="referrer" content="never">
-    <title>管理后台</title>
-    <!-- <script
-      charset="utf-8"
-      src="https://map.qq.com/api/gljs?v=1.exp&key=4IJBZ-DLACP-3QBDS-LI4FT-U2MZZ-5KFFA&libraries=visualization"
-    ></script> -->
-  <script charset="utf-8" src="https://map.qq.com/api/gljs?v=1.exp&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77"></script>
-  </head>
-  <body>
-    <script>
-      var lbConfig = {
-        jsPath: '/addons/longbing_card/core2/public/'
-      }
-    </script>
-    <div id="app"></div>
-    <script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=2LNBZ-HT2R2-LENUE-CBNZK-QZ4VS-AQB5Z"></script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+  <meta name="renderer" content="webkit"/>
+  <meta name="force-rendering" content="webkit"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+  <meta name="referrer" content="never">
+  <title>管理后台</title>
+  <script charset="utf-8" src="https://map.qq.com/api/gljs?v=1.exp&key={$map_secret}"></script>
+</head>
+<body>
+<script>
+  var lbConfig = {
+    jsPath: '{$jsPath}',
+    isWe7: '{$isWe7}',
+    is_founder: '{$is_founder}'
+  }
+  window.lbConfig = lbConfig;
+</script>
+<div id="app"></div>
+<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key={$map_secret}"></script>
+</body>
 </html>

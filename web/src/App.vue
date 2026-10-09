@@ -1,5 +1,5 @@
 <!--
- * @Description: 
+ * @Description:
  * @Author: xiao li
  * @Date: 2021-07-03 11:41:05
  * @LastEditTime: 2024-07-03 10:32:06
@@ -190,7 +190,7 @@ export default {
           console.error(res, '音频加载成功')
           that.audio.pause()
         }).catch((e) => {
-          console.error(e, '音频加载失败')
+          console.error(e, '音频加载失败'+src)
         })
       }
     },

@@ -23,20 +23,21 @@ use longbingcore\permissions\PermissionAbstract;
  * 商城模块功能权限
  * Class PermissionAppstore
  */
-class PermissionMassage extends PermissionAbstract {
+class PermissionMassage extends PermissionAbstract
+{
 
     const tabbarKey = null;
     //后台管理菜单对应key[必填] , 当前模块文件夹名称
     const adminMenuKey = 'massage';
-    public $saasKey ;
+    public $saasKey;
     const apiPaths = [];
 
 
-    public function __construct($uniacid,$infoConfigOptions=[],$saasKey='H5')
+    public function __construct($uniacid, $infoConfigOptions = [], $saasKey = 'H5')
     {
-        $this->saasKey  = longbing_get_auth_prefix($saasKey) ;
-
-        parent::__construct($uniacid, self::tabbarKey, self::adminMenuKey, $this->saasKey, self::apiPaths , $infoConfigOptions);
+        $this->saasKey = longbing_get_auth_prefix($saasKey);
+        parent::__construct($uniacid, self::tabbarKey, self::adminMenuKey, $this->saasKey, self::apiPaths,
+            $infoConfigOptions);
     }
 
 
@@ -46,13 +47,6 @@ class PermissionMassage extends PermissionAbstract {
      */
     public function sAuth(): bool
     {
-        return  true ;
-
-        if(!$this->getAuthIsSaasCheck()){
-            return  true ;
-        }
-
-       // dump($this->saasKey,$this->sassValue);exit;
         return true;
     }
 
@@ -62,25 +56,21 @@ class PermissionMassage extends PermissionAbstract {
      */
     public function pAuth(): bool
     {
-        return  true ;
-
-
+        return true;
     }
 
     /**
      * 返回c端授权结果
      *
-     * @param int $user_id
+     * @param  int  $user_id
      * @return bool
      * @author ArtizanZhang
      * @DataTime: 2019/12/9 17:13
      */
     public function cAuth(int $user_id): bool
     {
-
         return true;
     }
-
 
 
     /**
@@ -89,13 +79,9 @@ class PermissionMassage extends PermissionAbstract {
      * @author shuixian
      * @DataTime: 2019/12/19 19:02
      */
-    public function getCityNumber(){
-
-        return $this->getAuthVaule(  longbing_get_auth_prefix('CITY') , 1);
-
+    public function getCityNumber()
+    {
+        return $this->getAuthVaule(longbing_get_auth_prefix('CITY'), 1);
     }
-
-
-
 
 }

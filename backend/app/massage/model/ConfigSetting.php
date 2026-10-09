@@ -51,22 +51,28 @@ class ConfigSetting extends BaseModel
         incCache($key, 1, $uniacid, 99);
         $value = getCache($key, $uniacid);
         if ($value == 1) {
+            //一次查询取回已存在的配置项，替代逐条 find()（原 N+1 写法在 99 秒
+            //防重入计数器过期后的首个请求要跑全量循环，实测耗时 2 秒+）
+            $keys = array_column($data, 'key');
+            $exists = $this->where([['uniacid', '=', $uniacid], ['key', 'in', $keys]])->column('key');
+            $insert = [];
             foreach ($data as $v) {
-                $dis = [
-                    'uniacid' => $uniacid,
-                    'key' => $v['key'],
-                ];
-                $find = $this->where($dis)->find();
-                if (empty($find)) {
-                    $dis['text'] = $v['text'];
-                    $dis['value'] = $v['default_value'];
-                    $dis['default_value'] = $v['default_value'];
-                    $dis['field_type'] = $v['field_type'];
-                    $this->insert($dis);
+                if (!in_array($v['key'], $exists)) {
+                    $insert[] = [
+                        'uniacid'       => $uniacid,
+                        'key'           => $v['key'],
+                        'text'          => $v['text'],
+                        'value'         => $v['default_value'],
+                        'default_value' => $v['default_value'],
+                        'field_type'    => $v['field_type'],
+                    ];
                 }
             }
+            if (!empty($insert)) {
+                Db::name('massage_config_setting')->insertAll($insert);
+            }
         }
-        decCache($key, 1, $uniacid, 90);
+        decCache($key, 1, $uniacid);
         return true;
     }
 
