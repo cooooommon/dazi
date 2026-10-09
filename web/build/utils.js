@@ -43,7 +43,9 @@ exports.cssLoaders = function (options) {
       if (options.extract) {
         return ExtractTextPlugin.extract({
           use: loaders,
-          fallback: 'vue-style-loader'
+          fallback: 'vue-style-loader',
+          //抽取出的 CSS 位于 static/css/ 下，需回退两级才能命中 static/fonts 等资源
+          publicPath: '../../'
         })
       } else {
         return ['vue-style-loader'].concat(loaders)
@@ -67,7 +69,9 @@ exports.cssLoaders = function (options) {
     if (options.extract) {
       return ExtractTextPlugin.extract({
         use: loaders,
-        fallback: 'vue-style-loader'
+        fallback: 'vue-style-loader',
+        //抽取出的 CSS 位于 static/css/ 下，需回退两级才能命中 static/fonts 等资源
+        publicPath: '../../'
       })
     } else {
       return ['vue-style-loader'].concat(loaders)

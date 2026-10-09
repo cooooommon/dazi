@@ -81,7 +81,8 @@ class AdminSetting extends AdminRest
             $data['uniacid']     = $this->_uniacid;
             $data['create_time'] = time();
 
-            if (empty($data['app_key'])) {
+            //开启态必须有密钥才能落库；关闭态允许先保存，密钥后续补填
+            if (!empty($data['enabled']) && empty($data['app_key'])) {
 
                 $this->errorMsg('请填写现网 AppKey');
             }

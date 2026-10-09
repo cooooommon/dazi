@@ -332,6 +332,7 @@
     "SystemPayment": "支付配置",
     "SystemPaymentWechat": "微信支付设置",
     "SystemPaymentAlipay": "支付宝支付设置",
+    "SystemPaymentVirtualpay": "虚拟支付配置",
     "SystemUpload": "上传配置",
     "SystemTransaction": "交易设置",
     "SystemAllNotice": "万能通知",

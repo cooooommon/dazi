@@ -62,6 +62,14 @@ export default {
   payConfigUpdate (querys) {
     return post('massage/admin/AdminSetting/payConfigUpdate', querys)
   },
+  // 获取虚拟支付配置信息
+  virtualpayConfigInfo (querys) {
+    return post('virtualpay/admin/AdminSetting/configInfo', querys)
+  },
+  // 设置虚拟支付配置信息
+  virtualpayConfigUpdate (querys) {
+    return post('virtualpay/admin/AdminSetting/configUpdate', querys)
+  },
   // 车费配置详情
   carConfigInfo (querys) {
     return get('massage/admin/AdminSetting/carConfigInfo', querys)

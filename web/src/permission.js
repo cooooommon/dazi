@@ -2774,6 +2774,11 @@ export default [
           url: 'alipay',
           index: 1,
           auth: []
+        }, {
+          title: 'SystemPaymentVirtualpay',
+          url: 'virtualpay',
+          index: 2,
+          auth: []
         }]
       }
     },
@@ -2794,6 +2799,36 @@ export default [
           title: 'SystemPaymentAlipay',
           url: 'alipay',
           index: 1,
+          auth: []
+        }, {
+          title: 'SystemPaymentVirtualpay',
+          url: 'virtualpay',
+          index: 2,
+          auth: []
+        }]
+      }
+    }, {
+      path: 'virtualpay',
+      name: 'SystemPaymentVirtualpay',
+      component: '/system/payment/virtualpay',
+      meta: {
+        title: 'SystemSetting',
+        isOnly: false,
+        auth: 1,
+        pagePermission: [{
+          title: 'SystemPaymentWechat',
+          url: 'payment',
+          index: 0,
+          auth: []
+        }, {
+          title: 'SystemPaymentAlipay',
+          url: 'alipay',
+          index: 1,
+          auth: []
+        }, {
+          title: 'SystemPaymentVirtualpay',
+          url: 'virtualpay',
+          index: 2,
           auth: []
         }]
       }

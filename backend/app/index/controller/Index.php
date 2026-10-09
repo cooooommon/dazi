@@ -16,7 +16,7 @@ class Index
         $app = $is_we7 ? '/addons/'.APP_MODEL_NAME.'/core2/public/static/js/app.js' : '/static/js/app.js';
         $jsPath = $is_we7 ? '/addons/'.APP_MODEL_NAME.'/core2/public/' : '/';
         global $_W;
-        $is_founder = isset($_W['isfounder']) ? $_W['isfounder'] : false;
+        $is_founder = $_W['isfounder'] ?? false;
         View::assign('jsPath', $jsPath);
         View::assign('is_founder', $is_founder);
         View::assign('isWe7', $is_we7);
