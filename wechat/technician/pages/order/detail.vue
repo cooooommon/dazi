@@ -590,7 +590,7 @@
 					lat = '',
 						lng = '',
 						address = ''
-				} = await this.$util.getBmapLocation()
+				} = await this.$util.getLocationInfo()
 				if (!lat) {
 					this.$util.hideAll()
 					this.$util.showToast({

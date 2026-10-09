@@ -580,6 +580,9 @@ Route::group('app', function () {
     //首页
     Route::get('Index/index', 'Index/index');
 
+    //坐标逆地址解析（腾讯位置服务）
+    Route::post('Index/locationAddress', 'Index/locationAddress');
+
     Route::get('Index/serviceSelect', 'Index/serviceSelect');
 
     Route::get('Index/plugAuth', 'Index/plugAuth');

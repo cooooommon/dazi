@@ -76,6 +76,29 @@ class Index extends ApiRest
 
 
     /**
+     * @param $lng
+     * @param $lat
+     * @功能说明:坐标逆地址解析（腾讯位置服务，key 取后台 H5 设置的腾讯地图key）
+     */
+    public function locationAddress()
+    {
+
+        $lng = floatval($this->_param['lng'] ?? 0);
+
+        $lat = floatval($this->_param['lat'] ?? 0);
+
+        if (empty($lng) || empty($lat)) {
+
+            $this->errorMsg('缺少经纬度');
+        }
+
+        $data = getLocationAddress($lng, $lat, $this->_uniacid);
+
+        return $this->success($data);
+    }
+
+
+    /**
      * @author chenniang
      * @DataTime: 2021-03-23 09:20
      * @功能说明:首页

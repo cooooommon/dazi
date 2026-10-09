@@ -35,6 +35,10 @@ export default {
 	getMapInfo(param) {
 		return req.get("massage/app/Index/getMapInfo", param)
 	},
+	// 坐标逆地址解析（腾讯位置服务）
+	locationAddress(param) {
+		return req.post("massage/app/Index/locationAddress", param)
+	},
 	// 解析二维码
 	getWxCodeData(param) {
 		return req.get("card/app/getWxCodeData", param)

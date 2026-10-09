@@ -169,7 +169,7 @@
 					}
 					// #endif
 					// #ifdef APP-PLUS
-					let location = await this.$util.getBmapLocation()
+					let location = await this.$util.getLocationInfo()
 					locaLat = location.lat
 					locaLng = location.lng
 					// #endif

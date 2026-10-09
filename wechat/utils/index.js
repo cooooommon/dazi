@@ -1015,15 +1015,60 @@ export default {
 			return location
 		}
 	},
-	//百度地图获取定位
-	getBmapLocation: function(ak = 'GoI7BxLpfvBEyf1TcMXCloi99Vov7flZ', openLocation = false) {
-		//定位
+	//定位+逆地址解析（地图服务后台可配：ims_massage_config.map_type = baidu | tencent）
+	//baidu：前端 bmap-wx SDK 直连百度（key 取配置 bmap_key，缺省用内置 key）
+	//tencent：微信定位拿坐标 → 服务端 Index/locationAddress 腾讯逆解析（key 取后台 map_secret）
+	async getLocationInfo(ak = '', openLocation = false) {
 		let that = this;
-		let bmap = require('./bmap-wx.min.js');
-		let BMap = new bmap.BMapWX({
-			ak
-		});
+		let {
+			configInfo = {}
+		} = ($store.state && $store.state.config) || {}
+		let mapType = configInfo.map_type || 'baidu'
+		ak = ak || configInfo.bmap_key || 'GoI7BxLpfvBEyf1TcMXCloi99Vov7flZ'
+
+		if (mapType == 'tencent') {
+			let [locErr, locRes] = await uni.getLocation({
+				type: 'gcj02'
+			})
+			if (locErr || !locRes || !locRes.latitude) {
+				return that.locationFail(openLocation)
+			}
+			let lat = locRes.latitude
+			let lng = locRes.longitude
+			try {
+				let data = await $api.base.locationAddress({
+					lng,
+					lat
+				})
+				let comp = (data && data.result && data.result.address_component) || {}
+				return {
+					lat,
+					lng,
+					address: (data && data.result && data.result.address) || '',
+					province: comp.province || '',
+					city: comp.city || '',
+					district: comp.district || ''
+				}
+			} catch (e) {
+				//解析失败不影响定位坐标返回
+				console.warn('[location] 逆地址解析失败', e && e.error)
+				return {
+					lat,
+					lng,
+					address: '',
+					province: '',
+					city: '',
+					district: ''
+				}
+			}
+		}
+
+		//百度：bmap-wx 定位+逆解析
 		return new Promise((resove, reject) => {
+			let bmap = require('./bmap-wx.min.js');
+			let BMap = new bmap.BMapWX({
+				ak
+			});
 			BMap.regeocoding({
 				success: function(data) {
 					let addressInfo = data.originalData.result;
@@ -1040,148 +1085,44 @@ export default {
 						city,
 						district
 					} = addressComponent
-					//只返回需要的数据
-					let locationInfo = {
+					resove({
 						lat,
 						lng,
 						address,
 						province,
 						city,
-						district,
-					}
-					//成功回调
-					resove(locationInfo)
+						district
+					})
 				},
 				fail: function(res) {
-					//失败返回默认的数据
-					let locationInfo = {
-						name: '',
-						latitude: 0,
-						longitude: 0,
-						address: '',
-						city: ''
-					}
-					resove(locationInfo)
-					that.hideAll()
-					//失败后的提示
-					let errMsg = res.errMsg;
-					// #ifdef APP-PLUS
-					let {
-						isIos = false
-					} = $store.state.config.configInfo
-					if (!isIos || openLocation) {
-						if (errMsg.includes("domain")) {
-							uni.showModal({
-								title: "获取定位失败",
-								content: `请在小程序公众平台添加百度域名api.map.baidu.com`,
-								showCancel: false
-							})
-							return;
-						}
-						if (errMsg.includes("Referer")) {
-							uni.showModal({
-								title: "获取定位失败",
-								content: `登录百度开放平台给ak添加白名单`,
-								showCancel: false
-							})
-							return;
-						}
-						uni.showModal({
-							title: '提示',
-							content: '获取定位失败，是否授权打开定位',
-							success: (res) => {
-								if (res.confirm) {
-									uni.getSystemInfo({
-										success: (sys) => {
-											if (sys.platform ==
-												'ios') {
-												plus.runtime
-													.openURL(
-														"app-settings://"
-													);
-											} else {
-												var main = plus
-													.android
-													.runtimeMainActivity();
-												var Intent = plus
-													.android
-													.importClass(
-														"android.content.Intent"
-													);
-												//可能应该直接进入应用列表的权限设置？=> android.settings.APPLICATION_SETTINGS  
-												var mIntent =
-													new Intent(
-														'android.settings.LOCATION_SOURCE_SETTINGS'
-													);
-												main.startActivity(
-													mIntent);
-											}
-										}
-									})
-								}
-							}
-						})
-					}
-					// #endif
-					// #ifndef APP-PLUS
-					if (errMsg.includes("domain")) {
-						uni.showModal({
-							title: "获取定位失败",
-							content: `请在小程序公众平台添加百度域名api.map.baidu.com`,
-							showCancel: false
-						})
-						return;
-					}
-					if (errMsg.includes("Referer")) {
-						uni.showModal({
-							title: "获取定位失败",
-							content: `登录百度开放平台给ak添加白名单`,
-							showCancel: false
-						})
-						return;
-					}
-					uni.showModal({
-						title: "地理位置授权",
-						content: "为了更好的为您服务，请开启您手机中的定位授权",
-						confirmText: "去授权",
-						success(res) {
-							if (res.confirm) {
-								uni.openSetting({
-									success(result) {
-										if (result.authSetting[
-												`scope.userLocation`]) {
-											resove(true)
-										} else {
-											reject()
-										}
-									}
-								})
-							} else {
-								uni.showModal({
-									title: "提示",
-									content: "您取消了授权，是否重新设置【位置信息】权限",
-									confirmText: "去授权",
-									success(res) {
-										if (!res.confirm) return
-										uni.openSetting({
-											success(result) {
-												if (result.authSetting[
-														`scope.userLocation`
-													]) {
-													resove(true)
-												} else {
-													reject()
-												}
-											}
-										})
-									}
-								})
-							}
-						}
-					})
-					// #endif
+					resove(that.locationFail(openLocation, res))
 				}
 			})
 		})
+	},
+	//定位失败的统一处理：引导授权，仍失败返回默认空对象（调用方以 lat 为空判断）
+	async locationFail(openLocation = false, res = {}) {
+		let that = this;
+		that.hideAll()
+		let [modalRes] = await uni.showModal({
+			title: "地理位置授权",
+			content: "为了更好的为您服务，请开启您手机中的定位授权",
+			confirmText: "去授权"
+		})
+		if (modalRes && modalRes.confirm) {
+			let [settingRes] = await uni.openSetting({})
+			if (settingRes && settingRes.authSetting && settingRes.authSetting['scope.userLocation']) {
+				return that.getLocationInfo('', openLocation)
+			}
+		}
+		return {
+			name: '',
+			lat: 0,
+			lng: 0,
+			latitude: 0,
+			longitude: 0,
+			address: '',
+			city: ''
+		}
 	},
 }

@@ -44,6 +44,24 @@
             >请输入腾讯地图key，输入错误会影响H5的正常使用，谨慎修改</lb-tool-tips
           >
         </el-form-item>
+        <el-form-item label="百度地图key" prop="bmap_key">
+          <el-input
+            v-model="subForm.bmap_key"
+            placeholder="请输入百度地图key"
+          ></el-input>
+          <lb-tool-tips
+            >百度地图开放平台（lbsyun.baidu.com）创建「微信小程序」类型应用获取；位置解析服务选百度时必填</lb-tool-tips
+          >
+        </el-form-item>
+        <el-form-item label="位置解析服务" prop="map_type">
+          <el-radio-group v-model="subForm.map_type">
+            <el-radio label="baidu">百度地图</el-radio>
+            <el-radio label="tencent">腾讯地图</el-radio>
+          </el-radio-group>
+          <lb-tool-tips
+            >小程序端「定位并解析所在地址」使用的地图服务：选百度时请填写百度地图key，选腾讯时请填写腾讯地图key，保存后重新进入小程序生效</lb-tool-tips
+          >
+        </el-form-item>
         <el-form-item label="公众号二维码" prop="web_code_img">
           <lb-cover
             :fileList="subForm.web_code_img"
@@ -85,6 +103,8 @@ export default {
         web_app_id: '',
         web_app_secret: '',
         map_secret: '',
+        bmap_key: '',
+        map_type: 'baidu',
         web_code_img: []
       },
       subFormRules: {
@@ -109,6 +129,8 @@ export default {
       for (let key in this.subForm) {
         this.subForm[key] = data[key]
       }
+      //老数据无 map_type 字段时给默认值
+      if (this.subForm.map_type !== 'tencent') this.subForm.map_type = 'baidu'
     },
     submitForm () {
       this.$refs['subForm'].validate(valid => {

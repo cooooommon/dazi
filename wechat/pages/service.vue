@@ -314,10 +314,6 @@
 		<!-- #ifdef MP-WEIXIN -->
 		<user-privacy ref="user_privacy" :show="false"></user-privacy>
 		<!-- #endif -->
-		
-		<!-- #ifdef H5 -->
-		<open-mini-program ref="open_mini_program" :info="openMiniForm"></open-mini-program>
-		<!-- #endif -->
 	</view>
 </template>
 
@@ -331,13 +327,11 @@
 	import siteInfo from '@/siteinfo.js';
 	import tabbar from "@/components/tabbar.vue"
 	import technicianListItem from "@/components/technician-list-item.vue"
-	import openMiniProgram from "@/components/open-mini-program.vue"
 	import imageWindow from '@/components/image-window/image-window.vue'
 	export default {
 		components: {
 			tabbar,
 			technicianListItem,
-			openMiniProgram,
 			imageWindow
 		},
 		data() {
@@ -742,7 +736,7 @@
 				// 	}
 				// 	// #endif
 				// 	// #ifndef H5
-				// 	location = await this.$util.getBmapLocation()
+				// 	location = await this.$util.getLocationInfo()
 				// 	// #endif
 				// 	this.updateUserItem({
 				// 		key: 'location',

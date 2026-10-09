@@ -1,12 +1,12 @@
 {
     "name" : "城游搭子",
-    "appid" : "__UNI__020BCD8", // 改为自己的
+    "appid" : "__UNI__020BCD8",
     "description" : "",
-    "versionName" : "1.0.6",
-    "versionCode" : 108,
+    "versionName" : "1.0.0",
+    "versionCode" : 100,
     "transformPx" : false,
     "uniStatistics" : {
-        "enable" : false //全局关闭  
+        "enable" : false
     },
     "mp-weixin" : {
         "appid" : "wx0253be52582aa0aa",

@@ -692,7 +692,7 @@
 					}
 					// #endif
 					// #ifndef H5
-					location = await this.$util.getBmapLocation()
+					location = await this.$util.getLocationInfo()
 					// #endif
 					this.updateUserItem({
 						key: 'location',
