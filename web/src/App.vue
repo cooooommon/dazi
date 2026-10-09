@@ -178,16 +178,15 @@ export default {
     },
     playAudio (src, loop) {
       if (this.$route.path === '/count') return
+      if (!src) return // 未配置提示音时不播放，避免空 src 报「音频加载失败」
       let that = this
       this.audio = new Audio()
       this.audio.src = src
       this.audio.loop = loop
-      // if (!src) return
       let playPromise
       playPromise = this.audio.play()
       if (playPromise) {
         playPromise.then((res) => {
-          console.error(res, '音频加载成功')
           that.audio.pause()
         }).catch((e) => {
           console.error(e, '音频加载失败'+src)
@@ -196,6 +195,7 @@ export default {
     },
     toPlay (src, loop) {
       if (this.$route.path === '/count') return
+      if (!src) return // 未配置提示音时不播放
       this.audio.load()
       this.audio.src = src
       this.audio.loop = loop

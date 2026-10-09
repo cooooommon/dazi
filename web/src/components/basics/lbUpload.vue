@@ -795,7 +795,13 @@ export default {
             this.$refs['inputImg'].value = null
           })
           this.getFileList()
+        } else {
+          //失败必须提示（如类型不受支持/分组缺失），否则表现为「没有反应」
+          this.$message.error((res && res.error) || '上传失败')
         }
+      }).catch(e => {
+        this.$message.error('上传失败')
+        console.error('[upload] 本地上传失败', e)
       })
     },
     // 阿里云 分片上传
@@ -969,6 +975,8 @@ export default {
 
       let { data: uploadConfig } = await this.$api.system.getOssConfig()
       let { open_oss: openOss, uniacid } = uploadConfig
+      //open_oss 从库中返回为字符串（tinyint→string），转数字，否则 switch/严格比较不进任何分支、上传无反应
+      openOss = Number(openOss) || 0
       this.uploadConfig = uploadConfig
 
       // openOss 0本地上传，1阿里云OSS上传，2七牛云上传，3腾讯云上传

@@ -374,7 +374,8 @@ export default {
     async getFormInfo () {
       let { code, data } = await this.$api.system.getOssConfig()
       if (code !== 200) return
-      this.open_oss = data.open_oss
+      //open_oss 从库中返回为字符串（tinyint→string），转数字才能与选项 value 匹配，否则下拉显示原始数字
+      this.open_oss = Number(data.open_oss) || 0
       let formArr = ['baseForm', 'qiniuyunForm', 'aliyunForm', 'tengxunyunForm']
       for (let i = 0, len = formArr.length; i < len; i++) {
         for (let key in this[formArr[i]]) {
