@@ -708,249 +708,150 @@ class IndexOrder extends ApiRest
     public function payOrder()
     {
         $input = $this->_input;
-
         $address_order_model = new OrderAddress();
-
         $address_model = new Address();
-
         $coupon_record_model = new CouponRecord();
-
         $coach_model = new Coach();
-
         $cap_info = $coach_model->dataInfo(['id' => $input['coach_id']]);
-
         $order_id = !empty($input['order_id']) ? $input['order_id'] : 0;
-
         $admin_id = 0;
-
         if (!empty($cap_info) && $cap_info['is_work'] == 0) {
-
             $this->errorMsg('该向导未上班');
-
         }
-
         if (!empty($cap_info) && $cap_info['status'] != 2) {
-
             $this->errorMsg('该向导已下架');
-
         }
-
 
         $coupon_id = !empty($input['coupon_id']) ? $input['coupon_id'] : 0;
 
         //渠道商下级
         $p = new PermissionChannelstaff((int)$this->_uniacid);
-
         $staff_auth = $p->pAuth();
-
         $p = new PermissionChannel((int)$this->_uniacid);
-
         $channel_auth = $p->pAuth();
-
         //加钟订单
         if (!empty($order_id)) {
-
             $p_order = $this->model->dataInfo(['id' => $order_id]);
-
             $can_add = $this->model->orderCanAdd($p_order);
-
             if ($can_add == 0) {
-
                 $this->errorMsg('该订单不能续单');
             }
-
             $add_order = $this->model->where(['add_pid' => $order_id])->where('pay_type', 'in', [2, 3, 4, 5, 6, 8])->field('id,start_time,end_time')->find();
-
             if (!empty($add_order)) {
-
                 $this->errorMsg('请先完成上一次续单订单，才能继续续单');
-
             }
-
             $address = $p_order['address_info'];
-
             $address['id'] = $address['address_id'];
             //加钟订单不计算车费
             $input['car_type'] = 0;
             //加钟
             $input['start_time'] = $this->model->addOrderTime($order_id);
-
             $admin_id = $p_order['admin_id'];
-
             $store_id = $p_order['store_id'];
-
             $input['channel_id'] = $p_order['channel_id'];
-
             $input['channel_staff_id'] = $p_order['channel_staff_id'];
-
             $input['channel_staff_balance'] = $p_order['channel_staff_balance'];
         } else {
-
             if (empty($input['is_store'])) {
-
                 $address = $address_model->dataInfo(['id' => $input['address_id']]);
-
                 if (empty($address)) {
-
                     $this->errorMsg('请添加地址');
                 }
             } else {
                 //到店服务
                 $address = $address_order_model->getDefaultSetting($this->_uniacid, $input['user_name'], $input['user_phone'], $cap_info['store_id']);
-
                 if (empty($address)) {
-
                     $this->errorMsg('该向导未绑定门店');
                 }
-
             }
 
             $store_id = !empty($input['is_store']) && !empty($cap_info['store_id']) ? $cap_info['store_id'] : 0;
-
             //判断渠道商相关
             //有渠道商员工id
             if (isset($input['channel_staff_id']) && !empty($input['channel_staff_id']) && $staff_auth && $channel_auth) {
-
                 $staff = ChannelStaff::getFirst(['id' => $input['channel_staff_id']]);
                 //是否被解除关系
                 if ($staff['status'] == 1) {
-
                     $input['channel_id'] = $staff['channel_id'];
-
                     $input['channel_staff_balance'] = $staff['balance'];
                 } else {
                     $input['channel_id'] = 0;
-
                     $input['channel_staff_id'] = 0;
-
                     $input['channel_staff_balance'] = 0;
                 }
             } elseif (isset($input['channel_id']) && !empty($input['channel_id']) && $channel_auth) {
                 //是否解除授权
                 $channel = ChannelList::where(['id' => $input['channel_id'], 'status' => 2])->find();
-
                 if (empty($channel)) {
-
                     $input['channel_id'] = 0;
-
                     $input['channel_staff_id'] = 0;
-
                     $input['channel_staff_balance'] = 0;
                 }
             } else {
                 $input['channel_id'] = 0;
-
                 $input['channel_staff_id'] = 0;
-
                 $input['channel_staff_balance'] = 0;
             }
-
         }
 
         //查看渠道商时效性
         $input = Order::getChannel($input, $this->getUserId(), $this->_uniacid, $staff_auth, $channel_auth);
-
         if (!empty($store_check['code'])) {
-
             $this->errorMsg($store_check['msg']);
         }
-
         $order_info = $this->model->payOrderInfo($this->getUserId(), $input['coach_id'], $address['lat'], $address['lng'], $input['car_type'], $coupon_id, $order_id);
-
         $config_model = new Config();
-
         $config = $config_model->dataInfo(['uniacid' => $this->_uniacid]);
-
         //分销类型沿用主订单，无则用设置
         $cash_type = $config['cash_type'];
-
         if (!empty($order_id)) {
             $cash_type = $p_order['cash_type'];
         }
-
         Db::startTrans();
-
         $key = $order_info['coach_id'] . 'order_key';
-
         incCache($key, 1, $this->_uniacid);
-
         $key_value = getCache($key, $this->_uniacid);
-
         if ($key_value != 1) {
-
             decCache($key, 1, $this->_uniacid);
-
             Db::rollback();
-
             $this->errorMsg('下单人数过多，请重试');
-
         }
         //检查向导时间(返回结束时间)
         $check = $this->model->checkTime($order_info, $input['start_time'], $order_id, 0, $store_id);
-
         if (!empty($check['code'])) {
-
             decCache($key, 1, $this->_uniacid);
-
             Db::rollback();
-
             $this->errorMsg($check['msg']);
         }
         //默认微信
-        $pay_model = isset($input['pay_model']) ? $input['pay_model'] : 1;
-
+        $pay_model = $input['pay_model'] ?? 1;
         $order_insert = [
-
             'uniacid' => $this->_uniacid,
-
             'over_time' => time() + $config['over_time'] * 60,
-
             'order_code' => orderCode(),
-
             'user_id' => $this->getUserId(),
-
             'pay_price' => $order_info['pay_price'],
-
             'balance' => $pay_model == 2 ? $order_info['pay_price'] : 0,
-
             'init_service_price' => $order_info['init_goods_price'],
-
             'service_price' => $order_info['goods_price'],
-
             'true_service_price' => $order_info['goods_price'],
-
             'discount' => $order_info['discount'],
-
             'car_price' => $order_info['car_price'],
-
             'true_car_price' => $order_info['car_price'],
-
             'pay_type' => 1,
-
             'coach_id' => $order_info['coach_id'],
-
             'start_time' => $input['start_time'],
-
             'end_time' => $check['end_time'],
-
             'distance' => $order_info['distance'],
-
             'time_long' => $check['time_long'],
-
             'true_time_long' => $check['time_long'],
             //备注
             'text' => !empty($input['text']) ? $input['text'] : '',
-
             'can_tx_time' => $config['can_tx_time'],
-
             'car_type' => $input['car_type'],
-
             'channel_id' => !empty($input['channel_id']) ? $input['channel_id'] : 0,
-
             'channel_staff_id' => !empty($input['channel_staff_id']) ? $input['channel_staff_id'] : 0,
-
             'channel_staff_balance' => !empty($input['channel_staff_balance']) ? $input['channel_staff_balance'] : 0,
-
             'app_pay' => $this->is_app,
             //向导出发地址
             'trip_start_address' => !empty($cap_info['address']) ? $cap_info['address'] : '',
@@ -958,117 +859,75 @@ class IndexOrder extends ApiRest
             'trip_end_address' => $address['address'] . ' ' . $address['address_info'],
             //加钟fu
             'add_pid' => $order_id,
-
             'is_add' => !empty($order_id) ? 1 : 0,
-
             'pay_model' => $pay_model,
-
             'store_id' => $store_id,
-
             'cash_type' => $cash_type,
-
             'broker_id' => $order_info['broker_id'],
-
             'is_car' => $order_info['is_car'],
-
             'is_safe' => 0,
-
             'member_discount' => $order_info['member_discount'],
-
             'member_balance' => $order_info['member_balance'],
-
             'member_status' => $order_info['member_status']
         ];
 
         //下单
         $res = $this->model->dataAdd($order_insert);
-
         if ($res != 1) {
-
             decCache($key, 1, $this->_uniacid);
-
             Db::rollback();
-
             $this->errorMsg('下单失败');
         }
-
         decCache($key, 1, $this->_uniacid);
-
         $order_id = $this->model->getLastInsID();
         //使用优惠券
         $coupon_record_model->couponUse($coupon_id, $order_id);
         //添加下单地址
         $res = $address_order_model->orderAddressAdd($address, $order_id);
-
         if (!empty($res['code'])) {
-
             Db::rollback();
-
             $this->errorMsg($res['msg']);
         }
         //添加到子订单
         $res = $this->order_goods_model->orderGoodsAdd($order_info['order_goods'], $order_id, $input['coach_id'], $this->getUserId());
-
         if (!empty($res['code'])) {
-
             Db::rollback();
-
             $this->errorMsg($res['msg']);
         }
 
         $order_insert_data = $this->model->dataInfo(['id' => $order_id]);
         //处理各类佣金情况
         $order_update = $this->model->getCashData($order_insert_data, 1, $admin_id);
-
         if (!empty($order_update['code']) && $order_update['code'] == 300) {
-
             $this->errorMsg('请添加向导等级');
-
         }
 
         if (!empty($order_update['order_data'])) {
-
             $this->model->dataUpdate(['id' => $order_id], $order_update['order_data']);
         }
 
         OrderIntegral::getIntegralData($order_insert_data);
-
         Db::commit();
         //如果是0元
         if ($order_insert['pay_price'] <= 0) {
-
             $this->model->orderResult($order_insert['order_code'], $order_insert['order_code']);
-
             return $this->success(true);
         }
         //余额支付
         if ($pay_model == 2) {
-
             $user_model = new User();
-
             $user_balance = $user_model->where(['id' => $this->getUserId()])->value('balance');
-
             if ($user_balance < $order_insert['pay_price']) {
-
                 $this->errorMsg('余额不足');
             }
-
             $this->model->orderResult($order_insert['order_code'], $order_insert['order_code']);
-
             return $this->success(true);
-
         } elseif ($pay_model == 3) {
-
             $pay_model = new PayModel($this->payConfig());
-
             $jsApiParameters = $pay_model->aliPay($order_insert['order_code'], $order_insert['pay_price'], 'MassageOrder', 1);
-
             $arr['pay_list'] = $jsApiParameters;
-
             $arr['order_code'] = $order_insert['order_code'];
-
             $arr['order_id'] = $order_id;
-
         } else {
             //微信支付
             //虚拟支付开启时改走虚拟支付
@@ -1080,14 +939,10 @@ class IndexOrder extends ApiRest
                 //支付
                 $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig(), $this->getUserInfo()['openid'], $this->_uniacid, "购买商品", ['type' => 'Massage', 'out_trade_no' => $order_insert['order_code']], $order_insert['pay_price']);
             }
-
             $arr['pay_list'] = $jsApiParameters;
-
             $arr['order_id'] = $order_id;
         }
-
         return $this->success($arr);
-
     }
 
 
