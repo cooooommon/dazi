@@ -243,7 +243,6 @@
 					// #ifndef H5 
 					// #ifdef MP-WEIXIN 
 					try {
-						console.log(qywx_kid, qywx_company_id)
 						wx.openCustomerServiceChat({
 							extInfo: {
 								url: qywx_kid
@@ -265,7 +264,6 @@
 					// #ifdef APP-PLUS
 					let wechat = null
 					plus.share.getServices(res => {
-						console.log(res, "==============res")
 						wechat = res.find(i => i.id === 'weixin')
 						if (wechat) {
 							wechat.openCustomerServiceChat({

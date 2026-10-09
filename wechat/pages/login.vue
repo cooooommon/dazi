@@ -205,7 +205,6 @@
 				// 		id: uid = 0,
 				// 		phone = ''
 				// 	} = userInfo
-				// 	console.log(uid, phone, loginPage, "========uid, phone, loginPage")
 				// 	let isToPhone = user_force_login == 1 && short_code_status && !phone
 				// 	let url = isToPhone ? `/user/pages/phone` : loginPage || `/pages/service`
 				// 	this.$util.goUrl({
@@ -221,11 +220,9 @@
 						id: uid = 0,
 						phone = ''
 					} = userInfo
-					console.log(uid, phone, loginPage, "========uid, phone, loginPage")
 					let isToPhone = user_force_login == 1 && short_code_status && !phone
 					let url = isToPhone ? `/user/pages/phone` : loginPage || `/pages/service`
 					let split_url = url.split('?')[0]
-					console.log(url, "=====url")
 					let isReLaunch = isToPhone || pageArr.includes(split_url)
 					let openType = isReLaunch ? `reLaunch` : `navigateBack`
 					this.$util.goUrl({
@@ -241,7 +238,6 @@
 					val: ''
 				})
 				
-				console.log(loginPage ,user_force_login == 1 , short_code_status, '========> loginPage')
 				let optionsArr = loginPage.split('?')
 
 				if (user_force_login == 1 && short_code_status) {
@@ -271,7 +267,6 @@
 					let [providerErr, providerData] = await uni.getProvider({
 						service: 'oauth',
 					});
-					console.log(providerData , '==========> providerData')
 					if (providerErr) {
 						this.$util.showToast({
 							title: providerErr
@@ -281,7 +276,6 @@
 					let [loginErr, loginData] = await uni.login({
 						provider
 					});
-					console.log(provider, loginData ,loginErr, '==========> loginData')
 					if (loginErr) {
 						this.$util.showToast({
 							title: loginErr
@@ -291,7 +285,6 @@
 					let [infoErr, infoData] = await uni.getUserInfo({
 						provider
 					})
-					console.log(infoData , '==========> loginData')
 					if (infoErr) {
 						this.$util.showToast({
 							title: infoErr
@@ -343,7 +336,6 @@
 					2: 'appLogin',
 					3: 'iosLogin'
 				}
-				console.log(methodType[type], '=========> methodType[type]')
 				let methodModel = methodType[type]
 				let user_info = await this.$api.base[methodModel](param)
 				if (init == 1) {

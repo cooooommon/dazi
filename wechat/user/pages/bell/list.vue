@@ -380,7 +380,6 @@
 					activeIndex,
 					have_check_num
 				} = this
-				console.log(type, index)
 				this.activeIndex1 = index
 				if (activeIndex == 0) {
 					let {

@@ -474,7 +474,6 @@
 			options.is_edit = is_edit
 			options = admin_id ? await this.updateCommonOptions(options) : options
 			this.options = options
-			console.log(this.options)
 			this.$util.showLoading()
 			let cur_time = new Date(Math.ceil(new Date().getTime()))
 			this.endYear = this.$util.formatTime(cur_time, 'YY-M-D')

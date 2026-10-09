@@ -638,14 +638,12 @@
 							this.param.price = Number(oldPrice.toFixed(2))
 							this.totalPrice = totalPrice
 						} else if (res.cancel) {
-							console.log('用户点击取消');
 						}
 					}
 				});
 			},
 			changeAction(e, index) {
 				// this.serveTypeList[index].isOpened = e
-				console.log('返回：', e);
 			},
 			hanlderNumber(){
 				let totalPrice = 0

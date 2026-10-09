@@ -368,9 +368,6 @@
 							}
 							this.lockTap = false;
 						} catch (e) {
-							this.$util.showToast({
-								title: `支付失败`
-							})
 							this.lockTap = false;
 							return
 						}

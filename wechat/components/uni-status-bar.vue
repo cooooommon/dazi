@@ -5,6 +5,8 @@
 </template>
 
 <script>
+
+	import { getSystemInfo } from '@/utils/systemInfo.js';
 	export default {
 		computed: {
 			style() {
@@ -12,7 +14,7 @@
 				return ''
 				//#endif
 				//#ifndef APP-PLUS
-				return `height:${uni.getSystemInfoSync().statusBarHeight}px`
+				return `height:${getSystemInfo().statusBarHeight}px`
 				//#endif
 			}
 		}

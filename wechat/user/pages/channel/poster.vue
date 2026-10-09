@@ -67,7 +67,6 @@
 				let that = this
 				let qr_code = this.options && this.options.qr_code ? this.options.qr_code : await this.$api.channel.channelQr()
 				
-				console.log( qr_code, 'jin ++ ')
 				let poster = {
 					css: {
 						width: '750rpx',
@@ -92,7 +91,6 @@
 					success: (res) => {
 						that.$util.hideAll()
 						this.src = res.tempFilePath
-						console.log(res.tempFilePath);
 					},
 				});
 			},

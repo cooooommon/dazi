@@ -92,7 +92,6 @@ const strategies = {
 		}
 	},
 	isNumber: function(value, errorMsg, regType) {
-		console.log(value, errorMsg, regType)
 		if(regType){
 			if(value === null || value === ''){
 				return `请输入${errorMsg}`;

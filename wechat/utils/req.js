@@ -78,7 +78,6 @@ const wxLogin = async function() {
 			pid: query.pid
 		}
 
-		// console.log("login_param==>", login_param);
 
 		let d = await tokenFly.post(url, login_param);
 		let {
@@ -106,7 +105,6 @@ const wxLogin = async function() {
 			val: data.autograph
 		})
 		// 加入黑名单后 禁止进入
-		console.log(data.data.is_blacklist , '==========> 黑名单')
 		if(data.data.is_blacklist){
 			$util.goUrl({url: `/pages/interdict`, openType: 'reLaunch'})
 			return data
@@ -135,7 +133,6 @@ let pageArr = ['/pages/order']
 const gzhLogin = async function() {
 	let code = $util.getQueryString('code')
 	let pageUrl = window.location.href
-	console.log(H5LoginNum, "======H5LoginNum")
 	if (H5LoginNum == 0 && code) {
 		code = ''
 	}
@@ -145,7 +142,6 @@ const gzhLogin = async function() {
 		} = $store.state.user
 		let sOptions = uni.getStorageSync('commonOptions')
 		sOptions = sOptions ? sOptions : '{}'
-		console.log(commonOptions ,'=========> commonOptions 公众号登录')
 		let coupon_atv_id = $util.getQueryString('coupon_atv_id') || 0
 		let pid = $util.getQueryString('pid') || commonOptions.pid || JSON.parse(sOptions).pid || 0
 		let channel_id = $util.getQueryString('channel_id') || commonOptions.channel_id || JSON.parse(sOptions).channel_id || 0
@@ -155,7 +151,6 @@ const gzhLogin = async function() {
 		let coach_id = $util.getQueryString('coach_id') || commonOptions.coach_id || JSON.parse(sOptions).coach_id || 0
 		let channel_invite_id = $util.getQueryString('channel_invite_id') || commonOptions.channel_invite_id || JSON.parse(sOptions).channel_invite_id || 0
 		let is_member = $util.getQueryString('is_member') || commonOptions.is_member || JSON.parse(sOptions).is_member || 0
-		// console.log("index/webLogin ==>", code, coupon_atv_id, pid)
 		let url = formatUrl("index/webLogin")
 		let from_type = 1 // 来源类型 1公众号搜索 2分享链接 3分销码 4渠道商邀请用户二维码 5渠道员工码 6技师邀请码 7代理商邀请码 8邀请充值 9渠道商邀请用户二维码 10分享员邀请购买会员卡is_member==1
 		let from_id = 0 // 来源ID 1无id 2用户id pid 3分销员id pid 4渠道商id channel_id 5渠道员工id channel_staff_id 6经纪人id broker_id 7代理商id admin_id  8邀请充值 coach_id 9渠道商邀请员工二维码 channel_invite_id
@@ -215,7 +210,6 @@ const gzhLogin = async function() {
 			//登录成功
 			uni.hideLoading()
 			let commonOptions = uni.getStorageSync('commonOptions')
-			console.log('登录成功 ======> commonOptions',commonOptions)
 			$store.commit('updateUserItem', {
 				key: 'commonOptions',
 				val: commonOptions ? JSON.parse(commonOptions) : {}
@@ -224,7 +218,6 @@ const gzhLogin = async function() {
 				key: 'isGzhLogin',
 				val: true
 			})
-			console.log('登录成功 ======> data',d)
 			$store.commit('updateUserItem', {
 				key: 'userInfo',
 				val: data.data
@@ -234,7 +227,6 @@ const gzhLogin = async function() {
 				val: data.autograph
 			})
 			// 加入黑名单后 禁止进入
-			console.log(data.data.is_blacklist , '==========> 黑名单')
 			if(data.data.is_blacklist){
 				$util.goUrl({url: `/pages/interdict`, openType: 'reLaunch'})
 			}
@@ -245,7 +237,6 @@ const gzhLogin = async function() {
 				code,
 				error
 			} = e.response.data
-			// console.log("catch e code error=======", code, error)
 			if (code == 40163) {
 				H5LoginNum = 0
 				await $util.toAsyncLogin()
@@ -284,7 +275,6 @@ const appLogin = async function() {
 	if (appLoginNum == 0 && autograph) {
 		appLogin = ''
 	}
-	// console.log(autograph, "=========================appLogin autograph")
 	if (appLogin) {
 		code = ''
 		let url = formatUrl(loginType == 'weixin' ? 'index/appLogin' : 'index/iosLogin')
@@ -323,7 +313,6 @@ const appLogin = async function() {
 				val: data.autograph
 			})
 			// 加入黑名单后 禁止进入
-			console.log(data.data.is_blacklist , '==========> 黑名单')
 			if(data.data.is_blacklist){
 				$util.goUrl({url: `/pages/interdict`, openType: 'reLaunch'})
 			}
@@ -386,7 +375,6 @@ fly.interceptors.response.use(
 	async (response) => {
 			// #ifdef H5
 			let h5code = $util.getQueryString('code')
-			console.log(h5code, "=======h5code")
 			if (h5code && !$store.state.user.autograph && H5LoginNum == 0) {
 				response.data.code = 401
 				H5LoginNum++
@@ -394,17 +382,14 @@ fly.interceptors.response.use(
 			// #endif
 
 			//token过期验证
-			// console.log("response====>", response.request.url.split('&urls=')[1], "=== urls ====>", response.data.code, response)
 			if (response.data.code != 401) return response;
 			fly.lock()
 
 			//#ifdef  MP-WEIXIN
-			console.log("==> MP-WEIXIN 401")
 			await wxLogin()
 			//#endif
 
 			//#ifdef H5
-			console.log($store.state.user.autograph,"==> H5 401 autograph")
 			if ($store.state.user.autograph) {
 				let storeArr = ['userInfo', 'mineInfo', 'coachInfo', 'userPageType']
 				storeArr.map(key => {
@@ -421,7 +406,6 @@ fly.interceptors.response.use(
 			//#endif
 
 			//#ifdef  APP-PLUS 
-			console.log("==> APP-PLUS 401")
 			if (!$store.state.user.autograph) {
 				appLoginNum++
 			}
@@ -433,12 +417,12 @@ fly.interceptors.response.use(
 			return fly.request(response.request);
 		},
 		async (err) => {
-			console.log(err, "=======fly.interceptors.response.use err");
 			let {
 				status = 0,
 			} = err
 
 			$util.hideAll()
+			console.error('[api] 网络请求失败', status, err && (err.message || err.errMsg))
 			// networkError({
 			// 	code: status,
 			// })
@@ -457,7 +441,6 @@ const formatReq = function() {
 			url = formatUrl(url);
 
 			let res = await fly[type](url, param)
-			// console.log(res, "========= formatReq res")
 			// #ifdef MP-BAIDU
 			res.data = typeof(res.data) == "string" ? JSON.parse(res.data) : res.data;
 			// #endif
@@ -468,10 +451,11 @@ const formatReq = function() {
 			} = res.data
 			code = code * 1
 			if (code === 200) return data;
+			//业务错误统一记录，便于线上排查（urls 为模块/方法路由）
+			console.warn(`[api] ${url.split('&urls=')[1] || url} -> code=${code} ${error || ''}`)
 			//code!=200抛出错误
 			$util.hideAll();
 			if (code == 400 && error) {
-				console.log(code, error, "code != 200");
 				msgError({
 					msg: error
 				})
@@ -527,12 +511,10 @@ const uploadFile = async (url, {
 		if (code === 401) {
 			fly.lock()
 			//#ifdef  MP-WEIXIN
-			console.log("==> MP-WEIXIN 401")
 			await wxLogin()
 			//#endif
 
 			//#ifdef H5
-			console.log("==> H5 401")
 			if ($store.state.user.autograph) {
 				let storeArr = ['userInfo', 'autograph', 'mineInfo', 'coachInfo', 'userPageType']
 				storeArr.map(key => {
@@ -549,7 +531,6 @@ const uploadFile = async (url, {
 			//#endif
 
 			//#ifdef  APP-PLUS 
-			console.log("==> APP-PLUS 401")
 			if (!$store.state.user.autograph) {
 				appLoginNum++
 			}

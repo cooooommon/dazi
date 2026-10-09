@@ -47,6 +47,8 @@
 </template>
 
 <script>
+
+	import { getSystemInfo } from '@/utils/systemInfo.js';
 	export default {
 		name: 'column',
 		props: {
@@ -165,7 +167,7 @@
 					scrollLeft,
 					scrollWidth
 				} = e.detail;
-				let windowWidth = uni.getSystemInfoSync().windowWidth;
+				let windowWidth = getSystemInfo().windowWidth;
 				let left = scrollLeft * 30 / (scrollWidth - windowWidth);
 				this.left = left
 			},

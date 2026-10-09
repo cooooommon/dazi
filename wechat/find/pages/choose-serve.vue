@@ -139,19 +139,16 @@
 					if(this.configInfo.plugAuth.member && this.mineInfo.member_info){
 						discount = this.mineInfo.member_info.member_discount / 10
 					}
-					console.log(serveTypeList,this.skillList, '========> serveTypeList')
 					serveTypeList.forEach(item => {
 						totalPrice += (item.price ? Number(Number(item.price)*(item.number*1 || 1)*discount) : 0)
 						oldPrice += (item.price ? Number(Number(item.price)*(item.number*1 || 1)) : 0)
 					})
-					console.log(totalPrice , oldPrice, '=======> totalPrice')
 					this.$util.getPage(-1).param.price = Number(oldPrice.toFixed(2))
 					this.$util.getPage(-1).totalPrice = Number(totalPrice.toFixed(2))
 					let data = this.$util.deepCopy(this.$util.getPage(-1).serveTypeList[options.index])
 					data.name = name
 					data.id = id
 					data.price = price
-					console.log(data ,'==========> serveTypeList')
 					serveTypeList[options.index] = data
 					this.$util.getPage(-1).serveTypeList = serveTypeList
 				}

@@ -192,7 +192,6 @@
 				let that = this
 				// #ifdef H5
 				this.$jweixin.getScanQRCode().then(res => {
-					console.log(res)
 					var result = res.resultStr; // 当 needResult 为 1 时，扫码返回的结果
 					var resultArr = result.split(','); // 扫描结果以逗号分割数组(一维码)
 					var codeContent = resultArr[resultArr.length - 1]; // 获取数组最后一个元素，也就是最终的内容 

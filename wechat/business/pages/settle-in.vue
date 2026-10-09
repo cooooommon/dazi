@@ -413,7 +413,6 @@
 			},
 			async submit(){
 				let param = this.$util.deepCopy(this.param)
-				console.log(param)
 				let arr = ['cover', 'license']
 				arr.map(item => {
 					param[item] = param[item].length > 0 ? param[item][0].path : ''
@@ -632,7 +631,6 @@
 				this.showStartTime = true
 			},
 			onConfirm(e, type){
-				console.log(e ,'=======> onConfirm')
 				this.param.start_time = e.start || '00:00'
 				this.param.end_time = e.end || '00:00'
 			}

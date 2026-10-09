@@ -54,7 +54,6 @@ export default {
 			commit,
 			state
 		}, param) {
-			console.log(param , '=========> getServiceIndex')
 			let d = await $api.service.index(param);
 			let {
 				banner = [],

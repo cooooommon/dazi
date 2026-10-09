@@ -2,13 +2,15 @@ import Validate from './validate.js';
 import $store from "@/store/index.js"
 import $api from "api/index.js"
 import $util from './index.js';
+import { getSystemInfo } from './systemInfo.js';
 // #ifdef H5
 import $jweixin from "@/utils/jweixin.js"
 // #endif
 export default {
 	Validate,
-	log: console.log,
-	// log: () => {},
+	//调试开关：上线保持静默；需要排查问题时临时改回 console.log
+	log: () => {},
+	// log: console.log,
 	// 计算直线距离
 	getDistance(lat1, lon1, lat2, lon2) {
 		const R = 6371e3; // 地球半径，单位米
@@ -289,7 +291,7 @@ export default {
 		var {
 			statusBarHeight,
 			navigationBarHeight
-		} = await uni.getSystemInfoSync()
+		} = getSystemInfo()
 
 		let navBarHeight = statusBarHeight * 1 + 44
 		// #ifdef MP-BAIDU
@@ -311,7 +313,6 @@ export default {
 		return text
 	},
 	async toAsyncLogin() {
-		console.log('======================> toAsyncLogin')
 		let pageArr = ['/pages/order']
 		let pages = getCurrentPages()
 		let {
@@ -325,7 +326,6 @@ export default {
 		} = $store.state.user
 		let pageParam = route === 'pages/mine' ? `?type=${userPageType}` : ``
 		let loginPage = `${routeUrl}${pageParam}`
-		console.log(loginPage, "============toAsyncLogin loginPage")
 	
 		let openType = pageArr.includes(`/${route}`) ? `reLaunch` : `navigateTo`
 		// uni.setStorageSync('loginPage', loginPage)
@@ -431,7 +431,6 @@ export default {
 							title: '复制成功'
 						})
 						// #endif
-						console.log('复制文本成功 ==>', res.data);
 					}
 				});
 			}
@@ -460,7 +459,6 @@ export default {
 		return page.$vm
 	},
 	rgbColor(color, rgb = 0.8) {
-		console.log(color, "==rgbColor")
 		const binaryPattern = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i;
 		const match = color.match(binaryPattern);
 		if (match) {
@@ -643,7 +641,6 @@ export default {
 		// #ifndef H5
 		let [err, res] = await uni.requestPayment(param)
 		if (err) {
-			console.log("=======pay err", err)
 			that.showToast({
 				title: `支付失败`
 			})
@@ -662,7 +659,7 @@ export default {
 		// #ifdef MP-WEIXIN
 		//iOS 需要微信 8.0.68 及以上
 		try {
-			let sys = uni.getSystemInfoSync()
+			let sys = getSystemInfo()
 			if (sys.platform == 'ios' && that.compareVersion(sys.version || '', '8.0.68') < 0) {
 				that.showToast({
 					title: `当前微信版本过低，请更新微信后再支付`
@@ -682,21 +679,33 @@ export default {
 					try {
 						outTradeNo = JSON.parse(pay_list.signData).outTradeNo || ''
 					} catch (e) {}
+					console.log(`[virtualPay] 支付成功，等待发货确认 ${outTradeNo}`)
+					let delivered = false
 					for (let i = 0; i < 8 && outTradeNo; i++) {
 						await new Promise(r => setTimeout(r, 1500))
 						try {
 							let st = await $api.virtualpay.orderStatus({
 								out_trade_no: outTradeNo
 							})
-							if (st && st.status == 1) break
+							if (st && st.status == 1) {
+								delivered = true
+								break
+							}
 						} catch (e) {
 							break
 						}
 					}
+					if (delivered) {
+						console.log(`[virtualPay] 发货确认完成 ${outTradeNo}`)
+					} else {
+						//不影响支付结果，服务端推送/查单兜底会异步补发
+						console.warn(`[virtualPay] 12秒内未确认发货，等待服务端兜底 ${outTradeNo}`)
+					}
 					resove(true)
 				},
 				fail: (err) => {
-					console.log("=======virtualPay err", err)
+					//失败原因以 errCode/errMsg 为准（如 -15009 代币未发布、-15014 代币配置同步中）
+					console.error('[virtualPay] 支付失败', err && err.errCode, err && err.errMsg)
 					let msg = '支付失败'
 					if (err && err.errMsg && err.errMsg.indexOf('cancel') > -1) msg = '已取消支付'
 					that.showToast({
@@ -723,7 +732,6 @@ export default {
 	},
 	//小程序自带获取定位
 	getLocation() {
-		console.log('==========> 小程序自带获取定位')
 		let that = this;
 		return new Promise((resove, reject) => {
 			uni.getLocation({
@@ -749,7 +757,6 @@ export default {
 					resove(locationInfo)
 				},
 				fail: function(e) {
-					console.log(e, "====getLocation fail e")
 					let locationInfo = {
 						lat: 0,
 						lng: 0,
@@ -887,7 +894,6 @@ export default {
 			lat,
 			lng
 		} = await this.getLocation()
-		console.log(lat,lng , '============> lat , lng')
 		let location = this.toChangeUpdateUtilLoca(updateLoca, locaParams, {
 			lat,
 			lng,
@@ -1043,7 +1049,6 @@ export default {
 						city,
 						district,
 					}
-					// console.log(locationInfo, "====util locationInfo");
 					//成功回调
 					resove(locationInfo)
 				},

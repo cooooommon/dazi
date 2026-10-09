@@ -1077,7 +1077,6 @@
 						let storeInd = this.toolList.findIndex(item => {
 							return item.text == '商家端'
 						})
-						console.log(storeInd , '=========> storeInd')
 						if(storeInd == -1){
 							this.toolList.splice(positionInd, 0, {
 								icon: 'iconmendian',
@@ -1152,7 +1151,6 @@
 				this.initIndex(true)
 			},
 			async getOrderNumCall() {
-				console.log('======> getOrderNumCall')
 				try{
 					let data = await this.$api.technician.getOrderNum()
 					this.orderList2[0].number = data.wait //待接单
@@ -1166,7 +1164,6 @@
 			},
 			// 用户端 我的订单
 			async getUserOrderNumCall(){
-				console.log('======> getUserOrderNumCall')
 				try{
 					let data = await this.$api.user.getOrderNum()
 					this.orderList[0].number = data.pay //待接单
@@ -1180,7 +1177,6 @@
 			},
 			// 用户端 团购订单
 			async getOrderCount(){
-				console.log('======> getOrderCount')
 				try{
 					let data = await this.$api.business.orderCount()
 					this.packageList[0].number = data.status_1
@@ -1305,7 +1301,6 @@
 					// #ifndef H5 
 					// #ifdef MP-WEIXIN 
 					try {
-						console.log(qywx_kid, qywx_company_id)
 						wx.openCustomerServiceChat({
 							extInfo: {
 								url: qywx_kid
@@ -1327,7 +1322,6 @@
 					// #ifdef APP-PLUS
 					let wechat = null
 					plus.share.getServices(res => {
-						console.log(res, "==============res")
 						wechat = res.find(i => i.id === 'weixin')
 						if (wechat) {
 							wechat.openCustomerServiceChat({

@@ -147,7 +147,6 @@
 						let {
 							loginPage: url
 						} = this
-						console.log(url, '=========> loginPage')
 						let pageArr = ['/pages/service', '/pages/technician', '/pages/store', '/pages/find', '/pages/order', '/pages/mine']
 						let openType = pageArr.includes(url) ? `reLaunch` : `navigateBack`
 						this.$util.goUrl({

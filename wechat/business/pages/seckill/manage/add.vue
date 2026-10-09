@@ -235,7 +235,6 @@
 				return message;
 			},
 			async submit() {
-				console.log(this.param)
 				let param = this.$util.deepCopy(this.param)
 				let msg = this.validate(param);
 				if (msg) {

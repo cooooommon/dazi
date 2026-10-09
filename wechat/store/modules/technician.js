@@ -61,7 +61,6 @@ export default {
 			let ind = d.findIndex(v => {
 				return change || !cityId ? v.is_select : v.id == cityId
 			})
-			console.log(d, ind)
 			commit('updateTechnicianItem', {
 				key: 'cityList',
 				val: d

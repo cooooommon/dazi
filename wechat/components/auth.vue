@@ -357,7 +357,6 @@
 					user_from_switch = 0
 				} = this.configInfo
 				
-				console.log(user_from_switch , this.userInfo.from_type, index)
 				if(user_from_switch && this.userInfo.from_type == 1 && this.userInfo && this.userInfo.nickName && this.must){
 					this.$refs.show_user_from.open()
 					return
@@ -377,7 +376,6 @@
 					short_code_status = 0,
 					bind_phone_type = 0,
 				} = this.configInfo
-				console.log(uid , short_code_status, bind_phone_type, phone, '============> toShowAuth')
 				if (!uid || (short_code_status && bind_phone_type && !phone)) {
 					// this.updateUserItem({
 					// 	key: 'loginPage',
@@ -391,7 +389,6 @@
 						route,
 						options = {}
 					} = pages[pages.length - 1]
-					console.log(route, options , pages[pages.length - 1],'=============> toShowAuth')
 					let loginPage = this.$util.getUrlToStr(`/${route}`, options)
 					this.updateUserItem({
 						key: 'loginPage',
@@ -457,7 +454,6 @@
 					if (!this.pMust) return
 					this.$refs.show_info_item.open()
 				} catch (e) {
-					console.log(e, '============> authWxLogin')
 				} finally {
 					this.lockTap = false
 				}

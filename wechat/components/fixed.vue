@@ -9,6 +9,8 @@
 </template>
 
 <script>
+
+	import { getSystemInfo } from '@/utils/systemInfo.js';
 	export default {
 		name: 'fixed',
 		props: {
@@ -39,7 +41,7 @@
 		},
 		data() {
 			return {
-				height: uni.getSystemInfoSync().windowWidth * 100 / 750
+				height: getSystemInfo().windowWidth * 100 / 750
 			}
 		},
 		mounted() {

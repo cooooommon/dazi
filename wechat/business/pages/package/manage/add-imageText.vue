@@ -94,7 +94,6 @@
 			this.initIndex()
 			this.introduce = this.$util.getPage(-1).param.introduce
 			this.list = this.$util.getPage(-1).param.introduce_text || []
-			console.log(this.list)
 		},
 		methods: {
 			...mapActions(['getConfigInfo']),
@@ -136,10 +135,8 @@
 						sizeType: ['compressed']
 					}
 					param.sourceType = type == 2 ? ['camera'] : ['album']
-					console.log(type ,param )
 					let [res_upload, res_info] = await uni.chooseImage(param);
 					if (res_upload) return
-					console.log(res_info)
 					let {
 						size = 0,
 							tempFiles,

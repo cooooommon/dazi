@@ -394,7 +394,6 @@
 				let {
 					realtime_location = 0
 				} = this.configInfo
-				console.log(refresh, realtime_location, changeAddr ,'============')
 				if (this.param.page == 1) {
 					// #ifdef APP-PLUS
 					if (!locaRefuse && ((!location.lat || (location.lat && location.address == '暂未获取到位置信息')) || (
@@ -416,7 +415,6 @@
 							return
 						}
 						// #endif
-						console.log(coach_status, coach_position, '===========> getList')
 						if (coach_status == 2 && coach_position) {
 							let {
 								lat: change_lat,
@@ -545,7 +543,6 @@
 			},
 			// diy 轮播图/广告图跳转
 			goDiyBanner(e, index, type) {
-				console.log(e, index)
 				// connect_type 1查看大图，2文章
 				let {
 					connect_type = '',
@@ -725,14 +722,12 @@
 					return
 				}
 				// #endif  
-				console.log('选择地区=========> ')
 				let location = await this.$util.chooseLocation(1)
 				let {
 					lat,
 					lng
 				} = location
 				if (!lat) return
-				console.log('选择地址=========> ',location)
 				this.updateUserItem({
 					key: 'location',
 					val: location

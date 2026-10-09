@@ -604,7 +604,6 @@
 			},
 			// 预约
 			async toOrder(index, is_work) {
-				console.log(index, is_work)
 				if (is_work == 0) return
 				let {
 					id: coach_id,
@@ -613,7 +612,6 @@
 				let {
 					place_order_path
 				} = this.configInfo
-				console.log(this.lockTap, 12121212)
 				// if (!user_id) return
 				let {
 					id: service_id

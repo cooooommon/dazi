@@ -586,7 +586,6 @@
 				let that = this
 				// #ifdef H5
 				this.$jweixin.getScanQRCode().then(res => {
-					console.log(res)
 					var result = res.resultStr; // 当 needResult 为 1 时，扫码返回的结果
 					var resultArr = result.split(','); // 扫描结果以逗号分割数组(一维码)
 					var codeContent = resultArr[resultArr.length - 1]; // 获取数组最后一个元素，也就是最终的内容 
@@ -665,7 +664,6 @@
 					// let pages = getCurrentPages(); //当前页面栈
 					// if (pages.length > 1) {
 					// 	var beforePage = pages[pages.length - 2]; //获取上一个页面实例对象  
-					// 	console.log(beforePage.$page.fullPath)
 					// 	if(beforePage.$page.fullPath.indexOf('business/pages/manage/index') != -1 
 					// 	|| beforePage.$page.fullPath.indexOf('business/pages/manage/order/list') != -1
 					// 	|| beforePage.$page.fullPath.indexOf('business/pages/manage/order/detail') != -1){

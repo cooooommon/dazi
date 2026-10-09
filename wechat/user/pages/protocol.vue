@@ -54,7 +54,6 @@
 				this.initIndex(true)
 			},
 			linkpress(res) {
-				console.log("linkpress", res);
 				// #ifdef APP-PLUS
 				this.$util.goUrl({
 					url: res.href,

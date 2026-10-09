@@ -460,9 +460,6 @@
 								this.status = 2
 							}, 1000)
 						} catch (e) {
-							this.$util.showToast({
-								title: `支付失败`
-							})
 							setTimeout(() => {
 								this.lockTap = false
 								this.$util.goUrl({

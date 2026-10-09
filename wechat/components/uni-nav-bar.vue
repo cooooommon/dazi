@@ -26,6 +26,7 @@
 
 <script>
 	import uniStatusBar from '@/components/uni-status-bar.vue';
+	import { getSystemInfo } from '@/utils/systemInfo.js';
 	export default {
 		components: {
 			uniStatusBar
@@ -149,7 +150,7 @@
 		},
 		data() {
 			return {
-				navBarHeight: uni.getSystemInfoSync().statusBarHeight * 1 + 44
+				navBarHeight: getSystemInfo().statusBarHeight * 1 + 44
 			}
 		},
 		methods: {

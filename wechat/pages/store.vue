@@ -472,9 +472,7 @@
 			},
 			// diy 轮播图/广告图跳转
 			goDiyBanner(e, index) {
-				console.log(e, index)
 				// connect_type 1查看大图，2文章
-				console.log(this.configInfo.page[8][index].data.bannerList[e])
 				let {
 					connect_type = '',
 						type_id: id = 0,
@@ -516,7 +514,6 @@
 				let {
 					user_from_switch = 0
 				} = this.configInfo
-				console.log(this.userInfo, user_from_switch , '=======> goDiyBanner')
 				if(!this.userInfo||(this.userInfo && !this.userInfo.phone && !this.userInfo.nickName)){
 					this.$refs.auth_box.toShowAuth()
 				}else if(user_from_switch && this.userInfo.from_type == 1){

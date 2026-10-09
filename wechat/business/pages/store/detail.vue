@@ -563,7 +563,6 @@
 					// #ifndef H5 
 					// #ifdef MP-WEIXIN 
 					try {
-						console.log(qywx_kid, qywx_company_id)
 						wx.openCustomerServiceChat({
 							extInfo: {
 								url: qywx_kid
@@ -585,7 +584,6 @@
 					// #ifdef APP-PLUS
 					let wechat = null
 					plus.share.getServices(res => {
-						console.log(res, "==============res")
 						wechat = res.find(i => i.id === 'weixin')
 						if (wechat) {
 							wechat.openCustomerServiceChat({
@@ -667,10 +665,8 @@
 					summary,
 					imageUrl,
 					success: function(res) {
-						console.log("success:" + JSON.stringify(res));
 					},
 					fail: function(err) {
-						console.log("fail:" + JSON.stringify(err));
 					}
 				});
 				// #endif
@@ -720,7 +716,6 @@
 			
 			const query = uni.createSelectorQuery().in(this);
 			query.select('.tab-box').boundingClientRect(res => {
-				// console.log(res , this.configInfo.navBarHeight)
 				if(res.top == this.configInfo.navBarHeight){
 					this.tabBgShow = true
 				}else{

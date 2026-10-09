@@ -308,7 +308,6 @@
 			this.initIndex()
 		},
 		onShow(){
-			console.log(this.scroll, '=======> onShow')
 			if(!this.scroll[0] && !this.scroll[1] && this.isLoad){
 				this.$util.showLoading()
 				this.options.url = 0
@@ -352,7 +351,6 @@
 						is_seckill
 					})
 				}catch(e){
-					console.log(e, '=============> error')
 					this.isPage = true
 					this.isLoad = false
 					return
@@ -439,7 +437,6 @@
 				// #endif
 			},
 			goUrl(type = 0) {
-				console.log(this.options.pid)
 				if(type == 1 && this.detail.is_seckill == 1){
 					this.$util.goUrl({
 						url: `/business/pages/store/detail?id=${this.detail.store.id}`
@@ -535,10 +532,8 @@
 					summary,
 					imageUrl,
 					success: function(res) {
-						console.log("success:" + JSON.stringify(res));
 					},
 					fail: function(err) {
-						console.log("fail:" + JSON.stringify(err));
 					}
 				});
 				// #endif
@@ -570,10 +565,8 @@
 			uni.stopPullDownRefresh()
 		},
 		onPageScroll(e) {
-			console.log(e ,'===========> onPageScroll',this.scroll)
 			const query = uni.createSelectorQuery().in(this);
 			query.select('.tab-box').boundingClientRect(res => {
-				// console.log(res , this.configInfo.navBarHeight)
 				if(res.top == this.configInfo.navBarHeight){
 					this.tabBgShow = true
 				}else{

@@ -337,7 +337,6 @@
 				await this.getList(1)
 			},
 			handerTabChange(index) {
-				console.log(index, '=========>handerTabChange')
 				this.updateFindItem({
 					key: 'activeIndex',
 					val: index
@@ -372,7 +371,6 @@
 			},
 			async selectConfirm(e, type) {
 				this.$util.showLoading()
-				console.log(e, type)
 				let param = this.$util.deepCopy(this.param)
 				if (type == 'price') {
 					param = {
@@ -389,7 +387,6 @@
 				})
 
 				await this.updateList(param)
-				console.log(this.list.data)
 				this.$util.hideAll()
 			},
 			async updateList(param) {
@@ -399,7 +396,6 @@
 						setTimeout(() => {
 							uni.createSelectorQuery().select('.content' + index)
 								.boundingClientRect(data => { //目标位置的节点，类class或者id
-									console.log(data, '目标位置的节点，类class或者id')
 									item.isMore = data && data.height > 66 ? true : false
 									item.textHeight = data ? data.height : 0
 								}).exec();
@@ -616,7 +612,6 @@
 							let list = this.$util.deepCopy(this.list)
 							list.data[index].isEllipsis = !list.data[index].isEllipsis
 							list.data[index].isMore = !list.data[index].isMore
-							console.log(list.data, index)
 							this.updateFindItem({
 								key: 'list',
 								val: list

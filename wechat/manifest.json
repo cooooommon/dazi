@@ -20,6 +20,7 @@
         "optimization" : {
             "subPackages" : true
         },
+        "lazyCodeLoading" : "requiredComponents",
         "plugins" : {},
         "permission" : {
             "scope.userLocation" : {
@@ -32,7 +33,6 @@
             "startLocationUpdate",
             "onLocationChange"
         ],
-        "navigateToMiniProgramAppIdList" : [],
         "preloadRule" : {},
         "uniStatistics" : {
             "enable" : false

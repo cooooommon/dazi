@@ -671,7 +671,6 @@
 				for (let key in this.param) {
 					this.param[key] = data[key]
 				}
-				console.log(this.tradeweek, '=========> this.tradeweek')
 			},
 			async getStore() {
 				let data = await this.$api.business.getStore()
@@ -790,7 +789,6 @@
 						let endFlag = false
 						let week = this.tradeweek.arr
 						if (week.length == 1 || week[0] === week[1]) {
-							console.log(oldEndTime, newEndTime)
 							if (newStartTime >= newEndTime) {
 								return `开始时间不能大于结束时间`
 							} else if (oldStartTime > newStartTime) {
@@ -853,7 +851,6 @@
 					} = item
 					if (name == 'sku') {
 						param[name] = ''
-						console.log(item, this.validateSku())
 						item.errorMsg = this.validateSku()
 						if (!item.errorMsg) {
 							param[name] = this.skuList
@@ -875,7 +872,6 @@
 				return message;
 			},
 			async submit() {
-				console.log(this.param)
 				let param = this.$util.deepCopy(this.param)
 				let msg = this.validate(param);
 				if (msg) {
@@ -904,7 +900,6 @@
 					})
 				}
 				param.use_trade_week = newWeekArr
-				console.log(param, '========> param')
 				this.$util.showLoading()
 				if(this.lockTap) return
 				this.lockTap = true
@@ -997,11 +992,9 @@
 			},
 			onDateConfirm(data, type) {
 				this.param[type] = data.value
-				console.log(data, type, this.param)
 			},
 			onTimeConfirm(data, type) {
 				this.param[type] = data.result
-				console.log(data, type, this.param)
 			},
 			reservationChange(type) {
 				if (type == 'add') {
@@ -1025,13 +1018,11 @@
 				} = this.tradeweek
 
 				if ((start != '' && end != '') || (start == '' && end == '')) {
-					console.log(start, end, String(index), '-----')
 					this.tradeweek.start = String(index)
 					this.tradeweek.end = ''
 					this.tradeweek.arr = String(index)
 					this.tradeweek.line = ''
 				} else if (start != '' && end == '') {
-					console.log(start, end, index, '+++++++')
 					this.tradeweek.end = String(index)
 					if (start == index) {
 						this.tradeweek.arr = String(index)
@@ -1045,7 +1036,6 @@
 					}
 				}
 
-				console.log(index, this.tradeweek)
 			},
 			async updateSku(type,index){
 				let {

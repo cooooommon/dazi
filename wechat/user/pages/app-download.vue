@@ -27,6 +27,8 @@
 </template>
 
 <script>
+
+	import { getSystemInfo } from '@/utils/systemInfo.js';
 	import {
 		mapState,
 		mapActions,
@@ -37,7 +39,7 @@
 			return {
 				isLoad: false,
 				options: {},
-				isIos: uni.getSystemInfoSync().system.includes('iOS'),
+				isIos: getSystemInfo().system.includes('iOS'),
 				isWechatAgent: true,
 				detail: {},
 			}
@@ -70,7 +72,6 @@
 			toDownLoad() {
 				let key = this.isIos ? 'ios_link' : 'android_link'
 				let url = this.detail[key]
-				console.log(url, "==========toDownLoad")
 				window.location.href = url
 			}
 		}

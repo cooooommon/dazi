@@ -393,7 +393,6 @@
 						}
 					})
 				}
-				console.log('===========> changeOnAddr')
 			},
 			noChangeLoca(newval, oldval) {
 				setTimeout(() => {
@@ -405,7 +404,6 @@
 					let {
 						noloca
 					} = this.noChangeLoca
-					console.log(noloca && ((!lat && !lng) || !unix || (unix && cur_unix - unix >= 1)) , '============> noChangeLoca')
 					let cur_unix = this.$util.DateToUnix(this.$util.formatTime(new Date(), 'YY-M-D h:m:s'))
 					if (noloca && ((!lat && !lng) || !unix || (unix && cur_unix - unix >= 1))) {
 						this.toResetChangeLoca()
@@ -478,9 +476,7 @@
 			let {
 				lat: locaLat = 0
 			} = this.location
-			console.log(locaLat ,this.pageActive ,this.locaRefuse,'=======> locaLat')
 			if (!locaLat && this.pageActive && !this.locaRefuse) {
-				console.log(locaLat ,'=======> locaLat')
 				let {
 					lng = 0,
 						lat = 0
@@ -845,7 +841,6 @@
 			},
 			// diy 轮播图/广告图跳转
 			goDiyBanner(e, index, type) {
-				console.log(e, index)
 				// connect_type 1查看大图，2文章
 				let {
 					connect_type = '',
@@ -909,7 +904,6 @@
 				if(isPage && !storeplus) {
 					return 
 				}
-				console.log(this.userInfo, user_from_switch ,'===========> showTechnician')
 				if(!this.userInfo || (this.userInfo && !this.userInfo.phone && !this.userInfo.nickName)){
 					this.$refs.auth_box.toShowAuth()
 				} else if(user_from_switch && this.userInfo.from_type == 1){
@@ -937,7 +931,6 @@
 				let {
 					userInfo
 				} = this
-				console.log(this.isGzhLogin, '=========> toConfirmGoUrl')
 				if(url == '/technician/pages/apply' && coach_status!=-1){
 					if(!userInfo || (userInfo && !userInfo.phone && !userInfo.nickName)){
 						this.$util.toAsyncLogin()
@@ -1098,7 +1091,6 @@
 				let {
 					user_from_switch = 0
 				} = this.configInfo
-				console.log(this.userInfo, user_from_switch ,'===========> showTechnician')
 				if(!this.userInfo || (this.userInfo && !this.userInfo.phone && !this.userInfo.nickName)){
 					this.$refs.auth_box.toShowAuth()
 				}else if(user_from_switch && this.userInfo.from_type == 1){
@@ -1154,7 +1146,6 @@
 				})
 			},
 			toSearch(e) {
-				console.log(e, this.searchName)
 				clearTimeout(play)
 				this.searchName = e
 				play = setTimeout(async () => {

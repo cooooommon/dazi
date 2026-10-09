@@ -197,20 +197,17 @@
 				// let param = {
 				// 	count: imgsize == 1 ? 1 : imgsize - imagelist.length * 1,
 				// }
-				console.log(imgsize ,imagelist.length * 1)
 				if (is_upload_img) {
 					param.sizeType = ['compressed']
 				}
 				param.sourceType = sourceType == 1 ? ['camera', 'album'] : ['camera']
 				let [res_upload, res_info] = await uni[chooseModel](param)
 				if (res_upload) return
-				console.log(res_info, "=====upload res_info")
 				let {
 					size = 0,
 						tempFiles,
 						tempFilePath = ''
 				} = res_info
-				console.log(filetype,is_upload_img, size, size / 1024 / 1024, "=====size")
 				if (filetype == 'video' && size / 1024 / 1024 > videoSize) {
 					this.$util.showToast({
 						title: `上传视频大小超过限制${videoSize}M`
@@ -232,7 +229,6 @@
 				this.$util.showLoading({
 					title: "上传中"
 				});
-				console.log("======tempFiles", tempFiles)
 				if (is_upload_img) {
 					let arr = tempFiles.map(item => {
 						return item.path
@@ -246,11 +242,9 @@
 							pixels: 1000000, // 最大分辨率，默认二百万
 							quality: 0.5
 						}).then(res => {
-							// console.log(res, "=============== wCompress res")
 							this.$util.hideAll()
 							this.toCompressImg(res, imgtype, imgsize, imagelist)
 						}).catch(e => {
-							console.log(e)
 							this.$util.hideAll()
 						})
 					} else {
@@ -265,7 +259,6 @@
 							type: this.filetype
 						}
 					})
-					console.log(path, "=====video path", imagelist)
 					imagelist.push({
 						path
 					})

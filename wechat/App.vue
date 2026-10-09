@@ -23,12 +23,10 @@
 				window.location.href = window.location.href.replace("#", "?#")
 			}
 			// #endif
-			console.log('App mounted')
 		},
 		async onLaunch() {
 			let that = this
 			uni.onLocationChange((res) => {
-				// console.log("====onLocationChange", res)
 				let {
 					latitude: lat,
 					longitude: lng
@@ -93,7 +91,6 @@
 			// #ifdef MP-WEIXIN
 			await this.getPrivacySetting()
 			// #endif 
-			console.log('App onLaunch')
 		},
 		async onShow() {
 			// #ifdef MP-WEIXIN
@@ -133,7 +130,6 @@
 			})
 		},
 		async onHide() {
-			console.log('App Hide')
 			// #ifdef H5 
 			let {
 				status = 0,
@@ -233,13 +229,9 @@
 			},
 			locationChange(newVal, oldVal) {
 				if (newVal) {
-					uni.startLocationUpdate({
-						complete: msg => console.log(`startLocationUpdate API complete`, msg)
-					})
+					uni.startLocationUpdate()
 				} else {
-					uni.stopLocationUpdate({
-						complete: msg => console.log(`stopLocationUpdate API complete`, msg)
-					})
+					uni.stopLocationUpdate()
 				}
 			},
 			coach_travel_order_id(newVal, oldVal) {
@@ -419,7 +411,6 @@
 					key: 'old_channel_menu_name',
 					val: cName
 				})
-				// console.log(this.$t('action.attendantName'), this.$i18n.messages.zh, "=====");
 			}
 		}
 	}

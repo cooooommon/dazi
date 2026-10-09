@@ -50,6 +50,8 @@
 </template>
 
 <script>
+
+	import { getSystemInfo } from '@/utils/systemInfo.js';
 	import {
 		mapState
 	} from "vuex"
@@ -81,7 +83,7 @@
 		},
 		data() {
 			return {
-				statusBarHeight: uni.getSystemInfoSync().statusBarHeight,
+				statusBarHeight: getSystemInfo().statusBarHeight,
 				videoContexts: {},
 				playVideo: false,
 				current: 0
@@ -111,7 +113,6 @@
 				// 	this.current = 1
 				// 	this.videoContexts.pause()
 				// 	this.playVideo = false;
-				// 	console.log(e,"======swiperTransition")
 				// }
 				// // #endif
 			},

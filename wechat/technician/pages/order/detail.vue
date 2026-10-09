@@ -487,7 +487,6 @@
 			timeCountEnd(){
 				this.$util.log("倒计时完了")
 				setTimeout(() => {
-					console.log(this.detail.pay_type)
 					if(this.detail.pay_type == 7){
 						this.detail.end_service_time = -1
 					}

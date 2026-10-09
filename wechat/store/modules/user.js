@@ -79,7 +79,6 @@ export default {
 					id: mine_id = -1,
 					isEmpty = false
 				} = val
-				console.log(isEmpty, '========> isEmpty')
 				if (mine_id == -1) {
 					let stoerArr = ['userInfo', 'appLogin', 'loginType', 'loginPage', 'isShowLogin',
 						'isGzhLogin'
@@ -97,21 +96,18 @@ export default {
 						uni.setStorageSync(key, key == 'isShowLogin' ? true : '')
 					})
 				}
-				console.log(state.mineInfo,'========> jin mineInfo')
 			}
 
 			if (['mineInfo','autograph', 'userInfo', 'location', 'appLogin', 'loginType', 'isShowLogin', 'loginPage', 'isGzhLogin']
 				.includes(key)) {
 				uni.setStorageSync(key, val)
 			}
-			console.log(key ,uni.getStorageSync('loginPage'),'========> jin mineInfo')
 			if (key === 'locationChange' && val == true) {
 				let locationChangeUnix = $util.DateToUnix($util.formatTime(new Date(), 'YY-M-D h:m:s'))
 				state.locationChangeUnix = locationChangeUnix
 			}
 			
 			// #ifdef APP-PLUS
-			console.log('========> jin APP')
 			if (key === 'location') {
 				let locaRefuse = !val || (val && !val.lat && !val.lng) ? true : false
 				state.locaRefuse = locaRefuse
@@ -161,12 +157,10 @@ export default {
 				empty = true
 			} = param ? param : { empty: true }
 			data.isEmpty = empty
-			console.log(data,param, '=========> mineInfo')
 			commit('updateUserItem', {
 				key: 'mineInfo',
 				val: data
 			})
-			console.log(state.userInfo, '=========> state.userInfo')
 			if(!state.userInfo){
 				state.userInfo = {
 					from_type: data ? data.from_type : 1

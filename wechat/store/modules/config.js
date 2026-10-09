@@ -1,12 +1,13 @@
 import $util from "@/utils/index.js"
 import $api from "@/api/index.js"
+import { getSystemInfo } from "@/utils/systemInfo.js"
 export default {
 	state: {
 		old_attendant_name: '向导',
 		configInfo: {
 			id: 0,
-			isIos: uni.getSystemInfoSync().system.includes('iOS'),
-			navBarHeight: uni.getSystemInfoSync().statusBarHeight * 1 + 44,
+			isIos: getSystemInfo().system.includes('iOS'),
+			navBarHeight: getSystemInfo().statusBarHeight * 1 + 44,
 			curSysHeight: '',
 			tabbarHeight: '',
 			methodObj: {
@@ -98,7 +99,6 @@ export default {
 			}];
 			play_method.map(item => {
 				state.audioBg[item.method](() => {
-					console.log('bg=>', item.msg)
 					state.playBg = item.status;
 				})
 			})

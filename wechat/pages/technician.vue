@@ -271,7 +271,6 @@
 				pageActive,
 				changeAddr
 			} = this
-			console.log(changeAddr,this.location, '==============> changeAddr')
 			let {
 				realtime_location = 0
 			} = this.configInfo
@@ -541,14 +540,12 @@
 					return
 				}
 				// #endif  
-				console.log('选择地区=========> ')
 				let location = await this.$util.chooseLocation(1)
 				let {
 					lat,
 					lng
 				} = location
 				if (!lat) return
-				console.log('选择地址=========> ',location)
 				this.updateUserItem({
 					key: 'location',
 					val: location
@@ -618,7 +615,6 @@
 							return
 						}
 						// #endif
-						console.log(coach_status, coach_position, '===========> getList')
 						if (coach_status == 2 && coach_position) {
 							let {
 								lat: change_lat,

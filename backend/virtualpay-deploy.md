@@ -79,6 +79,7 @@ MP 后台【虚拟支付 → 基础配置】：配置**小程序简称**、开�
 
 - 日志：`backend/runtime/virtualpay.log`（create 签名参数、notify 原文、query_response 平台返回）。
 - 拉起支付报签名错误：核对 `app_key` 是否为**现网** AppKey、`session_key` 是否过期（重进小程序刷新）。
+- 拉起支付报 `-15009 COIN_NOT_PUBLISH`：MP 后台【代币配置】未「发布」（改比例后需重新发布，变更可能需审核），发布完成后再试。
 - 支付成功但未发货：看日志有无推送原文；查单兜底会自动补（代币充值属现金单，可用 query_order 查询）。
 - 彻底关闭虚拟支付：`UPDATE ims_virtualpay_config SET enabled=0 WHERE uniacid=666;`（恢复原微信支付，无需改代码）。
 

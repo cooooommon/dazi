@@ -229,15 +229,12 @@
 				},50)
 			},
 			onPlay(e) {
-				console.log('onPlay', e)
 			},
 			onPause(e) {
-				console.log('onPause', e)
 				this.videoContexts.pause()
 				// this.playVideo = false
 			},
 			onEnded(e) {
-				console.log('onEnded', e)
 				// #ifndef APP-NVUE
 				this.videoContexts.pause()
 				this.playVideo = false

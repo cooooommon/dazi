@@ -585,9 +585,6 @@
 							this.lockTap = false;
 							this.$util.back()
 						} catch (e) {
-							this.$util.showToast({
-								title: `支付失败`
-							})
 							this.lockTap = false;
 							return;
 						}
@@ -668,7 +665,6 @@
 					// #ifdef APP-PLUS
 					let wechat = null
 					plus.share.getServices(res => {
-						console.log(res, "==============res")
 						wechat = res.find(i => i.id === 'weixin')
 						if (wechat) {
 							wechat.openCustomerServiceChat({

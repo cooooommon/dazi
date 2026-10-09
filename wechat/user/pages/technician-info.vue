@@ -561,7 +561,6 @@
 					// #ifdef APP-PLUS
 					let wechat = null
 					plus.share.getServices(res => {
-						console.log(res, "==============res")
 						wechat = res.find(i => i.id === 'weixin')
 						if (wechat) {
 							wechat.openCustomerServiceChat({
@@ -790,7 +789,6 @@
 			}
 		},
 		onPageScroll(e) {
-			console.log(e)
 		}
 	}
 </script>

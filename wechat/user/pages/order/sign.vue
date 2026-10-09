@@ -18,6 +18,8 @@
 </template>
 
 <script>
+
+	import { getSystemInfo } from '@/utils/systemInfo.js';
 	import {
 		mapState,
 		mapMutations
@@ -50,7 +52,7 @@
 				// #endif 
 				const {
 					windowWidth
-				} = uni.getSystemInfoSync()
+				} = getSystemInfo()
 				this.winWidth = windowWidth
 				this.$util.setNavigationBarColor({
 					bg: this.primaryColor

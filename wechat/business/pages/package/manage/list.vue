@@ -186,7 +186,6 @@
 				this.getList()
 			},
 			toSearch(data){
-				console.log(data)
 				clearTimeout(timer)
 				timer = setTimeout(() => {
 					this.param.page = 1

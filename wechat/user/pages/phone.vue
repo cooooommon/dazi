@@ -113,7 +113,6 @@
 						pageArr,
 						loginPage
 					} = this
-					console.log(loginPage, "===========loginPage")
 					let url = loginPage || `/pages/service`
 					let split_url = url.split('?')[0]
 					let isReLaunch = forcetype == 1 || pageArr.includes(split_url)
@@ -195,7 +194,6 @@
 							pageArr
 						} = this
 						let url = loginPage || `/pages/service`
-						// console.log(this.loginPage, loginPage, "====loginPage phone-page")
 						let split_url = url.split('?')[0]
 						let isReLaunch = pageArr.includes(split_url)
 						let openType = isReLaunch ? `reLaunch` : `navigateBack`

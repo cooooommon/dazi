@@ -111,7 +111,6 @@
 		},
 		watch: {
 			refresh(oldValue, newValue){
-				console.log(oldValue, newValue , '=============> oldValue, newValue')
 				if(oldValue == -1){
 					this.time = {
 						h: '00',
@@ -190,7 +189,6 @@
 				if (!this.configInfo.id) {
 					await this.getConfigInfo()
 				}
-				console.log("======toInitPlay")
 
 				let {
 					countdown_voice
@@ -202,28 +200,22 @@
 					key: 'isHaveAudio',
 					val: true
 				})
-				console.log(this.audioBg, "=======this.audioBg")
 
 				this.audioBg.onPlay(() => {
-					console.log('onPlay')
 					this.playBg = true
 				})
 				this.audioBg.onStop(() => {
-					console.log('onStop')
 					this.playBg = false
 				})
 				this.audioBg.onError(() => {
-					console.log('onError')
 					this.playBg = false
 					this.audioBg.destroy()
 				})
 				this.audioBg.onEnded(() => {
-					console.log('onEnded')
 					this.playBg = false
 				})
 			},
 			toPlay() {
-				console.log("=====toPlay", this.playBg, this.audioBg)
 				if (this.playBg) {
 					this.audioBg.stop()
 				}

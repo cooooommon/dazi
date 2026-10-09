@@ -409,7 +409,6 @@
 				if(max_price){
 					param.max_price = max_price
 				}
-				console.log(param, this.sexId)
 				this.$emit('changeParams', param)
 			},
 			toReset(){

@@ -321,7 +321,6 @@
 					// 	})
 					// }
 					this.orderInfo = data
-					console.log(this.orderInfo , '===========》 ')
 					this.lockTap = false
 				} catch (e) {
 					this.lockTap = false
@@ -417,9 +416,6 @@
 								})
 							}, 1000)
 						} catch (e) {
-							this.$util.showToast({
-								title: `支付失败`
-							})
 							setTimeout(() => {
 								this.lockTap = false
 								this.$util.goUrl({

@@ -12,6 +12,8 @@
 </template>
 
 <script>
+
+	import { getSystemInfo } from '@/utils/systemInfo.js';
 	import {
 		mapState,
 		mapActions,
@@ -41,7 +43,7 @@
 		}),
 		async mounted() {
 			let that = this;
-			let sysheight = uni.getSystemInfoSync().windowHeight
+			let sysheight = getSystemInfo().windowHeight
 			let {
 				navBarHeight
 			} = that.configInfo

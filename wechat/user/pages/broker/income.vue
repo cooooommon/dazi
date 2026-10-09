@@ -284,7 +284,6 @@
 					})
 					return
 				}
-				console.log(val)
 				this.check_time[showKey] = val.result
 				// if(showKey == 'end_time'){
 				// 	this.chooseInd = -1

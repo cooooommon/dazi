@@ -294,7 +294,6 @@
 					setTimeout(() => {
 						uni.createSelectorQuery().select('.content' + index).boundingClientRect(
 							data => { //目标位置的节点，类class或者id
-								console.log(data, '目标位置的节点，类class或者id')
 								if(data){
 									item.isMore = data.height > 66 ? true : false
 									item.textHeight = data ? data.height : 0

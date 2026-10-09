@@ -468,7 +468,6 @@
 				let {
 					is_member
 				} = this
-				console.log(coupon_id, '==============> coupon_id')
 				let [data, mineInfo] = await Promise.all([this.$api.order.payOrderInfo({
 					is_store,
 					service_id: ser_id,
@@ -904,9 +903,6 @@
 								})
 							}, 1000)
 						} catch (e) {
-							this.$util.showToast({
-								title: `支付失败`
-							})
 							setTimeout(() => {
 								this.lockTap = false
 								this.$util.goUrl({

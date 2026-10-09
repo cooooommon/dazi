@@ -690,7 +690,6 @@
 				this.showStartTime = true
 			},
 			onConfirm(e, type){
-				console.log(e ,'=======> onConfirm')
 				
 				this.param.start_time = e.start || '00:00'
 				this.param.end_time = e.end || '00:00'

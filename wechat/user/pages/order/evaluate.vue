@@ -165,7 +165,6 @@
 			},
 			bindInput(e) {
 				let that = this
-				console.log(e)
 				this.$nextTick(function() {
 					that.param.text = e.detail.value.substring(0, 300);
 				})

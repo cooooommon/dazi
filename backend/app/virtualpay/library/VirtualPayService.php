@@ -96,24 +96,17 @@ class VirtualPayService
             ->order('id', 'desc')
             ->select()
             ->toArray();
-
         foreach ($old_orders as $old) {
-
             if ($old['status'] == 0) {
-
                 self::queryAndDeliver($uniacid, $old);
-
                 $old['status'] = intval(Db::name('virtualpay_order')->where(['id' => $old['id']])->value('status'));
             }
-
             if ($old['status'] == 1) {
-
                 self::fail('订单已支付，请勿重复支付');
             }
         }
 
         if (empty($openid)) {
-
             self::fail('虚拟支付缺少用户 openid');
         }
 
@@ -122,7 +115,6 @@ class VirtualPayService
             ->value('session_key');
 
         if (empty($session_key)) {
-
             self::fail('支付会话已失效，请退出小程序重新进入后再支付');
         }
 
