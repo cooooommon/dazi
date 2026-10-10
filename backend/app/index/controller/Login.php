@@ -227,6 +227,10 @@ class Login
 
         $user_info['from_type'] = empty($from_type) ? 1 : $from_type;
 
+        //is_blacklist 转整数返回：PDO 会把 tinyint 序列化为字符串 "0"/"1"，
+        //前端 if(is_blacklist) 对字符串 "0" 判真，会把正常用户误拦到 interdict 页
+        $user_info['is_blacklist'] = intval($user_info['is_blacklist'] ?? 0);
+
         setCache($key, $user_info, 86400 * 3, 999999999999);
 
         $arr = [
@@ -653,6 +657,9 @@ class Login
         $from_type = UserFrom::getFromValue($user_info['id']);
 
         $user_info['from_type'] = empty($from_type) ? 1 : $from_type;
+
+        //is_blacklist 转整数返回（同小程序登录，避免前端字符串判真误拦）
+        $user_info['is_blacklist'] = intval($user_info['is_blacklist'] ?? 0);
 
         setCache($key, $user_info, 86400 * 3, 999999999999);
 
