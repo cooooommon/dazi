@@ -105,7 +105,7 @@ const wxLogin = async function() {
 			val: data.autograph
 		})
 		// 加入黑名单后 禁止进入
-		if(data.data.is_blacklist){
+		if(data.data.is_blacklist == 1){
 			$util.goUrl({url: `/pages/interdict`, openType: 'reLaunch'})
 			return data
 		}
@@ -227,7 +227,7 @@ const gzhLogin = async function() {
 				val: data.autograph
 			})
 			// 加入黑名单后 禁止进入
-			if(data.data.is_blacklist){
+			if(data.data.is_blacklist == 1){
 				$util.goUrl({url: `/pages/interdict`, openType: 'reLaunch'})
 			}
 			return data;
@@ -313,7 +313,7 @@ const appLogin = async function() {
 				val: data.autograph
 			})
 			// 加入黑名单后 禁止进入
-			if(data.data.is_blacklist){
+			if(data.data.is_blacklist == 1){
 				$util.goUrl({url: `/pages/interdict`, openType: 'reLaunch'})
 			}
 			return data;
