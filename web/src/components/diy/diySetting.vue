@@ -208,6 +208,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/assets.js'
 import draggable from 'vuedraggable'
 import diyDraggSetting from './diyDraggSetting.vue'
 export default {
@@ -219,9 +220,9 @@ export default {
     return {
       hoverIndex: '',
       showDialog: false,
-      showDialogList: [{ title: '样式一', img: 'https://lbqny.migugu.com/admin/diy/share-poster1.jpeg' }, { title: '样式二', img: 'https://lbqny.migugu.com/admin/diy/share-poster2.jpeg' }],
-      defaultImg: [{ url: 'https://lbqny.migugu.com/admin/diy/default.png' }],
-      posterImg: [{ url: 'https://lbqny.migugu.com/admin/diy/invite-poster.jpg' }]
+      showDialogList: [{ title: '样式一', img: assetUrl('admin/diy/share-poster1.jpeg') }, { title: '样式二', img: assetUrl('admin/diy/share-poster2.jpeg') }],
+      defaultImg: [{ url: assetUrl('admin/diy/default.png') }],
+      posterImg: [{ url: assetUrl('admin/diy/invite-poster.jpg') }]
     }
   },
   name: 'diy-setting',

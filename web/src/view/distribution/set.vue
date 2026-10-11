@@ -81,6 +81,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/assets.js'
 export default {
   data () {
     return {
@@ -115,9 +116,9 @@ export default {
     },
     toReset (type) {
       if (type === 1) {
-        this.subForm.promotion_poster_img = [{ url: 'https://lbqny.migugu.com/admin/peiwan/fx-share1.png' }]
+        this.subForm.promotion_poster_img = [{ url: assetUrl('admin/peiwan/fx-share1.png') }]
       } else {
-        this.subForm.distribution_poster_img = [{ url: 'https://lbqny.migugu.com/admin/anmo/mine/fx-share-down.png' }]
+        this.subForm.distribution_poster_img = [{ url: assetUrl('admin/anmo/mine/fx-share-down.png') }]
       }
       this.submitForm(type)
     },

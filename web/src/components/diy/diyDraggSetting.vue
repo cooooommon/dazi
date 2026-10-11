@@ -378,6 +378,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/assets.js'
 import { mapState } from 'vuex'
 import { get } from '../../api/index'
 import vuedraggable from 'vuedraggable'
@@ -387,7 +388,7 @@ export default {
   },
   data () {
     return {
-      defaultImg: [{ url: 'https://lbqny.migugu.com/admin/diy/default.png' }],
+      defaultImg: [{ url: assetUrl('admin/diy/default.png') }],
       hoverIndex: '',
       tableData: [],
       currentRow: { id: 0, title: '' },

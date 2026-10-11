@@ -17,7 +17,7 @@
       <img
         mode="aspectFill"
         class="king-img abs"
-        src="https://lbqny.migugu.com/admin/anmo/mine/king.gif"
+        :src="$util.assetUrl('admin/anmo/mine/king.gif')"
         v-if="item.coach_type_status === 1"
       />
       <div class="flex-center flex-column">
@@ -28,12 +28,8 @@
             :class="[`${imgType[item.coach_type_status]}-img`]"
             :src="
               item.coach_type_status === 3
-                ? `https://lbqny.migugu.com/admin/anmo/mine/${
-                    imgType[item.coach_type_status]
-                  }.png`
-                : `https://lbqny.migugu.com/admin/anmo/mine/${
-                    imgType[item.coach_type_status]
-                  }.gif`
+                ? `${$util.assetUrl('admin/anmo/mine/')}${imgType[item.coach_type_status]}.png`
+                : `${$util.assetUrl('admin/anmo/mine/')}${imgType[item.coach_type_status]}.gif`
             "
             v-if="item.coach_type_status"
           />
@@ -153,6 +149,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/assets.js'
 export default {
   name: 'coachList',
   props: {
@@ -177,7 +174,7 @@ export default {
       coachList: [{
         user_id: 1,
         coach_name: '赵倩',
-        work_img: 'https://lbqny.migugu.com/admin/anmo/pc/technician1.png',
+        work_img: assetUrl('admin/anmo/pc/technician1.png'),
         is_work: 1,
         star: 5,
         distance: '600m',
@@ -191,7 +188,7 @@ export default {
       }, {
         user_id: 1,
         coach_name: '孙梨',
-        work_img: 'https://lbqny.migugu.com/admin/anmo/pc/technician2.png',
+        work_img: assetUrl('admin/anmo/pc/technician2.png'),
         is_work: 1,
         star: 4,
         distance: '1.88km',
@@ -205,7 +202,7 @@ export default {
       }, {
         user_id: 1,
         coach_name: '周舞',
-        work_img: 'https://lbqny.migugu.com/admin/anmo/pc/technician3.png',
+        work_img: assetUrl('admin/anmo/pc/technician3.png'),
         is_work: 0,
         star: 4.5,
         distance: '3.99km',
@@ -219,7 +216,7 @@ export default {
       }, {
         user_id: 1,
         coach_name: '郑望',
-        work_img: 'https://lbqnyv3.migugu.com/image/666/23/02/89FqhbuQ6h02aDlUGW3gjBnaSoElQ14S.jpg',
+        work_img: assetUrl('image/666/23/02/89FqhbuQ6h02aDlUGW3gjBnaSoElQ14S.jpg'),
         is_work: 0,
         star: 4.9,
         distance: '5.12km',

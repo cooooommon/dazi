@@ -11,7 +11,7 @@
       <div class="rel" style="width: 177px">
         <img
           class="wizard"
-          src="https://lbqny.migugu.com/admin/playwith/service/01.png"
+          :src="$util.assetUrl('admin/playwith/service/01.png')"
           mode="aspectFill"
         />
         <span class="c-base f-sm-title abs wizard-title"
@@ -22,7 +22,7 @@
         <div class="rel">
           <img
             class="business"
-            src="https://lbqny.migugu.com/admin/playwith/service/02.png"
+            :src="$util.assetUrl('admin/playwith/service/02.png')"
             mode="aspectFill"
           />
           <span class="c-base f-sm-title abs business-title">商家入驻</span>
@@ -30,7 +30,7 @@
         <div class="mt-sm rel" style="width: 178px">
           <img
             class="join"
-            src="https://lbqny.migugu.com/admin/playwith/service/03.png"
+            :src="$util.assetUrl('admin/playwith/service/03.png')"
             mode="aspectFill"
           />
           <span class="c-base f-sm-title abs join-title">合作加盟</span>
@@ -41,7 +41,7 @@
       <div class="rel mr-md" style="width: 166px">
         <img
           class="_wizard"
-          :src="`https://lbqny.migugu.com/admin/playwith/service/04.png`"
+          :src="$util.assetUrl('admin/playwith/service/04.png')"
           mode="aspectFill"
         />
         <span class="c-base f-sm-title abs _wizard-title"
@@ -51,7 +51,7 @@
       <div class="rel" style="width: 178px">
         <img
           class="_join"
-          src="https://lbqny.migugu.com/admin/playwith/service/03.png"
+          :src="$util.assetUrl('admin/playwith/service/03.png')"
           mode="aspectFill"
         />
         <span class="c-base f-sm-title abs join-title">合作加盟</span>

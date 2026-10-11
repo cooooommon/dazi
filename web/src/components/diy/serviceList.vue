@@ -64,7 +64,7 @@
               </div>
               <img
                 class="mem-price-img"
-                src="https://lbqny.migugu.com/admin/member/member-bg.png"
+                :src="$util.assetUrl('admin/member/member-bg.png')"
                 mode="aspectFill"
               />
             </div>
@@ -112,6 +112,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/assets.js'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 
 export default {
@@ -124,7 +125,7 @@ export default {
     return {
       serviceList: [{
         title: '酒吧微醺',
-        cover: 'https://lbqny.migugu.com/admin/peiwan/diy-01.jpeg',
+        cover: assetUrl('admin/peiwan/diy-01.jpeg'),
         price: 128,
         total_sale: 10,
         time_long: 20,
@@ -133,7 +134,7 @@ export default {
         member_price: '108'
       }, {
         title: '电影鉴赏',
-        cover: 'https://lbqny.migugu.com/admin/peiwan/diy-02.webp',
+        cover: assetUrl('admin/peiwan/diy-02.webp'),
         price: 88,
         total_sale: 74,
         time_long: 10,
@@ -142,7 +143,7 @@ export default {
         member_price: '68'
       }, {
         title: '酒吧微醺',
-        cover: 'https://lbqny.migugu.com/admin/peiwan/diy-01.jpeg',
+        cover: assetUrl('admin/peiwan/diy-01.jpeg'),
         price: 68,
         total_sale: 16,
         time_long: 20,

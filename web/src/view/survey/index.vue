@@ -367,6 +367,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/assets.js'
 import moment from 'moment'
 import salesEcharts from './salesEcharts'
 export default {
@@ -518,7 +519,7 @@ export default {
             width: 20,
             height: 25,
             anchor: { x: 17, y: 23 },
-            src: 'https://mapapi.qq.com/web/lbs/visualizationApi/demo/img/big.png',
+            src: assetUrl('web/lbs/visualizationApi/demo/img/big.png'),
             color: '#333',
             size: 12,
             direction: 'bottom',

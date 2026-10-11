@@ -125,6 +125,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/assets.js'
 import lbHeader from './header'
 import lbFooter from './footer'
 import sidebar from './sidebar'
@@ -197,15 +198,15 @@ export default {
       authFormRules: {
         pass: { required: true, type: 'string', message: '请输入获取到的激活口令', trigger: 'blur' }
       },
-      modelAuthImg: 'https://lbqny.migugu.com/admin/card/WechatIMG322.jpeg',
+      modelAuthImg: assetUrl('admin/card/WechatIMG322.jpeg'),
       modelAuthList: {
         // https://lbqny.migugu.com/weixin/WechatIMG495.jpeg
-        longbing_card: 'https://lbqny.migugu.com/admin/card/WechatIMG322.jpeg',
-        longbing_radarstore: 'https://lbqny.migugu.com/admin/card/WechatIMG322.jpeg',
-        longbing_decorate: 'https://lbqny.migugu.com/admin/card/WechatIMG322.jpeg',
-        longbing_shortvideo: 'https://lbqny.migugu.com/admin/card/WechatIMG322.jpeg',
-        longbing_restaurant: 'https://lbqny.migugu.com/admin/card/WechatIMG322.jpeg',
-        longbing_member: 'https://lbqny.migugu.com/admin/card/WechatIMG322.jpeg'
+        longbing_card: assetUrl('admin/card/WechatIMG322.jpeg'),
+        longbing_radarstore: assetUrl('admin/card/WechatIMG322.jpeg'),
+        longbing_decorate: assetUrl('admin/card/WechatIMG322.jpeg'),
+        longbing_shortvideo: assetUrl('admin/card/WechatIMG322.jpeg'),
+        longbing_restaurant: assetUrl('admin/card/WechatIMG322.jpeg'),
+        longbing_member: assetUrl('admin/card/WechatIMG322.jpeg')
       },
       userInfo: JSON.parse(window.localStorage.getItem('massage_userInfo'))
     }

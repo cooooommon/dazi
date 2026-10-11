@@ -21,7 +21,7 @@
           <div class="flex">
             <div class="mr-lg">
               <img
-                src="https://lbqny.migugu.com/admin/playwith/service/web-01.png"
+                :src="$util.assetUrl('admin/playwith/service/web-01.png')"
                 alt=""
                 srcset=""
                 style="width: 275px"
@@ -29,7 +29,7 @@
             </div>
             <div>
               <img
-                src="https://lbqny.migugu.com/admin/playwith/service/web-02.png"
+                :src="$util.assetUrl('admin/playwith/service/web-02.png')"
                 alt=""
                 srcset=""
                 style="width: 275px"

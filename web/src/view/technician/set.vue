@@ -269,6 +269,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/assets.js'
 import { mapState } from 'vuex'
 export default {
   data () {
@@ -299,8 +300,8 @@ export default {
     }
     return {
       list: {
-        recommend: [{ title: '样式一', img: 'https://lbqny.migugu.com/admin/anmo/technician/recommend_1_1.jpeg' }, { title: '样式二', img: 'https://lbqny.migugu.com/admin/anmo/technician/recommend_2_1.jpeg' }],
-        format: [{ title: '样式一', img: 'https://lbqny.migugu.com/admin/anmo/technician/list_1.jpeg' }, { title: '样式二', img: 'https://lbqny.migugu.com/admin/anmo/technician/list_2.jpeg' }]
+        recommend: [{ title: '样式一', img: assetUrl('admin/anmo/technician/recommend_1_1.jpeg') }, { title: '样式二', img: assetUrl('admin/anmo/technician/recommend_2_1.jpeg') }],
+        format: [{ title: '样式一', img: assetUrl('admin/anmo/technician/list_1.jpeg') }, { title: '样式二', img: assetUrl('admin/anmo/technician/list_2.jpeg') }]
       },
       showDialog: false,
       dialogType: '',

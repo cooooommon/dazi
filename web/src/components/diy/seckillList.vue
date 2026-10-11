@@ -37,7 +37,7 @@
               广告
             </div>
             <img
-              src="https://lbqnyv3.migugu.com/image/666/23/12/9598b7d980634c96815f9b5043074d54.jpeg"
+              :src="$util.assetUrl('image/666/23/12/9598b7d980634c96815f9b5043074d54.jpeg')"
               class="item-cover"
             />
           </div>
@@ -78,7 +78,7 @@
               <span class="f-caption c-caption text-delete">￥250.98</span>
             </div>
             <img
-              src="https://lbqny.migugu.com/admin/peiwan/seckill-btn-1.png"
+              :src="$util.assetUrl('admin/peiwan/seckill-btn-1.png')"
               alt=""
               class="item-btn-img"
             />

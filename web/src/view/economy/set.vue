@@ -153,6 +153,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/assets.js'
 export default {
   data () {
     let validateTime = (rule, value, callback) => {
@@ -202,7 +203,7 @@ export default {
       this.subForm[key] = img
     },
     toReset () {
-      this.subForm.broker_poster = [{ url: 'https://lbqny.migugu.com/admin/peiwan/invite-poster.png' }]
+      this.subForm.broker_poster = [{ url: assetUrl('admin/peiwan/invite-poster.png') }]
       this.submitForm()
     },
     submitForm () {

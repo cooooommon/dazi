@@ -118,6 +118,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/assets.js'
 export default {
   name: 'serviceList',
   props: {
@@ -148,7 +149,7 @@ export default {
         },
         order_goods: [{
           goods_name: '拔罐祛湿',
-          goods_cover: 'https://lbqnyv3.migugu.com/image/666/23/02/ozPjt1ySlDaQhw85OqnEEJtCy3kds3ux.jpg',
+          goods_cover: assetUrl('image/666/23/02/ozPjt1ySlDaQhw85OqnEEJtCy3kds3ux.jpg'),
           price: 1,
           num: 1,
           can_refund_num: 1,
@@ -167,14 +168,14 @@ export default {
         },
         order_goods: [{
           goods_name: '拔罐祛湿',
-          goods_cover: 'https://lbqnyv3.migugu.com/image/666/23/02/ozPjt1ySlDaQhw85OqnEEJtCy3kds3ux.jpg',
+          goods_cover: assetUrl('image/666/23/02/ozPjt1ySlDaQhw85OqnEEJtCy3kds3ux.jpg'),
           price: 88,
           num: 1,
           can_refund_num: 1,
           true_price: 88
         }, {
           goods_name: '足疗按摩',
-          goods_cover: 'https://lbqnyv3.migugu.com/image/666/23/09/d6j942iDfeqU7GX9g5vfHJV46ffk0xjL.jpeg',
+          goods_cover: assetUrl('image/666/23/09/d6j942iDfeqU7GX9g5vfHJV46ffk0xjL.jpeg'),
           price: 89,
           num: 3,
           can_refund_num: 3,

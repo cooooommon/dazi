@@ -13,6 +13,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/assets.js'
 import LoadEvent from '@/utils/Event.js'
 import Debounce from '@/utils/Debounce.js'
 import Bus from '@/Bus'
@@ -296,7 +297,7 @@ export default {
         } else if (files[i].type === 2) {
           insetHtml = `<audio src="${files[i].url}" controls="controls"></audio>`
         } else if (files[i].type === 3) {
-          insetHtml = `<img width='343' height='220' class='edui-upload-video vjs-default-skin video-js' _url='${files[i].url}' style="background:url(https://lbqny.migugu.com/admin/public/videologo.gif) no-repeat center center; border:1px solid gray;" />`
+          insetHtml = `<img width='343' height='220' class='edui-upload-video vjs-default-skin video-js' _url='${files[i].url}' style="background:url(${assetUrl('admin/public/videologo.gif')}) no-repeat center center; border:1px solid gray;" />`
         } else if (files[i].type === 5) { // iframe标签
           insetHtml = files[i].url
         }

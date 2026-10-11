@@ -5,7 +5,10 @@
  * @LastEditTime: 2023-11-22 15:06:41
  * @LastEditors: wen kun
  */
+import assetUrl from './assets.js'
 export default {
+  // 静态资源地址（走后端域名，不写死）—— 实现在 ./assets.js，模板里用 $util.assetUrl(...)
+  assetUrl,
   debounce (fn, delay = 300) { // 默认300毫秒
     let timer
     return function (...args) {

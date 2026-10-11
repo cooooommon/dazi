@@ -180,7 +180,7 @@ export default {
       let { record_type: type, record_no: no } = data
       if (!no) return
       let recordcode = type === 2 ? no.replace(/[^0-9]/ig, '') : ``
-      let image = type === 1 ? `` : `<image class="mr-sm" src="https://lbqny.migugu.com/admin/public/information.png"></image>`
+      let image = type === 1 ? `` : `<image class="mr-sm" :src="$util.assetUrl('admin/public/information.png')"></image>`
       let href = type === 1 ? `https://beian.miit.gov.cn/` : `https://www.beian.gov.cn/portal/registerSystemInfo?recordcode=${recordcode}`
       this.fHtml = `<div class="flex-y-center c-base">备案号：${image} <a class="c-base" href="${href}" target="_blank">${no}</a></div>`
     },

@@ -17,7 +17,7 @@
         v-for="(item, index) in colNum == 4 ? 8 : 10"
         :key="index"
       >
-        <img src="https://lbqny.migugu.com/admin/diy/default.png" alt="" />
+        <img :src="$util.assetUrl('admin/diy/default.png')" alt="" />
         <div class="flex-center">分类</div>
       </div>
     </div>

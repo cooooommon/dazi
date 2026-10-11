@@ -133,7 +133,7 @@
               <img
                 mode="aspectFill"
                 class="service-page-bg abs"
-                src="https://lbqny.migugu.com/admin/playwith/mine/service-nav-bg.png" /><!--https://lbqny.migugu.com/admin/playwith/mine/service-page-bg.png-->
+                :src="$util.assetUrl('admin/playwith/mine/service-nav-bg.png')" /><!--https://lbqny.migugu.com/admin/playwith/mine/service-page-bg.png-->
               <div style="height: 58px"></div>
 
               <div class="rel" style="z-index:2">
@@ -161,16 +161,16 @@
                   </div> -->         
                   <div class="pt-md pl-md pr-md flex-between module">
                   <div class="rel" style="width: 150px;">
-                      <img class="wizard" src="https://lbqny.migugu.com/admin/playwith/service/01.png" mode="aspectFill"></img>
+                      <img class="wizard" :src="$util.assetUrl('admin/playwith/service/01.png')" mode="aspectFill"></img>
                       <span class="c-base f-title abs wizard-title">{{$t('action.attendantName')}}入驻</span>
                     </div>
                   <div class="">
                     <div class="rel">
-                      <img class="business" src="https://lbqny.migugu.com/admin/playwith/service/02.png" mode="aspectFill"></img>
+                      <img class="business" :src="$util.assetUrl('admin/playwith/service/02.png')" mode="aspectFill"></img>
                       <span class="c-base f-title abs business-title">商家入驻</span>
                     </div>
                     <div class="mt-sm rel" style="width:143px;">
-                        <img class="join" src="https://lbqny.migugu.com/admin/playwith/service/03.png" mode="aspectFill"></img>
+                        <img class="join" :src="$util.assetUrl('admin/playwith/service/03.png')" mode="aspectFill"></img>
                         <span class="c-base f-title abs join-title">合作加盟</span>
                       </div>
                     
@@ -251,8 +251,8 @@
               <!-- <img
                 mode="aspectFill"
                 class="technician-page-bg abs"
-                src="https://lbqny.migugu.com/admin/playwith/mine/technician-page-bg.png" /> -->
-              <div class="technician-page-bg abs" style="background:url(https://lbqny.migugu.com/admin/playwith/mine/technician-nav-bg.png)no-repeat left top / 100%"></div>
+                :src="$util.assetUrl('admin/playwith/mine/technician-page-bg.png')" /> -->
+              <div class="technician-page-bg abs" style="background:url(${assetUrl('admin/playwith/mine/technician-nav-bg.png')})no-repeat left top / 100%"></div>
               <div style="height: 58px"></div>
                 <div class="fix-info ml-md mr-md">
                   <div class="search-info pb-md">
@@ -553,12 +553,13 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/assets.js'
 export default {
   data () {
     return {
-      navbar: 'https://lbqny.migugu.com/admin/diy/navbar_white_none.png',
+      navbar: assetUrl('admin/diy/navbar_white_none.png'),
       banner:
-        'https://lbqnyv3.migugu.com/image/666/23/04/b4dPRgrgoi419KMtPOMpt65M65IltXGR.png',
+        assetUrl('image/666/23/04/b4dPRgrgoi419KMtPOMpt65M65IltXGR.png'),
       colorList: [{
         primaryColor: '#843CFF',
         subColor: '#DF52FF'
@@ -714,7 +715,7 @@ export default {
       serviceList: [{
         title: '密室逃脱',
         sub_title: '游戏',
-        cover: 'https://card-1253902191.cos.ap-chengdu.myqcloud.com/image/666/22/02/ef2f99bc4b0549bcb4903bf6d77d07f5.jpg',
+        cover: assetUrl('image/666/22/02/ef2f99bc4b0549bcb4903bf6d77d07f5.jpg'),
         price: 156,
         total_sale: 16,
         time_long: 4,
@@ -722,7 +723,7 @@ export default {
       }, {
         title: '线下唱歌',
         sub_title: '娱乐',
-        cover: 'https://lbqnyv3.migugu.com/image/666/23/04/b4dPRgrgoi419KMtPOMpt65M65IltXGR.png',
+        cover: assetUrl('image/666/23/04/b4dPRgrgoi419KMtPOMpt65M65IltXGR.png'),
         price: 128,
         total_sale: 10,
         time_long: 10,
@@ -730,7 +731,7 @@ export default {
       }, {
         title: '狼人杀',
         sub_title: '游戏',
-        cover: 'https://lbqnyv3.migugu.com/image/666/23/04/1vL8gb728bCTt4gi7ZoyuLiqgenRXhRe.jpeg',
+        cover: assetUrl('image/666/23/04/1vL8gb728bCTt4gi7ZoyuLiqgenRXhRe.jpeg'),
         price: 168,
         total_sale: 55,
         time_long: 10,
@@ -739,7 +740,7 @@ export default {
       coachList: [{
         user_id: 1,
         coach_name: '赵倩',
-        work_img: 'https://card-1253902191.cos.ap-chengdu.myqcloud.com/image/666/22/02/8b4542f9bb8b48d0a533a227bb0dfec5.jpeg',
+        work_img: assetUrl('image/666/22/02/8b4542f9bb8b48d0a533a227bb0dfec5.jpeg'),
         is_work: 1,
         star: 5,
         distance: '4.89km',
@@ -759,7 +760,7 @@ export default {
       }, {
         user_id: 1,
         coach_name: '李某嬬',
-        work_img: 'https://card-1253902191.cos.ap-chengdu.myqcloud.com/image/666/22/02/ef2f99bc4b0549bcb4903bf6d77d07f5.jpg',
+        work_img: assetUrl('image/666/22/02/ef2f99bc4b0549bcb4903bf6d77d07f5.jpg'),
         is_work: 1,
         star: 4,
         distance: '5.88km',
@@ -779,7 +780,7 @@ export default {
       }, {
         user_id: 1,
         coach_name: '任敏',
-        work_img: 'https://card-1253902191.cos.ap-chengdu.myqcloud.com/image/666/22/09/e6af165706b2454f973a4f4f0e930303.jpg',
+        work_img: assetUrl('image/666/22/09/e6af165706b2454f973a4f4f0e930303.jpg'),
         is_work: 0,
         star: 4.5,
         distance: '7.99km',
@@ -799,7 +800,7 @@ export default {
       }, {
         user_id: 1,
         coach_name: 'selina',
-        work_img: 'https://card-1253902191.cos.ap-chengdu.myqcloud.com/image/666/22/09/e6af165706b2454f973a4f4f0e930303.jpg',
+        work_img: assetUrl('image/666/22/09/e6af165706b2454f973a4f4f0e930303.jpg'),
         is_work: 0,
         star: 4.5,
         distance: '3.99km',
@@ -829,7 +830,7 @@ export default {
         },
         order_goods: [{
           goods_name: '密室逃脱',
-          goods_cover: 'https://card-1253902191.cos.ap-chengdu.myqcloud.com/image/666/22/02/ef2f99bc4b0549bcb4903bf6d77d07f5.jpg',
+          goods_cover: assetUrl('image/666/22/02/ef2f99bc4b0549bcb4903bf6d77d07f5.jpg'),
           price: 1,
           num: 1,
           can_refund_num: 1,
@@ -848,14 +849,14 @@ export default {
         },
         order_goods: [{
           goods_name: '线下唱歌',
-          goods_cover: 'https://lbqnyv3.migugu.com/image/666/23/04/b4dPRgrgoi419KMtPOMpt65M65IltXGR.png',
+          goods_cover: assetUrl('image/666/23/04/b4dPRgrgoi419KMtPOMpt65M65IltXGR.png'),
           price: 1,
           num: 1,
           can_refund_num: 1,
           true_price: 1
         }, {
           goods_name: '狼人杀',
-          goods_cover: 'https://lbqnyv3.migugu.com/image/666/23/04/1vL8gb728bCTt4gi7ZoyuLiqgenRXhRe.jpeg',
+          goods_cover: assetUrl('image/666/23/04/1vL8gb728bCTt4gi7ZoyuLiqgenRXhRe.jpeg'),
           price: 19.5,
           num: 3,
           can_refund_num: 3,

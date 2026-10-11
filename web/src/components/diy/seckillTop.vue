@@ -8,7 +8,7 @@
 <template>
   <div class="flex-between pl-lg pr-lg pt-md seck-top">
     <img
-      src="https://lbqny.migugu.com/admin/peiwan/seckill-text.png"
+      :src="$util.assetUrl('admin/peiwan/seckill-text.png')"
       mode="aspectFill"
       class="seckill-icon"
     />

@@ -121,6 +121,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/assets.js'
 export default {
   name: 'wizardList',
   props: {
@@ -141,7 +142,7 @@ export default {
         text: '阿鲨环球网',
         text_type: 3,
         weight: '48.00',
-        work_img: 'https://lbqnyv3.migugu.com/image/666/23/07/5296dbf3f69a4da18f7acd0496f9caa7.png'
+        work_img: assetUrl('image/666/23/07/5296dbf3f69a4da18f7acd0496f9caa7.png')
       }, {
         age: 24,
         coach_name: '殊荣',
@@ -154,7 +155,7 @@ export default {
         text: '阿鲨环球网',
         text_type: 1,
         weight: '48.00',
-        work_img: 'https://lbqnyv3.migugu.com/image/666/23/07/5296dbf3f69a4da18f7acd0496f9caa7.png'
+        work_img: assetUrl('image/666/23/07/5296dbf3f69a4da18f7acd0496f9caa7.png')
       }],
       textType: {
         1: '可接单',

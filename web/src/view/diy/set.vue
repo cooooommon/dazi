@@ -272,11 +272,12 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/assets.js'
 import { mapState, mapMutations } from 'vuex'
 export default {
   data () {
     return {
-      default_img: 'https://lbqny.migugu.com/admin/anmo/mine/bg.png',
+      default_img: assetUrl('admin/anmo/mine/bg.png'),
       colorList: [
         '#739bc6',
         '#60a06a',

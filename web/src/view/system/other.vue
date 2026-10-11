@@ -334,7 +334,7 @@
       </div>
       <div class="pt-lg pb-lg">
         <img
-          src="https://lbqny.migugu.com/admin/peiwan/place_order1.jpg"
+          :src="$util.assetUrl('admin/peiwan/place_order1.jpg')"
           alt=""
           style="width: 100%"
         />
@@ -346,7 +346,7 @@
       </div>
       <div class="pt-lg pb-lg">
         <img
-          src="https://lbqny.migugu.com/admin/peiwan/place_order2.jpg"
+          :src="$util.assetUrl('admin/peiwan/place_order2.jpg')"
           alt=""
           style="width: 100%"
         />

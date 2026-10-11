@@ -14,7 +14,7 @@
     >
       <div class="store-img radius-15 rel">
         <img
-          src="https://card-1253902191.cos.ap-chengdu.myqcloud.com/image/666/22/09/e6af165706b2454f973a4f4f0e930303.jpg"
+          :src="$util.assetUrl('image/666/22/09/e6af165706b2454f973a4f4f0e930303.jpg')"
           class="store-img radius-15"
         />
         <span

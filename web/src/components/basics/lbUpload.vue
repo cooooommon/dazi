@@ -44,7 +44,7 @@
           <!-- <el-tab-pane label="提取网络视频" name="2">
             <div class="get-network-video">
               <lb-image
-                src="https://lbqny.migugu.com/admin/public/iframe_video.jpeg"
+                :src="$util.assetUrl('admin/public/iframe_video.jpeg')"
               />
               <el-input
                 v-model="networkVideo"

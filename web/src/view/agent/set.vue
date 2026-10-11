@@ -146,6 +146,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/assets.js'
 import moment from 'moment'
 export default {
   data () {
@@ -186,7 +187,7 @@ export default {
       this.subForm[key] = img
     },
     toReset () {
-      this.subForm.bind_technician_img = [{ url: 'https://lbqnyv2.migugu.com/bianzu18.png' }]
+      this.subForm.bind_technician_img = [{ url: assetUrl('bianzu18.png') }]
       this.submitForm()
     },
     resetForm (form) {

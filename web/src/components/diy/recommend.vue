@@ -64,6 +64,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/assets.js'
 export default {
   name: 'search',
   props: {
@@ -79,14 +80,14 @@ export default {
           is_new: 0,
           order_count: 5,
           star: 5,
-          work_img: "https://lbqnyv3.migugu.com/image/666/23/08/mSvn4TlBPvCCN2c2C9VNs7JO2h0gnxqO.jpeg"
+          work_img: assetUrl('image/666/23/08/mSvn4TlBPvCCN2c2C9VNs7JO2h0gnxqO.jpeg')
         }, {
           coach_name: "刘星-女",
           id: 211,
           is_new: 0,
           order_count: 0,
           star: 4,
-          work_img: "https://longbing.oss-cn-beijing.aliyuncs.com/testing/image/666/23/02/392797589c784d84a1ac43ab0322c537.jpeg"
+          work_img: assetUrl('testing/image/666/23/02/392797589c784d84a1ac43ab0322c537.jpeg')
         }
       ]
     }
