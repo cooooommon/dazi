@@ -91,7 +91,9 @@ class MemberOrder extends BaseModel
                 $insert = [
                     'uniacid' => $order['uniacid'],
                     'user_id' => $order['user_id'],
-                    'pay_price' => $order['pay_price'],
+                    //扣费金额必须取会员卡应付价 price；pay_price 在下单时未写入（恒为默认 0），
+                    //原取 pay_price 导致余额支付扣款 0 元（购买成功但余额不扣）
+                    'pay_price' => $order['price'],
                     'id' => $order['id'],
                 ];
 
