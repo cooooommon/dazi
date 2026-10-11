@@ -29,11 +29,11 @@
 		<block v-if="configInfo.plugAuth.member">
 
 			<view class="discount-info rel">
-				<image class="abs discount-bg" :src="`https://lbqny.migugu.com/admin/anmo/memberdiscount/page-bg.png`">
+				<image class="abs discount-bg" :src="$util.assetUrl('admin/anmo/memberdiscount/page-bg.png')">
 				</image>
-				<image class="abs bg-img" :src="`https://lbqny.migugu.com/admin/anmo/memberdiscount/bg-img.png`">
+				<image class="abs bg-img" :src="$util.assetUrl('admin/anmo/memberdiscount/bg-img.png')">
 				</image>
-				<image class="abs bg-icon" :src="`https://lbqny.migugu.com/admin/anmo/memberdiscount/bg-icon.png`">
+				<image class="abs bg-icon" :src="$util.assetUrl('admin/anmo/memberdiscount/bg-icon.png')">
 				</image>
 				<view class="rel count-info">
 					<view class="flex-center" v-if="!mineInfo.member_info">
@@ -60,7 +60,7 @@
 						v-for="(item,index) in detail.list" :key="index">
 						<view class="card-tag abs flex-center f-icontext c-base" v-if="item.icon">{{item.icon}}</view>
 						<image class="abs card-img"
-							:src="`https://lbqny.migugu.com/admin/anmo/memberdiscount/card-cur.png`"
+							:src="$util.assetUrl('admin/anmo/memberdiscount/card-cur.png')"
 							v-if="chooseInd==index">
 						</image>
 						<view class="flex-center flex-column rel">
@@ -80,7 +80,7 @@
 				<view class="rights-list flex-warp flex-between pr-lg">
 					<view class="list-item flex-center radius-16">
 						<image class="rights-img"
-							:src="`https://lbqny.migugu.com/admin/anmo/memberdiscount/discount.png`">
+							:src="$util.assetUrl('admin/anmo/memberdiscount/discount.png')">
 						</image>
 						<view class="flex-1 ml-md">
 							<view class="title f-paragraph text-bold">会员折扣</view>
@@ -91,7 +91,7 @@
 					</view>
 					<!-- <view class="list-item flex-center radius-16" v-if="coupon_discount">
 						<image class="rights-img"
-							:src="`https://lbqny.migugu.com/admin/anmo/memberdiscount/coupon.png`">
+							:src="$util.assetUrl('admin/anmo/memberdiscount/coupon.png')">
 						</image>
 						<view class="flex-1 ml-md">
 							<view class="title f-paragraph text-bold">优惠券</view>
@@ -102,7 +102,7 @@
 						</view>
 					</view> -->
 					<view class="list-item flex-center radius-16" v-if="detail.integra">
-						<image class="rights-img" :src="`https://lbqny.migugu.com/admin/anmo/memberdiscount/integra.png`">
+						<image class="rights-img" :src="$util.assetUrl('admin/anmo/memberdiscount/integra.png')">
 						</image>
 						<view class="flex-1 ml-md">
 							<view class="title f-paragraph text-bold">会员积分</view>
@@ -110,7 +110,7 @@
 						</view>
 					</view>
 					<view class="list-item flex-center radius-16">
-						<image class="rights-img" :src="`https://lbqny.migugu.com/admin/anmo/memberdiscount/kefu.png`">
+						<image class="rights-img" :src="$util.assetUrl('admin/anmo/memberdiscount/kefu.png')">
 						</image>
 						<view class="flex-1 ml-md">
 							<view class="title f-paragraph text-bold">人工客服</view>
@@ -119,7 +119,7 @@
 					</view>
 					<view class="list-item flex-center radius-16">
 						<image class="rights-img"
-							:src="`https://lbqny.migugu.com/admin/anmo/memberdiscount/refund.png`">
+							:src="$util.assetUrl('admin/anmo/memberdiscount/refund.png')">
 						</image>
 						<view class="flex-1 ml-md">
 							<view class="title f-paragraph text-bold">秒退款</view>
@@ -137,7 +137,7 @@
 			<view @tap.stop="$util.goUrl({url:`/memberdiscount/pages/share`})"
 				class="share-info flex-center mt-md ml-md mr-md pd-lg fill-base radius-16"
 				v-if="mineInfo.is_fx">
-				<image class="icon-img" :src="`https://lbqny.migugu.com/admin/anmo/memberdiscount/inv-icon.png`">
+				<image class="icon-img" :src="$util.assetUrl('admin/anmo/memberdiscount/inv-icon.png')">
 				</image>
 				<view class="flex-1 flex-between ml-md">
 					<view>
@@ -171,7 +171,7 @@
 			<view class="space-max-footer"></view>
 			<view class="pay-order-info fix fill-base pt-lg pb-lg" v-if="detail.list && detail.list.length>0">
 				<view class="order-info ml-md mr-md rel">
-					<image class="buy-img abs" :src="`https://lbqny.migugu.com/admin/anmo/memberdiscount/buy.png`">
+					<image class="buy-img abs" :src="$util.assetUrl('admin/anmo/memberdiscount/buy.png')">
 					</image>
 					<view class="flex-between pl-lg pr-lg rel">
 						<view class="flex-y-baseline">

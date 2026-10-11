@@ -109,7 +109,7 @@
 					</view>
 					<view class="no-data-item flex-center mt-lg" v-if="list.data.length == 0">
 						<image mode="aspectFill" class="avatar radius"
-							src="https://lbqny.migugu.com/admin/anmo/mine/dynamic-user.png">
+							:src="$util.assetUrl('admin/anmo/mine/dynamic-user.png')">
 						</image>
 						<view class="text flex-1 flex-y-center ml-md pl-lg f-icontext radius">评论千万条, 礼貌第一条</view>
 					</view>
@@ -322,7 +322,7 @@
 						lower-threshold="100" class="scroll-list">
 						<view class="no-data-item flex-center pd-lg" v-if="list.data.length == 0">
 							<image mode="aspectFill" class="avatar radius"
-								src="https://lbqny.migugu.com/admin/anmo/mine/dynamic-user.png">
+								:src="$util.assetUrl('admin/anmo/mine/dynamic-user.png')">
 							</image>
 							<view class="text flex-1 flex-y-center ml-md pl-lg f-icontext radius">评论千万条, 礼貌第一条</view>
 						</view>

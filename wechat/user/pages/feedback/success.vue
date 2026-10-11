@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="header flex-center pt-md">
-			<image src="https://lbqny.migugu.com/admin/shop/succ.png" mode="aspectFill"></image>
+			<image :src="$util.assetUrl('admin/shop/succ.png')" mode="aspectFill"></image>
 		</view>
 		<view class="as-box-cont text-bold text-center">提交成功</view>
 		<view class="f-mini-title c-caption text-center pl-lg pr-lg pt-sm">您已经成功提交申请，审核进度和结果可在反馈记录里查看。</view>

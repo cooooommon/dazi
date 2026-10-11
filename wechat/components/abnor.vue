@@ -27,9 +27,10 @@
 
 
 <script>
+	import assetUrl from '@/utils/asset.js';
 	const Types = {
 		'REQUEST_ERROR': {
-			image: 'https://lbqny.migugu.com/admin/public/request-error.png',
+			image: assetUrl('admin/public/request-error.png'),
 			title: '网络加载失败',
 			button: [{
 				text: '点击刷新',
@@ -38,7 +39,7 @@
 			tip: []
 		},
 		'NOT_FOUND': {
-			image: 'https://lbqny.migugu.com/admin/public/not-found.png',
+			image: assetUrl('admin/public/not-found.png'),
 			title: '很抱歉，找不到你要访问的页面',
 			button: [{
 				text: '返回',
@@ -47,7 +48,7 @@
 			tip: []
 		},
 		'DATA': {
-			image: 'https://lbqny.migugu.com/admin/public/no-data-2.png',
+			image: assetUrl('admin/public/no-data-2.png'),
 			title: '',
 			button: [],
 			tip: [{
@@ -56,7 +57,7 @@
 			}]
 		},
 		'NOT_AUTH': {
-			image: 'https://lbqny.migugu.com/admin/anmo/technician/no_data.png',
+			image: assetUrl('admin/anmo/technician/no_data.png'),
 			title: '',
 			button: [],
 			tip: [{
@@ -65,7 +66,7 @@
 			}]
 		},
 		'NOT_LOCATION': {
-			image: 'https://lbqny.migugu.com/admin/anmo/technician/no_data.png',
+			image: assetUrl('admin/anmo/technician/no_data.png'),
 			title: '',
 			button: [],
 			tip: [{
@@ -74,7 +75,7 @@
 			}]
 		},
 		'FOLLOW': {
-			image: 'https://lbqny.migugu.com/admin/public/no-follow.png',
+			image: assetUrl('admin/public/no-follow.png'),
 			title: '关注有趣的人',
 			button: [],
 			tip: [{
@@ -83,55 +84,55 @@
 			}]
 		},
 		'FEED': {
-			image: 'https://lbqny.migugu.com/admin/public/no-feed.png',
+			image: assetUrl('admin/public/no-feed.png'),
 			title: '还没有任何反馈哦',
 			button: [],
 			tip: []
 		},
 		'SHOP': {
-			image: 'https://lbqny.migugu.com/admin/public/no-shop.png',
+			image: assetUrl('admin/public/no-shop.png'),
 			title: '稍后再来试试吧~',
 			button: [],
 			tip: []
 		},
 		'WEIBO': {
-			image: 'https://lbqny.migugu.com/admin/public/no-weibo.png',
+			image: assetUrl('admin/public/no-weibo.png'),
 			title: '',
 			button: [],
 			tip: []
 		},
 		'SEARCH': {
-			image: 'https://lbqny.migugu.com/admin/public/no-search.png',
+			image: assetUrl('admin/public/no-search.png'),
 			title: '抱歉！没找到相关商品~',
 			button: [],
 			tip: []
 		},
 		'TAG': {
-			image: 'https://lbqny.migugu.com/admin/public/no-tag.png',
+			image: assetUrl('admin/public/no-tag.png'),
 			title: '',
 			button: [],
 			tip: []
 		},
 		'MESSAGE': {
-			image: 'https://lbqny.migugu.com/admin/public/no-message.png',
+			image: assetUrl('admin/public/no-message.png'),
 			title: '消息通知空空如也',
 			button: [],
 			tip: []
 		},
 		'LIVE': {
-			image: 'https://lbqny.migugu.com/admin/public/no-live.png',
+			image: assetUrl('admin/public/no-live.png'),
 			title: '',
 			button: [],
 			tip: []
 		},
 		'ORDER': {
-			image: 'https://lbqny.migugu.com/admin/public/no-order.png',
+			image: assetUrl('admin/public/no-order.png'),
 			title: "还没有相关订单哦",
 			button: [],
 			tip: []
 		},
 		'CART': {
-			image: 'https://lbqny.migugu.com/admin/public/no-car.png',
+			image: assetUrl('admin/public/no-car.png'),
 			title: '购物车还是空的哦~',
 			button: [{
 				text: '去逛逛',
@@ -141,25 +142,25 @@
 			tip: []
 		},
 		'FOOTPRINT': {
-			image: 'https://lbqny.migugu.com/admin/public/no-footprint.png',
+			image: assetUrl('admin/public/no-footprint.png'),
 			title: '你还没有足迹~',
 			button: [],
 			tip: []
 		},
 		'COUPON': {
-			image: 'https://lbqny.migugu.com/admin/public/no-coupon.png',
+			image: assetUrl('admin/public/no-coupon.png'),
 			title: '你还没有可用的卡券哦',
 			button: [],
 			tip: []
 		},
 		'REDUCTION': {
-			image: 'https://lbqny.migugu.com/admin/reduction/nodata.png',
+			image: assetUrl('admin/reduction/nodata.png'),
 			title: '您当前没有满减券，请向工作人员索取',
 			button: [],
 			tip: []
 		},
 		'MYTEAM': {
-			image: 'https://lbqny.migugu.com/admin/public/no-coupon.png',
+			image: assetUrl('admin/public/no-coupon.png'),
 			title: '没有更多了',
 			button: [],
 			tip: []

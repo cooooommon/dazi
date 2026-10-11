@@ -219,11 +219,11 @@
 		<uni-popup ref="share_box" type="center" :custom="true" :bgOpacity="0.6">
 			<view class="share-friend">
 				<view class="flex" style="justify-content: flex-end;">
-					<image class="share-tips1" src="https://lbqny.migugu.com/admin/card/share-friend2.png"
+					<image class="share-tips1" :src="$util.assetUrl('admin/card/share-friend2.png')"
 						mode="aspectFill"></image>
 				</view>
 				<view class="flex" style="justify-content: flex-end;">
-					<image class="share-tips2" src="https://lbqny.migugu.com/admin/card/share-friend1.png"
+					<image class="share-tips2" :src="$util.assetUrl('admin/card/share-friend1.png')"
 						mode="aspectFill"></image>
 				</view>
 				<view class="flex-center">

@@ -1,6 +1,6 @@
 <template>
 	<view class="memberdiscount-share rel" :style="{background:'#fdcdc9'}">
-		<image class="share-img abs" :src="`https://lbqny.migugu.com/admin/anmo/memberdiscount/inv-user-poster.png`">
+		<image class="share-img abs" :src="$util.assetUrl('admin/anmo/memberdiscount/inv-user-poster.png')">
 		</image>
 		<view class="balance-text flex-center text-bold abs">
 			<view class="flex-y-baseline font-num">
@@ -25,7 +25,7 @@
 				<view class="f-title">生成海报, 面对面邀请好友</view>
 				<view @tap.stop="$util.goUrl({url:`/memberdiscount/pages/poster`})"
 					class="code-btn flex-center f-mini-title text-bold radius">
-					<image class="code-img" :src="`https://lbqny.migugu.com/admin/anmo/memberdiscount/code.png`">
+					<image class="code-img" :src="$util.assetUrl('admin/anmo/memberdiscount/code.png')">
 					</image>
 					海报邀请
 				</view>
@@ -39,11 +39,11 @@
 					跳过引导</view>
 				<view class="flex-between" style="padding:0 92rpx;">
 					<view></view>
-					<image class="jiantou-img" :src="`https://lbqny.migugu.com/admin/anmo/alipay/jiantou.png`"></image>
+					<image class="jiantou-img" :src="$util.assetUrl('admin/anmo/alipay/jiantou.png')"></image>
 				</view>
 				<view class="oper-rule f-mini-title c-title rel">
-					<image class="bg-img abs" :src="`https://lbqny.migugu.com/admin/anmo/alipay/bg.png`"></image>
-					<image class="bg-icon abs" :src="`https://lbqny.migugu.com/admin/anmo/alipay/bg-icon.png`"></image>
+					<image class="bg-img abs" :src="$util.assetUrl('admin/anmo/alipay/bg.png')"></image>
+					<image class="bg-icon abs" :src="$util.assetUrl('admin/anmo/alipay/bg-icon.png')"></image>
 					<view class="rel" style="z-index: 2;">
 						<view class="flex-y-center" style="margin: 30rpx 0;">
 							<view class="num flex-center mr-md f-sm-title c-base radius">1</view>
@@ -65,6 +65,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/asset.js';
 	import {
 		mapState,
 		mapMutations
@@ -100,7 +101,7 @@
 				id: coach_id = 0
 			} = this.coachInfo
 			let title = '限时特惠, 邀您购买会员卡'
-			let imageUrl = 'https://lbqny.migugu.com/admin/anmo/memberdiscount/inv-share.png'
+			let imageUrl = assetUrl('admin/anmo/memberdiscount/inv-share.png')
 			let path = `/memberdiscount/pages/index?pid=${pid}&is_member=1`
 			this.$util.log(path)
 			return {
@@ -137,7 +138,7 @@
 				} = this.coachInfo
 				let title = '限时特惠, 邀您购买会员卡'
 				let summary = '权益多多, 快来看看吧~'
-				let imageUrl = 'https://lbqny.migugu.com/admin/anmo/memberdiscount/inv-share.png'
+				let imageUrl = assetUrl('admin/anmo/memberdiscount/inv-share.png')
 
 				let {
 					siteroot
@@ -185,10 +186,10 @@
 									dst: `_doc/${cur_unix}-img.jpg`,
 									quality: 50,
 								}, res => {
-									item.imageUrl = res.target || `/static/img/logo.png`
+									item.imageUrl = res.target || assetUrl('default-avatar.png')
 									that.sharePage(item)
 								}, error => {
-									item.imageUrl = `/static/img/logo.png`
+									item.imageUrl = assetUrl('default-avatar.png')
 									that.sharePage(item)
 								})
 							})

@@ -13,11 +13,11 @@
 					<view class="f_r_m_c">
 						1.分享海报
 					</view>
-					<image mode="aspectFill" class="info_text_img" src="https://lbqny.migugu.com/admin/anmo/coupon/btn.png"></image>
+					<image mode="aspectFill" class="info_text_img" :src="$util.assetUrl('admin/anmo/coupon/btn.png')"></image>
 					<view class="f_r_m_c">
 						2.微信扫码
 					</view>
-					<image mode="aspectFill" class="info_text_img" src="https://lbqny.migugu.com/admin/anmo/coupon/btn.png"></image>
+					<image mode="aspectFill" class="info_text_img" :src="$util.assetUrl('admin/anmo/coupon/btn.png')"></image>
 					<view class="f_r_m_c">
 						3.注册登录
 					</view>
@@ -32,6 +32,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/asset.js';
 	import {
 		mapState,
 		mapActions
@@ -87,7 +88,7 @@
 				let {
 					distribution_poster_img = ''
 				} = this.configInfo
-				let cover = distribution_poster_img || 'https://lbqny.migugu.com/admin/anmo/mine/fx-share-down.png'
+				let cover = distribution_poster_img || assetUrl('admin/anmo/mine/fx-share-down.png')
 				let qr_radius = '0rpx'
 				// #ifdef MP-WEIXIN
 				qr_radius = '145rpx'

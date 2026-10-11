@@ -1,7 +1,7 @@
 <template>
 	<view class="mine-pages-setting">
 		<view class="flex-center flex-column fill-base mt-lg ml-lg mr-lg radius-24">
-			<image mode="aspectFill" class="logout-img" src="https://lbqny.migugu.com/admin/anmo/mine/logout.png"></image>
+			<image mode="aspectFill" class="logout-img" :src="$util.assetUrl('admin/anmo/mine/logout.png')"></image>
 			<view class="f-title c-title text-bold mb-lg">账户注销，将放弃以下权益和财产</view>
 			<view class="f-desc c-caption pb-lg" style="padding-right: 50rpx;" v-html="text"></view>
 		</view>

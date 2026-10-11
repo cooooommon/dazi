@@ -3,11 +3,14 @@ import $store from "@/store/index.js"
 import $api from "api/index.js"
 import $util from './index.js';
 import { getSystemInfo } from './systemInfo.js';
+import assetUrl from './asset.js';
 // #ifdef H5
 import $jweixin from "@/utils/jweixin.js"
 // #endif
 export default {
 	Validate,
+	// 静态资源地址（走后端接口域名，不写死）
+	assetUrl,
 	//调试开关：上线保持静默；需要排查问题时临时改回 console.log
 	log: () => {},
 	// log: console.log,

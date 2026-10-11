@@ -103,7 +103,7 @@
 		<uni-popup ref="choose_city_item" type="top" :custom="true" :zIndex="999">
 			<view :style="{height:configInfo.navBarHeight + 8 + 'px'}"></view>
 			<view class="choose-city-popup rel">
-				<image class="city-img" src="https://lbqny.migugu.com/admin/anmo/technician/no_city.png"></image>
+				<image class="city-img" :src="$util.assetUrl('admin/anmo/technician/no_city.png')"></image>
 				<view class="text f-paragraph c-base abs">
 					很抱歉,该城市未开通, 点击左上角切换其他城市下单服务
 				</view>

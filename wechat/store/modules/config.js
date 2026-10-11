@@ -1,6 +1,7 @@
 import $util from "@/utils/index.js"
 import $api from "@/api/index.js"
 import { getSystemInfo } from "@/utils/systemInfo.js"
+import assetUrl from "@/utils/asset.js"
 export default {
 	state: {
 		old_attendant_name: '向导',
@@ -55,7 +56,7 @@ export default {
 		audioBg: {},
 		playBg: false,
 		isHaveAudio: false,
-		avatarUrl: 'https://lbqnyv2.migugu.com/defaultAvatar.png', //默认头像
+		avatarUrl: assetUrl('defaultAvatar.png'), //默认头像
 	},
 	mutations: {
 		//修改信息
@@ -122,10 +123,10 @@ export default {
 				config.gradualColor = '#DF52FF'
 			}
 			if (!config.user_image) {
-				config.user_image = 'https://lbqny.migugu.com/admin/anmo/mine/bg.png'
+				config.user_image = assetUrl('admin/anmo/mine/bg.png')
 			}
 			if (!config.coach_image) {
-				config.coach_image = 'https://lbqny.migugu.com/admin/anmo/mine/bg.png'
+				config.coach_image = assetUrl('admin/anmo/mine/bg.png')
 			}
 			if (!config.service_btn_color) {
 				config.service_btn_color = '#282B34'

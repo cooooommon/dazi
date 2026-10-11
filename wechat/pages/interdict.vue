@@ -8,7 +8,7 @@
 		<!-- #endif -->
 		<view class="interdict">
 			<view class="flex-center">
-				<image src="https://lbqny.migugu.com/admin/public/no-blacklist.png" mode="aspectFill" class="bg"></image>
+				<image :src="$util.assetUrl('admin/public/no-blacklist.png')" mode="aspectFill" class="bg"></image>
 			</view>
 			<view class="flex-center f-desc">很抱歉,您无法进入该系统</view>
 		</view>

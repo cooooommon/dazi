@@ -22,7 +22,7 @@
 					<view class="flex-center mem-price mr-sm" v-if="detail.member_price">
 						<view class="rel mem-price-bg flex-center">
 							<view class="abs f-ms-little c-base" style="padding-right: 2px;z-index: 2;">会员价</view>
-							<image class="mem-price-img" src="https://lbqny.migugu.com/admin/member/member-bg.png" mode="aspectFill"></image>
+							<image class="mem-price-img" :src="$util.assetUrl('admin/member/member-bg.png')" mode="aspectFill"></image>
 						</view>
 						<view class="mem-price-text text-bold f-ms-little">¥{{detail.member_price}}</view>
 					</view>

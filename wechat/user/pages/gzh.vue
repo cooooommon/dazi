@@ -14,6 +14,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/asset.js';
 	import {
 		mapState,
 		mapActions,
@@ -24,7 +25,7 @@
 			return {
 				isLoad: false,
 				options: {},
-				gzh_img: 'https://lbqny.migugu.com/admin/anmo/mine/web-code-img.png'
+				gzh_img: assetUrl('admin/anmo/mine/web-code-img.png')
 			}
 		},
 		computed: mapState({

@@ -1,9 +1,9 @@
 <template>
 	<view class="rel">
-		<image src="https://lbqny.migugu.com/admin/playwith/service/join-bg.png" mode="aspectFill" class="join-bg"></image>
-		<image src="https://lbqny.migugu.com/admin/playwith/service/join-title.png" mode="aspectFill" class="join-title abs"></image>
+		<image :src="$util.assetUrl('admin/playwith/service/join-bg.png')" mode="aspectFill" class="join-bg"></image>
+		<image :src="$util.assetUrl('admin/playwith/service/join-title.png')" mode="aspectFill" class="join-title abs"></image>
 		<view class="join-box abs">
-			<image src="https://lbqny.migugu.com/admin/playwith/service/join-form.png" mode="aspectFill" class="join-form"></image>
+			<image :src="$util.assetUrl('admin/playwith/service/join-form.png')" mode="aspectFill" class="join-form"></image>
 			<view class="abs join-content">
 				<view class="item">
 					<view class="f-title text-bold">您的姓名</view>
@@ -29,7 +29,7 @@
 				</view>
 			</view>
 			<view class="join-btn mt-lg" @tap="submit">
-				<image src="https://lbqny.migugu.com/admin/playwith/service/join-btn.png" mode="aspectFill"></image>
+				<image :src="$util.assetUrl('admin/playwith/service/join-btn.png')" mode="aspectFill"></image>
 			</view>
 		</view>
 	</view>

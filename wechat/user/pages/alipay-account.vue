@@ -26,16 +26,16 @@
 			<view class="f-title text-bold mb-md">支付宝账号获取：</view>
 			<view class="f-paragraph c-desc mt-md mb-md">1)、打开【支付宝】-【我的】页面</view>
 			<image mode="widthFix" class="item-image radius-16"
-				src="https://lbqny.migugu.com/admin/anmo/mine/alipay-0.jpeg">
+				:src="$util.assetUrl('admin/anmo/mine/alipay-0.jpeg')">
 			</image>
 			<view class="f-paragraph c-desc mt-md mb-md">2)、打开上图箭头所示，个人信息页面</view>
 			<image mode="widthFix" class="item-image radius-16"
-				src="https://lbqny.migugu.com/admin/anmo/mine/alipay-1.jpeg">
+				:src="$util.assetUrl('admin/anmo/mine/alipay-1.jpeg')">
 			</image>
 			<view class="fill-base pd-lg mt-lg radius-26">
 				<view class="f-title text-bold mb-md">身份信息</view>
 				<view class="f-paragraph c-title mb-md">根据相关法律法规要求，请保持身份信息完整，以便使用支付宝相关功能</view>
-				<image mode="widthFix" class="radius-16" src="https://lbqny.migugu.com/admin/anmo/mine/alipay-2.jpeg">
+				<image mode="widthFix" class="radius-16" :src="$util.assetUrl('admin/anmo/mine/alipay-2.jpeg')">
 				</image>
 			</view>
 		</view>

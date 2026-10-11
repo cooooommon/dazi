@@ -12,7 +12,7 @@
 		<block v-if="list.data && list.data.length>0">
 			<view class="list-item flex-center pd-lg mt-md ml-md mr-md fill-base radius-16 rel"
 				v-for="(item,index) in list.data" :key="index">
-				<image mode="aspectFill" class="king-img abs" src="https://lbqny.migugu.com/admin/anmo/mine/king.gif"
+				<image mode="aspectFill" class="king-img abs" :src="$util.assetUrl('admin/anmo/mine/king.gif')"
 					v-if="item.coach_type_status==1">
 				</image>
 				<view class="flex-center flex-column">
@@ -25,7 +25,7 @@
 						</view>
 						<view @tap.stop="item.coach_type_status==1?toPreviewImage(index,1):''" class="h5-image abs"
 							:class="[`${imgType[item.coach_type_status]}-img`]"
-							:style="{ backgroundImage :  `url('https://lbqny.migugu.com/admin/anmo/mine/${imgType[item.coach_type_status]}_2.gif')`}"
+							:style="{ backgroundImage :  `url(`${$util.assetUrl('admin/anmo/mine/')}${imgType[item.coach_type_status]}_2.gif`)`}"
 							v-if="item.coach_type_status">
 						</view>
 						<!-- #endif -->
@@ -35,7 +35,7 @@
 						</image>
 						<image @tap.stop="item.coach_type_status==1?toPreviewImage(index,1):''" class="abs"
 							:class="[`${imgType[item.coach_type_status]}-img`]"
-							:src="`https://lbqny.migugu.com/admin/anmo/mine/${imgType[item.coach_type_status]}_2.gif`"
+							:src="`${$util.assetUrl('admin/anmo/mine/')}${imgType[item.coach_type_status]}_2.gif`"
 							v-if="item.coach_type_status">
 						</image>
 						<!-- #endif -->

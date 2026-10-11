@@ -7,7 +7,7 @@
 		<view :style="{height:`${configInfo.navBarHeight}px`}"></view>
 		<!-- #endif -->
 		<image mode="aspectFill" lazy-load class="service-page-bg abs"
-			src="https://lbqny.migugu.com/admin/playwith/mine/classify-nav-bg.png"></image>
+			:src="$util.assetUrl('admin/playwith/mine/classify-nav-bg.png')"></image>
 		
 		<!-- #ifndef MP-WEIXIN -->
 		<view style="height:30rpx"></view>
@@ -52,7 +52,7 @@
 							<view class="flex-center mem-price" v-if="item.member_price">
 								<view class="rel mem-price-bg flex-center">
 									<view class="abs f-ms-little c-base" style="padding-right: 2px;z-index: 2;">会员价</view>
-									<image class="mem-price-img" src="https://lbqny.migugu.com/admin/member/member-bg.png" mode="aspectFill"></image>
+									<image class="mem-price-img" :src="$util.assetUrl('admin/member/member-bg.png')" mode="aspectFill"></image>
 								</view>
 								<view class="mem-price-text text-bold f-ms-little">¥{{item.member_price}}</view>
 							</view>

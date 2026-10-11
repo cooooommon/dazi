@@ -66,7 +66,7 @@
 			</view>
 		</view>
 		<view @tap="$util.goUrl({url: `/user/pages/broker/poster`})" class="ml-md mr-md invite-box mt-md rel flex-between" :style="{background: `linear-gradient(${subColor},${primaryColor})`}">
-			<image src="https://lbqny.migugu.com/admin/peiwan/invite-bg.png" mode="aspectFill" class="invite-bg abs"></image>
+			<image :src="$util.assetUrl('admin/peiwan/invite-bg.png')" mode="aspectFill" class="invite-bg abs"></image>
 			<view class="rel">
 				<view class="c-base f-lg-title text-bold">推荐收入</view>
 				<view class="pt-sm c-base f-paragraph ">推荐{{$t('action.attendantName')}}入驻, 享高额推荐佣金</view>

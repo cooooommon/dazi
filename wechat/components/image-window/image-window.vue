@@ -28,6 +28,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/asset.js';
 	import {
 		mapState,
 		mapActions
@@ -52,7 +53,7 @@
 				default () {
 					return [{
 						id: 1,
-						imgUrl: 'http://static.yoshop.xany6.com/20180928164910decaa3848.png'
+						imgUrl: assetUrl('20180928164910decaa3848.png')
 					}]
 				}
 			},

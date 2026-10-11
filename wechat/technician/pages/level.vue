@@ -40,7 +40,7 @@
 					<i class="iconfont icon-level-icon icon-font-color abs" :style="{left:'60rpx',
 				backgroundImage: `-webkit-linear-gradient(0deg, #000 36%,  ${primaryColor} 100%)`}"></i>
 					<image mode="aspectFill" class="level-icon-img abs"
-						src="https://lbqny.migugu.com/admin/anmo/technician/level-icon.png">
+						:src="$util.assetUrl('admin/anmo/technician/level-icon.png')">
 					</image>
 					<view class="space-md"></view>
 					<view class="flex-y-baseline level-title text-bold">{{item.title}}

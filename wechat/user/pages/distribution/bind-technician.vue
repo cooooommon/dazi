@@ -14,6 +14,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/asset.js';
 	import {
 		mapState,
 		mapActions
@@ -71,7 +72,7 @@
 					bind_technician_img = ''
 				} = this.configInfo
 
-				let cover = bind_technician_img || 'https://lbqnyv2.migugu.com/bianzu18.png'
+				let cover = bind_technician_img || assetUrl('bianzu18.png')
 
 				let {
 					nickName,

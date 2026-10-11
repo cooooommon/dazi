@@ -1,7 +1,7 @@
 <template>
 	<view class="choose-invite" v-if="isLoad">
 		<view class="item pl-lg pr-md radius-24 fill-base flex-center ml-md mr-md mt-md" @tap="$util.goUrl({url: `/user/pages/distribution/poster`})">
-			<image src="https://lbqny.migugu.com/admin/peiwan/index-03.png" mode="aspectFill" class="item-icon"></image>
+			<image :src="$util.assetUrl('admin/peiwan/index-03.png')" mode="aspectFill" class="item-icon"></image>
 			<view class="pl-md flex-1 flex-between">
 				<view class="flex-1">
 					<view class="f-title text-bold">邀请用户</view>
@@ -15,7 +15,7 @@
 		</view>
 		<view class="item pl-lg pr-md radius-24 fill-base flex-center ml-md mr-md mt-md" v-if="configInfo.plugAuth.distributor" 
 		@tap="$util.goUrl({url: `/user/pages/distribution/poster-below`})">
-			<image src="https://lbqny.migugu.com/admin/peiwan/index-04.png" mode="aspectFill" class="item-icon"></image>
+			<image :src="$util.assetUrl('admin/peiwan/index-04.png')" mode="aspectFill" class="item-icon"></image>
 			<view class="pl-md flex-1 flex-between">
 				<view class="flex-1">
 					<view class="f-title text-bold">邀请下级</view>

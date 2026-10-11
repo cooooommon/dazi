@@ -74,6 +74,7 @@
 		mapMutations
 	} from 'vuex';
 	import siteInfo from '@/siteinfo.js';
+	import assetUrl from '@/utils/asset.js';
 	export default {
 		components: {},
 		data() {
@@ -256,8 +257,6 @@
 			},
 			// APP登录
 			async toAppLogin() {
-				// this.toConfirmLoginApp()
-				// return
 
 				let {
 					loginType: provider
@@ -399,98 +398,6 @@
 					openType
 				})
 			},
-			// app调试登录
-			toConfirmLoginApp() {
-				let user_info = {
-					"data": {
-						"id": 824,
-						"uniacid": 666,
-						"openid": "oDG4342lxj6wUH73W7pKLzTTvL6w",
-						"nickName": "蕭萧",
-						"avatarUrl": "https:\/\/massage.cncnconnect.com\/attachment\/image\/666\/23\/05\/a2f0efd10dfa4190aa125bc7ae522d93.jpg",
-						"create_time": 1673263802,
-						"status": 1,
-						"cap_id": 0,
-						"city": "",
-						"country": "",
-						"gender": 0,
-						"language": "",
-						"province": "",
-						"balance": 92230.44,
-						"phone": "18284514093",
-						"session_key": "UsZEVHhv8vdYpJ+\/YuEjIA==",
-						"pid": 824,
-						"cash": 374.67,
-						"unionid": "o3fbU0SmMbQLD4BKPyxcoD1KhAko",
-						"app_openid": "oOxoV6NEt8Zl3P6lA7JWLH7NxMNc",
-						"web_openid": "oFcA90U0Dy1YtuX91vppB5_LYgio",
-						"wechat_openid": "oDG4342lxj6wUH73W7pKLzTTvL6w",
-						"last_login_type": 0,
-						"new_cash": "339.42",
-						"lock": 178,
-						"is_fx": 1,
-						"ios_openid": "0",
-						"push_id": "",
-						"alipay_number": "18284514093",
-						"alipay_name": "",
-						"ip": "222.211.236.197"
-					},
-					"autograph": "f99e8e0daa9fb6d3575e1a32a4b27c57",
-					coach_status: 2
-				}
-
-				let {
-					autograph,
-					coach_status,
-					data
-				} = user_info
-				this.$util.hideAll()
-				this.updateUserItem({
-					key: 'isShowLogin',
-					val: false
-				})
-				this.updateUserItem({
-					key: 'userInfo',
-					val: data
-				})
-				this.updateUserItem({
-					key: 'autograph',
-					val: autograph
-				})
-				let {
-					user_force_login,
-					short_code_status = 0,
-					plugAuth = {}
-				} = this.configInfo
-
-				let {
-					coachport = false
-				} = plugAuth
-
-				this.updateUserItem({
-					key: 'userPageType',
-					val: [2, 3].includes(coach_status) && !coachport ? 2 : 1
-				})
-
-				let {
-					phone = ''
-				} = data
-
-				let {
-					pageArr,
-					loginPage
-				} = this
-
-				let isToPhone = user_force_login == 1 && short_code_status && !phone
-				let url = isToPhone ? `/user/pages/phone` : loginPage || `/pages/service`
-				let split_url = url.split('?')[0]
-				let isReLaunch = isToPhone || pageArr.includes(split_url)
-				let openType = isReLaunch ? `reLaunch` : `navigateBack`
-				this.$util.goUrl({
-					url: isReLaunch ? url : 1,
-					openType
-				})
-			}
 		}
 	}
 </script>

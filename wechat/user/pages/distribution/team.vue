@@ -3,7 +3,7 @@
 		<view class="partner-list b-1px-t" v-for="(item,index) in list.data" :key="index">
 			<view class="partner-sort" v-if="index<3">
 				<image mode="aspectFill" class="icon-sm"
-					:src="`https://lbqny.migugu.com/admin/public/sort${index+1}.png`"></image>
+					:src="`${$util.assetUrl('admin/public/sort')}${index+1}.png`"></image>
 			</view>
 			<view class="partner-sort" v-if="index>=3">{{index+1}}</view>
 			<image mode="aspectFill" class="avatar md radius" :src="item.avatarUrl"></image>

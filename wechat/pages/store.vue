@@ -81,6 +81,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/asset.js';
 	import {
 		mapState,
 		mapActions,
@@ -102,7 +103,7 @@
 					height: '8rpx',
 					width: '8rpx'
 				},
-				banner: ['https://lbqny.migugu.com/admin/diy/default.png','https://lbqny.migugu.com/admin/diy/default.png'],
+				banner: [assetUrl('admin/diy/default.png'),assetUrl('admin/diy/default.png')],
 				title: ''
 			}
 		},

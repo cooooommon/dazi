@@ -232,6 +232,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/asset.js';
 	import wPicker from "@/components/w-picker/w-picker.vue";
 	import {
 		mapState,
@@ -288,9 +289,9 @@
 					'3': '平台管理员已取消授权'
 				},
 				image: {
-					'-1': 'https://lbqny.migugu.com/admin/public/apply_wait.jpg',
-					'2': 'https://lbqny.migugu.com/admin/public/apply_suc.jpg',
-					'3': 'https://lbqny.migugu.com/admin/public/apply_fail.jpg'
+					'-1': assetUrl('admin/public/apply_wait.jpg'),
+					'2': assetUrl('admin/public/apply_suc.jpg'),
+					'3': assetUrl('admin/public/apply_fail.jpg')
 				},
 				is_update: 0,
 				coach_status: 0,
@@ -448,10 +449,10 @@
 					}]
 				},
 				bimage: {
-					'1': 'https://lbqny.migugu.com/admin/public/apply_wait.jpg',
-					'2': 'https://lbqny.migugu.com/admin/public/apply_suc.jpg',
-					'3': 'https://lbqny.migugu.com/admin/public/apply_fail.jpg',
-					'4': 'https://lbqny.migugu.com/admin/public/apply_fail.jpg',
+					'1': assetUrl('admin/public/apply_wait.jpg'),
+					'2': assetUrl('admin/public/apply_suc.jpg'),
+					'3': assetUrl('admin/public/apply_fail.jpg'),
+					'4': assetUrl('admin/public/apply_fail.jpg'),
 				},
 				broker: {
 					coach_status: 0

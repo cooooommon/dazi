@@ -24,7 +24,7 @@
 				<!-- status 1进行中，2成功，3失败 -->
 				<view class="ml-lg mr-lg pt-lg pb-sm pl-lg pr-lg rel radius-20" style="background: #FFFAF4;">
 					<view class="menu-img mt-lg abs">
-						<image mode="aspectFill" class="menu-img" src="https://lbqny.migugu.com/admin/anmo/coupon/menu.png"></image>
+						<image mode="aspectFill" class="menu-img" :src="$util.assetUrl('admin/anmo/coupon/menu.png')"></image>
 						<view class="menu-title flex-center abs" :style="{color:primaryColor}">邀请记录</view>
 					</view>
 					<view class="space-lg"></view>
@@ -33,7 +33,7 @@
 						<view class="user-item">用户</view>
 						<view class="time-item">时间</view>
 					</view>
-					<image mode="aspectFill" class="line-img" src="https://lbqny.migugu.com/admin/anmo/coupon/line.png"></image>
+					<image mode="aspectFill" class="line-img" :src="$util.assetUrl('admin/anmo/coupon/line.png')"></image>
 					<scroll-view scroll-y class="user-list-info" v-if="record_list.data.length > 0">
 						<view class="user-list flex-between f-desc c-title b-1px-b"
 							v-for="(item,index) in record_list.data" :key="index">
@@ -52,7 +52,7 @@
 					<auth :needAuth="userInfo && (!userInfo.phone || !userInfo.nickName)" :must="true"
 						:type="!userInfo.phone ? 'phone':'userInfo'" @go="toShare" v-if="detail.status == 1">
 						<view class="share-img mt-lg rel">
-							<image mode="aspectFill" class="share-img" src="https://lbqny.migugu.com/admin/anmo/coupon/btn.png"></image>
+							<image mode="aspectFill" class="share-img" :src="$util.assetUrl('admin/anmo/coupon/btn.png')"></image>
 							<view class="share-title flex-center abs" :style="{color:primaryColor}">
 								{{detail.user_id == userInfo.id?'邀请有奖': userInfo.nickName ?'帮TA邀请':'我要参加'}}
 							</view>
@@ -60,7 +60,7 @@
 					</auth>
 
 					<view class="share-img grayscale mt-lg rel" v-else>
-						<image mode="aspectFill" class="share-img" src="https://lbqny.migugu.com/admin/anmo/coupon/btn.png"></image>
+						<image mode="aspectFill" class="share-img" :src="$util.assetUrl('admin/anmo/coupon/btn.png')"></image>
 						<view class="share-title flex-center abs" :style="{color:primaryColor}">
 							{{detail.user_id == userInfo.id?'邀请有奖': userInfo.nickName ?'帮TA邀请':'我要参加'}}
 						</view>
@@ -92,21 +92,21 @@
 				<view class="flex-center">
 					<!-- #ifdef MP-WEIXIN -->
 					<button open-type="share" class="clear-btn list-item flex-center flex-column">
-						<image mode="aspectFill" class="item-image" src="https://lbqny.migugu.com/admin/anmo/coupon/wechat.png"></image>
+						<image mode="aspectFill" class="item-image" :src="$util.assetUrl('admin/anmo/coupon/wechat.png')"></image>
 						<view style="font-size: 26rpx;color:#666;">分享给好友</view>
 					</button>
 					<view @tap.stop="toPoster" class="list-item flex-center flex-column">
-						<image mode="aspectFill" class="item-image" src="https://lbqny.migugu.com/admin/anmo/coupon/picture.png"></image>
+						<image mode="aspectFill" class="item-image" :src="$util.assetUrl('admin/anmo/coupon/picture.png')"></image>
 						<view>生成海报码</view>
 					</view>
 					<!-- #endif -->
 					<!-- #ifndef MP-WEIXIN -->
 					<view @tap.stop="toAppShare(1)" class="list-item flex-center flex-column">
-						<image mode="aspectFill" class="item-image" src="https://lbqny.migugu.com/admin/anmo/coupon/wechat.png"></image>
+						<image mode="aspectFill" class="item-image" :src="$util.assetUrl('admin/anmo/coupon/wechat.png')"></image>
 						<view style="font-size: 26rpx;color:#666;">分享给好友</view>
 					</view>
 					<view @tap.stop="toAppShare(2)" class="list-item flex-center flex-column">
-						<image mode="aspectFill" class="item-image" src="https://lbqny.migugu.com/admin/anmo/coupon/wechat-moments.png"></image>
+						<image mode="aspectFill" class="item-image" :src="$util.assetUrl('admin/anmo/coupon/wechat-moments.png')"></image>
 						<view>分享到朋友圈</view>
 					</view>
 					<!-- #endif -->
@@ -118,6 +118,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/asset.js';
 	import {
 		mapState,
 		mapActions,
@@ -131,7 +132,7 @@
 		},
 		data() {
 			return {
-				shareImg: 'https://lbqny.migugu.com/admin/anmo/coupon/bg.png',
+				shareImg: assetUrl('admin/anmo/coupon/bg.png'),
 				isLoad: false,
 				options: {},
 				detail: {

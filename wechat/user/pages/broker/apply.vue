@@ -40,6 +40,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/asset.js';
 	import {
 		mapState,
 		mapActions,
@@ -117,9 +118,9 @@
 					'4': '审核驳回'
 				},
 				image: {
-					'1': 'https://lbqny.migugu.com/admin/public/apply_wait.jpg',
-					'2': 'https://lbqny.migugu.com/admin/public/apply_suc.jpg',
-					'4': 'https://lbqny.migugu.com/admin/public/apply_fail.jpg'
+					'1': assetUrl('admin/public/apply_wait.jpg'),
+					'2': assetUrl('admin/public/apply_suc.jpg'),
+					'4': assetUrl('admin/public/apply_fail.jpg')
 				},
 				status: 0, // 1 审核中 2通过 3取消  4驳回
 			}

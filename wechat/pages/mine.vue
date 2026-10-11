@@ -7,7 +7,7 @@
 		<view :style="{height:`${configInfo.navBarHeight}px`}"></view>
 		<!-- #endif -->
 		<image mode="aspectFill" lazy-load class="mine-user-bg abs"
-			src="https://lbqny.migugu.com/admin/playwith/mine/service-nav-bg.png" v-if="userPageType==1"></image>
+			:src="$util.assetUrl('admin/playwith/mine/service-nav-bg.png')" v-if="userPageType==1"></image>
 		<image mode="aspectFill" lazy-load class="mine-bg abs" :src="configInfo[image_type[userPageType]]"
 			v-if="userPageType==2"></image>
 
@@ -22,7 +22,7 @@
 					</image> -->
 					<view class="avatar_view">
 						<image mode="aspectFill" class="avatar radius"
-							:src="userInfo.avatarUrl || `https://lbqny.migugu.com/admin/anmo/mine/default_user.png`">
+							:src="userInfo.avatarUrl || $util.assetUrl('admin/anmo/mine/default_user.png')">
 						</image>
 					</view>
 					<view class="flex-warp" style="margin-top: -26rpx;margin-left: 7rpx;">
@@ -100,7 +100,7 @@
 				:type="!userInfo.phone ? 'phone' : 'userInfo'" @go="$util.toCheckLogin({ url: `/memberdiscount/pages/index` })"
 				v-if="configInfo.plugAuth.member">
 				<view class="rel flex-center mt-sm">
-					<image class="member-card-bg" src="https://lbqny.migugu.com/admin/peiwan/member-bg.png" mode="aspectFill"></image>
+					<image class="member-card-bg" :src="$util.assetUrl('admin/peiwan/member-bg.png')" mode="aspectFill"></image>
 					<view class="abs member-card-box pr-lg flex-between">
 						<block v-if="mineInfo.member_info && mineInfo.member_info.id && new Date().getTime() < mineInfo.member_info.end_time*1000">
 							<view class="">
@@ -125,7 +125,7 @@
 				@go="$util.toCheckLogin({url:`/user/pages/stored/list`})">
 				<view class="mt-md ml-md mr-md radius-20 rel">
 					<image mode="aspectFill" class="store-img radius-16"
-						src="https://lbqny.migugu.com/admin/playwith/mine/balance-bg.png">
+						:src="$util.assetUrl('admin/playwith/mine/balance-bg.png')">
 					</image>
 					<view class="abs store-img flex-center" style="padding:33rpx 40rpx;top:0;left:0;z-index: 2;">
 						<view class="flex-1 mr-lg c-base">
@@ -203,7 +203,7 @@
 			<auth :needAuth="userInfo && (!userInfo.phone || !userInfo.nickName)" :must="true" v-if="mineInfo.coach_status != 2"
 				:type="!userInfo.phone ? 'phone' : 'userInfo'" @go="toApply(1)" class="wizard-settle rel">
 				<view class="rel mt-md">
-					<image src="https://lbqny.migugu.com/admin/playwith/mine/settle-1.png" mode="aspectFill" class="settle-bg"></image>
+					<image :src="$util.assetUrl('admin/playwith/mine/settle-1.png')" mode="aspectFill" class="settle-bg"></image>
 					<view class="abs wizard-box flex-between pr-lg">
 						<view class="">
 							<view class="f-title c-base">{{$t('action.attendantName')}}入驻</view>
@@ -535,6 +535,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/asset.js';
 	import {
 		mapState,
 		mapActions,
@@ -558,27 +559,27 @@
 				is_share: true,
 				// 我的订单
 				orderList: [{
-					icon: 'https://lbqny.migugu.com/admin/playwith/mine/pay-1.png',
+					icon: assetUrl('admin/playwith/mine/pay-1.png'),
 					text: '待支付',
 					url: '/pages/order?tab=1',
 					number: 0
 				}, {
-					icon: 'https://lbqny.migugu.com/admin/playwith/mine/pay-2.png',
+					icon: assetUrl('admin/playwith/mine/pay-2.png'),
 					text: '待服务',
 					url: '/pages/order?tab=2',
 					number: 0
 				}, {
-					icon: 'https://lbqny.migugu.com/admin/playwith/mine/pay-3.png',
+					icon: assetUrl('admin/playwith/mine/pay-3.png'),
 					text: '服务中',
 					url: '/pages/order?tab=3',
 					number: 0
 				}, {
-					icon: 'https://lbqny.migugu.com/admin/playwith/mine/pay-4.png',
+					icon: assetUrl('admin/playwith/mine/pay-4.png'),
 					text: '待评价',
 					url: '/pages/order?tab=4',
 					number: 0
 				}, {
-					icon: 'https://lbqny.migugu.com/admin/playwith/mine/pay-5.png',
+					icon: assetUrl('admin/playwith/mine/pay-5.png'),
 					text: '退款/售后',
 					url: '/user/pages/refund/list',
 					number: 0

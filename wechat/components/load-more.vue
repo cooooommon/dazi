@@ -71,7 +71,7 @@
 		display: inline-block;
 		vertical-align: middle;
 		animation: weuiLoading 1s steps(12, end) infinite;
-		background: url('https://s10.mogucdn.com/mlcdn/c45406/171016_4a61e09hcadd157gadhdeje55e82c_32x32.png') no-repeat;
+		background: url('../static/images/loading-32.png') no-repeat;
 		-webkit-background-size: 100%;
 		background-size: 100%;
 	}

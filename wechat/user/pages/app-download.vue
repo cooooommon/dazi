@@ -5,13 +5,13 @@
 			</image>
 			<block v-if="(detail.ios_link && isIos) || (detail.android_link && !isIos)">
 				<view class="download-tip fix" v-if="isWechatAgent">
-					<image mode="widthFix" class="tip-img fix" src="https://lbqny.migugu.com/admin/anmo/mine/tip.png">
+					<image mode="widthFix" class="tip-img fix" :src="$util.assetUrl('admin/anmo/mine/tip.png')">
 					</image>
 				</view>
 				<view style="height: 200rpx;"></view>
 				<view class="space-safe"></view>
 				<view @tap.stop="toDownLoad" class="fix footer-btn">
-					<image mode="aspectFill" class="download-bg abs" src="https://lbqny.migugu.com/admin/anmo/mine/download-btn.png?1">
+					<image mode="aspectFill" class="download-bg abs" :src="$util.assetUrl('admin/anmo/mine/download-btn.png?1')">
 					</image>
 					<view class="flex-center f-md-title c-base">
 						<view class="item-btn flex-center radius" :style="{background:detail.primaryColor}">

@@ -2,7 +2,7 @@
 	<view class="add-pages">
 		<view class="add-tips" v-if="list.length == 0">
 			<view class="flex-center">
-				<image src="https://lbqny.migugu.com/admin/peiwan/add-package.png" mode="aspectFill" class="tips-img"></image>
+				<image :src="$util.assetUrl('admin/peiwan/add-package.png')" mode="aspectFill" class="tips-img"></image>
 			</view>
 			<view class="tips-text f-desc flex-center">添加丰富的内容, 介绍你的产品</view>
 			<view class="pt-lg flex-center pt-sm">

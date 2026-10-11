@@ -41,7 +41,7 @@
 								<text class="f-caption text-bold c-warning f-md-title">{{item.price}}</text>
 								<text class="f-caption c-caption text-delete">￥{{item.package_price}}</text>
 							</view>
-							<image src="https://lbqny.migugu.com/admin/peiwan/seckill-btn.png" mode="aspectFill" class="item-btn-img"></image>
+							<image :src="$util.assetUrl('admin/peiwan/seckill-btn-1.png')" mode="aspectFill" class="item-btn-img"></image>
 						</view>
 					</view>
 				</view>

@@ -16,8 +16,8 @@
 				</banner>
 				<view class="pl-lg pr-lg rel fill-base seckill-basic" v-if="detail.is_seckill == 1 && configInfo.plugAuth.seckill">
 					<view class="abs info-bg">
-						<image src="https://lbqny.migugu.com/admin/peiwan/seckill-info-01.png" mode="aspectFill" class="abs info-bg"></image>
-						<image src="https://lbqny.migugu.com/admin/peiwan/seckill-info-03.png" mode="aspectFill" class="abs info-bg1"></image>
+						<image :src="$util.assetUrl('admin/peiwan/seckill-info-01.png')" mode="aspectFill" class="abs info-bg"></image>
+						<image :src="$util.assetUrl('admin/peiwan/seckill-info-03.png')" mode="aspectFill" class="abs info-bg1"></image>
 					</view>
 					<view class="flex-between package-basic-box">
 						<view class="rel">
@@ -188,11 +188,11 @@
 		<uni-popup ref="share_box" type="center" :custom="true" :bgOpacity="0.6">
 			<view class="share-friend">
 				<view class="flex" style="justify-content: flex-end;">
-					<image class="share-tips1" src="https://lbqny.migugu.com/admin/card/share-friend2.png"
+					<image class="share-tips1" :src="$util.assetUrl('admin/card/share-friend2.png')"
 						mode="aspectFill"></image>
 				</view>
 				<view class="flex" style="justify-content: flex-end;">
-					<image class="share-tips2" src="https://lbqny.migugu.com/admin/card/share-friend1.png"
+					<image class="share-tips2" :src="$util.assetUrl('admin/card/share-friend1.png')"
 						mode="aspectFill"></image>
 				</view>
 				<view class="flex-center">

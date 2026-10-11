@@ -3,7 +3,7 @@
 		<fixed :zIndex="99">
 			<view class="fix-info rel" :class="[from]">
 				<image mode="widthFix" lazy-load class="technician-page-bg abs"
-					src="https://lbqny.migugu.com/admin/playwith/mine/technician-nav-bg.png"></image>
+					:src="$util.assetUrl('admin/playwith/mine/technician-nav-bg.png')"></image>
 				<view class="search-info rel">
 					<!-- #ifdef MP-WEIXIN -->
 					 <view :style="{height:`${navBarHeight}px`}"></view>

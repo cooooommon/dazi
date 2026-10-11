@@ -14,6 +14,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/asset.js';
 	import {
 		mapState,
 		mapActions
@@ -74,8 +75,8 @@
 					list
 				} = this.$util.getPage(-1)
 
-				let bg = 'https://lbqny.migugu.com/admin/anmo/mine/balance-text-bg.png'
-				let cover = 'https://lbqny.migugu.com/admin/anmo/mine/balance-share.png'
+				let bg = assetUrl('admin/anmo/mine/balance-text-bg.png')
+				let cover = assetUrl('admin/anmo/mine/balance-share.png')
 
 				let {
 					price = 0,

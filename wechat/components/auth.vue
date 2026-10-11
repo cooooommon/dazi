@@ -15,7 +15,7 @@
 			<view @tap.stop.prevent class="auth-box fill-base flex-column flex-center text-center radius-26">
 				<view class="space-md"></view>
 				<block v-if="pType == 'phone'">
-					<image mode="aspectFill" class="auth-img" :src="`https://lbqny.migugu.com/admin/public/auth.png`">
+					<image mode="aspectFill" class="auth-img" :src="$util.assetUrl('admin/public/auth.png')">
 					</image>
 				</block>
 				<view class="space-sm"></view>

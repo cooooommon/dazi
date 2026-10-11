@@ -2,7 +2,7 @@
 	<view class="pages-home">
 		<block v-if="isLoad">
 			<image mode="aspectFill" lazy-load class="service-page-bg abs"
-				src="https://lbqny.migugu.com/admin/playwith/mine/service-nav-bg.png"></image>
+				:src="$util.assetUrl('admin/playwith/mine/service-nav-bg.png')"></image>
 			<!-- #ifdef MP-WEIXIN -->
 			<view :style="{height:`${configInfo.navBarHeight}px`}"></view>
 			<!-- #endif -->
@@ -90,7 +90,7 @@
 						<auth @tap.stop.prevent :needAuth="userInfo && (!userInfo.phone || !userInfo.nickName)" :must="true"
 							:type="!userInfo.phone ? 'phone' : 'userInfo'" @go="toApply(1)" style="width:354rpx">
 							<view class="rel" style="width:354rpx">
-								<image class="wizard" :src="`https://lbqny.migugu.com/admin/playwith/service/01.png`"
+								<image class="wizard" :src="$util.assetUrl('admin/playwith/service/01.png')"
 									mode="aspectFill"></image>
 								<text class="c-base f-sm-title abs wizard-title">{{$t('action.attendantName')}}入驻</text>
 							</view>
@@ -99,7 +99,7 @@
 							<auth @tap.stop.prevent :needAuth="userInfo && (!userInfo.phone || !userInfo.nickName)" :must="true"
 								:type="!userInfo.phone ? 'phone' : 'userInfo'" @go="businessUrl">
 								<view class="rel">
-									<image class="business" src="https://lbqny.migugu.com/admin/playwith/service/02.png"
+									<image class="business" :src="$util.assetUrl('admin/playwith/service/02.png')"
 										mode="aspectFill"></image>
 									<text class="c-base f-sm-title abs business-title">商家入驻</text>
 								</view>
@@ -108,7 +108,7 @@
 							<auth @tap.stop.prevent :needAuth="userInfo && (!userInfo.phone || !userInfo.nickName)" :must="true" style="width:356rpx;"
 								:type="!userInfo.phone ? 'phone' : 'userInfo'" @go="$util.toCheckLogin({url: `/technician/pages/join-us`})">
 								<view class="mt-md rel">
-									<image class="join" src="https://lbqny.migugu.com/admin/playwith/service/03.png"
+									<image class="join" :src="$util.assetUrl('admin/playwith/service/03.png')"
 										mode="aspectFill"></image>
 									<text class="c-base f-sm-title abs join-title">合作加盟</text>
 								</view>
@@ -119,7 +119,7 @@
 						<auth @tap.stop.prevent :needAuth="userInfo && (!userInfo.phone || !userInfo.nickName)" :must="true"
 							:type="!userInfo.phone ? 'phone' : 'userInfo'" @go="toApply(1)" style="width:331rpx">
 							<view class="rel mr-md" style="width:331rpx">
-								<image class="_wizard" :src="`https://lbqny.migugu.com/admin/playwith/service/04.png`"
+								<image class="_wizard" :src="$util.assetUrl('admin/playwith/service/04.png')"
 									mode="aspectFill"></image>
 								<text class="c-base f-sm-title abs wizard-title">{{$t('action.attendantName')}}入驻</text>
 							</view>
@@ -127,7 +127,7 @@
 						<auth @tap.stop.prevent :needAuth="userInfo && (!userInfo.phone || !userInfo.nickName)" :must="true" style="width:356rpx;"
 							:type="!userInfo.phone ? 'phone' : 'userInfo'" @go="$util.toCheckLogin({url: `/technician/pages/join-us`})">
 							<view class="rel">
-								<image class="_join" src="https://lbqny.migugu.com/admin/playwith/service/03.png"
+								<image class="_join" :src="$util.assetUrl('admin/playwith/service/03.png')"
 									mode="aspectFill"></image>
 								<text class="c-base f-sm-title abs join-title">合作加盟</text>
 							</view>
@@ -181,7 +181,7 @@
 										<view class="flex-center mem-price" v-if="item.member_price">
 											<view class="rel mem-price-bg flex-center">
 												<view class="abs f-ms-little c-base" style="padding-right: 2px;z-index: 2;">会员价</view>
-												<image class="mem-price-img" src="https://lbqny.migugu.com/admin/member/member-bg.png" mode="aspectFill"></image>
+												<image class="mem-price-img" :src="$util.assetUrl('admin/member/member-bg.png')" mode="aspectFill"></image>
 											</view>
 											<view class="mem-price-text text-bold f-ms-little">¥{{item.member_price}}</view>
 										</view>
@@ -247,11 +247,11 @@
 				<view class="coupon-popup f_r_c_c">
 					<!-- #ifdef H5 -->
 					<view class="h5-image bg-img"
-						:style="{ backgroundImage : `url('https://lbqnyv2.migugu.com/bianzu3.png')`}">
+						:style="{ backgroundImage : `url(${$util.assetUrl('bianzu3.png')})`}">
 					</view>
 					<!-- #endif -->
 					<!-- #ifndef H5 -->
-					<image mode="aspectFill" lazy-load class="bg-img" src="https://lbqnyv2.migugu.com/bianzu3.png">
+					<image mode="aspectFill" lazy-load class="bg-img" :src="$util.assetUrl('bianzu3.png')">
 					</image>
 					<!-- #endif -->
 		
@@ -269,7 +269,7 @@
 						<view class="lists f_r_c_c">
 							<scroll-view scroll-y style="width: 420rpx;height:100%;">
 								<view class="list f_r_sb_c" v-for="(item, index) in couponList" :key="index">
-									<image src="https://lbqny.migugu.com/admin/anmo/coupon/coupon.png"
+									<image :src="$util.assetUrl('admin/anmo/coupon/coupon.png')"
 										mode="aspectFill">
 									</image>
 									<view class="f_r_sb_c">

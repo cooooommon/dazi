@@ -6,6 +6,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/asset.js';
 	import {
 		mapState,
 		mapActions,
@@ -58,10 +59,10 @@
 					'4': '申请失败',
 				},
 				image: {
-					'1': 'https://lbqny.migugu.com/admin/public/apply_wait.jpg',
-					'2': 'https://lbqny.migugu.com/admin/public/apply_suc.jpg',
-					'3': 'https://lbqny.migugu.com/admin/public/apply_fail.jpg',
-					'4': 'https://lbqny.migugu.com/admin/public/apply_fail.jpg',
+					'1': assetUrl('admin/public/apply_wait.jpg'),
+					'2': assetUrl('admin/public/apply_suc.jpg'),
+					'3': assetUrl('admin/public/apply_fail.jpg'),
+					'4': assetUrl('admin/public/apply_fail.jpg'),
 				},
 				isLoad: false,
 				status: 1

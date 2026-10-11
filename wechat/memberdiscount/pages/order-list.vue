@@ -4,7 +4,7 @@
 		<view class="list-item mt-md ml-md mr-md pl-lg pr-lg pb-lg fill-base radius-16"
 			v-for="(item,index) in list.data" :key="index">
 			<view class="flex-center pt-lg pb-lg b-1px-b">
-				<image class="cover" :src="`https://lbqny.migugu.com/admin/anmo/memberdiscount/member.png`"></image>
+				<image class="cover" :src="$util.assetUrl('admin/anmo/memberdiscount/member.png')"></image>
 				<view class="flex-1 ml-md f-mini-title c-title text-bold">{{item.title}}</view>
 			</view>
 			<view class="flex-center f-desc c-paragraph mt-lg">

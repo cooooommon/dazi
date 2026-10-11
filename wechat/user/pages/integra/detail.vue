@@ -13,7 +13,7 @@
 					<view class="f-caption" style="color: #F5EFFF;">我的积分</view>
 					<view class="text-bold c-base" style="font-size: 80rpx;">{{Number((mineInfo.integral*1 + mineInfo.wait_integral*1).toFixed(2)) || 0}}</view>
 				</view>
-				<image class="integra-bg abs" src="https://lbqny.migugu.com/admin/peiwan/integra-detail.png" mode="aspectFill"></image>
+				<image class="integra-bg abs" :src="$util.assetUrl('admin/peiwan/integra-detail.png')" mode="aspectFill"></image>
 			</view>
 			<view class="pt-lg f-mini-title pb-md pl-md mt-sm">积分明细</view>
 			<view class="pl-lg pr-lg radius-32 fill-base">

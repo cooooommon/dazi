@@ -61,7 +61,7 @@
 		</view>
 		<view class="radius-24 fill-base mt-md flex-between index-item ml-md mr-md pl-lg pr-lg " v-if="plugAuth.channelstaff">
 			<view class="flex-y-center">
-				<image src="https://lbqny.migugu.com/admin/peiwan/index-01.png" mode="aspectFill" class="index-item-icon"></image>
+				<image :src="$util.assetUrl('admin/peiwan/index-01.png')" mode="aspectFill" class="index-item-icon"></image>
 				<view class="pl-md">
 					<view class="f-title text-bold">邀请员工</view>
 					<view class="f-caption c-paragraph pt-sm">扩大推广范围，获得更多提成</view>
@@ -77,7 +77,7 @@
 		</view>
 		<view class="radius-24 fill-base mt-md flex-between index-item ml-md mr-md pl-lg pr-lg ">
 			<view class="flex-y-center">
-				<image src="https://lbqny.migugu.com/admin/peiwan/index-02.png" mode="aspectFill" class="index-item-icon"></image>
+				<image :src="$util.assetUrl('admin/peiwan/index-02.png')" mode="aspectFill" class="index-item-icon"></image>
 				<view class="pl-md">
 					<view class="f-title text-bold">我的渠道码</view>
 					<view class="f-caption c-paragraph pt-sm">邀请用户下单获得高额抽成</view>

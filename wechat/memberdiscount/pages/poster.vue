@@ -23,6 +23,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/asset.js';
 	import {
 		mapState,
 		mapActions
@@ -79,7 +80,7 @@
 				let qr_code = await this.$api.mine.userCommQr({
 					is_member: 1
 				})
-				let cover = 'https://lbqny.migugu.com/admin/anmo/memberdiscount/poster-share-img.png'
+				let cover = assetUrl('admin/anmo/memberdiscount/poster-share-img.png')
 				let {
 					avatarUrl = '',
 					nickName = ''

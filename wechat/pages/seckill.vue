@@ -17,7 +17,7 @@
 				<!-- #endif -->
 					<view class="seck-bg-top">
 						<view class="flex-between pl-lg pr-lg pt-md pb-md seck-top">
-							<image src="https://lbqny.migugu.com/admin/peiwan/seckill-text.png" mode="aspectFill" class="seckill-icon"></image>
+							<image :src="$util.assetUrl('admin/peiwan/seckill-text.png')" mode="aspectFill" class="seckill-icon"></image>
 							<view class="flex-center pl-lg" @tap.stop="toChooseLocation">
 								<i class="iconfont icondizhi" :style="{color: primaryColor}"></i> <!--icondizhi5 -->
 								<text class="f-paragraph text-bold ellipsis max-400" style="line-height: normal;">{{location&&location.address ? location.address :  '定位中...'}}</text>
@@ -106,7 +106,7 @@
 											<text class="f-caption text-bold c-warning f-md-title">{{item.price}}</text>
 											<text class="f-caption c-caption text-delete">￥{{item.package_price}}</text>
 										</view>
-										<image src="https://lbqny.migugu.com/admin/peiwan/seckill-btn-1.png" mode="aspectFill" class="item-btn-img"></image>
+										<image :src="$util.assetUrl('admin/peiwan/seckill-btn-1.png')" mode="aspectFill" class="item-btn-img"></image>
 									</view>
 								</view>
 							</view>
@@ -138,6 +138,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/asset.js';
 	import {
 		mapState,
 		mapActions,
@@ -159,7 +160,7 @@
 					height: '8rpx',
 					width: '8rpx'
 				},
-				banner: ['https://lbqny.migugu.com/admin/diy/default.png','https://lbqny.migugu.com/admin/diy/default.png'],
+				banner: [assetUrl('admin/diy/default.png'),assetUrl('admin/diy/default.png')],
 				title: '',
 				initHeight: 0
 			}

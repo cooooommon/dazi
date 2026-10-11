@@ -114,35 +114,35 @@
 				<view class="flex-center">
 					<!-- #ifdef MP-WEIXIN -->
 					<button open-type="share" class="clear-btn list-item flex-center flex-column">
-						<image mode="aspectFill" class="item-image" src="https://lbqny.migugu.com/admin/anmo/coupon/wechat.png"></image>
+						<image mode="aspectFill" class="item-image" :src="$util.assetUrl('admin/anmo/coupon/wechat.png')"></image>
 						<view style="font-size: 26rpx;color:#666;">分享给好友</view>
 					</button>
 					<view @tap.stop="toPoster" class="list-item flex-center flex-column">
-						<image mode="aspectFill" class="item-image" src="https://lbqny.migugu.com/admin/anmo/coupon/picture.png"></image>
+						<image mode="aspectFill" class="item-image" :src="$util.assetUrl('admin/anmo/coupon/picture.png')"></image>
 						<view>生成海报码</view>
 					</view>
 					<!-- #endif -->
 					<!-- #ifdef H5 -->
 					<view @tap.stop="toAppShare" class="list-item flex-center flex-column">
-						<image mode="aspectFill" class="item-image" src="https://lbqny.migugu.com/admin/anmo/coupon/wechat.png"></image>
+						<image mode="aspectFill" class="item-image" :src="$util.assetUrl('admin/anmo/coupon/wechat.png')"></image>
 						<view style="font-size: 26rpx;color:#666;">分享给好友</view>
 					</view>
 					<view @tap.stop="toPoster" class="list-item flex-center flex-column">
-						<image mode="aspectFill" class="item-image" src="https://lbqny.migugu.com/admin/anmo/coupon/picture.png"></image>
+						<image mode="aspectFill" class="item-image" :src="$util.assetUrl('admin/anmo/coupon/picture.png')"></image>
 						<view>生成海报码</view>
 					</view>
 					<!-- #endif -->
 					<!-- #ifdef APP-PLUS -->
 					<view @tap.stop="toAppShare(1)" class="list-item flex-center flex-column">
-						<image mode="aspectFill" class="item-image" src="https://lbqny.migugu.com/admin/anmo/coupon/wechat.png"></image>
+						<image mode="aspectFill" class="item-image" :src="$util.assetUrl('admin/anmo/coupon/wechat.png')"></image>
 						<view style="font-size: 26rpx;color:#666;">分享给好友</view>
 					</view>
 					<view @tap.stop="toAppShare(2)" class="list-item flex-center flex-column">
-						<image mode="aspectFill" class="item-image" src="https://lbqny.migugu.com/admin/anmo/coupon/wechat-moments.png"></image>
+						<image mode="aspectFill" class="item-image" :src="$util.assetUrl('admin/anmo/coupon/wechat-moments.png')"></image>
 						<view>分享到朋友圈</view>
 					</view>
 					<view @tap.stop="toPoster" class="list-item flex-center flex-column">
-						<image mode="aspectFill" class="item-image" src="https://lbqny.migugu.com/admin/anmo/coupon/picture.png"></image>
+						<image mode="aspectFill" class="item-image" :src="$util.assetUrl('admin/anmo/coupon/picture.png')"></image>
 						<view>生成海报码</view>
 					</view>
 					<!-- #endif -->
@@ -154,6 +154,7 @@
 </template>
 
 <script>
+	import assetUrl from '@/utils/asset.js';
 	import {
 		mapState,
 		mapActions,
@@ -174,7 +175,7 @@
 				payInd: 0,
 				chooseInd: 0,
 				qr_code: '',
-				imageUrl: 'https://lbqny.migugu.com/admin/anmo/mine/balance-wechat-share.png',
+				imageUrl: assetUrl('admin/anmo/mine/balance-wechat-share.png'),
 				coach_info: {},
 				param: {
 					page: 1,
