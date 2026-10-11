@@ -653,6 +653,21 @@ export default {
 		}
 		// #endif
 	},
+	//支付前校验微信会话：session_key 过期/轮换会导致支付签名 -15005 SIGNATURE_INVALID，
+	//校验失败时静默重新登录，刷新服务端 session_key 后再继续支付
+	async refreshWxSession () {
+		try {
+			let [csErr] = await uni.checkSession()
+			if (!csErr) return
+			let [loginErr, loginData] = await uni.login({ provider: 'weixin' })
+			if (loginErr || !loginData.code) return
+			let res = await $api.base.login({ code: loginData.code, pid: '' })
+			$store.commit('updateUserItem', { key: 'userInfo', val: res.data })
+			$store.commit('updateUserItem', { key: 'autograph', val: res.autograph })
+		} catch (e) {
+			console.warn('[virtualPay] 会话刷新失败', e)
+		}
+	},
 	//小程序虚拟支付（wx.requestVirtualPayment，payData 由服务端签名生成）
 	async virtualPay(pay_list) {
 		let that = this;
@@ -660,6 +675,7 @@ export default {
 		return Promise.reject("当前端不支持虚拟支付")
 		// #endif
 		// #ifdef MP-WEIXIN
+		await that.refreshWxSession()
 		//iOS 需要微信 8.0.68 及以上
 		try {
 			let sys = getSystemInfo()
