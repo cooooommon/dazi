@@ -254,7 +254,8 @@ class AdminIndex extends AdminRest
         $diss[] = ['status', '=', 2];
         $diss[] = ['is_work', '=', 1];
         $diss[] = ['user_id', '>', 0];
-        $coach_list = $coach_model->where($diss)->select()->toArray();
+        // 下面只用到 id，改走查询构造器：模型 hydrate 会触发 Coach::$append 的逐行 COUNT 查询
+        $coach_list = Db::name('massage_service_coach_list')->where($diss)->field('id')->select()->toArray();
         //接单中
         $working = [];
         //休息向导

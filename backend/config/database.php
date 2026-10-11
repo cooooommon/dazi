@@ -52,13 +52,13 @@ return [
                 // field('a.*')->group('非主键') 的写法（会报 1055），此处按连接关闭该模式
                 \PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))",
 
-                // 关闭 ORM 默认的"原生预处理"。原生预处理会让每条查询产生
-                // prepare/execute/close 共 3 次往返；本地应用与 MySQL 之间隔着
-                // Docker 端口代理，每次额外往返约 17ms，单条查询因此高达 ~50ms。
-                // 改用客户端模拟预处理后每条查询只需 1 次往返
-                // （实测单条 50ms -> 4.4ms，AdminIndex/coachAndUserData 14.3s -> 0.54s）。
-                // 副作用：数值列会以字符串返回（如 {"id":"17"}），与原生预处理不同。
-                \PDO::ATTR_EMULATE_PREPARES => true,
+                // 注意：这里【不要】设置 PDO::ATTR_EMULATE_PREPARES => true。
+                // 它能让每条查询少 2 次往返（本地经 Docker 端口代理时单条 50ms -> 4ms），
+                // 但会让所有数值列以【字符串】返回（status 由 int -1 变成 "-1"），
+                // 而前后端有大量 `status === 1` 这类严格比较（后台 web/ 就有 285 处），
+                // 会导致状态显示全错。生产环境应用与 MySQL 同机、原生预处理本来就快，
+                // 开启模拟预处理是纯损害。如确实要优化本地查询延迟，请改从
+                // "减少查询次数"（消除 N+1）或调整本地网络拓扑入手。
             ],
             // 数据库编码默认采用utf8
             'charset' => 'utf8mb4',

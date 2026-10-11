@@ -1,7 +1,6 @@
 <?php
 
 namespace app\massage\model;
-
 use Exception;
 use log\LogUtils;
 use app\BaseModel;
@@ -15,21 +14,18 @@ use app\member\model\MemberOrder;
 use app\member\model\MemberConfig;
 use app\integral\model\OrderIntegral;
 use app\broker\info\PermissionBroker;
+use think\Model;
 
 class Order extends BaseModel
 {
     //定义表名
     protected $name = 'massage_service_order_list';
-
-
     protected $append = [
         'coach_info',
         'order_goods',
         'all_goods_num',
         'address_info'
     ];
-
-
     /**
      * 电话号码加密
      * @param $value
@@ -45,8 +41,6 @@ class Order extends BaseModel
         }
         return $value;
     }
-
-
     /**
      * @param $value
      * @param $data
@@ -63,8 +57,6 @@ class Order extends BaseModel
             return $value;
         }
     }
-
-
     /**
      * @param $value
      * @param $data
@@ -79,8 +71,6 @@ class Order extends BaseModel
             return $address_model->dataInfo(['order_id' => $data['id']]);
         }
     }
-
-
     /**
      * @param $value
      * @param $data
@@ -99,14 +89,11 @@ class Order extends BaseModel
             return $order_goods_model->where($dis)->sum('num');
         }
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2021-03-19 17:05
      * @功能说明:子订单信息
      */
-
     public function getOrderGoodsAttr($value, $data)
     {
         if (!empty($data['id'])) {
@@ -119,11 +106,14 @@ class Order extends BaseModel
         }
     }
 
-
     /**
      * @param $value
      * @param $data
      * @功能说明:订单的团长信息
+     * @return Coach|array|mixed|Model|void|null
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
      * @author chenniang
      * @DataTime: 2021-03-19 16:49
      */
@@ -143,14 +133,11 @@ class Order extends BaseModel
             return $info;
         }
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2021-03-19 16:23
      * @功能说明:前端订单列表
      */
-
     public function indexDataList($dis, $mapor, $page = 10)
     {
         $data = $this->alias('a')
@@ -175,8 +162,6 @@ class Order extends BaseModel
         }
         return $data;
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2021-03-15 14:37
@@ -228,8 +213,6 @@ class Order extends BaseModel
         }
         return $data;
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2021-03-15 14:37
@@ -254,8 +237,6 @@ class Order extends BaseModel
         }
         return round($price, 2);
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2021-03-15 14:37
@@ -302,8 +283,6 @@ class Order extends BaseModel
         }
         return $data;
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:04
@@ -314,8 +293,6 @@ class Order extends BaseModel
         $data['create_time'] = time();
         return $this->insert($data);
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:05
@@ -325,8 +302,6 @@ class Order extends BaseModel
     {
         return $this->where($dis)->update($data);
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:06
@@ -336,8 +311,6 @@ class Order extends BaseModel
     {
         return $this->where($dis)->order('id desc')->paginate($page)->toArray();
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:43
@@ -348,8 +321,6 @@ class Order extends BaseModel
         $data = $this->where($dis)->find();
         return !empty($data) ? $data->toArray() : [];
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2021-03-18 14:33
@@ -373,8 +344,6 @@ class Order extends BaseModel
             return $this->where($dis)->count();
         }
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2021-03-19 09:28
@@ -416,13 +385,11 @@ class Order extends BaseModel
             $data['car_price'] = 0;
             $data['distance'] = 0;
         }
-
         //服务可不支付车费
         if ($data['is_car'] == 0) {
             $data['car_price'] = 0;
             $data['distance'] = 0;
         }
-
         //订单支付价
         $data['pay_price'] = round($data['goods_price'] + $data['car_price'], 2);
         $data['coach_id'] = $cap_id;
@@ -438,7 +405,6 @@ class Order extends BaseModel
         }
         return $data;
     }
-
     /**
      * @Desc: 处理会员折扣价
      * @param $order_info
@@ -474,7 +440,6 @@ class Order extends BaseModel
         $order_info['goods_price'] = $order_info['member_price'];
         return $order_info;
     }
-
     /**
      * @author chenniang
      * @DataTime: 2023-02-16 10:45
@@ -496,8 +461,6 @@ class Order extends BaseModel
         }
         return $order;
     }
-
-
     /**
      * @param $order
      * @param  int  $type
@@ -519,8 +482,6 @@ class Order extends BaseModel
         }
         return $arr_data;
     }
-
-
     /**
      * @param $order
      * @功能说明:获取佣金数据(常规)
@@ -565,7 +526,6 @@ class Order extends BaseModel
             //经纪人
             $comm_model->brokerCommission($order);
         }
-
         $arr = [
             'coach_balance', 'admin_balance', 'admin_id', 'user_cash', 'company_cash', 'coach_cash', 'admin_cash',
             'partner_id', 'user_top_id', 'user_balance', 'channel_cash', 'channel_balance', 'broker_cash',
@@ -582,8 +542,6 @@ class Order extends BaseModel
         $arr_data['data'] = $order;
         return $arr_data;
     }
-
-
     /**
      * @param $order
      * @功能说明:获取佣金数据(自定义)
@@ -624,7 +582,6 @@ class Order extends BaseModel
             //平台
             $comm_model->companyCommission($order);
         }
-
         $arr = [
             'coach_balance', 'admin_balance', 'admin_id', 'user_cash', 'company_cash', 'coach_cash', 'admin_cash',
             'partner_id'
@@ -639,8 +596,6 @@ class Order extends BaseModel
         $arr_data['data'] = $order;
         return $arr_data;
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2021-07-09 17:43
@@ -671,8 +626,6 @@ class Order extends BaseModel
             return round($start_price * 2, 2);
         }
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2021-03-22 11:31
@@ -733,7 +686,6 @@ class Order extends BaseModel
         }
         return true;
     }
-
     /**
      * @Desc: 发送代理商通知
      * @param $order
@@ -751,8 +703,6 @@ class Order extends BaseModel
         }
         return true;
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2021-03-22 15:31
@@ -773,7 +723,6 @@ class Order extends BaseModel
         }
         return round($price, 2);
     }
-
     /**
      * @author chenniang
      * @DataTime: 2021-03-22 15:31
@@ -794,8 +743,6 @@ class Order extends BaseModel
         }
         return $price;
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2021-03-26 15:15
@@ -812,7 +759,6 @@ class Order extends BaseModel
             //核销类型 1技师 2用户
             'hx_type' => $hx_type
         ];
-
         $res = $this->dataUpdate(['id' => $order['id']], $update);
         //解除虚拟电话绑定
         $called = new \app\virtual\model\Config();
@@ -821,8 +767,6 @@ class Order extends BaseModel
         $this->coachBalanceArr($order['uniacid'], $order['id']);
         return $res;
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2021-04-01 10:13
@@ -858,8 +802,6 @@ class Order extends BaseModel
         decCache($key, 1, $uniacid);
         return true;
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2021-04-01 10:13
@@ -887,7 +829,6 @@ class Order extends BaseModel
                 return $res;
             }
         }
-
         if ($is_up == 0 && $order['pay_type'] < 3) {
             //退换优惠券
             $coupon_model = new CouponRecord();
@@ -901,8 +842,6 @@ class Order extends BaseModel
         Db::commit();
         return true;
     }
-
-
     /**
      * @param $coach
      * @param $start_time
@@ -941,8 +880,6 @@ class Order extends BaseModel
         }
         return true;
     }
-
-
     /**
      * @param $order_list
      * @param $config
@@ -979,8 +916,6 @@ class Order extends BaseModel
         }
         return true;
     }
-
-
     /**
      * @param $rest_arr
      * @param $start_time
@@ -1001,8 +936,6 @@ class Order extends BaseModel
         }
         return true;
     }
-
-
     /**
      * @param $order
      * @param $start_time
@@ -1054,7 +987,6 @@ class Order extends BaseModel
                 $where[] = ['add_pid', '<>', $order_id];
                 $where[] = ['id', '<>', $order_id];
             }
-
             $order_list = $order_model->where($where)->field('id,start_time,end_time,order_end_time,pay_type,coach_id')->select()->toArray();
             //校验向导时间
             $res = $this->checkOrderTime($order_list, $config, $start_time, $end_time);
@@ -1081,8 +1013,6 @@ class Order extends BaseModel
             'time_long' => $total_long,
         ];
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2021-07-11 22:39
@@ -1127,8 +1057,6 @@ class Order extends BaseModel
         }
         return $update;
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2021-07-11 23:18
@@ -1198,8 +1126,6 @@ class Order extends BaseModel
         decCache($key, 1, $uniacid);
         return true;
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2022-08-30 14:12
@@ -1234,7 +1160,6 @@ class Order extends BaseModel
         $data['wait_price'] = round($data['wait_price'], 2);
         return $data;
     }
-
     /**
      * 获取订单数量
      * @param $where
@@ -1245,8 +1170,6 @@ class Order extends BaseModel
     {
         return $this->where($where)->count();
     }
-
-
     /**
      * 车费列表
      * @param $dis
@@ -1283,8 +1206,6 @@ class Order extends BaseModel
         }
         return $data;
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2022-10-26 11:16
@@ -1300,8 +1221,6 @@ class Order extends BaseModel
         }
         return $end_time;
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2023-02-17 11:46
@@ -1312,8 +1231,6 @@ class Order extends BaseModel
         $times = $this->where(['add_pid' => $order_id])->where('pay_type', '>', 0)->count();
         return !empty($times) ? $times : 1;
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2022-10-26 13:40
@@ -1329,8 +1246,6 @@ class Order extends BaseModel
         }
         return $start_time + $total_long * 60;
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2022-10-27 10:52
@@ -1340,8 +1255,6 @@ class Order extends BaseModel
     {
         return in_array($order['pay_type'], [6]) && $order['is_add'] == 0 && !empty($order['address_info']) ? 1 : 0;
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2023-02-17 14:20
@@ -1362,8 +1275,6 @@ class Order extends BaseModel
         }
         return true;
     }
-
-
     /**
      * @author chenniang
      * @DataTime: 2023-02-23 16:42
@@ -1382,7 +1293,6 @@ class Order extends BaseModel
         }
         return $data;
     }
-
     /**
      * @Desc: 分销商流水
      * @param $id
@@ -1426,7 +1336,6 @@ class Order extends BaseModel
         }
         return $data;
     }
-
     /**
      * @Desc: 判断渠道商时效性
      * @param $input
@@ -1469,7 +1378,6 @@ class Order extends BaseModel
             UserChannel::insert($insert);
             return $input;
         }
-
         //查找上次进入系统的渠道商
         $user_channel = UserChannel::where(['user_id' => $user_id])->order('id desc')->find();
         if (!empty($user_channel)) {
@@ -1535,7 +1443,6 @@ class Order extends BaseModel
         }
         return $input;
     }
-
     /**
      * @Desc: 获取用户消费金额
      * @param $user_id

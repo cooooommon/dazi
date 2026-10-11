@@ -116,7 +116,7 @@ class Index extends ApiRest
         ];
         $data['banner'] = $this->banner_model->where($dis)->field('id,img,link,type_id,connect_type,banner_type,video_url')->order('top desc,id desc')->select()->toArray();
         //判断插件权限没有返回空
-        $auth = AdminMenu::getAuthList((int)$this->_uniacid, ['recommend']);
+        $auth = AdminMenu::getAuthList((int) $this->_uniacid, ['recommend']);
 
         if (!empty($auth['recommend']) || $auth['recommend'] == true) {
 
@@ -149,10 +149,10 @@ class Index extends ApiRest
 
             $lng = !empty($input['lng']) ? $input['lng'] : 0;
 
-            $alh = 'ACOS(SIN((' . $lat . ' * 3.1415) / 180 ) *SIN((lat * 3.1415) / 180 ) +COS((' . $lat . ' * 3.1415) / 180 ) * COS((lat * 3.1415) / 180 ) *COS((' . $lng . ' * 3.1415) / 180 - (lng * 3.1415) / 180 ) ) * 6378.137*1000 as distance';
+            $alh = 'ACOS(SIN(('.$lat.' * 3.1415) / 180 ) *SIN((lat * 3.1415) / 180 ) +COS(('.$lat.' * 3.1415) / 180 ) * COS((lat * 3.1415) / 180 ) *COS(('.$lng.' * 3.1415) / 180 - (lng * 3.1415) / 180 ) ) * 6378.137*1000 as distance';
 
             if (!empty($input['name'])) {
-                $where[] = ['a.coach_name', 'like', '%' . $input['name'] . '%'];
+                $where[] = ['a.coach_name', 'like', '%'.$input['name'].'%'];
             }
 
             $page = $this->request->param('limit', 10);
@@ -177,7 +177,9 @@ class Index extends ApiRest
                     //是否是新人
                     $v['is_new'] = in_array($v['id'], $seven) ? 1 : 0;
                     //近30天单量
-                    $v['order_count'] = $order_model->where(['coach_id' => $v['id'], 'pay_type' => 7])->whereTime('create_time', '-30 days')->count();
+                    $v['order_count'] = $order_model->where([
+                        'coach_id' => $v['id'], 'pay_type' => 7
+                    ])->whereTime('create_time', '-30 days')->count();
                     $v['near_time'] = $this->coach_model->getCoachEarliestTime($v['id'], $config);
 
                     $v['age'] = getAge($v['birthday']);
@@ -242,72 +244,46 @@ class Index extends ApiRest
      */
     public function serviceList()
     {
-
         $input = $this->_param;
-
         $page = $input['limit'] ?? 10;
-
         $dis[] = ['uniacid', '=', $this->_uniacid];
-
         $dis[] = ['status', '=', 1];
-
         $dis[] = ['type', '=', 1];
-
         $dis[] = ['check_status', '=', 2];
-
         $dis[] = ['is_add', '=', 0];
-
         if (!empty($input['name'])) {
-
-            $dis[] = ['title', 'like', '%' . $input['name'] . '%'];
-
+            $dis[] = ['title', 'like', '%'.$input['name'].'%'];
         }
-
         if (!empty($input['service_type'])) {
-
-            $data = ServiceType::where(['uniacid' => $this->_uniacid, 'id' => $input['service_type'], 'status' => 1])->find();
-
+            $data = ServiceType::where([
+                'uniacid' => $this->_uniacid, 'id' => $input['service_type'], 'status' => 1
+            ])->find();
             if (empty($data)) {
-
                 return $this->success('');
             }
             $dis[] = ['service_type', '=', $input['service_type']];
         }
-
         $where = [
             [['b.status', '=', 2], ['b.is_work', '=', 1]]
         ];
         if (!empty($this->getUserId())) {
-
             $shield_coach = $this->coach_model->getShieldCoach($this->getUserId());
-
             if (!empty($shield_coach)) {
-
                 $where[] = ['b.id', 'not in', $shield_coach];
             }
         }
-
         $input['sort'] = !empty($input['sort']) ? $input['sort'] : 'top desc';
-
         $data = $this->model->indexDataList($dis, $page, $input['sort'], $where);
-
         if ($data['data']) {
-
             $auth_status = MemberConfig::getStatus($this->_uniacid);
-
             $config = MemberConfig::getInfo(['uniacid' => $this->_uniacid]);
-
             foreach ($data['data'] as &$datum) {
-
                 if ($auth_status) {
-
                     $datum['member_price'] = round($datum['price'] * $config['discount'] / 10, 2);
                 }
             }
         }
-
         return $this->success($data);
-
     }
 
 
@@ -404,7 +380,12 @@ class Index extends ApiRest
 
         $config_model = new ConfigSetting();
 
-        $data = $config_model->dataInfo($this->_uniacid, ['wechat_transfer', 'alipay_transfer', 'under_transfer', 'coach_format', 'recommend_style', 'coach_level_show', 'tax_point', 'recharge_status', 'gradualColor', 'agent_phone', 'qywx_company_id', 'qywx_kid', 'qywx_kid', 'user_force_login', 'place_order_path', 'realtime_location', 'broker_check', 'broker_poster', 'attendant_name', 'video_limit', 'user_from_switch']);
+        $data = $config_model->dataInfo($this->_uniacid, [
+            'wechat_transfer', 'alipay_transfer', 'under_transfer', 'coach_format', 'recommend_style',
+            'coach_level_show', 'tax_point', 'recharge_status', 'gradualColor', 'agent_phone', 'qywx_company_id',
+            'qywx_kid', 'qywx_kid', 'user_force_login', 'place_order_path', 'realtime_location', 'broker_check',
+            'broker_poster', 'attendant_name', 'video_limit', 'user_from_switch'
+        ]);
 
         if (!empty($data['qywx_kid'])) {
             $qywx_kid = explode(',', $data['qywx_kid']);
@@ -634,7 +615,7 @@ class Index extends ApiRest
 
         if (!empty($input['coach_name'])) {
 
-            $dis[] = ['a.coach_name', 'like', '%' . $input['coach_name'] . '%'];
+            $dis[] = ['a.coach_name', 'like', '%'.$input['coach_name'].'%'];
         }
 
         if (!empty($input['city_id'])) {
@@ -705,7 +686,7 @@ class Index extends ApiRest
 
         $lng = !empty($input['lng']) ? $input['lng'] : 0;
 
-        $alh = 'ACOS(SIN((' . $lat . ' * 3.1415) / 180 ) *SIN((a.lat * 3.1415) / 180 ) +COS((' . $lat . ' * 3.1415) / 180 ) * COS((a.lat * 3.1415) / 180 ) *COS((' . $lng . ' * 3.1415) / 180 - (a.lng * 3.1415) / 180 ) ) * 6378.137*1000 as distance';
+        $alh = 'ACOS(SIN(('.$lat.' * 3.1415) / 180 ) *SIN((a.lat * 3.1415) / 180 ) +COS(('.$lat.' * 3.1415) / 180 ) * COS((a.lat * 3.1415) / 180 ) *COS(('.$lng.' * 3.1415) / 180 - (a.lng * 3.1415) / 180 ) ) * 6378.137*1000 as distance';
 
         $data = $this->coach_model->serviceCoachList($dis, $alh, $order);
 
@@ -812,7 +793,7 @@ class Index extends ApiRest
 
         if (!empty($input['coach_name'])) {
 
-            $dis[] = ['a.coach_name', 'like', '%' . $input['coach_name'] . '%'];
+            $dis[] = ['a.coach_name', 'like', '%'.$input['coach_name'].'%'];
         }
 
         if (!empty($input['store_id'])) {
@@ -852,7 +833,7 @@ class Index extends ApiRest
 
         $lng = !empty($input['lng']) ? $input['lng'] : 0;
 
-        $alh = 'ACOS(SIN((' . $lat . ' * 3.1415) / 180 ) *SIN((a.lat * 3.1415) / 180 ) +COS((' . $lat . ' * 3.1415) / 180 ) * COS((a.lat * 3.1415) / 180 ) *COS((' . $lng . ' * 3.1415) / 180 - (a.lng * 3.1415) / 180 ) ) * 6378.137*1000 as distance';
+        $alh = 'ACOS(SIN(('.$lat.' * 3.1415) / 180 ) *SIN((a.lat * 3.1415) / 180 ) +COS(('.$lat.' * 3.1415) / 180 ) * COS((a.lat * 3.1415) / 180 ) *COS(('.$lng.' * 3.1415) / 180 - (a.lng * 3.1415) / 180 ) ) * 6378.137*1000 as distance';
 
         $data = $this->coach_model->typeServiceCoachList($dis, $alh, $order);
 
@@ -1177,12 +1158,12 @@ class Index extends ApiRest
 
         if (!empty($input['coach_name'])) {
 
-            $dis[] = ['d.coach_name', 'like', '%' . $input['coach_name'] . '%'];
+            $dis[] = ['d.coach_name', 'like', '%'.$input['coach_name'].'%'];
         }
 
         if (!empty($input['goods_name'])) {
 
-            $dis[] = ['c.goods_name', 'like', '%' . $input['goods_name'] . '%'];
+            $dis[] = ['c.goods_name', 'like', '%'.$input['goods_name'].'%'];
 
         }
 
@@ -1236,12 +1217,12 @@ class Index extends ApiRest
 
         if (!empty($input['coach_name'])) {
 
-            $dis[] = ['d.coach_name', 'like', '%' . $input['coach_name'] . '%'];
+            $dis[] = ['d.coach_name', 'like', '%'.$input['coach_name'].'%'];
         }
 
         if (!empty($input['goods_name'])) {
 
-            $dis[] = ['c.goods_name', 'like', '%' . $input['goods_name'] . '%'];
+            $dis[] = ['c.goods_name', 'like', '%'.$input['goods_name'].'%'];
 
         }
 
@@ -1314,7 +1295,8 @@ class Index extends ApiRest
         //评价
         $coach_comment_ratio = getConfigSetting($this->_uniacid, 'coach_comment_ratio');
         $coach_comment_ratio = explode(',', $coach_comment_ratio);
-        $data['star'] = round($data['star'] * $coach_comment_ratio[0] / 100 + $data['attitude_star'] * $coach_comment_ratio[1] / 100 + $data['speed_star'] * $coach_comment_ratio[2] / 100, 1);
+        $data['star'] = round($data['star'] * $coach_comment_ratio[0] / 100 + $data['attitude_star'] * $coach_comment_ratio[1] / 100 + $data['speed_star'] * $coach_comment_ratio[2] / 100,
+            1);
         $data['star'] = $data['star'] > 5 ? 5 : $data['star'];
 
         return $this->success($data);
@@ -1349,7 +1331,7 @@ class Index extends ApiRest
 
             $url = 'https://apis.map.qq.com/ws/geocoder/v1/?location=';
 
-            $url = $url . $input['location'] . '&key=' . $config['map_secret'] . '&poi_options=policy=1';
+            $url = $url.$input['location'].'&key='.$config['map_secret'].'&poi_options=policy=1';
 
             $data = longbingCurl($url, []);
 
@@ -1399,7 +1381,7 @@ class Index extends ApiRest
 
         $lng = $input['lng'];
 
-        $alh = 'ACOS(SIN((' . $lat . ' * 3.1415) / 180 ) *SIN((lat * 3.1415) / 180 ) +COS((' . $lat . ' * 3.1415) / 180 ) * COS((lat * 3.1415) / 180 ) *COS((' . $lng . ' * 3.1415) / 180 - (lng * 3.1415) / 180 ) ) * 6378.137*1000 as distance';
+        $alh = 'ACOS(SIN(('.$lat.' * 3.1415) / 180 ) *SIN((lat * 3.1415) / 180 ) +COS(('.$lat.' * 3.1415) / 180 ) * COS((lat * 3.1415) / 180 ) *COS(('.$lng.' * 3.1415) / 180 - (lng * 3.1415) / 180 ) ) * 6378.137*1000 as distance';
 
         $data = $city_model->where($dis)->field(['*', $alh])
             ->where(function ($query) use ($where) {
@@ -1415,7 +1397,7 @@ class Index extends ApiRest
             //是否必须定位到当前城市
             if ($key_find == 1) {
 
-                $keys = round($lng, 3) . '-' . round($lat, 3);
+                $keys = round($lng, 3).'-'.round($lat, 3);
 
                 $city = getCache($keys, $this->_uniacid);
 
@@ -1617,7 +1599,10 @@ class Index extends ApiRest
     public function plugAuth()
     {
 
-        $data = AdminMenu::getAuthList((int)$this->_uniacid, ['dynamic', 'recommend', 'store', 'demand', 'channelstaff', 'distributor', 'broker', 'storeplus', 'channel', 'seckill', 'integral']);
+        $data = AdminMenu::getAuthList((int) $this->_uniacid, [
+            'dynamic', 'recommend', 'store', 'demand', 'channelstaff', 'distributor', 'broker', 'storeplus', 'channel',
+            'seckill', 'integral'
+        ]);
 
         $config_model = new MassageConfig();
 
@@ -1670,7 +1655,7 @@ class Index extends ApiRest
         $name = $this->request->param('name', '');
         $where = [['uniacid', '=', $this->_uniacid], ['status', '=', 1]];
         if (!empty($name)) {
-            $where[] = ['name', 'like', '%' . $name . '%'];
+            $where[] = ['name', 'like', '%'.$name.'%'];
         }
         $list = DemandType::where($where)->field('id,name,price,img')->order('top desc')->select()->toArray();
         if ($is_all == 1) {
@@ -1707,7 +1692,7 @@ class Index extends ApiRest
             ['a.start_time', '>', time()],
             ['a.is_refund', 'in', [0, 3]]
         ];
-        $alh = '(2 * 6378.137* ASIN(SQRT(POW(SIN(3.1415926535898*(' . $lat . '-a.lat)/360),2)+COS(3.1415926535898*' . $lat . '/180)* COS(' . $lat . ' * 3.1415926535898/180)*POW(SIN(3.1415926535898*(' . $lng . '-a.lng)/360),2))))*1000 as distance';
+        $alh = '(2 * 6378.137* ASIN(SQRT(POW(SIN(3.1415926535898*('.$lat.'-a.lat)/360),2)+COS(3.1415926535898*'.$lat.'/180)* COS('.$lat.' * 3.1415926535898/180)*POW(SIN(3.1415926535898*('.$lng.'-a.lng)/360),2))))*1000 as distance';
         if (!empty($input['ser_id'])) {
             $where[] = ['a.ser_id', '=', $input['ser_id']];
         }
@@ -1720,7 +1705,8 @@ class Index extends ApiRest
         $data = DemandOrder::getList1($where, $alh, $dis, $page);
         if (!empty($data['data']) && !empty($input['coach_id'])) {
             $order_id = array_column($data['data'], 'id');
-            $order = DemandOrderApply::whereIn('order_id', $order_id)->where('coach_id', $input['coach_id'])->select()->toArray();
+            $order = DemandOrderApply::whereIn('order_id', $order_id)->where('coach_id',
+                $input['coach_id'])->select()->toArray();
             foreach ($data['data'] as &$datum) {
                 if ($datum['status'] == 2) {
                     foreach ($order as $item) {

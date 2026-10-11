@@ -5,6 +5,7 @@ namespace app\massage\model;
 
 
 use app\BaseModel;
+use think\facade\Db;
 
 class CoachTimeList extends BaseModel
 {
@@ -19,8 +20,6 @@ class CoachTimeList extends BaseModel
 
         $tt = time();
 
-        $coach_model = new Coach();
-
         $dis = [
 
             'uniacid' => $uniacid,
@@ -29,7 +28,8 @@ class CoachTimeList extends BaseModel
 
         ];
 
-        $list = $coach_model->where($dis)->field('id,start_time,end_time')->select()->toArray();
+        // 用查询构造器取数：模型 hydrate 会触发 Coach::$append(comment_num/collect_num) 逐行发 COUNT 查询
+        $list = Db::name('massage_service_coach_list')->where($dis)->field('id,start_time,end_time')->select()->toArray();
 
         $arr = [];
 
