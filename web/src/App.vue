@@ -93,7 +93,7 @@ export default {
       if ((!ShopOrderPage && (type === 4 || type === 1)) || (!ShopRefuseOrderPage && type === 3) || (!ShopRefundPage && type === 2)) {
         return
       }
-      let src = `https://lbqny.migugu.com/admin/anmo/pc/order_speech${type}.mp3`
+      let src = `/assets/voice/order_speech${type}.mp3`
       if (!this.audio) {
         this.playAudio(src, false)
       } else {
