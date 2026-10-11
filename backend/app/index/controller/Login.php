@@ -231,6 +231,10 @@ class Login
         //前端 if(is_blacklist) 对字符串 "0" 判真，会把正常用户误拦到 interdict 页
         $user_info['is_blacklist'] = intval($user_info['is_blacklist'] ?? 0);
 
+        //记录 session_key 指纹（支付签名失败时可对比：登录时 vs 下单时是否一致）
+        \app\virtualpay\library\VirtualPayService::log($this->uniacid, 'login_session_key_fp',
+            $user_info['id'] ?? 0, substr(md5((string)($user_info['session_key'] ?? '')), 0, 8));
+
         setCache($key, $user_info, 86400 * 3, 999999999999);
 
         $arr = [
@@ -660,6 +664,10 @@ class Login
 
         //is_blacklist 转整数返回（同小程序登录，避免前端字符串判真误拦）
         $user_info['is_blacklist'] = intval($user_info['is_blacklist'] ?? 0);
+
+        //记录 session_key 指纹（支付签名失败时可对比：登录时 vs 下单时是否一致）
+        \app\virtualpay\library\VirtualPayService::log($this->uniacid, 'login_session_key_fp',
+            $user_info['id'] ?? 0, substr(md5((string)($user_info['session_key'] ?? '')), 0, 8));
 
         setCache($key, $user_info, 86400 * 3, 999999999999);
 

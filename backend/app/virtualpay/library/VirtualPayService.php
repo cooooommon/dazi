@@ -118,6 +118,9 @@ class VirtualPayService
             self::fail('支付会话已失效，请退出小程序重新进入后再支付');
         }
 
+        //记录用于签名的 session_key 指纹（与登录时的指纹对比，判断 -15005 签名错误是否为 key 脱节）
+        self::log($uniacid, 'sign_session_key_fp', $openid, substr(md5((string)$session_key), 0, 8));
+
         $out_trade_no = 'VP' . date('YmdHis') . mt_rand(1000, 9999);
 
         $sign_arr = [
