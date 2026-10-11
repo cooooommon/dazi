@@ -40,30 +40,17 @@
     },
     "h5" : {
         "title" : "",
-        "domain" : "https://dazi.tunma.top/", // 改为自己的
+        "domain" : "https://dazi.tunma.top/",
         "devServer" : {
             "https" : true
         },
-        // "devServer" : {
-        //     "disableHostCheck" : true,
-        //     "proxy" : {
-        //         "/api" : {
-        //             "target" : "https://massage.cncnconnect.com",
-        //             "changeOrigin" : true,
-        //             "secure" : false,
-        //             "pathRewrite" : {
-        //                 "^/api" : ""
-        //             }
-        //         }
-        //     }
-        // },
         "router" : {
             "base" : "/h5/"
         },
         "sdkConfigs" : {
             "maps" : {
                 "qqmap" : {
-                    "key" : "7X2BZ-U5GL3-TZ63O-OC2SQ-NM36V-FFBFO" // 改为自己的 腾讯地图key
+                    "key" : "7X2BZ-U5GL3-TZ63O-OC2SQ-NM36V-FFBFO"
                 }
             }
         },
@@ -71,9 +58,8 @@
     },
     "app-plus" : {
         "runmode" : "liberate",
-        /* 5+App特有相关 */
         "compatible" : {
-            "ignoreVersion" : true //true表示忽略版本检查提示框，HBuilderX1.9.0及以上版本支持  
+            "ignoreVersion" : true
         },
         "usingComponents" : true,
         "splashscreen" : {
@@ -91,22 +77,21 @@
             "VideoPlayer" : {},
             "Camera" : {}
         },
-        /* 模块配置 */
         "distribute" : {
             "sdkConfigs" : {
                 "oauth" : {
                     "weixin" : {
-                        "appid" : "wx0253be52582aa0aa", // 改为自己的 微信开放平台应用信息
-                        "appsecret" : "34ab3a526ebfc54b21ad97cc4c67fee5", // 改为自己的
-                        "UniversalLinks" : "https://dazi.tunma.top/uni-universallinks/__UNI__307A9A7/" // 改为自己的
+                        "appid" : "wx0253be52582aa0aa",
+                        "appsecret" : "34ab3a526ebfc54b21ad97cc4c67fee5",
+                        "UniversalLinks" : "https://dazi.tunma.top/uni-universallinks/__UNI__307A9A7/"
                     },
                     "apple" : {}
                 },
                 "geolocation" : {
                     "amap" : {
                         "__platform__" : [ "ios", "android" ],
-                        "appkey_ios" : "409bf2ae106a827e0dd1ad769391e4a8", // 改为自己的  谷歌地图
-                        "appkey_android" : "b73acbb0d077810836b709c12e51cf50", // 改为自己的
+                        "appkey_ios" : "409bf2ae106a827e0dd1ad769391e4a8",
+                        "appkey_android" : "b73acbb0d077810836b709c12e51cf50",
                         "name" : " "
                     },
                     "system" : {
@@ -115,15 +100,15 @@
                 },
                 "maps" : {
                     "amap" : {
-                        "appkey_ios" : "409bf2ae106a827e0dd1ad769391e4a8", // 改为自己的  高德地图
-                        "appkey_android" : "b73acbb0d077810836b709c12e51cf50" // 改为自己的
+                        "appkey_ios" : "409bf2ae106a827e0dd1ad769391e4a8",
+                        "appkey_android" : "b73acbb0d077810836b709c12e51cf50"
                     }
                 },
                 "payment" : {
                     "weixin" : {
                         "__platform__" : [ "ios", "android" ],
-                        "appid" : "wxd8784e94289d39fe", // 改为自己的
-                        "UniversalLinks" : "https://testapps.cncnconnect.com/uni-universallinks/__UNI__307A9A7/" // 改为自己的
+                        "appid" : "wx0253be52582aa0aa",
+                        "UniversalLinks" : "https://dazi.tunma.top/uni-universallinks/__UNI__307A9A7/"
                     },
                     "alipay" : {
                         "__platform__" : [ "ios", "android" ]
@@ -131,8 +116,8 @@
                 },
                 "share" : {
                     "weixin" : {
-                        "appid" : "wxd8784e94289d39fe", // 改为自己的
-                        "UniversalLinks" : "https://testapps.cncnconnect.com/uni-universallinks/__UNI__307A9A7/" // 改为自己的
+                        "appid" : "wx0253be52582aa0aa",
+                        "UniversalLinks" : "https://dazi.tunma.top/uni-universallinks/__UNI__307A9A7/"
                     }
                 },
                 "ad" : {}
@@ -174,7 +159,6 @@
                 "autoSdkPermissions" : true
             },
             "icons" : {
-                // 改为自己的 logo
                 "android" : {
                     "hdpi" : "unpackage/res/icons/72x72.png",
                     "xhdpi" : "unpackage/res/icons/96x96.png",
@@ -209,12 +193,11 @@
             "ios" : {
                 "capabilities" : {
                     "entitlements" : {
-                        "com.apple.developer.associated-domains" : [ "applinks:testapps.cncnconnect.com" ] // 改为自己的
+                        "com.apple.developer.associated-domains" : [ "applinks:dazi.tunma.top" ]
                     }
                 },
                 "dSYMs" : false,
                 "privacyDescription" : {
-                    // ios隐私信息访问许可描述
                     "NSPhotoLibraryUsageDescription" : "允许手机存储权限读写相册，注册服务人员/退款时需从相册中选择图片",
                     "NSPhotoLibraryAddUsageDescription" : "允许手机存储权限读写相册，用于保存图片",
                     "NSCameraUsageDescription" : "需要访问相册，以便于上传服务人员资格证书、工作形象照等功能",
