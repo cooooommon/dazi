@@ -37,5 +37,18 @@ rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
       '  Tip: built files are meant to be served over an HTTP server.\n' +
       '  Opening index.html over file:// won\'t work.\n'
     ))
+
+    //自动把构建产物同步到本地后端静态目录（本地后台 nginx 直接生效，免去手动拷贝）
+    //生产部署仍需把 backend/public/static 上传服务器
+    const shell = require('shelljs')
+    const destStatic = path.resolve(__dirname, '../../backend/public/static')
+    if (require('fs').existsSync(path.resolve(__dirname, '../../backend/public'))) {
+      const syncSpinner = ora('syncing dist/static -> backend/public/static...')
+      syncSpinner.start()
+      shell.rm('-rf', destStatic)
+      shell.cp('-R', path.join(config.build.assetsRoot, config.build.assetsSubDirectory), destStatic)
+      syncSpinner.stop()
+      console.log(chalk.cyan('  static 已同步到 backend/public/static（本地后台生效）；生产部署请上传该目录。\n'))
+    }
   })
 })
