@@ -715,7 +715,18 @@ export default {
         time: 'order_end_time',
         icon: 'iconjishiwancheng'
       }],
-      subForm: {},
+      subForm: {
+        // 模板与 getDetail 都会直接读写这些嵌套结构，初值必须带上容器，
+        // 否则接口异常时渲染 / 赋值都会抛 TypeError
+        address_info: {},
+        coach_info: {},
+        store_info: {},
+        add_pid: {},
+        add_order_id: [],
+        dispatch_record: [],
+        order_goods: [],
+        imgs: []
+      },
       upRecord: {},
       showDialog: { label: false, file: false },
       labelList: [],
@@ -758,6 +769,15 @@ export default {
     async getDetail (id) {
       let { code, data } = await this.$api.shop.orderInfo({ id })
       if (code !== 200) return
+      // 兜底：下面会直接读写这些嵌套结构，接口未返回时会抛 TypeError
+      data.address_info = data.address_info || {}
+      data.coach_info = data.coach_info || {}
+      data.store_info = data.store_info || {}
+      data.add_pid = data.add_pid || {}
+      data.add_order_id = data.add_order_id || []
+      data.dispatch_record = data.dispatch_record || []
+      data.order_goods = data.order_goods || []
+      data.imgs = data.imgs || []
       data.is_balance = data.balance * 1 > 0 ? 1 : 0
       let { coach_refund_text: text } = data
       data.coach_refund_text = text && text.length > 0 ? text.replace(/\n/g, '<br>') : '没有填写原因哦'

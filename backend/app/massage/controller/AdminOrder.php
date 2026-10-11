@@ -295,6 +295,13 @@ class AdminOrder extends AdminRest
 
         $data = $this->refund_order_model->dataInfo($dis);
 
+        // 找不到退款单时 dataInfo 返回空数组；继续取 $data['order_id'] 会抛
+        // Undefined index -> 接口 500，前端拿不到数据、subForm 停在初始值后渲染崩溃
+        if (empty($data)) {
+
+            return $this->error('退款单不存在或已删除');
+        }
+
         $data['pay_order_code'] = $this->model->where(['id' => $data['order_id']])->value('order_code');
 
         $data['create_time'] = date('Y-m-d H:i:s', $data['create_time']);

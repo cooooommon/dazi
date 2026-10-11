@@ -221,7 +221,12 @@ export default {
         3: '拒绝退款'
       },
       subForm: {
-        id: 0
+        id: 0,
+        // 模板会直接取子属性（如 subForm.address_info.user_name），
+        // 初值必须带上这些容器，否则接口异常时会渲染崩溃
+        address_info: {},
+        coach_info: {},
+        imgs: []
       },
       dialogRefund: false,
       refundMoney: '',
@@ -250,6 +255,10 @@ export default {
     async getDetail (id) {
       let { code, data } = await this.$api.shop.refundOrderInfo({ id })
       if (code !== 200) return
+      // 兜底：接口未返回这些嵌套结构时，模板直接取子属性会抛 TypeError
+      data.address_info = data.address_info || {}
+      data.coach_info = data.coach_info || {}
+      data.imgs = data.imgs || []
       this.subForm = data
     },
     showRefundDialog () {

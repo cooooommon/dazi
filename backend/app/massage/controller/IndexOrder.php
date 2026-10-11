@@ -464,6 +464,12 @@ class IndexOrder extends ApiRest
 
         $data = $this->refund_model->dataInfo($dis);
 
+        // 找不到退款单时 dataInfo 返回空数组，继续取 $data['order_id'] 会抛
+        // Undefined index 导致接口 500（与 AdminOrder::refundOrderInfo 同一处缺陷）
+        if (empty($data)) {
+
+            return $this->error('退款单不存在或已删除');
+        }
 
         $data['create_time'] = date('Y-m-d H:i:s', $data['create_time']);
 
