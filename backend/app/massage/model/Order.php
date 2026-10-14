@@ -482,9 +482,16 @@ class Order extends BaseModel
         }
         return $arr_data;
     }
+
     /**
      * @param $order
      * @功能说明:获取佣金数据(常规)
+     * @param  int  $type
+     * @param  int  $admin_id
+     * @return array|int|int[]|mixed
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
      * @author chenniang
      * @DataTime: 2022-06-13 13:42
      */
@@ -1107,7 +1114,7 @@ class Order extends BaseModel
                                     }
                                 }
                                 //各类佣金
-                                $res = $comm_model->commissionSucessCash($value['id']);
+                                $res = $comm_model->commissionSuccessCash($value['id']);
                                 if ($res == 0) {
                                     Db::rollback();
                                     continue;
@@ -1283,10 +1290,10 @@ class Order extends BaseModel
     public function coachCashList($dis, $page = 10, $month = '')
     {
         if (!empty($month)) {
-            $firstday = date('Y-m-01', $month);
-            $lastday = date('Y-m-d H:i:s', strtotime("$firstday +1 month") - 1);
+            $firstDay = date('Y-m-01', $month);
+            $lastDay = date('Y-m-d H:i:s', strtotime("$firstDay +1 month") - 1);
             $data = $this->where($dis)->whereTime('create_time', '<=',
-                $lastday)->field('id,coach_id,order_code,pay_type,pay_price,start_time,create_time,user_id,end_time,add_pid,is_add,coach_cash,true_car_price')
+                $lastDay)->field('id,coach_id,order_code,pay_type,pay_price,start_time,create_time,user_id,end_time,add_pid,is_add,coach_cash,true_car_price')
                 ->order('create_time desc,id desc')->paginate($page)->toArray();
         } else {
             $data = $this->where($dis)->order('create_time desc,id desc')->field('id,coach_id,order_code,pay_type,pay_price,start_time,create_time,user_id,end_time,add_pid,is_add,coach_cash,true_car_price')->paginate($page)->toArray();

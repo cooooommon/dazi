@@ -18,6 +18,7 @@ use app\card\model\UserPhone;
 use app\card\model\Company as CompanyModel;
 use app\massage\info\PermissionMassage;
 use app\massage\model\Config;
+use app\massage\model\ConfigSetting;
 use longbingcore\permissions\AdminMenu;
 use longbingcore\permissions\DiyAuthConfig;
 use longbingcore\wxcore\WxSetting;
@@ -2342,7 +2343,7 @@ if (!function_exists('getConfigSetting')) {
     //@ioncube.dk myk("sha256", "cnjdbvjdnjd") -> "cff6bcac6bd92467e0cee72e5c879cdbf7044386eda8f464c817bd5c5c963d6f" RANDOM
     function getConfigSetting($uniacid, $key)
     {
-        $config_model = new \app\massage\model\ConfigSetting();
+        $config_model = new ConfigSetting();
         $config = $config_model->dataInfo($uniacid, [$key]);
         return $config[$key];
     }
@@ -2355,7 +2356,7 @@ if (!function_exists('getConfigSettingArr')) {
      */
     function getConfigSettingArr($uniacid, $key)
     {
-        $config_model = new \app\massage\model\ConfigSetting();
+        $config_model = new ConfigSetting();
         return $config_model->dataInfo($uniacid, $key);
     }
 }
