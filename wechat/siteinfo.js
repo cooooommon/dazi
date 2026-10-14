@@ -28,6 +28,6 @@ module.exports = {
 	"uniacid": "666",
 	"multiid": "0",
 	"version": "3.0",
-	"gzh_appid": "wx0253be52582aa0aa",
+	"gzh_appid": "wx98347e33ef8297d8",
 	"siteroot": isDev ? LOCAL_SITEROOT : ONLINE_SITEROOT
 }
