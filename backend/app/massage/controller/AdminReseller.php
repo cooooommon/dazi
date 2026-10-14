@@ -225,6 +225,12 @@ class AdminReseller extends AdminRest
 
         $info = $this->model->dataInfo($diss);
 
+        //分销商记录不存在（脏数据/已删除）时明确报错，避免后续未定义索引
+        if (empty($info)) {
+
+            $this->errorMsg('分销商不存在或已删除');
+        }
+
         if(!empty($input['status'])&&in_array($input['status'],[2,4,-1])){
 
             $input['sh_time'] = time();
@@ -290,9 +296,10 @@ class AdminReseller extends AdminRest
                 $update['is_fx'] = 1;
 
             }
-            $user = $this->user_model->dataInfo(['id' => $info['user_id']]);
+            $user = !empty($info['user_id']) ? $this->user_model->dataInfo(['id' => $info['user_id']]) : [];
 
-            if ($user['pid'] == 0) {
+            //分销商关联的用户不存在（脏数据）时跳过 pid 同步，避免未定义索引报错
+            if (!empty($user) && $user['pid'] == 0) {
 
                 $update['pid'] = $info['pid'];
 
