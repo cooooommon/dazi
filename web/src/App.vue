@@ -63,7 +63,8 @@ export default {
     },
     // 求救通知
     'routesItem.police_num' (val, oldval) {
-      let { is_admin: admin = 0 } = JSON.parse(window.localStorage.getItem('massage_userInfo'))
+      // 未登录时 massage_userInfo 为 null，兜底空对象防止崩溃
+      let { is_admin: admin = 0 } = JSON.parse(window.localStorage.getItem('massage_userInfo')) || {}
       let { help_voice: voice, have_police_read: read, notice_info: final = {} } = this.routesItem
       if (admin && read && final.notice_type === 1) {
         if (val > oldval && !this.audio) {
@@ -164,7 +165,8 @@ export default {
         notice = 0
         police = 0
       }
-      let { id, is_admin: admin = 0 } = JSON.parse(window.localStorage.getItem('massage_userInfo'))
+      // 未登录/存储被清掉时 massage_userInfo 为 null，兜底空对象防止崩溃
+      let { id, is_admin: admin = 0 } = JSON.parse(window.localStorage.getItem('massage_userInfo')) || {}
       let { have_police_read: read, isOrderNotification: isNotice } = this.routesItem
 
       this.changeRoutesItem({ key: 'notice_info', val: final })

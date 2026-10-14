@@ -25,7 +25,7 @@
 						</view>
 						<view @tap.stop="item.coach_type_status==1?toPreviewImage(index,1):''" class="h5-image abs"
 							:class="[`${imgType[item.coach_type_status]}-img`]"
-							:style="{ backgroundImage :  `url(`${$util.assetUrl('admin/anmo/mine/')}${imgType[item.coach_type_status]}_2.gif`)`}"
+							:style="{ backgroundImage : 'url(' + $util.assetUrl('admin/anmo/mine/') + imgType[item.coach_type_status] + '_2.gif)' }"
 							v-if="item.coach_type_status">
 						</view>
 						<!-- #endif -->

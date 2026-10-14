@@ -4,7 +4,7 @@
 	<view class='swiper-box' :style='{margin:`0 ${margin}rpx`,height:height+`rpx`}' >
 		<swiper class="swiper-ad" :indicator-dots="false" :autoplay="playVideo ? false : autoplay"
 			:indicator-color="indicatorColor" :indicator-active-color="indicatorActiveColor" :circular="circular"
-			:previous-margin="list.length>1?previousMargin:0" :next-margin="list.length>1?nextMargin:0"
+			:previous-margin="list.length>1&&previousMargin?`${previousMargin}`:''" :next-margin="list.length>1&&nextMargin?`${nextMargin}`:''"
 			@change="handerChange" :style="{height:height+'rpx'}" easing-function="linear" v-if="showSwiper">
 			<swiper-item v-for="(item,index) in list" :key="index">
 				<view class='img-box flex-center' @tap.stop='changeItem(item,index)'>

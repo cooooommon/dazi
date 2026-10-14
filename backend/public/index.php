@@ -14,7 +14,7 @@ namespace think;
 require __DIR__ . '/../vendor/autoload.php';
 
 header( "Access-Control-Allow-Origin: *" );
-header( "Access-Control-Allow-Headers: content-type,token , autograph, Origin, X-Requested-With, Content-Type, Accept, Authorization" );
+header( "Access-Control-Allow-Headers: content-type,token,autograph,isapp,Origin,X-Requested-With,Content-Type,Accept,Authorization" );
 header( 'Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS,PATCH' );
 // 执行HTTP应用并响应
 

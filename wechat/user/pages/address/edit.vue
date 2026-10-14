@@ -195,12 +195,14 @@
 				}
 				// #endif
 
-				let [, {
+				let [chooseErr, chosenLoca] = await uni.chooseLocation(param);
+				if (chooseErr || !chosenLoca) return
+				let { 
 					address = '',
 					longitude,
 					latitude,
 					name
-				}] = await uni.chooseLocation(param);
+				 } = chosenLoca;
 				if (!address) return
 				this.form.address = address
 				this.form.lng = longitude

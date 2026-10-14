@@ -1206,11 +1206,13 @@
 				}
 				// #endif
 
-				let [, {
+				let [chooseErr, chosenLoca] = await uni.chooseLocation(param);
+				if (chooseErr || !chosenLoca) return
+				let { 
 					address = '',
 					longitude: lng,
 					latitude: lat
-				}] = await uni.chooseLocation(param);
+				 } = chosenLoca;
 				if (!address) return
 				await this.$api.technician.coachUpdate({
 					address,

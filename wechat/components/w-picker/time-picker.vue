@@ -82,7 +82,8 @@
 				return (Number(n)<10?'0'+Number(n):Number(n)+'');
 			},
 			checkValue(value){
-				let strReg=/^\d{2}:\d{2}:\d{2}$/,example="18:00:05";
+				//按 second 属性区分格式：second=false 时值为 HH:MM，不应按 HH:MM:SS 校验（否则合法值误报）
+				let strReg=this.second?/^\d{2}:\d{2}:\d{2}$/:/^\d{2}:\d{2}$/,example=this.second?"18:00:05":"18:00";
 				if(!strReg.test(value)){
 					console.log(new Error("请传入与mode、fields匹配的value值，例value="+example+""))
 				}

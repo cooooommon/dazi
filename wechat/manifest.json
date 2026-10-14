@@ -42,7 +42,10 @@
         "title" : "",
         "domain" : "https://dazi.tunma.top/",
         "devServer" : {
-            "https" : true
+            // 本地运行 H5 走 http：页面若是 https，请求 http://<局域网IP>:8080 会被判为
+            // 混合内容而拦截（仅 127.0.0.1 豁免）。关掉后手机连局域网调试也能通。
+            // 注意：http 下手机上定位/摄像头等需要安全上下文的 API 不可用（桌面 localhost 不受影响）。
+            "https" : false
         },
         "router" : {
             "base" : "/h5/"
@@ -83,7 +86,7 @@
                     "weixin" : {
                         "appid" : "wx0253be52582aa0aa",
                         "appsecret" : "34ab3a526ebfc54b21ad97cc4c67fee5",
-                        "UniversalLinks" : "https://dazi.tunma.top/uni-universallinks/__UNI__307A9A7/"
+                        "UniversalLinks" : "https://dazi.tunma.top/uni-universallinks/__UNI__020BCD8/"
                     },
                     "apple" : {}
                 },
@@ -108,7 +111,7 @@
                     "weixin" : {
                         "__platform__" : [ "ios", "android" ],
                         "appid" : "wx0253be52582aa0aa",
-                        "UniversalLinks" : "https://dazi.tunma.top/uni-universallinks/__UNI__307A9A7/"
+                        "UniversalLinks" : "https://dazi.tunma.top/uni-universallinks/__UNI__020BCD8/"
                     },
                     "alipay" : {
                         "__platform__" : [ "ios", "android" ]
@@ -117,7 +120,7 @@
                 "share" : {
                     "weixin" : {
                         "appid" : "wx0253be52582aa0aa",
-                        "UniversalLinks" : "https://dazi.tunma.top/uni-universallinks/__UNI__307A9A7/"
+                        "UniversalLinks" : "https://dazi.tunma.top/uni-universallinks/__UNI__020BCD8/"
                     }
                 },
                 "ad" : {}

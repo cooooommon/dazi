@@ -33,50 +33,41 @@ class Config extends AdminRest
     //创建或者修改
     public function updateOssConfig()
     {
-
         //获取nuiacid
         $uniacid = $this->_uniacid;
         //获取上传参数
         $input = [];
-
         if (isset($this->_input['oss_config'])) {
             $input = $this->_input['oss_config'];
         }
         //数据清洗
         $data = getOssConfigData($input);
-
         $data['uniacid'] = $uniacid;
         //生成操作模型
         $oss_config_model = new OssConfig();
         //查询数据是否存在 
         $oss_config = $oss_config_model->getConfig(['uniacid' => $uniacid]);
-
         $result = false;
-
         $data['is_sync'] = 1;
-
         if (empty($oss_config)) {
             $result = $oss_config_model->createConfig($data);
         } else {
             //检查上传配置是否正确
             $result = $oss_config_model->updateConfig(['uniacid' => $uniacid], $data);
         }
-        $config = longbingGetOssConfig($uniacid, true);
-
+        longbingGetOssConfig($uniacid, true);
         if (!empty($result) && !empty($data['open_oss'])) {
             $path = LONGBING_EXTEND_PATH.'timg.jpg';
             if (file_exists($path)) {
                 $file = new UploadedFile($path, 'test.jpg');
                 $file_upload_model = new Upload($uniacid);
                 $check = $file_upload_model->upload('picture', $file);
-
                 if (empty($check)) {
                     return $this->error(lang('upload config error'));
                 }
             }
         }
         return $this->success($result);
-
     }
 
     //获取配置
@@ -98,11 +89,9 @@ class Config extends AdminRest
     //小程序设置
     public function getAppConfig()
     {
-        //获取参数
         $uniacid = $this->_uniacid;
         //获取数据
         $result = longbingGetAppConfig($uniacid);
-
         //返回数据
         return $this->success($result);
     }
@@ -114,44 +103,28 @@ class Config extends AdminRest
         $uniacid = $this->_uniacid;
         //获取数据
         $input = null;
-
-
         if (isset($this->_input['app_config'])) {
             $input = $this->_input['app_config'];
         }
-
         if (empty($input)) {
             return $this->error('not app config data ,please check input data.');
         }
-
         $input['uniacid'] = $this->_uniacid;
         //获取数据
         $result = longbingGetAppConfig($uniacid);
-
         $app_config_model = new AppConfig();
-
         $input['is_sync'] = 1;
-
         //企业微信小程序通知
         if (!empty($input['notice_switch']) && $input['notice_switch'] == 4) {
-
-            $insrt['yq_corpid'] = $input['yq_corpid'];
-
-            $insrt['yq_corpsecret'] = $input['yq_corpsecret'];
-
-            $insrt['yq_agentid'] = $input['yq_agentid'];
-
+            $insert['yq_corpid'] = $input['yq_corpid'];
+            $insert['yq_corpsecret'] = $input['yq_corpsecret'];
+            $insert['yq_agentid'] = $input['yq_agentid'];
             $send_model = new SendConfig();
-
-            $data = $send_model->configUpdate(['uniacid' => $this->_uniacid], $insrt);
-
+            $send_model->configUpdate(['uniacid' => $this->_uniacid], $insert);
             unset($input['yq_corpid']);
-
             unset($input['yq_corpsecret']);
-
             unset($input['yq_agentid']);
         }
-
         if (!isset($result['uniacid']) || empty($result)) {
             //创建
             $result = $app_config_model->createConfig($input);
@@ -159,9 +132,7 @@ class Config extends AdminRest
             //更新
             $result = $app_config_model->updateConfig(['id' => $result['id']], $input);
         }
-
         longbingGetAppConfig($uniacid, true);
-
         return $this->success($result);
     }
 
@@ -211,7 +182,6 @@ class Config extends AdminRest
             longbingGetAppConfig($this->_uniacid, true);
         }
         $result = ['mini_template_id' => $mini_template_id];
-
         return $this->success($result);
     }
 
@@ -224,7 +194,6 @@ class Config extends AdminRest
         $result = longbingGetAppTabbar($uniacid, true);
         //数据封装
         $result = longbingGetAppTabbarResponse($result);
-
         $pluginAuth = longbingGetPluginAuth($uniacid);
         $plugin_map = [
             "activity" => 'activity',
@@ -237,22 +206,17 @@ class Config extends AdminRest
             'dynamic' => 'Dynamic',
             'website' => 'Website',
         ];
-
-
         foreach ($result['data'] as $k => $item) {
             if (in_array($k, array_keys($plugin_map)) && ($pluginAuth['plugin'][$plugin_map[$k]] == 0)) {
                 unset($result['data'][$k]);
                 continue;
             }
-
             if (in_array($k, array_keys($meta_map)) && ($pluginAuth['web_manage_meta_config'][$meta_map[$k]] == 0)) {
                 unset($result['data'][$k]);
                 continue;
             }
         }
-
         $result = array_merge($result, $pluginAuth);
-
         return $this->success($result);
     }
 
@@ -269,11 +233,8 @@ class Config extends AdminRest
         if (empty($input)) {
             return $this->error('not tabbar data');
         }
-//        var_dump($input);die;
         //获取数据
         $tabbar = longbingGetAppTabbar($uniacid);
-
-
         //限制只能有5个tabbar
         $menu_now = [
             'menu1_is_hide' => $tabbar['menu1_is_hide'],
@@ -284,9 +245,7 @@ class Config extends AdminRest
             'menu_activity_is_show' => $tabbar['menu_activity_is_show'],
             'menu_house_is_show' => $tabbar['menu_house_is_show'],
         ];
-
         $permissions = longbingGetPluginAuth($this->_uniacid);
-
         $not_tabbars = [];
         if (!empty($permissions) && !empty($permissions['plugin'])) {
             //预约
@@ -344,7 +303,6 @@ class Config extends AdminRest
         if ($all_tabbar_count > $max_tabbar_count) {
             return $this->error('显示的菜单栏不能大于 '.$max_tabbar_count);
         }
-
         //判断数据是否存在
         $result = false;
         $tabbar_model = new AppTabbar();
@@ -363,17 +321,13 @@ class Config extends AdminRest
     {
         //获取数据
         $uniacid = $this->_uniacid;
-
         setCache('test', 1, 10, 8888);
         $result = clearCache($uniacid);
         clearCache(8888);
         //更新数据库
         UpdateService::installSql(8888, 0);
-
         $a = new WxSetting($this->_uniacid);
-
         $a->setH5Info();
-
         return $this->success($result);
     }
 
@@ -402,16 +356,11 @@ class Config extends AdminRest
      */
     public function wxUploadUpdate()
     {
-
         $input = $this->_param;
-
         $model = new WxUpload();
-
         $dis = [
-
             'uniacid' => $this->_uniacid
         ];
-
         $data = [
             //密钥
             'key' => $input['key'],
@@ -424,9 +373,6 @@ class Config extends AdminRest
         ];
         //详情
         $data = $model->settingUpdate($dis, $data);
-
         return $this->success($data);
     }
-
-
 }

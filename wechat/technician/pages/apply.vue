@@ -80,8 +80,8 @@
 							<picker @change="pickerChange($event,'city')" :value="cityIndex" :range="cityList"
 								range-key="title">
 								<view class="flex-y-center"
-									:class="[{'c-caption':cityIndex==-1},{'text-bold':cityIndex!=-1}]">
-									{{cityIndex!=-1?cityList[cityIndex].title:'请选择'}}
+									:class="[{'c-caption':cityIndex==-1 || !cityList[cityIndex]},{'text-bold':cityIndex!=-1 && !!cityList[cityIndex]}]">
+									{{cityList[cityIndex]?cityList[cityIndex].title:'请选择'}}
 									<i class="iconfont icongengduo ml-sm"></i>
 								</view>
 							</picker>
@@ -658,7 +658,9 @@
 					return
 				}
 				this.cityIndex = val
-				this.form.city_id = this.cityList[this.cityIndex].id
+				//城市列表为空（定位失败/后台未配置城市）时防崩，city_id 置 0
+				let cityItem = this.cityList[this.cityIndex] || {}
+				this.form.city_id = cityItem.id || 0
 			},
 			imgUpload(e) {
 				let {
@@ -715,11 +717,13 @@
 				}
 				// #endif
 
-				let [, {
+				let [chooseErr, chosenLoca] = await uni.chooseLocation(param);
+				if (chooseErr || !chosenLoca) return
+				let { 
 					address = '',
 					longitude,
 					latitude
-				}] = await uni.chooseLocation(param);
+				 } = chosenLoca;
 				if (!address) return
 				this.form.address = address
 				this.form.lng = longitude

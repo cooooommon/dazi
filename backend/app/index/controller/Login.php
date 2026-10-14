@@ -45,7 +45,7 @@ class Login
         //获取uniacid
         if (!isset($this->_param['i']) || !$this->_param['i']) {
 
-            return $this->error('need uniacid',400);
+            return $this->error('need uniacid', 400);
         }
 
         $this->uniacid = $this->_param['i'];
@@ -66,46 +66,46 @@ class Login
 
         }
 
-        $cap_id = !empty($input['cap_id'])?$input['cap_id']:0;
+        $cap_id = !empty($input['cap_id']) ? $input['cap_id'] : 0;
 
-        $code    = $input['code'];
+        $code = $input['code'];
         //  是否是微擎
-        $config = longbingGetAppConfig($this->uniacid,true);
+        $config = longbingGetAppConfig($this->uniacid, true);
 
-        $appid  = $config['appid'];
+        $appid = $config['appid'];
 
         $appsecret = $config['appsecret'];
 
 //        $encryptedData = isset($this->_param['encryptedData']) ? $this->_param['encryptedData'] : '';
         //  从微信获取openid等
-        $url  = "https://api.weixin.qq.com/sns/jscode2session?appid={$appid}&secret={$appsecret}&js_code={$code}&grant_type=authorization_code";
+        $url = "https://api.weixin.qq.com/sns/jscode2session?appid={$appid}&secret={$appsecret}&js_code={$code}&grant_type=authorization_code";
 
         $arrContextOptions = array(
 
-            "ssl"=>array(
+            "ssl" => array(
 
-                "verify_peer"     => false,
+                "verify_peer" => false,
 
-                "verify_peer_name"=> false,
+                "verify_peer_name" => false,
             ),
         );
 
-        $info = file_get_contents($url ,false, stream_context_create($arrContextOptions));
+        $info = file_get_contents($url, false, stream_context_create($arrContextOptions));
 
         $info = @json_decode($info, true);
         //  微信端返回错误
         if (isset($info['errcode'])) {
 
-            return $this->error($info['errcode'] . ', errmsg: ' . $info['errmsg']);
+            return $this->error($info['errcode'].', errmsg: '.$info['errmsg']);
 
         }
         if (!isset($info['session_key'])) {
 
-            return $this->error('session_key not exists','402');
+            return $this->error('session_key not exists', '402');
 
         }
 
-        if(empty($info['openid'])){
+        if (empty($info['openid'])) {
 
             return $this->error('openid not exists');
 
@@ -113,15 +113,15 @@ class Login
 
         $user_model = new \app\massage\model\User();
 
-        $unionid = !empty($info['unionid'])?$info['unionid']:'';
+        $unionid = !empty($info['unionid']) ? $info['unionid'] : '';
 
-        if(empty($unionid)){
+        if (empty($unionid)) {
 
             // return $this->error('请将小程序绑定到开发平台');
 
         }
 
-        if(!empty($unionid)){
+        if (!empty($unionid)) {
 
             $dis = [
 
@@ -131,11 +131,11 @@ class Login
 
             ];
 
-        }else{
+        } else {
             //没有移动应用
             $dis = [
 
-                'openid'  => $info['openid'],
+                'openid' => $info['openid'],
 
                 'uniacid' => $this->uniacid
 
@@ -144,7 +144,7 @@ class Login
 
         $user_info = $user_model->dataInfo($dis);
 
-        if(empty($user_info)){
+        if (empty($user_info)) {
 
             $dis = [
 
@@ -156,27 +156,27 @@ class Login
 
         $insert = [
 
-            'uniacid'     => $this->uniacid,
+            'uniacid' => $this->uniacid,
 
-            'openid'      => $info['openid'],
+            'openid' => $info['openid'],
 
-            'wechat_openid'=> $info['openid'],
+            'wechat_openid' => $info['openid'],
 
-            'cap_id'      => $cap_id,
+            'cap_id' => $cap_id,
 
             'session_key' => $info['session_key'],
 
-            'unionid'     => $unionid,
+            'unionid' => $unionid,
 
             'last_login_type' => 0,
 
         ];
 
-        if(empty($user_info)){
+        if (empty($user_info)) {
 
-            if(!empty($input['pid'])){
+            if (!empty($input['pid'])) {
                 //开启了分销审核
-                if($config['fx_check']==1){
+                if ($config['fx_check'] == 1) {
 
                     $distribu_model = new DistributionList();
 
@@ -184,19 +184,19 @@ class Login
 
                         'user_id' => $input['pid'],
 
-                        'status'  => 2
+                        'status' => 2
                     ];
 
                     $distribu_user = $distribu_model->dataInfo($dis);
 
-                    if(!empty($distribu_user)){
+                    if (!empty($distribu_user)) {
 
                         $insert['pid'] = $input['pid'];
 
                         $insert['bind_time'] = time();
                     }
 
-                }else{
+                } else {
 
                     $insert['pid'] = $input['pid'];
 
@@ -214,12 +214,12 @@ class Login
 
             UserFrom::add($this->uniacid, $user_info['id'], $from_type, $from_id);
 
-        }else{
+        } else {
 
-            $user_model->dataUpdate(['id'=>$user_info['id']],$insert);
+            $user_model->dataUpdate(['id' => $user_info['id']], $insert);
         }
 
-        $key = 'longbing_user_autograph_' . $user_info['id'];
+        $key = 'longbing_user_autograph_'.$user_info['id'];
 
         $key = md5($key);
 
@@ -233,13 +233,13 @@ class Login
 
         //记录 session_key 指纹（支付签名失败时可对比：登录时 vs 下单时是否一致）
         \app\virtualpay\library\VirtualPayService::log($this->uniacid, 'login_session_key_fp',
-            $user_info['id'] ?? 0, substr(md5((string)($user_info['session_key'] ?? '')), 0, 8));
+            $user_info['id'] ?? 0, substr(md5((string) ($user_info['session_key'] ?? '')), 0, 8));
 
         setCache($key, $user_info, 86400 * 3, 999999999999);
 
         $arr = [
 
-            'data'      => $user_info,
+            'data' => $user_info,
 
             'autograph' => $key
         ];
@@ -273,8 +273,6 @@ class Login
     }
 
 
-
-
     /**
      * @author chenniang
      * @DataTime: 2021-03-17 10:06
@@ -288,7 +286,7 @@ class Login
 
         $input = $input['data'];
 
-        $cap_id = !empty($input['cap_id'])?$input['cap_id']:0;
+        $cap_id = !empty($input['cap_id']) ? $input['cap_id'] : 0;
 
         $user_model = new \app\massage\model\User();
 
@@ -296,7 +294,7 @@ class Login
 
             'unionid' => $input['unionId'],
 
-            'status'  => 1
+            'status' => 1
 
         ];
 
@@ -304,41 +302,41 @@ class Login
 
         $insert = [
 
-            'uniacid'  => $uniacid,
+            'uniacid' => $uniacid,
 
             'nickName' => $input['nickName'],
 
-            'avatarUrl'=> $input['avatarUrl'],
+            'avatarUrl' => $input['avatarUrl'],
 
-            'unionid'  => $input['unionId'],
+            'unionid' => $input['unionId'],
 
-            'gender'   => $input['gender'],
+            'gender' => $input['gender'],
 
-            'city'     => $input['city'],
+            'city' => $input['city'],
 
             'province' => $input['province'],
 
-            'country'  => $input['country'],
+            'country' => $input['country'],
 
-            'openid'   => $input['openId'],
+            'openid' => $input['openId'],
 
-            'app_openid'  => $input['openId'],
+            'app_openid' => $input['openId'],
 
             //'create_time' => time(),
 
-            'cap_id'      => $cap_id,
+            'cap_id' => $cap_id,
 
-            'last_login_type'  => 1,
+            'last_login_type' => 1,
 
         ];
 
-        if(empty($user_info)){
+        if (empty($user_info)) {
 
-            $config = longbingGetAppConfig($this->uniacid,true);
+            $config = longbingGetAppConfig($this->uniacid, true);
 
-            if(!empty($input['pid'])){
+            if (!empty($input['pid'])) {
                 //开启了分销审核
-                if($config['fx_check']==1){
+                if ($config['fx_check'] == 1) {
 
                     $distribu_model = new DistributionList();
 
@@ -346,12 +344,12 @@ class Login
 
                         'user_id' => $input['pid'],
 
-                        'status'  => 2
+                        'status' => 2
                     ];
 
                     $distribu_user = $distribu_model->dataInfo($dis);
 
-                    if(!empty($distribu_user)){
+                    if (!empty($distribu_user)) {
 
                         $insert['pid'] = $input['pid'];
 
@@ -359,7 +357,7 @@ class Login
 
                     }
 
-                }else{
+                } else {
 
                     $insert['pid'] = $input['pid'];
 
@@ -370,29 +368,29 @@ class Login
 
             $user_model->dataAdd($insert);
 
-            $user_id  = $user_model->getLastInsID();
+            $user_id = $user_model->getLastInsID();
 
 
-        }else{
+        } else {
 
             $user_id = $user_info['id'];
 
-            $user_model->dataUpdate(['id'=>$user_id],$insert);
+            $user_model->dataUpdate(['id' => $user_id], $insert);
 
         }
 
-        $user_info = $user_model->dataInfo(['id'=>$user_id]);
+        $user_info = $user_model->dataInfo(['id' => $user_id]);
 
-        $key = 'longbing_user_autograph_' . $user_info['id'];
+        $key = 'longbing_user_autograph_'.$user_info['id'];
 
         $key = md5($key);
 
-        setCache($key, $user_info, 86400*3,999999999999);
+        setCache($key, $user_info, 86400 * 3, 999999999999);
 
 
         $arr = [
 
-            'data'      => $user_info,
+            'data' => $user_info,
 
             'autograph' => $key
         ];
@@ -407,13 +405,14 @@ class Login
      * @DataTime: 2022-10-27 16:32
      * @功能说明:获取code
      */
-    public function getCode($appId){
+    public function getCode($appId)
+    {
 
-        $url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'];
+        $url = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'];
 
-        $url = str_replace('&state=STATE','',$url);
+        $url = str_replace('&state=STATE', '', $url);
 
-        $url  = str_replace('&from=singlemessage','',$url);
+        $url = str_replace('&from=singlemessage', '', $url);
 
         $url2 = urlencode($url);
 
@@ -421,7 +420,7 @@ class Login
 
         $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid={$appId}&redirect_uri={$url2}&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect";
 
-        header('Location:' . $url);
+        header('Location:'.$url);
 
         exit;
 
@@ -450,13 +449,14 @@ class Login
      * @DataTime: 2022-02-24 10:28
      * @功能说明:h5公众号登陆
      */
-    public function webLogin(){
+    public function webLogin()
+    {
 
         $input = $this->_input;
 
-        $config = longbingGetAppConfig($this->uniacid,true);
+        $config = longbingGetAppConfig($this->uniacid, true);
 
-        $appid  = $config['web_app_id'];
+        $appid = $config['web_app_id'];
 
         if (!isset($input['code']) || !$input['code']) {
 
@@ -466,25 +466,25 @@ class Login
 
         $uniacid = $this->_param['i'];
 
-        $cap_id = !empty($input['cap_id'])?$input['cap_id']:0;
+        $cap_id = !empty($input['cap_id']) ? $input['cap_id'] : 0;
 
-        $code   = $input['code'];
+        $code = $input['code'];
         //  是否是微擎
         $appsecret = $config['web_app_secret'];
 
-        $url    = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={$appid}&secret={$appsecret}&code={$code}&grant_type=authorization_code";
+        $url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={$appid}&secret={$appsecret}&code={$code}&grant_type=authorization_code";
 
         $arrContextOptions = array(
 
-            "ssl"=>array(
+            "ssl" => array(
 
-                "verify_peer"     => false,
+                "verify_peer" => false,
 
-                "verify_peer_name"=> false,
+                "verify_peer_name" => false,
             ),
         );
 
-        $info = file_get_contents($url ,false, stream_context_create($arrContextOptions));
+        $info = file_get_contents($url, false, stream_context_create($arrContextOptions));
 
         $info = @json_decode($info, true);
 
@@ -492,7 +492,7 @@ class Login
 
             // $this->getCode($appid,$code);
 
-            return $this->error($info['errcode'] . ', errmsg: ' . $info['errmsg'],40163);
+            return $this->error($info['errcode'].', errmsg: '.$info['errmsg'], 40163);
 
         }
 
@@ -504,15 +504,15 @@ class Login
 
         $json = file_get_contents($url);//获取微信用户基本信息
 
-        $arr = json_decode($json,true);
+        $arr = json_decode($json, true);
 
         if (isset($arr['errcode'])) {
 
-            return $this->error($arr['errcode'] . ', errmsg: ' . $arr['errmsg'],40163);
+            return $this->error($arr['errcode'].', errmsg: '.$arr['errmsg'], 40163);
 
         }
 
-        if(empty($info['openid'])){
+        if (empty($info['openid'])) {
 
             return $this->error('openid not exists');
 
@@ -520,15 +520,15 @@ class Login
 
         $user_model = new \app\massage\model\User();
 
-        $unionid = !empty($info['unionid'])?$info['unionid']:'';
+        $unionid = !empty($info['unionid']) ? $info['unionid'] : '';
 
-        if(empty($unionid)){
+        if (empty($unionid)) {
 
             // return $this->error('请将公众号绑定到开发平台');
 
         }
 
-        if(!empty($unionid)){
+        if (!empty($unionid)) {
 
             $dis = [
 
@@ -536,26 +536,26 @@ class Login
 
                 'uniacid' => $this->uniacid,
 
-                'status'  => 1
+                'status' => 1
 
             ];
 
-        }else{
+        } else {
             //没有移动应用
             $dis = [
 
-                'openid'  => $info['openid'],
+                'openid' => $info['openid'],
 
                 'uniacid' => $this->uniacid,
 
-                'status'  => 1
+                'status' => 1
 
             ];
         }
 
         $user_info = $user_model->dataInfo($dis);
 
-        if(empty($user_info)){
+        if (empty($user_info)) {
 
             $dis = [
 
@@ -567,37 +567,37 @@ class Login
 
         $insert = [
 
-            'uniacid'  => $uniacid,
+            'uniacid' => $uniacid,
 
             'nickName' => $arr['nickname'],
 
-            'avatarUrl'=> $arr['headimgurl'],
+            'avatarUrl' => $arr['headimgurl'],
 
-            'unionid'  => $unionid,
+            'unionid' => $unionid,
 
-            'gender'   => $arr['sex'],
+            'gender' => $arr['sex'],
 
-            'city'     => $arr['city'],
+            'city' => $arr['city'],
 
             'province' => $arr['province'],
 
-            'country'  => $arr['country'],
+            'country' => $arr['country'],
 
-            'openid'   => $arr['openid'],
+            'openid' => $arr['openid'],
 
-            'web_openid'  => $arr['openid'],
+            'web_openid' => $arr['openid'],
 
-            'cap_id'      => $cap_id,
+            'cap_id' => $cap_id,
 
             'last_login_type' => 2,
 
         ];
 
-        if(empty($user_info)){
+        if (empty($user_info)) {
 
-            if(!empty($input['pid'])){
+            if (!empty($input['pid'])) {
                 //开启了分销审核
-                if($config['fx_check']==1){
+                if ($config['fx_check'] == 1) {
 
                     $distribu_model = new DistributionList();
 
@@ -605,12 +605,12 @@ class Login
 
                         'user_id' => $input['pid'],
 
-                        'status'  => 2
+                        'status' => 2
                     ];
 
                     $distribu_user = $distribu_model->dataInfo($dis);
 
-                    if(!empty($distribu_user)){
+                    if (!empty($distribu_user)) {
 
                         $insert['pid'] = $input['pid'];
 
@@ -618,7 +618,7 @@ class Login
 
                     }
 
-                }else{
+                } else {
 
                     $insert['pid'] = $input['pid'];
 
@@ -629,7 +629,7 @@ class Login
 
             $user_model->dataAdd($insert);
 
-            $user_id  = $user_model->getLastInsID();
+            $user_id = $user_model->getLastInsID();
 
             $from_id = $this->request->param('from_id', 0);
 
@@ -637,24 +637,24 @@ class Login
 
             UserFrom::add($uniacid, $user_id, $from_type, $from_id);
 
-            if(!empty($input['coupon_atv_id'])){
+            if (!empty($input['coupon_atv_id'])) {
 
                 $coupon_atv_model = new CouponAtv();
 
-                $coupon_atv_model->invUser($user_id,$input['coupon_atv_id']);
+                $coupon_atv_model->invUser($user_id, $input['coupon_atv_id']);
             }
 
-        }else{
+        } else {
 
             $user_id = $user_info['id'];
 
-            $user_model->dataUpdate(['id'=>$user_id],$insert);
+            $user_model->dataUpdate(['id' => $user_id], $insert);
 
         }
 
-        $user_info = $user_model->dataInfo(['id'=>$user_id]);
+        $user_info = $user_model->dataInfo(['id' => $user_id]);
 
-        $key = 'longbing_user_autograph_' . $user_info['id'];
+        $key = 'longbing_user_autograph_'.$user_info['id'];
 
         $key = md5($key);
 
@@ -667,13 +667,13 @@ class Login
 
         //记录 session_key 指纹（支付签名失败时可对比：登录时 vs 下单时是否一致）
         \app\virtualpay\library\VirtualPayService::log($this->uniacid, 'login_session_key_fp',
-            $user_info['id'] ?? 0, substr(md5((string)($user_info['session_key'] ?? '')), 0, 8));
+            $user_info['id'] ?? 0, substr(md5((string) ($user_info['session_key'] ?? '')), 0, 8));
 
         setCache($key, $user_info, 86400 * 3, 999999999999);
 
         $arr = [
 
-            'data'      => $user_info,
+            'data' => $user_info,
 
             'autograph' => $key
         ];
@@ -686,13 +686,14 @@ class Login
      * @DataTime: 2022-01-09 13:47
      * @功能说明:获取隐私协议
      */
-    public function getLoginProtocol(){
+    public function getLoginProtocol()
+    {
 
-        $input     = $this->_param;
+        $input = $this->_param;
 
-        $config    = longbingGetAppConfig($this->uniacid);
+        $config = longbingGetAppConfig($this->uniacid);
 
-        $data = !empty($config['login_protocol'])?$config['login_protocol']:'';
+        $data = !empty($config['login_protocol']) ? $config['login_protocol'] : '';
 
         return $this->success($data);
     }
@@ -703,7 +704,8 @@ class Login
      * @DataTime: 2022-08-10 18:30
      * @功能说明:
      */
-    public function getConfig(){
+    public function getConfig()
+    {
 
         $config = longbingGetAppConfig($this->uniacid);
 
@@ -723,7 +725,7 @@ class Login
 
         $setting_model = new MassageConfig();
 
-        $setting = $setting_model->dataInfo(['uniacid'=>$this->uniacid]);
+        $setting = $setting_model->dataInfo(['uniacid' => $this->uniacid]);
 
         $data['app_download_img'] = $setting['app_download_img'];
 
@@ -733,7 +735,7 @@ class Login
 
         $short_config_model = new ShortCodeConfig();
 
-        $short_config = $short_config_model->dataInfo(['uniacid'=>$this->uniacid]);
+        $short_config = $short_config_model->dataInfo(['uniacid' => $this->uniacid]);
 
         $data['short_code_status'] = $short_config['short_code_status'];
 
@@ -748,57 +750,40 @@ class Login
      * @功能说明:获取h5配置
      *
      */
-    public function getWebConfig(){
-
-        $input= $this->_param;
-
-        $update = !empty($input['update'])?$input['update']:0;
-
+    public function getWebConfig()
+    {
+        $input = $this->_param;
+        $update = !empty($input['update']) ? $input['update'] : 0;
         $config = longbingGetAppConfig($this->uniacid);
-
         $data['appid'] = $config['web_app_id'];
-
         $data['timestamp'] = time();
-
-        $data['nonceStr']  = uniqid() . rand(10000, 99999);
-
+        $data['nonceStr'] = uniqid().rand(10000, 99999);
         $wx_config = new WxSetting($this->uniacid);
-
         $jsapi_ticket = $wx_config->getWebTicket();
-
         $url_now = $input['page'];
-
         $str = "jsapi_ticket={$jsapi_ticket}&noncestr={$data['nonceStr']}&timestamp={$data['timestamp']}&url={$url_now}";
-
         $signature = sha1($str);
-
         $data['signature'] = $signature;
-
         $data['jsapi_ticket'] = $jsapi_ticket;
-
         return $this->success($data);
-
     }
 
 
-
-
-    public function checkToken(){
-
+    public function checkToken()
+    {
         $signature = $_GET["signature"];
         $timestamp = $_GET["timestamp"];
         $nonce = $_GET["nonce"];
-
         $token = '2232eefrfg'; //对应微信公众平台配置的token
         $tmpArr = array($token, $timestamp, $nonce);
         sort($tmpArr, SORT_STRING);
-        $tmpStr = implode( $tmpArr );
-        $tmpStr = sha1( $tmpStr );
+        $tmpStr = implode($tmpArr);
+        $tmpStr = sha1($tmpStr);
 
-        if( $tmpStr == $signature ){
+        if ($tmpStr == $signature) {
             echo $_GET['echostr'];
             exit;
-        }else{
+        } else {
             return false;
         }
     }
@@ -809,41 +794,43 @@ class Login
      * @DataTime: 2022-11-24 18:19
      * @功能说明:
      */
-    public function incCoachOrderNum(){
+    public function incCoachOrderNum()
+    {
 
-        $time = rand(1,3);
+        $time = rand(1, 3);
 
-        \think\facade\Db::name('massage_service_coach_list')->where(['uniacid'=>666])->update(['order_num'=>Db::raw("order_num+$time")]);
+        \think\facade\Db::name('massage_service_coach_list')->where(['uniacid' => 666])->update(['order_num' => Db::raw("order_num+$time")]);
 
         $arr = [
 
-            1 => rand(5,10),
+            1 => rand(5, 10),
 
-            2 => rand(10,20),
+            2 => rand(10, 20),
 
-            3 => rand(20,30),
+            3 => rand(20, 30),
 
-            4 => rand(20,30),
+            4 => rand(20, 30),
 
-            5 => rand(10,20),
+            5 => rand(10, 20),
 
-            6 => rand(1,5),
+            6 => rand(1, 5),
 
-            7 => rand(1,3),
+            7 => rand(1, 3),
 
-            8 => rand(1,3),
+            8 => rand(1, 3),
         ];
 
-        foreach ($arr as $key=> $value){
+        foreach ($arr as $key => $value) {
 
-            Db::name('massage_service_service_list')->where(['id'=>$key])->update(['sale'=>Db::raw("sale+$value"),'total_sale'=>Db::raw("total_sale+$value")]);
+            Db::name('massage_service_service_list')->where(['id' => $key])->update([
+                'sale' => Db::raw("sale+$value"), 'total_sale' => Db::raw("total_sale+$value")
+            ]);
 
         }
 
         return $this->success(true);
 
     }
-
 
 
     /**
@@ -859,39 +846,39 @@ class Login
 
         $input = $input['data'];
 
-        $cap_id = !empty($input['cap_id'])?$input['cap_id']:0;
+        $cap_id = !empty($input['cap_id']) ? $input['cap_id'] : 0;
 
         $user_model = new \app\massage\model\User();
 
         $dis = [
 
-            'openid'  => $input['openId'],
+            'openid' => $input['openId'],
 
-            'status'  => 1
+            'status' => 1
 
         ];
 
         $user_info = $user_model->dataInfo($dis);
 
-        $familyName = !empty($input['fullName']['familyName'])?$input['fullName']['familyName']:'';
+        $familyName = !empty($input['fullName']['familyName']) ? $input['fullName']['familyName'] : '';
 
-        $giveName   = !empty($input['fullName']['giveName'])?$input['fullName']['giveName']:'';
+        $giveName = !empty($input['fullName']['giveName']) ? $input['fullName']['giveName'] : '';
 
-        $name = !empty($familyName.$giveName)?$familyName.$giveName:'默认用户';
+        $name = !empty($familyName.$giveName) ? $familyName.$giveName : '默认用户';
 
         $insert = [
 
-            'uniacid'  => $uniacid,
+            'uniacid' => $uniacid,
 
             'nickName' => $name,
 
-            'avatarUrl'=> 'https://lbqny.migugu.com/admin/farm/default-user.png',
+            'avatarUrl' => 'https://lbqny.migugu.com/admin/farm/default-user.png',
 
-            'openid'   => $input['openId'],
+            'openid' => $input['openId'],
 
-            'push_id'  => !empty($input['push_id'])?$input['push_id']:'',
+            'push_id' => !empty($input['push_id']) ? $input['push_id'] : '',
 
-            'cap_id'   => $cap_id,
+            'cap_id' => $cap_id,
 
             'last_login_type' => 4,
 
@@ -899,13 +886,13 @@ class Login
 
         ];
 
-        $config = longbingGetAppConfig($this->uniacid,true);
+        $config = longbingGetAppConfig($this->uniacid, true);
 
-        if(empty($user_info)){
+        if (empty($user_info)) {
 
-            if(!empty($input['pid'])){
+            if (!empty($input['pid'])) {
                 //开启了分销审核
-                if($config['fx_check']==1){
+                if ($config['fx_check'] == 1) {
 
                     $distribu_model = new DistributionList();
 
@@ -913,12 +900,12 @@ class Login
 
                         'user_id' => $input['pid'],
 
-                        'status'  => 2
+                        'status' => 2
                     ];
 
                     $distribu_user = $distribu_model->dataInfo($dis);
 
-                    if(!empty($distribu_user)){
+                    if (!empty($distribu_user)) {
 
                         $insert['pid'] = $input['pid'];
 
@@ -926,7 +913,7 @@ class Login
 
                     }
 
-                }else{
+                } else {
 
                     $insert['pid'] = $input['pid'];
 
@@ -937,34 +924,34 @@ class Login
 
             $user_model->dataAdd($insert);
 
-            $user_id  = $user_model->getLastInsID();
+            $user_id = $user_model->getLastInsID();
 
-            if(!empty($input['coupon_atv_id'])){
+            if (!empty($input['coupon_atv_id'])) {
 
                 $coupon_atv_model = new CouponAtv();
 
-                $coupon_atv_model->invUser($user_id,$input['coupon_atv_id']);
+                $coupon_atv_model->invUser($user_id, $input['coupon_atv_id']);
             }
 
-        }else{
+        } else {
 
             $user_id = $user_info['id'];
 
-            $user_model->dataUpdate(['id'=>$user_id],$insert);
+            $user_model->dataUpdate(['id' => $user_id], $insert);
 
         }
 
-        $user_info = $user_model->dataInfo(['id'=>$user_id]);
+        $user_info = $user_model->dataInfo(['id' => $user_id]);
 
-        $key = 'longbing_user_autograph_' . $user_info['id'];
+        $key = 'longbing_user_autograph_'.$user_info['id'];
 
         $key = md5($key);
 
-        setCache($key, $user_info, 86400*3,999999999999);
+        setCache($key, $user_info, 86400 * 3, 999999999999);
 
         $arr = [
 
-            'data'      => $user_info,
+            'data' => $user_info,
 
             'autograph' => $key
         ];
@@ -972,9 +959,6 @@ class Login
         return $this->success($arr);
 
     }
-
-
-
 
 
 }

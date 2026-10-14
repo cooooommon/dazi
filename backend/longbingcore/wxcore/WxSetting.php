@@ -3,7 +3,9 @@
  * 服务通知
  *
  *************************************/
+
 namespace longbingcore\wxcore;
+
 use app\admin\model\AppConfig;
 use app\massage\info\PermissionMassage;
 use app\sendmsg\model\SendConfig;
@@ -27,14 +29,13 @@ class WxSetting
     protected $uniacid = '7777';
     //配置信息
     protected $config = [];
+
     //初始化
-    function __construct($uniacid = '666'){
-        $this->uniacid   = $uniacid;
-
-        $this->config    = $this->getConfig($this->uniacid);
-
-        $this->appid     = $this->getAppid();
-
+    function __construct($uniacid = '666')
+    {
+        $this->uniacid = $uniacid;
+        $this->config = $this->getConfig($this->uniacid);
+        $this->appid = $this->getAppid();
         $this->appsecret = $this->getAppsecret();
     }
 
@@ -47,7 +48,9 @@ class WxSetting
      */
     protected function getAppid()
     {
-        if(isset($this->config['appid'])) return $this->config['appid'];
+        if (isset($this->config['appid'])) {
+            return $this->config['appid'];
+        }
         return null;
     }
 
@@ -60,7 +63,9 @@ class WxSetting
      */
     protected function getAppsecret()
     {
-        if(isset($this->config['appsecret'])) return $this->config['appsecret'];
+        if (isset($this->config['appsecret'])) {
+            return $this->config['appsecret'];
+        }
         return null;
     }
 
@@ -77,17 +82,16 @@ class WxSetting
      */
     public function getConfig($uniacid)
     {
-
-        $config = longbingGetAppConfig($uniacid);
-        //返回数据
-        return $config;
+        return longbingGetAppConfig($uniacid);
     }
 
     //检查信息是否存在
     public function checkConfig()
     {
         $result = true;
-        if(empty($this->uniacid) || empty($this->appid) || empty($this->appsecret)) $result = false;
+        if (empty($this->uniacid) || empty($this->appid) || empty($this->appsecret)) {
+            $result = false;
+        }
         return $result;
     }
 
@@ -98,50 +102,32 @@ class WxSetting
      * @author chenniang
      * @DataTime: 2019-12-25 17:35
      */
-    public function lbSingleGetAccessToken ()
+    public function lbSingleGetAccessToken()
     {
         $key = "longbing_card_access_token";
-
-        $value = getCache( $key,$this->uniacid );
-
-
-        if ( $value !=false )
-        {
+        $value = getCache($key, $this->uniacid);
+        if ($value != false) {
             return $value;
         }
-
         $uniacid = $this->uniacid;
         //基础检查
-        if(!$this->checkConfig()){
-
-
+        if (!$this->checkConfig()) {
             return false;
         }
         //appid
-        $appid     = $this->appid;
+        $appid = $this->appid;
         //appsecret
         $appsecret = $this->appsecret;
-
         $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$appid&secret={$appsecret}";
-
-
-        $accessToken = file_get_contents( $url );
-
-       // dump($accessToken);exit;
-
-        if ( strstr( $accessToken, 'errcode' ) )
-        {
+        $accessToken = file_get_contents($url);
+        if (strstr($accessToken, 'errcode')) {
             return 0;
         }
-
-        $accessToken = json_decode( $accessToken, true );
-        $accessToken = $accessToken[ 'access_token' ];
-
-        setCache( $key, $accessToken, 7000, $uniacid );
-
+        $accessToken = json_decode($accessToken, true);
+        $accessToken = $accessToken['access_token'];
+        setCache($key, $accessToken, 7000, $uniacid);
         return $accessToken;
     }
-
 
 
     /**
@@ -151,17 +137,17 @@ class WxSetting
      * @return bool|string
      * descrption:添加模版 返回模版消息id
      */
-    public function addTmpl($data){
+    public function addTmpl($data)
+    {
         //获取token
         $access_token = $this->lbSingleGetAccessToken();
 //        dump($access_token);exit;
         //添加模版的小程序地址
-        $url  =  "https://api.weixin.qq.com/wxaapi/newtmpl/addtemplate?access_token={$access_token}";
+        $url = "https://api.weixin.qq.com/wxaapi/newtmpl/addtemplate?access_token={$access_token}";
         //请求
-        $data =  json_encode( $data, JSON_UNESCAPED_UNICODE );
+        $data = json_encode($data, JSON_UNESCAPED_UNICODE);
         //返回模版消息id 是个array
-        $res  =  $this->curlPost( $url,$data );
-        return $res;
+        return $this->curlPost($url, $data);
     }
 
     /**
@@ -169,14 +155,14 @@ class WxSetting
      * @DataTime: 2019-12-26 11:39
      * @功能说明:获取所有模版消息列表
      */
-    public function getAllTpmlList(){
+    public function getAllTpmlList()
+    {
         //获取token
         $access_token = $this->lbSingleGetAccessToken();
         //获取小程序所有 模版消息的url
         $url = "https://api.weixin.qq.com/wxaapi/newtmpl/gettemplate?access_token={$access_token}";
         //请求
-        $res  =  $this->curlPost($url,NULL,'GET');
-        return $res;
+        return $this->curlPost($url, null, 'GET');
     }
 
 
@@ -186,7 +172,8 @@ class WxSetting
      * @author chenniang
      * @DataTime: 2019-12-26 14:08
      */
-    public function deleteTmpl($tpml_id){
+    public function deleteTmpl($tpml_id)
+    {
         //获取token
         $access_token = $this->lbSingleGetAccessToken();
         //获取小程序所有 模版消息的url
@@ -194,9 +181,8 @@ class WxSetting
         //请求参数
         $data['priTmplId'] = $tpml_id;
         //请求
-        $data =  json_encode( $data, JSON_UNESCAPED_UNICODE );
-        $res  =  $this->curlPost($url,$data);
-        return $res;
+        $data = json_encode($data, JSON_UNESCAPED_UNICODE);
+        return $this->curlPost($url, $data);
     }
 
     /**
@@ -204,16 +190,15 @@ class WxSetting
      * @DataTime: 2019-12-26 18:54
      * @功能说明:发送模版消息
      */
-    public function sendTmpl($data){
+    public function sendTmpl($data)
+    {
         //获取token
         $access_token = $this->lbSingleGetAccessToken();
         //获取小程序所有 模版消息的url
-        $url  = "https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token={$access_token}";
+        $url = "https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token={$access_token}";
         //请求
-        $data =  json_encode( $data, JSON_UNESCAPED_UNICODE );
-//        dump($data);exit;
-        $res  =  $this->curlPost($url,$data);
-        return $res;
+        $data = json_encode($data, JSON_UNESCAPED_UNICODE);
+        return $this->curlPost($url, $data);
     }
 
 
@@ -222,19 +207,19 @@ class WxSetting
      * @DataTime: 2019-12-26 18:54
      * @功能说明:获取当前账号下的所有模版消息
      */
-    public function getUserTmpl(){
+    public function getUserTmpl()
+    {
         //获取token
         $access_token = $this->lbSingleGetAccessToken();
         //获取小程序所有 模版消息的url
-        $url  = "https://api.weixin.qq.com/wxaapi/newtmpl/gettemplate?access_token={$access_token}";
+        $url = "https://api.weixin.qq.com/wxaapi/newtmpl/gettemplate?access_token={$access_token}";
         //请求
-        $res  =  $this->curlPost($url,[],'GET');
-        return $res;
+        return $this->curlPost($url, [], 'GET');
     }
 
 
     /**
-     * @param array $data
+     * @param  array  $data
      * @功能说明:企业微信消息
      * @author chenniang
      * @DataTime: 2020-04-27 18:33
@@ -244,15 +229,9 @@ class WxSetting
         if (is_array($data)) {
             $data = json_encode($data, JSON_UNESCAPED_UNICODE);
         }
-
         $accessTokenWW = $this->companyMsgToken();
-
         $url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={$accessTokenWW}";
-
-        $res = $this->curlPost($url, $data);
-
-
-        return $res;
+        return $this->curlPost($url, $data);
     }
 
 
@@ -261,62 +240,31 @@ class WxSetting
      * @DataTime: 2020-04-28 13:40
      * @功能说明:获取企业消息token
      */
-    public function companyMsgToken(){
-
+    public function companyMsgToken()
+    {
         $key = "longbing_card_access_token_qy_cn";
-
-        $value = getCache($key,$this->uniacid);
-
-        if ( $value !== false )
-        {
+        $value = getCache($key, $this->uniacid);
+        if ($value !== false) {
             return $value;
         }
-
-        $send_model  = new SendConfig();
+        $send_model = new SendConfig();
         //配置信息
-        $config      = $send_model->configInfo(['uniacid'=>$this->uniacid]);
-
-        if (!empty($config['yq_corpid'])&& !empty($config['yq_corpsecret'] ))
-        {
-            $key    = $config['yq_corpid'];
-
+        $config = $send_model->configInfo(['uniacid' => $this->uniacid]);
+        if (!empty($config['yq_corpid']) && !empty($config['yq_corpsecret'])) {
+            $key = $config['yq_corpid'];
             $secret = $config['yq_corpsecret'];
-
-            $url    = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=$key&corpsecret=$secret";
-
-            $accessToken = file_get_contents( $url );
-
-            $accessToken = json_decode( $accessToken, true );
-
-            if($accessToken['errcode'] != 0){
-
-                echo json_encode( [ 'code' => 402, 'error' => '获取token失败' ] );
-
+            $url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=$key&corpsecret=$secret";
+            $accessToken = file_get_contents($url);
+            $accessToken = json_decode($accessToken, true);
+            if ($accessToken['errcode'] != 0) {
+                echo json_encode(['code' => 402, 'error' => '获取token失败']);
                 exit;
             }
-            $accessToken = $accessToken[ 'access_token' ];
-
-            setCache( $key, $accessToken, 7200, $this->uniacid );
+            $accessToken = $accessToken['access_token'];
+            setCache($key, $accessToken, 7200, $this->uniacid);
         }
-
-        return !empty($accessToken)?$accessToken:'';
+        return !empty($accessToken) ? $accessToken : '';
     }
-    /**
-     * 功能说明 post 请求
-     *
-     * @param $url
-     * @param $post
-     * @param $method
-     * @param int $header
-     * @return bool|string
-     * @author chenniang
-     * @DataTime: 2019-12-25 18:40
-     */
-    public function curlPost($url,$post=NULL,$post_type='POST'){
-        $result = $this->crulGetData($url,$post,$post_type);
-        return $result;
-    }
-
 
     /**
      * 功能说明 post 请求
@@ -324,26 +272,45 @@ class WxSetting
      * @param $url
      * @param $post
      * @param $method
-     * @param int $header
+     * @param  int  $header
      * @return bool|string
      * @author chenniang
      * @DataTime: 2019-12-25 18:40
      */
-    public function crulGetData($url, $post, $method, $header=1){
-        $this->_errno = NULL;
-        $this->_error = NULL;
+    public function curlPost($url, $post = null, $post_type = 'POST')
+    {
+        return $this->crulGetData($url, $post, $post_type);
+    }
+
+
+    /**
+     * 功能说明 post 请求
+     *
+     * @param $url
+     * @param $post
+     * @param $method
+     * @param  int  $header
+     * @return bool|string
+     * @author chenniang
+     * @DataTime: 2019-12-25 18:40
+     */
+    public function crulGetData($url, $post, $method, $header = 1)
+    {
+        $this->_errno = null;
+        $this->_error = null;
         $ch = curl_init($url);
-
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-        if($post != NULL)
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        if ($post != null) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        }
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
-        curl_setopt($ch, CURLOPT_AUTOREFERER,true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 120);
 
-        if($header)
+        if ($header) {
             curl_setopt($ch, CURLOPT_HEADER, false);
+        }
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                 "Content-Type: application/json; charset=utf-8",
@@ -355,20 +322,16 @@ class WxSetting
 
     /**
      * @param $content
-     * @param $access_token
-     * @功能说明: 违禁词检测
+     * @return int[]|mixed
      * @author chenniang
      * @DataTime: 2020-01-02 17:07
      */
     public function wxContentRlue($content)
     {
         $access_token = $this->lbSingleGetAccessToken();
-
-        if(empty($access_token)){
-
-            return ['errcode'=>0];
+        if (empty($access_token)) {
+            return ['errcode' => 0];
         }
-
         $url = "https://api.weixin.qq.com/wxa/msg_sec_check?access_token={$access_token}";
         $tmp = [
             'url' => $url,
@@ -377,8 +340,7 @@ class WxSetting
             ],
         ];
         $rest = $this->curlPost($tmp['url'], urldecode(json_encode($tmp['data'])));
-        $rest = json_decode($rest, true);
-        return $rest;
+        return json_decode($rest, true);
     }
 
 
@@ -388,30 +350,28 @@ class WxSetting
      * @author chenniang
      * @DataTime: 2020-03-27 11:44
      */
-    function imgSecCheck($img_path){
-
+    function imgSecCheck($img_path)
+    {
         //token
         $access_token = $this->lbSingleGetAccessToken();
         //地址
-        $url ='https://api.weixin.qq.com/wxa/img_sec_check?access_token='.$access_token;
+        $url = 'https://api.weixin.qq.com/wxa/img_sec_check?access_token='.$access_token;
         //请求包
         $post_data = [
-            'media'=>new \CURLFile($img_path)
+            'media' => new \CURLFile($img_path)
         ];
-
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
 
-        curl_setopt($ch, CURLOPT_URL,$url);
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 100);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,$post_data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
         $output = curl_exec($ch);
         curl_close($ch);
-
         return $output;
     }
 
@@ -421,72 +381,46 @@ class WxSetting
      * @DataTime: 2022-02-26 17:19
      * @功能说明:
      */
-    public function getGzhToken($update=0){
-
+    public function getGzhToken($update = 0)
+    {
         $uniacid = $this->uniacid;
-
-        $config  = longbingGetAppConfig($this->uniacid);
-
-        $appid   = $config['web_app_id'];
-
-        $gzh_secret  = $config['web_app_secret'];
-
-        $key         = 'articleToken-';
-
+        $config = longbingGetAppConfig($this->uniacid);
+        $appid = $config['web_app_id'];
+        $gzh_secret = $config['web_app_secret'];
+        $key = 'articleToken-';
         $value = getCache($key, $uniacid);
-
-        if ($value&&$update==0)
-        {
+        if ($value && $update == 0) {
             return $value;
         }
-
         $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$appid}&secret={$gzh_secret}";
-
         $js_token = file_get_contents($url);
-
         $js_token = json_decode($js_token, true);
-
-        if (isset($js_token['access_token']))
-        {
+        if (isset($js_token['access_token'])) {
             $js_token = $js_token['access_token'];
-
             setCache($key, $js_token, 1200, $uniacid);
-
             return $js_token;
         }
-
-        $str = '请求ac错误' . isset($js_token['errmsg']) ? $js_token['errmsg'] : '';
+        $str = '请求ac错误'.isset($js_token['errmsg']) ? $js_token['errmsg'] : '';
         echo $str;
         die;
     }
 
 
     /**
-     * @param $appid
-     * @param $gzh_secret
      * @param $js_token
-     * @param $uniacid
-     * @功能说明:
+     * @return false|mixed
      * @author chenniang
      * @DataTime: 2022-02-26 17:21
      */
-    public function getArticleJsapiTicket( $js_token)
+    public function getArticleJsapiTicket($js_token)
     {
-
-
         $ticket_url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={$js_token}&type=jsapi";
-
         $ticket_arr = file_get_contents($ticket_url);
-
         $ticket_arr = json_decode($ticket_arr, true);
-
-        if (isset($ticket_arr['errcode']) && $ticket_arr['errcode'] != 0)
-        {
+        if (isset($ticket_arr['errcode']) && $ticket_arr['errcode'] != 0) {
             return false;
         }
-        $jsapi_ticket = $ticket_arr['ticket'];
-
-        return $jsapi_ticket;
+        return $ticket_arr['ticket'];
     }
 
 
@@ -495,35 +429,22 @@ class WxSetting
      * @DataTime: 2022-07-14 22:23
      * @功能说明:
      */
-    public function getWebTicket(){
-
-        $config  = longbingGetAppConfig($this->uniacid);
-
-        $appid   = $config['web_app_id'];
-
+    public function getWebTicket()
+    {
+        $config = longbingGetAppConfig($this->uniacid);
+        $appid = $config['web_app_id'];
         $key = 'ticket'.$appid;
-
-        $ticket = getCacheAll($key,$this->uniacid);
-
-        if($ticket){
-
+        $ticket = getCacheAll($key, $this->uniacid);
+        if ($ticket) {
             return $ticket;
         }
-
-        $token  = $this->getGzhToken(1);
-
+        $token = $this->getGzhToken(1);
         $ticket = $this->getArticleJsapiTicket($token);
-
-        if(!empty($ticket)){
-
-            setCacheAll($key,$ticket,3600,$this->uniacid);
-
-        }else{
-
+        if (!empty($ticket)) {
+            setCacheAll($key, $ticket, 3600, $this->uniacid);
+        } else {
             clearCache($this->uniacid);
-
         }
-
         return $ticket;
     }
 
@@ -533,26 +454,17 @@ class WxSetting
      * @DataTime: 2022-03-14 18:56
      * @功能说明:php二维码 返回base64
      */
-    public function phpQrCode($data){
-
-        require_once  EXTEND_PATH.'phpqrcode/phpqrcode.php';
-
+    public function phpQrCode($data)
+    {
+        require_once EXTEND_PATH.'phpqrcode/phpqrcode.php';
         $errorCorrectionLevel = 'L';  //容错级别
-
         $matrixPointSize = 10;
         //生成图片大小
         ob_start();
-
-        \QRcode::png($data,false,$errorCorrectionLevel,$matrixPointSize,2,false,0xFFFFFF,0x000000);
-
+        \QRcode::png($data, false, $errorCorrectionLevel, $matrixPointSize, 2, false, 0xFFFFFF, 0x000000);
         $imgstr = base64_encode(ob_get_contents());
-
         ob_end_clean();
-
-        $imgstr = 'data:image/png;base64,'.$imgstr;
-
-        return $imgstr;
-
+        return 'data:image/png;base64,'.$imgstr;
     }
 
 
@@ -561,25 +473,17 @@ class WxSetting
      * @DataTime: 2022-08-12 10:58
      * @功能说明:初始化h5所需文件
      */
-    public function setH5Info(){
-
+    public function setH5Info()
+    {
         $p = new PermissionMassage($this->uniacid);
-
         $value = $p->getSaasValue();
-
-        if(is_numeric($value)&&$value>0){
-
+        if (is_numeric($value) && $value > 0) {
             $config = $this->getConfig($this->uniacid);
-
             $app_id = $config['web_app_id'];
-
-            $url  = 'https://'.$_SERVER['HTTP_HOST'].'/index.php';
-
+            $url = 'https://'.$_SERVER['HTTP_HOST'].'/index.php';
             $fileName = 'siteinfo.json';
-
-            $MapKey =$config['map_secret'];
-
-            $tempStr =<<<str
+            $MapKey = $config['map_secret'];
+            $tempStr = <<<str
                 let siteInfo = {
                     "uniacid": "666",
                     "multiid": "0",
@@ -590,16 +494,10 @@ class WxSetting
                 }
 
 str;
-
-            LongbingFile::createDir(H5_PATH) ;
-
-            file_put_contents(H5_PATH . $fileName, $tempStr);
-
+            LongbingFile::createDir(H5_PATH);
+            file_put_contents(H5_PATH.$fileName, $tempStr);
         }
-
         return true;
-
-
     }
 
 
@@ -609,18 +507,12 @@ str;
      * @author chenniang
      * @DataTime: 2023-02-03 15:57
      */
-    public function checkContent($content){
-
-        $access_token  = $this->getGzhToken(1);
-
+    public function checkContent($content)
+    {
+        $access_token = $this->getGzhToken(1);
         $url = 'https://api.weixin.qq.com/wxa/msg_sec_check'.'?access_token='.$access_token;
-
-        $data = ['content'=>$content];
-
-        $res = lbCurlPost($url,urldecode(json_encode($data,JSON_UNESCAPED_UNICODE)));
-
-        return $res;
-
+        $data = ['content' => $content];
+        return lbCurlPost($url, urldecode(json_encode($data, JSON_UNESCAPED_UNICODE)));
     }
 
 
@@ -632,35 +524,19 @@ str;
      */
     public function checkKeyWords($content)
     {
-
-        $file_path =ROOT_PATH. "public/pub_sms_banned_words.txt"; // 文件的绝对路径
+        $file_path = ROOT_PATH."public/pub_sms_banned_words.txt"; // 文件的绝对路径
         // 检测文件是否存在
         if (file_exists($file_path)) {
-
             $fp = fopen($file_path, "r"); // 以只读的方式打开
-
             while (!feof($fp)) {
-
                 $str_line = base64_decode(fgets($fp));
-
                 $str_line = trim($str_line);
-
                 if (false !== strstr($content, $str_line)) {
-
                     return false;
-
                 }
-
             }
             fclose($fp); // 关闭文件
         }
-
         return true;
-
     }
-
-
-
-
-
 }

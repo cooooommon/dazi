@@ -292,14 +292,16 @@
 				}
 				// #endif
 
-				let [, {
+				let [chooseErr, chosenLoca] = await uni.chooseLocation(param);
+				if (chooseErr || !chosenLoca) return
+				let { 
 					address = '',
 					longitude: lng,
 					latitude: lat,
 					province = '',
 					city = '',
 					district = '',
-				}] = await uni.chooseLocation(param);
+				 } = chosenLoca;
 				if (!lng) return
 				let location = {
 					lng,
