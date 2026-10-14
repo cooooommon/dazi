@@ -57,6 +57,15 @@ class VirtualPayService
      */
     public static function tryCreate ($uniacid, $openid, $type, $order_code, $price, $user_id = 0)
     {
+        //虚拟支付（wx.requestVirtualPayment）为小程序专属能力：
+        //仅小程序端（UA 含 miniProgram）走虚拟支付；
+        //H5/APP 等其他端返回 null，自动回落到各业务原有的微信支付/支付宝支付逻辑
+        $ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
+        if (stripos($ua, 'miniProgram') === false) {
+
+            return null;
+        }
+
         $config = self::enabled($uniacid);
 
         //未开启虚拟支付，走原有支付
