@@ -42,7 +42,6 @@ function putBucketLogging($ossClient, $bucket)
     //访问日志存放在本bucket下
     $targetBucket = $bucket;
     $targetPrefix = "access.log";
-
     try {
         $ossClient->putBucketLogging($bucket, $targetBucket, $targetPrefix, $option);
     } catch (OssException $e) {

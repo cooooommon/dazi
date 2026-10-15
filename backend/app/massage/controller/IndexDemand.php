@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\massage\controller;
-
 
 use app\ApiRest;
 use app\massage\model\Coach;
@@ -97,12 +95,9 @@ class IndexDemand extends ApiRest
         if ($order['status'] != 2 || $order['start_time'] < time()) {
             return $this->error('此订单不可接单');
         }
-
         if ($order['is_refund'] == 1) {
-
             return $this->error('申请退款中,不可邀约');
         }
-
         $count = DemandOrderApply::num(['order_id' => $data['order_id'], 'coach_id' => $data['coach_id'], 'status' => 1]);
         if (empty($count)) {
             return $this->error('不可接单');
@@ -116,10 +111,8 @@ class IndexDemand extends ApiRest
         if ($code['code'] == 1) {
             return $this->error($code['msg']);
         }
-
         //消息通知
         DemandOrder::chooseSendMsg($data);
-
         return $this->success('');
     }
 
@@ -155,9 +148,7 @@ class IndexDemand extends ApiRest
         if ($res === false) {
             return $this->error('取消失败');
         }
-
         if ($order['coach_id'] > 0) {
-
             $data = [
                 'coach_id' => $order['coach_id'],
                 'uniacid' => $order['uniacid'],
@@ -169,7 +160,6 @@ class IndexDemand extends ApiRest
             ];
             Coach::refundOrderSendMsg($data, 2);
         }
-
         return $this->success('');
     }
 

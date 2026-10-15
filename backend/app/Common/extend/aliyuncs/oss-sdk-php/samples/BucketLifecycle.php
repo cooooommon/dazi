@@ -30,7 +30,6 @@ Common::println("bucket $bucket lifecycleConfig fetched:" . $lifecycleConfig->se
 $ossClient->deleteBucketLifecycle($bucket);
 Common::println("bucket $bucket lifecycleConfig deleted");
 
-
 //***************************** 完整用法参考下面函数  ***********************************************
 
 putBucketLifecycle($ossClient, $bucket);
@@ -105,5 +104,3 @@ function deleteBucketLifecycle($ossClient, $bucket)
     }
     print(__FUNCTION__ . ": OK" . "\n");
 }
-
-

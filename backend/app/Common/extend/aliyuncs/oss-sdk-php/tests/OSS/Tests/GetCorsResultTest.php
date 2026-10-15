@@ -2,7 +2,6 @@
 
 namespace OSS\Tests;
 
-
 use OSS\Core\OssException;
 use OSS\Result\GetCorsResult;
 use OSS\Http\ResponseCore;
@@ -61,7 +60,6 @@ BBBB;
             new GetCorsResult($response);
             $this->assertTrue(false);
         } catch (OssException $e) {
-
         }
     }
 }

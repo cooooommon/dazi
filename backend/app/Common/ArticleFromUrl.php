@@ -41,22 +41,16 @@ class ArticleFromUrl
     public function getArticle ()
     {
         $file = $this->html;
-
         $file = str_replace( "data-src", "src", $file );
         $file = str_replace( "data-croporisrc", "src", $file );
         $file = str_replace( "preview.html", "player.html", $file );
         $file = str_replace( "display: inline-block;", "display: block;", $file );
-
         $html = '';
-
         $title = $this->get_between( $file, '<h2 class="rich_media_title" id="activity-name">', "</h2>" );
-
-
         if(strpos($file,'<div class="rich_media_content " id="js_content" style="visibility: hidden;">') !== false){
             $html_content = '<div class="rich_media_content " id="js_content" style="visibility: hidden;">';
         }else{
             $html_content = '<div class="rich_media_content " id="js_content">';
-
         }
 //        $html_content  = str_replace('style="visibility: hidden;"','','<div class="rich_media_content " id="js_content" style="visibility: hidden;">');
 //        dump($html_content);exit;
@@ -74,17 +68,13 @@ class ArticleFromUrl
             $content = file_get_contents( 'tmp_article.txt' );
         }
         @unlink( 'tmp_article.txt' );
-
         $html = $content;
-
         $cover = '';
-
         $title = trim( $title );
         $cover = trim( $cover );
         $html  = trim( $html );
         return [ 'cover' => $cover, 'title' => $title, 'content' => $html ];
     }
-
 
     /**
      * @Purpose: php截取指定两个字符之间字符串
@@ -99,16 +89,13 @@ class ArticleFromUrl
      */
     protected function get_between ( $input, $start, $end )
     {
-
         $substr = substr( $input, strlen( $start ) + strpos( $input, $start ), ( strlen( $input ) - strpos( $input, $end ) ) * ( -1 ) );
 //        $substr = substr( $input,  strpos( $input, $start ), ( strlen( $input ) - strpos( $input, $end ) ) * ( -1 ) );
-
         return $substr;
     }
 
     protected function getImageDown ( $str )
     {
-
         if ( !is_dir( ATTACHMENT_ROOT . '/' . "images" ) ) {
             mkdir( ATTACHMENT_ROOT . '/' . "images" );
         }
@@ -118,19 +105,14 @@ class ArticleFromUrl
         if ( !is_dir( ATTACHMENT_ROOT . '/' . "images/a_image/" ) ) {
             mkdir( ATTACHMENT_ROOT . '/' . "images/a_image/" );
         }
-
         $preg = '/<img.*?src=[\"|\']?(.*?)[\"|\']?\s.*?>/i';//匹配img标签的正则表达式
-
         preg_match_all( $preg, $str, $allImg );//这里匹配所有的img
-
         $allImg             = $allImg[ 1 ];
         $allImgNot          = array();
         $destination_folder = ATTACHMENT_ROOT . '/images' . "/a_image/";
-
         foreach ( $allImg as $index2 => $item2 ) {
             $ftype = '.png';
             $res   = getimagesize( $item2 );
-
             if ( isset( $res[ 'mime' ] ) ) {
                 if ( strpos( $res[ 'mime' ], 'gif' ) ) {
                     $ftype = '.gif';

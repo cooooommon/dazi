@@ -36,23 +36,15 @@ class OrderIntegral extends BaseModel
     public static function getIntegralData($order, $type = 1, $status = -1)
     {
         $in_status = self::getStatus($order['uniacid'], $order['user_id']);
-
         if (!$in_status) {
-
             return true;
         }
-
         $config = MemberConfig::getInfo(['uniacid' => $order['uniacid']]);
-
         $integral = round($config['integra'] * $order['true_service_price']);
-
         if (!$integral > 0) {
-
             return true;
         }
-
         Order::where('id', $order['id'])->update(['config_integral' => $config['integra']]);
-
         $insert = [
             'uniacid' => $order['uniacid'],
             'order_id' => $order['id'],
@@ -63,9 +55,7 @@ class OrderIntegral extends BaseModel
             'create_time' => time(),
             'update_time' => time()
         ];
-
         self::insert($insert);
-
         return true;
     }
 
@@ -82,39 +72,24 @@ class OrderIntegral extends BaseModel
      */
     public static function refundIntegral($order, $type = 1)
     {
-
         self::where(['order_id' => $order['id'], 'order_type' => $type])->update(['status' => -1]);
-
         if ($type == 2) {
-
             return true;
         }
-
         $model = new RefundOrder();
-
         $refund_success = $model->checkRefundNum($order['id']);
-
         if ($refund_success) {
-
             return true;
         }
-
         $integral = round($order['config_integral'] * $order['true_service_price']);
-
         if (!$integral > 0) {
-
             return true;
         }
-
         $data = self::where(['order_id' => $order['id'], 'order_type' => $type])->find();
-
         if (empty($data)) {
-
             return true;
         }
-
         self::where('id', $data['id'])->update(['integral' => $integral, 'status' => 1]);
-
         return true;
     }
 
@@ -132,21 +107,14 @@ class OrderIntegral extends BaseModel
     public static function getStatus($uniacid, $user_id)
     {
         $status = MemberOrder::getStatus($user_id, $uniacid);
-
         if (!$status) {
-
             return 0;
         }
-
         $p = new PermissionIntegral((int)$uniacid);
-
         $auth = $p->pAuth();
-
         if (!$auth) {
-
             return 0;
         }
-
         return 1;
     }
 
@@ -169,21 +137,14 @@ class OrderIntegral extends BaseModel
     public static function endIntegral($order_id, $type = 1)
     {
         $data = self::where(['order_id' => $order_id, 'order_type' => $type, 'status' => 1])->select()->toArray();
-
         if (!$data) {
-
             return true;
         }
-
         foreach ($data as $datum) {
-
             UserIntegral::handleIntegral($datum, $type);
         }
-
         $ids = array_column($data, 'id');
-
         self::edit([['id', 'in', $ids]], ['status' => 2]);
-
         return true;
     }
 }

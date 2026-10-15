@@ -7,7 +7,6 @@
  */
 
 return [
-
     //模块名称[必填]
     'name'        => 'broker',
     //模块标题[必填]
@@ -28,5 +27,4 @@ return [
     'need_app'   => [],
     //订阅消息
     'tmpl_name'=>[]
-
 ];

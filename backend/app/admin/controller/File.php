@@ -34,7 +34,6 @@ class File extends AdminRest
         //获取uid
 //      if(!empty($this->uid)) $group['uid'] = $this->uid;
         $group['uniacid'] = $this->_uniacid;
-
         $group['admin_id'] = $this->_user['id'];
         //生成分组模型
         $group_model = new AttachmentGroup();
@@ -44,18 +43,13 @@ class File extends AdminRest
         if ($group_count >= 20) { //分组不超过20个
             return $this->error('分组最多限制为20个！');
         }
-
         $repeat = $group_model->where([
             'uniacid' => $this->_uniacid, 'name' => $group['name'], 'admin_id' => $this->_user['id']
         ])->count();
-
         if ($repeat) {
-
             return $this->error('已存在同名分组');
         }
-
         $result = $group_model->createGroup($group);
-
         return $this->success($result);
     }
 
@@ -67,15 +61,10 @@ class File extends AdminRest
         if (isset($param['name'])) {
             $filter[] = ['name', '=', $param['name']];
         }
-
         $filter[] = ['uniacid', '=', $this->_uniacid];
-
         if (empty($this->_user['is_admin'])) {
-
             $filter[] = ['admin_id', '=', $this->_user['id']];
-
         } else {
-
             $filter[] = ['admin_id', 'in', [$this->_user['id'], 0]];
         }
         //获取uid
@@ -96,13 +85,11 @@ class File extends AdminRest
         $data = $this->_input['group'];
         //生成分组模型
         $group_model = new AttachmentGroup();
-
         $repeat = $group_model->where(['uniacid' => $this->_uniacid, 'name' => $data['name']])->where('id', '<>',
             $group_id)->count();
         if ($repeat) {
             return $this->error('已存在同名分组');
         }
-
         //更新数据
         $result = $group_model->updateGroup(['id' => $group_id, 'uniacid' => $this->_uniacid], $data);
         //返回数据
@@ -117,7 +104,6 @@ class File extends AdminRest
             return $this->error('not group id');
         }
         $group_id = $this->_param['group_id'];
-
         $where = array(
             ['group_id', '=', $group_id],
             ['uniacid', '=', $this->_uniacid]
@@ -146,7 +132,6 @@ class File extends AdminRest
             return $this->error('not group id');
         }
         $group_id = $this->_param['group_id'];
-
         $attachment_model = new CoreAttachment();
         if (is_array($group_id)) {
             foreach ($group_id as $id) {
@@ -199,14 +184,12 @@ class File extends AdminRest
         return $this->success($result);
     }
 
-
     public function uploadFiles()
     {
         //获取参数
         $input = $this->_param;
         //获取文件列表
         $files = $this->request->file('file');
-
         //检查文件是否存在
         if (empty($files)) {
             return $this->error('not file ,please check file.');
@@ -216,27 +199,21 @@ class File extends AdminRest
         if (isset($input['type'])) {
             $type = $input['type'];
         }
-
         //上传文件分组 --lichuanming 2020/5/13
         $group_id = -1;
         if (isset($input['group_id'])) {
             $group_id = $input['group_id'];
         }
-
         $result = [];
         //生成上传模型
         $uploda_model = new Upload($this->_uniacid);
-
         foreach ($files as $file) {
             //上传文件
             $info = $uploda_model->upload($type, $file);
-
             if (!empty($info)) {
                 //获取上传者id
                 $info['uid'] = $this->uid;
-
                 $info['admin_id'] = $this->_user['id'];
-
                 $info['attachment_path'] = longbingGetFilePath($info['attachment'], $this->_host, $this->_uniacid,
                     $info['longbing_driver']);
                 //文件分组界定 --lichuanming 2020/5/13
@@ -255,7 +232,6 @@ class File extends AdminRest
         return $this->success($result);
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2023-03-13 12:00
@@ -264,19 +240,12 @@ class File extends AdminRest
     public function listFile()
     {
         $param = $this->_param;
-
         $filter['uniacid'] = $this->_uniacid;
-
         $filter['type'] = 1;
-
         $filter['uid'] = 0;
-
         if (empty($this->_user['is_admin'])) {
-
             $where[] = ['admin_id', '=', $this->_user['id']];
-
         } else {
-
             $where[] = ['admin_id', 'in', [$this->_user['id'], 0]];
         }
         //判断分组是否存在
@@ -289,13 +258,9 @@ class File extends AdminRest
         }
         //生成模型类
         $file_model = new CoreAttachment();
-
         $result = $file_model->where($filter)->where($where)->order('id desc')->paginate($param['limit'])->toArray();
-
         $result['files'] = $result['data'];
-
         unset($result['data']);
-
         $result['files'] = transImagesOne($result['files'], ['attachment'], $this->_uniacid);
         //返回数据
         return $this->success($result);
@@ -346,13 +311,9 @@ class File extends AdminRest
      */
     public function uploadConfig()
     {
-
         $data = longbingGetOssConfig($this->_uniacid);
-
         $data['uniacid'] = $this->_uniacid;
-
         return $this->success($data);
-
     }
 
     /**
@@ -362,13 +323,9 @@ class File extends AdminRest
      */
     public function addFile()
     {
-
         $info = $this->_input;
-
         $group_id = -1;
-
         if (isset($info['group_id'])) {
-
             $group_id = $info['group_id'];
         }
         //获取上传者id
@@ -376,19 +333,12 @@ class File extends AdminRest
         //$info['attachment_path'] = longbingGetFilePath($info['attachment'] , $this->_host,$this->_uniacid ,$info['longbing_driver']);
         //文件分组界定 --lichuanming 2020/5/13
         $info['group_id'] = $group_id;
-
         $info['admin_id'] = $this->_user['id'];
-
         $info['uniacid'] = $this->_uniacid;
-
         $info['createtime'] = time();
-
         $attachment_model = new CoreAttachment();
-
         $data = $attachment_model->addAttach($info);
-
         return $this->success($data);
-
     }
 
     /**
@@ -398,14 +348,9 @@ class File extends AdminRest
      */
     public function moveGroup()
     {
-
         $input = $this->_input;
-
         $attachment_model = new CoreAttachment();
-
         $res = $attachment_model->where('id', 'in', $input['file_id'])->update(['group_id' => $input['group_id']]);
-
         return $this->success($res);
-
     }
 }

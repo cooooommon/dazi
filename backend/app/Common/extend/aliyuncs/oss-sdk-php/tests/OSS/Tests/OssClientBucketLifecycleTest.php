@@ -9,7 +9,6 @@ use OSS\Model\LifecycleAction;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'TestOssClientBase.php';
 
-
 class OssClientBucketLifecycleTest extends TestOssClientBase
 {
     public function testBucket()
@@ -23,13 +22,11 @@ class OssClientBucketLifecycleTest extends TestOssClientBase
         $actions[] = new LifecycleAction("Expiration", "Date", '2022-10-12T00:00:00.000Z');
         $lifecycleRule = new LifecycleRule("delete temporary files", "temporary/", "Enabled", $actions);
         $lifecycleConfig->addRule($lifecycleRule);
-
         try {
             $this->ossClient->putBucketLifecycle($this->bucket, $lifecycleConfig);
         } catch (OssException $e) {
             $this->assertTrue(false);
         }
-
         try {
             Common::waitMetaSync();
             $lifecycleConfig2 = $this->ossClient->getBucketLifecycle($this->bucket);
@@ -37,14 +34,12 @@ class OssClientBucketLifecycleTest extends TestOssClientBase
         } catch (OssException $e) {
             $this->assertTrue(false);
         }
-
         try {
             Common::waitMetaSync();
             $this->ossClient->deleteBucketLifecycle($this->bucket);
         } catch (OssException $e) {
             $this->assertTrue(false);
         }
-
         try {
             Common::waitMetaSync();
             $lifecycleConfig3 = $this->ossClient->getBucketLifecycle($this->bucket);
@@ -52,6 +47,5 @@ class OssClientBucketLifecycleTest extends TestOssClientBase
         } catch (OssException $e) {
             $this->assertTrue(false);
         }
-
     }
 }

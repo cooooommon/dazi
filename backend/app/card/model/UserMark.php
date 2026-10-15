@@ -4,7 +4,6 @@ namespace app\card\model;
 use app\BaseModel;
 use app\dynamic\model\CardStatistics;
 
-
 class UserMark extends BaseModel
 {
     //定义表名

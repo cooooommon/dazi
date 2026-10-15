@@ -2,7 +2,6 @@
 
 namespace OSS\Tests;
 
-
 use OSS\Model\RefererConfig;
 
 class RefererConfigTest extends \PHPUnit_Framework_TestCase

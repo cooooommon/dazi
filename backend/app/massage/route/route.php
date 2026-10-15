@@ -6,9 +6,7 @@ use think\facade\Route;
 Route::group('admin', function () {
     //商品列表
     Route::post('Admin/login', 'Admin/login');
-
     Route::get('Admin/getConfig', 'Admin/getConfig');
-
     Route::get('Admin/getW7TmpV2', 'Admin/getW7TmpV2');
     //配置详情
     Route::post('AdminSetting/configInfo', 'AdminSetting/configInfo');
@@ -18,9 +16,7 @@ Route::group('admin', function () {
     Route::post('AdminSetting/carConfigUpdate', 'AdminSetting/carConfigUpdate');
     //配置修改
     Route::post('AdminSetting/configUpdate', 'AdminSetting/configUpdate');
-
     Route::post('AdminSetting/payConfigInfo', 'AdminSetting/payConfigInfo');
-
     Route::post('AdminSetting/payConfigUpdate', 'AdminSetting/payConfigUpdate');
     //banne列表
     Route::post('AdminSetting/bannerList', 'AdminSetting/bannerList');
@@ -40,53 +36,29 @@ Route::group('admin', function () {
     Route::post('AdminSetting/lableAdd', 'AdminSetting/lableAdd');
     //编辑评价标签
     Route::post('AdminSetting/lableUpdate', 'AdminSetting/lableUpdate');
-
     Route::get('AdminSetting/adminList', 'AdminSetting/adminList');
-
     Route::get('AdminSetting/adminInfo', 'AdminSetting/adminInfo');
-
     Route::post('AdminSetting/adminAdd', 'AdminSetting/adminAdd');
-
     Route::post('AdminSetting/adminUpdate', 'AdminSetting/adminUpdate');
-
     Route::post('AdminSetting/adminStatusUpdate', 'AdminSetting/adminStatusUpdate');
-
     Route::get('AdminSetting/userSelect', 'AdminSetting/userSelect');
-
     Route::get('AdminSetting/cityList', 'AdminSetting/cityList');
-
     Route::get('AdminSetting/cityInfo', 'AdminSetting/cityInfo');
-
     Route::get('AdminSetting/citySelect', 'AdminSetting/citySelect');
-
     Route::get('AdminSetting/getCity', 'AdminSetting/getCity');
-
     Route::post('AdminSetting/cityAdd', 'AdminSetting/cityAdd');
-
     Route::post('AdminSetting/cityUpdate', 'AdminSetting/cityUpdate');
-
     Route::get('AdminSetting/adminSelect', 'AdminSetting/adminSelect');
-
     Route::get('AdminSetting/getSaasAuth', 'AdminSetting/getSaasAuth');
-
     Route::get('AdminSetting/helpConfigInfo', 'AdminSetting/helpConfigInfo');
-
     Route::post('AdminSetting/helpConfigUpate', 'AdminSetting/helpConfigUpate');
-
     Route::get('AdminSetting/sendMsgConfigInfo', 'AdminSetting/sendMsgConfigInfo');
-
     Route::post('AdminSetting/sendMsgConfigUpdate', 'AdminSetting/sendMsgConfigUpdate');
-
     Route::get('AdminSetting/shortCodeConfigInfo', 'AdminSetting/shortCodeConfigInfo');
-
     Route::post('AdminSetting/shortCodeConfigUpdate', 'AdminSetting/shortCodeConfigUpdate');
-
     Route::get('AdminSetting/addClockInfo', 'AdminSetting/addClockInfo');
-
     Route::get('AdminSetting/provinceList', 'AdminSetting/provinceList');
-
     Route::post('AdminSetting/addClockUpdate', 'AdminSetting/addClockUpdate');
-
     //向导列表
     Route::get('AdminCoach/coachList', 'AdminCoach/coachList');
     //向导详情
@@ -113,13 +85,11 @@ Route::group('admin', function () {
     Route::get('AdminCoach/policeList', 'AdminCoach/policeList');
     //编辑报警
     Route::post('AdminCoach/policeUpdate', 'AdminCoach/policeUpdate');
-
     Route::post('AdminCoach/coachDataUpdate', 'AdminCoach/coachDataUpdate');
     //技师服务修改
     Route::post('AdminCoach/coachServiceUpdate', 'AdminCoach/coachServiceUpdate');
     //技师服务添加
     Route::post('AdminCoach/coachServiceAdd', 'AdminCoach/coachServiceAdd');
-
     //优惠券列表(搜索：name)
     Route::get('AdminCoupon/couponList', 'AdminCoupon/couponList');
     //优惠券详情（id）
@@ -134,8 +104,6 @@ Route::group('admin', function () {
     Route::post('AdminCoupon/couponAtvUpdate', 'AdminCoupon/couponAtvUpdate');
     //后台派发卡券(coupon_id,user_id)
     Route::post('AdminCoupon/couponRecordAdd', 'AdminCoupon/couponRecordAdd');
-
-
     //储值充值卡列表
     Route::get('AdminBalance/cardList', 'AdminBalance/cardList');
     //储值充值卡列表
@@ -148,7 +116,6 @@ Route::group('admin', function () {
     Route::get('AdminBalance/orderList', 'AdminBalance/orderList');
     //充值订单详情
     Route::get('AdminBalance/orderInfo', 'AdminBalance/orderInfo');
-
     Route::get('AdminBalance/orderInfo', 'AdminBalance/orderInfo');
     //服务列表(搜索：name)
     Route::get('AdminService/serviceList', 'AdminService/serviceList');
@@ -158,10 +125,7 @@ Route::group('admin', function () {
     Route::post('AdminService/serviceAdd', 'AdminService/serviceAdd');
     //编辑服务|上下架删除
     Route::post('AdminService/serviceUpdate', 'AdminService/serviceUpdate');
-
     Route::post('AdminService/checkStoreGoods', 'AdminService/checkStoreGoods');
-
-
     //后台提现列表
     Route::get('AdminCoach/walletList', 'AdminCoach/walletList');
     //同意打款（id,status=2,online 1：线上，0线下）
@@ -170,16 +134,10 @@ Route::group('admin', function () {
     Route::post('AdminCoach/walletNoPass', 'AdminCoach/walletNoPass');
     //财务管理
     Route::get('AdminCoach/financeList', 'AdminCoach/financeList');
-
     Route::get('AdminCoach/userLabelList', 'AdminCoach/userLabelList');
-
-
     Route::get('AdminCoach/coachUserList', 'AdminCoach/coachUserList');
-
     Route::post('AdminCoach/coachAdd', 'AdminCoach/coachAdd');
-
     Route::post('AdminCoach/coachUpdateCheck', 'AdminCoach/coachUpdateCheck');
-
     Route::get('AdminCoach/coachUpdateInfo', 'AdminCoach/coachUpdateInfo');
     //商品列表
     Route::get('AdminGoods/goodsList', 'AdminGoods/goodsList');
@@ -193,9 +151,7 @@ Route::group('admin', function () {
     Route::post('AdminGoods/shUpdate', 'AdminGoods/shUpdate');
     //用户列表
     Route::get('AdminUser/userList', 'AdminUser/userList');
-
     Route::group('AdminOrder', function () {
-
         Route::get('cateList', 'AdminOrder/cateList');
         //退款列表
         Route::get('refundOrderList', 'AdminOrder/refundOrderList');
@@ -229,26 +185,17 @@ Route::group('admin', function () {
         Route::post('noLookCount', 'AdminOrder/noLookCount');
         //全部已读
         Route::post('allLook', 'AdminOrder/allLook');
-
         Route::post('adminUpdateOrder', 'AdminOrder/adminUpdateOrder');
-
         Route::post('orderChangeCoach', 'AdminOrder/orderChangeCoach');
-
         Route::get('orderChangeCoachList', 'AdminOrder/orderChangeCoachList');
-
         Route::get('orderUpRecord', 'AdminOrder/orderUpRecord');
-
         Route::get('lableList', 'AdminOrder/lableList');
-
         Route::post('addComment', 'AdminOrder/addComment');
-
-
     });
     //订单导出
     Route::get('AdminExcel/orderList', 'AdminExcel/orderList');
     //财务导出
     Route::get('AdminExcel/dateCount', 'AdminExcel/dateCount');
-
     Route::get('AdminExcel/subDataList', 'AdminExcel/subDataList');
     Route::get('AdminExcel/demandOrder', 'AdminExcel/demandOrder');
     //打印机详情(id)
@@ -261,49 +208,27 @@ Route::group('admin', function () {
     Route::post('AdminPrinter/printerAdd', 'AdminPrinter/printerAdd');
     //佣金记录
     Route::post('AdminUser/commList', 'AdminUser/commList');
-
 //    Route::get('AdminUser/commList', 'AdminUser/commList');
     Route::get('AdminUser/commList', 'AdminUser/cashList');
-
     Route::post('AdminUser/adminUpdateCoachCommisson', 'AdminUser/adminUpdateCoachCommisson');
-
     Route::get('AdminUser/cashList', 'AdminUser/cashList');
-
     Route::post('AdminUser/delUserLabel', 'AdminUser/delUserLabel');
-
     Route::post('AdminUser/applyWallet', 'AdminUser/applyWallet');
-
     Route::get('AdminReseller/resellerList', 'AdminReseller/resellerList');
-
     Route::get('AdminReseller/resellerInfo', 'AdminReseller/resellerInfo');
-
     Route::post('AdminReseller/resellerUpdate', 'AdminReseller/resellerUpdate');
-
     Route::get('AdminReseller/partnerDataList', 'AdminReseller/partnerDataList');
-
-
     Route::group('AdminChannel', function () {
-
         Route::get('cateList', 'AdminChannel/cateList');
-
         Route::get('cateSelect', 'AdminChannel/cateSelect');
-
         Route::get('channelSelect', 'AdminChannel/channelSelect');
-
         Route::post('cateAdd', 'AdminChannel/cateAdd');
-
         Route::post('cateUpdate', 'AdminChannel/cateUpdate');
-
         Route::get('cateInfo', 'AdminChannel/cateInfo');
-
         Route::get('channelList', 'AdminChannel/channelList');
-
         Route::get('channelInfo', 'AdminChannel/channelInfo');
-
         Route::post('channelUpdate', 'AdminChannel/channelUpdate');
-
     });
-
     /********************按摩6.0接口**********************/
     //添加物料分类
     Route::post('AdminShop/addCarte', 'AdminShop/addCarte');
@@ -314,8 +239,6 @@ Route::group('admin', function () {
     Route::get('AdminShop/carteList', 'AdminShop/carteList');
     //上下架、删除
     Route::post('AdminShop/carteStatus', 'AdminShop/carteStatus');
-
-
     //分类下拉
     Route::get('AdminShop/goodsCarteList', 'AdminShop/goodsCarteList');
     //添加商品
@@ -327,8 +250,6 @@ Route::group('admin', function () {
     Route::get('AdminShop/goodsList', 'AdminShop/goodsList');
     //商品上下架、删除
     Route::post('AdminShop/goodsStatus', 'AdminShop/goodsStatus');
-
-
     //反馈记录列表
     Route::get('AdminSetting/feedbackList', 'AdminSetting/feedbackList');
     //反馈记录详情
@@ -341,73 +262,39 @@ Route::group('admin', function () {
     Route::get('AdminSetting/appealInfo', 'AdminSetting/appealInfo');
     //处理申诉记录
     Route::post('AdminSetting/appealHandle', 'AdminSetting/appealHandle');
-
     Route::post('AdminSetting/configUpdateSchedule', 'AdminSetting/configUpdateSchedule');
-
     Route::get('AdminSetting/configInfoSchedule', 'AdminSetting/configInfoSchedule');
-
     Route::get('AdminSetting/getCarConfigList', 'AdminSetting/getCarConfigList');
-
     Route::get('AdminSetting/getCarConfigInfo', 'AdminSetting/getCarConfigInfo');
-
     Route::post('AdminSetting/getCarConfigAdd', 'AdminSetting/getCarConfigAdd');
-
     Route::post('AdminSetting/getCarConfigUpdate', 'AdminSetting/getCarConfigUpdate');
-
     Route::post('AdminSetting/getCarConfigDel', 'AdminSetting/getCarConfigDel');
-
     Route::get('AdminSetting/configSettingInfo', 'AdminSetting/configSettingInfo');
-
     Route::post('AdminSetting/configSettingUpdate', 'AdminSetting/configSettingUpdate');
-
     Route::get('AdminSetting/distributionConfigInfo', 'AdminSetting/distributionConfigInfo');
-
     Route::post('AdminSetting/distributionConfigUpdate', 'AdminSetting/distributionConfigUpdate');
-
-
     Route::get('AdminSetting/userLabelList', 'AdminSetting/userLabelList');
-
     Route::get('AdminSetting/userLabelInfo', 'AdminSetting/userLabelInfo');
-
     Route::post('AdminSetting/userLabelUpdate', 'AdminSetting/userLabelUpdate');
-
     Route::post('AdminSetting/userLabelAdd', 'AdminSetting/userLabelAdd');
-
     Route::get('AdminIndex/orderData', 'AdminIndex/orderData');
-
     Route::get('AdminIndex/agentOrderData', 'AdminIndex/agentOrderData');
-
     Route::get('AdminIndex/coachAndUserData', 'AdminIndex/coachAndUserData');
     //
     Route::get('AdminIndex/coachSaleData', 'AdminIndex/coachSaleData');
-
-
     Route::group('AdminArticle', function () {
-
         Route::get('fieldList', 'AdminArticle/fieldList');
         Route::get('fieldSelect', 'AdminArticle/fieldSelect');
-
         Route::get('fieldInfo', 'AdminArticle/fieldInfo');
-
         Route::get('articleList', 'AdminArticle/articleList');
-
         Route::post('fieldAdd', 'AdminArticle/fieldAdd');
-
         Route::post('fieldUpdate', 'AdminArticle/fieldUpdate');
-
         Route::get('articleInfo', 'AdminArticle/articleInfo');
-
         Route::post('articleAdd', 'AdminArticle/articleAdd');
-
         Route::post('articleUpdate', 'AdminArticle/articleUpdate');
-
         Route::get('subTitle', 'AdminArticle/subTitle');
-
         Route::get('subDataList', 'AdminArticle/subDataList');
-
     });
-
-
     //邀约设置
     Route::post('AdminSetting/demandSetting', 'AdminSetting/demandSetting');
     //邀约设置
@@ -446,7 +333,6 @@ Route::group('admin', function () {
     Route::post('AdminCoach/coachTagAdd', 'AdminCoach/coachTagAdd');
     //个性标签列表不分页
     Route::get('AdminCoach/coachTagList', 'AdminCoach/coachTagList');
-
     /***********1.3版本*************/
     //入驻协议
     Route::get('AdminSetting/agreement', 'AdminSetting/agreement');
@@ -455,7 +341,6 @@ Route::group('admin', function () {
     Route::get('AdminSetting/joinList', 'AdminSetting/joinList');
     //已阅
     Route::post('AdminSetting/joinRead', 'AdminSetting/joinRead');
-
     /***********1.4版本*************/
     //列表
     Route::get('AdminStore/getList', 'AdminStore/getList');
@@ -471,12 +356,9 @@ Route::group('admin', function () {
     Route::post('AdminStore/changeStatus', 'AdminStore/changeStatus');
     //设置向导抽成比例
     Route::post('AdminCoach/setBalance', 'AdminCoach/setBalance');
-
     /***********1.6版本*************/
     //代理商编辑向导信息
     Route::post('AdminCoach/coachUpdateAdmin', 'AdminCoach/coachUpdateAdmin');
-
-
     /***********1.7版本**************/
     //diy相关
     Route::get('AdminSetting/diyInfo', 'AdminSetting/diyInfo');
@@ -484,7 +366,6 @@ Route::group('admin', function () {
     Route::get('AdminSetting/getFunctionPageList', 'AdminSetting/getFunctionPageList');
     Route::get('AdminSetting/getFunctionPageInfo', 'AdminSetting/getFunctionPageInfo');
     Route::post('AdminSetting/diyUpdate', 'AdminSetting/diyUpdate');
-
     //设置黑名单
     Route::post('AdminUser/setBlacklist', 'AdminUser/setBlacklist');
     //黑名单列表
@@ -501,8 +382,6 @@ Route::group('admin', function () {
     Route::post('AdminChannel/changeBalance', 'AdminChannel/changeBalance');
     //手动修改余额列表
     Route::get('AdminChannel/getCashList', 'AdminChannel/getCashList');
-
-
     /***********1.8版本**************/
     //门店分类插入
     Route::post('AdminStore/typeAdd', 'AdminStore/typeAdd');
@@ -530,28 +409,21 @@ Route::group('admin', function () {
     Route::post('AdminCoach/cancelBroker', 'AdminCoach/cancelBroker');
     //套餐订单导出
     Route::get('AdminExcel/packageOrder', 'AdminExcel/packageOrder');
-
-
     /***********1.9行业拆分**********/
     //门店diy内部链接
     Route::get('AdminSetting/getFunctionPageListForStore', 'AdminSetting/getFunctionPageListForStore');
-
-
     /***********2.0版本**********/
     Route::get('AdminBalance/payWater', 'AdminBalance/payWater');
     Route::post('AdminBalance/payBalanceOrder', 'AdminBalance/payBalanceOrder');
     Route::post('AdminStore/editStoreBalance', 'AdminStore/editStoreBalance');
     //审核通过发送模板消息
     Route::get('AdminOrder/sendMsg', 'AdminOrder/sendMsg');
-
     /***********2.1版本**********/
     //套餐订单导出
     Route::get('AdminExcel/userList', 'AdminExcel/userList');
-
     /***********2.2版本**********/
     //批量设置渠道商绑定时间
     Route::post('AdminChannel/setBindTime', 'AdminChannel/setBindTime');
-
     /***********2.3版本**********/
     //服务分类插入
     Route::post('AdminService/typeAdd', 'AdminService/typeAdd');
@@ -565,36 +437,24 @@ Route::group('admin', function () {
     Route::get('AdminSetting/addressToLocation', 'AdminSetting/addressToLocation');
     //逆地址解析
     Route::get('AdminSetting/locationToAddress', 'AdminSetting/locationToAddress');
-
     Route::get('AdminStore/getStoreList', 'AdminStore/getStoreList');
-
     /***********2.4版本**********/
     Route::get('AdminUser/getUserInfo', 'AdminUser/getUserInfo');
-
     Route::get('AdminUser/integralList', 'AdminUser/integralList');
 });
-
 
 //商城后端路由表
 Route::group('app', function () {
     //首页
     Route::get('Index/index', 'Index/index');
-
     //坐标逆地址解析（腾讯位置服务）
     Route::post('Index/locationAddress', 'Index/locationAddress');
-
     Route::get('Index/serviceSelect', 'Index/serviceSelect');
-
     Route::get('Index/plugAuth', 'Index/plugAuth');
-
     Route::get('Index/recommendCoach', 'Index/recommendCoach');
-
     Route::get('Index/getCity', 'Index/getCity');
-
     Route::get('Index/couponList', 'Index/couponList');
-
     Route::post('Index/userGetCoupon', 'Index/userGetCoupon');
-
     Route::get('Index/coachInfo', 'Index/coachInfo');
     //再来一单(order_id)
     Route::post('Index/onceMoreOrder', 'Index/onceMoreOrder');
@@ -610,15 +470,11 @@ Route::group('app', function () {
     Route::get('Index/coachServiceList', 'Index/coachServiceList');
     //向导服务列表(coach_id)
     Route::get('Index/coachServiceListPage', 'Index/coachServiceListPage');
-
     Route::get('Index/getMapInfo', 'Index/getMapInfo');
-
     Route::get('Index/typeServiceCoachList', 'Index/typeServiceCoachList');
-
     Route::post('IndexUser/delUserInfo', 'IndexUser/delUserInfo');
     //用户授权
     Route::post('IndexUser/userUpdate', 'IndexUser/userUpdate');
-
     Route::post('IndexUser/attestationCoach', 'IndexUser/attestationCoach');
     //申请向导
     Route::post('IndexUser/coachApply', 'IndexUser/coachApply');
@@ -628,15 +484,10 @@ Route::group('app', function () {
     Route::post('IndexUser/addCollect', 'IndexUser/addCollect');
     //删除向导收藏(coach_id)
     Route::post('IndexUser/delCollect', 'IndexUser/delCollect');
-
     Route::post('IndexUser/shieldCoachAdd', 'IndexUser/shieldCoachAdd');
-
     Route::post('IndexUser/shieldCoachDel', 'IndexUser/shieldCoachDel');
-
     Route::get('IndexUser/shieldCoachList', 'IndexUser/shieldCoachList');
-
     Route::get('IndexUser/userInfo', 'IndexUser/userInfo');
-
     Route::post('IndexUser/reportPhone', 'IndexUser/reportPhone');
     //优惠券活动详情
     Route::post('IndexUser/couponAtvInfo', 'IndexUser/couponAtvInfo');
@@ -646,9 +497,7 @@ Route::group('app', function () {
     Route::get('IndexUser/coachInfo', 'IndexUser/coachInfo');
     //用户地址列表
     Route::get('IndexUser/addressList', 'IndexUser/addressList');
-
     Route::get('IndexUser/getVirtualPhone', 'IndexUser/getVirtualPhone');
-
     Route::get('IndexUser/getDemandVirtualPhone', 'IndexUser/getDemandVirtualPhone');
     //地址详情
     Route::get('IndexUser/addressInfo', 'IndexUser/addressInfo');
@@ -680,9 +529,7 @@ Route::group('app', function () {
     Route::get('IndexCoach/capCashInfo', 'IndexCoach/capCashInfo');
     //团长佣金信息(车费)
     Route::get('IndexCoach/capCashInfoCar', 'IndexCoach/capCashInfoCar');
-
     Route::get('IndexCoach/balanceCommissionList', 'IndexCoach/balanceCommissionList');
-
     Route::get('IndexCoach/balanceCommissionData', 'IndexCoach/balanceCommissionData');
     //提现记录
     Route::get('IndexCoach/capCashList', 'IndexCoach/capCashList');
@@ -696,16 +543,10 @@ Route::group('app', function () {
     Route::post('IndexCoach/police', 'IndexCoach/police');
     //向导修改订单信息(type,order_id)
     Route::post('IndexCoach/updateOrder', 'IndexCoach/updateOrder');
-
     Route::post('IndexCoach/coachUpdateV2', 'IndexCoach/coachUpdateV2');
-
     Route::post('IndexCoach/shieldUserAdd', 'IndexCoach/shieldUserAdd');
-
     Route::post('IndexCoach/shieldUserDel', 'IndexCoach/shieldUserDel');
-
     Route::get('IndexCoach/shieldCoachList', 'IndexCoach/shieldCoachList');
-
-
     Route::get('IndexGoods/indexCapList', 'IndexGoods/indexCapList');
     //选择楼长(cap_id)
     Route::post('IndexGoods/selectCap', 'IndexGoods/selectCap');
@@ -713,12 +554,10 @@ Route::group('app', function () {
     Route::get('IndexGoods/cateList', 'IndexGoods/cateList');
     //商品首页信息
     Route::get('IndexGoods/index', 'IndexGoods/index');
-
     //商品列表
     Route::get('IndexGoods/goodsList', 'IndexGoods/goodsList');
     //商品详情
     Route::get('IndexGoods/goodsInfo', 'IndexGoods/goodsInfo');
-
     //购物车信息（coach_id）
     Route::get('Index/carInfo', 'Index/carInfo');
     //添加购物车（service_id,coach_id,num = 1）
@@ -735,11 +574,8 @@ Route::group('app', function () {
     Route::get('IndexOrder/payOrderInfo', 'IndexOrder/payOrderInfo');
     //用户订单列表（pay_type,name）
     Route::get('IndexOrder/orderList', 'IndexOrder/orderList');
-
     Route::post('IndexOrder/delOrder', 'IndexOrder/delOrder');
-
     Route::get('IndexOrder/getUpOrderGoods', 'IndexOrder/getUpOrderGoods');
-
     Route::any('IndexOrder/upOrderGoods', 'IndexOrder/upOrderGoods');
     //订单详情
     Route::get('IndexOrder/orderInfo', 'IndexOrder/orderInfo');
@@ -757,30 +593,21 @@ Route::group('app', function () {
     Route::get('IndexOrder/refundOrderInfo', 'IndexOrder/refundOrderInfo');
     //刷新订单二维码(id)
     Route::post('IndexOrder/refreshQr', 'IndexOrder/refreshQr');
-
     Route::post('IndexOrder/checkAddOrder', 'IndexOrder/checkAddOrder');
     //选中时间(coach_id,day)
     Route::get('IndexOrder/timeText', 'IndexOrder/timeText');
-
     Route::get('IndexOrder/dayText', 'IndexOrder/dayText');
     //添加评价(order_id,text，star)
     Route::post('IndexOrder/addComment', 'IndexOrder/addComment');
-
     Route::get('IndexOrder/lableList', 'IndexOrder/lableList');
     //可用的优惠券(coach_id)
     Route::get('IndexOrder/couponList', 'IndexOrder/couponList');
-
     Route::post('IndexOrder/userSignOrder', 'IndexOrder/userSignOrder');
-
     Route::get('IndexOrder/orderUpRecord', 'IndexOrder/orderUpRecord');
-
     Route::get('IndexOrder/getAddClockOrder', 'IndexOrder/getAddClockOrder');
-
     Route::post('IndexOrder/upOrderInfo', 'IndexOrder/upOrderInfo');
-
     //储值充值卡列表
     Route::get('IndexBalance/cardList', 'IndexBalance/cardList');
-
     Route::get('IndexBalance/coachList', 'IndexBalance/coachList');
     //充值余额(card_id)
     Route::post('IndexBalance/payBalanceOrder', 'IndexBalance/payBalanceOrder');
@@ -792,59 +619,32 @@ Route::group('app', function () {
     Route::get('IndexUser/commList', 'IndexUser/commList');
     //img
     Route::post('IndexUser/base64ToImg', 'IndexUser/base64ToImg');
-
     Route::get('IndexUser/adminCoachQr', 'IndexUser/adminCoachQr');
-
     Route::get('IndexUser/userCashInfo', 'IndexUser/userCashInfo');
-
     Route::post('IndexUser/applyWallet', 'IndexUser/applyWallet');
-
     Route::post('IndexUser/bindAlipayNumber', 'IndexUser/bindAlipayNumber');
-
     Route::get('IndexUser/walletList', 'IndexUser/walletList');
-
     Route::get('IndexUser/myTeam', 'IndexUser/myTeam');
-
     Route::get('IndexUser/userCommQr', 'IndexUser/userCommQr');
     //申请分销商 user_name mobile
     Route::post('IndexUser/applyReseller', 'IndexUser/applyReseller');
-
     Route::get('IndexUser/resellerInfo', 'IndexUser/resellerInfo');
-
-
     Route::get('IndexOrder/getIsBus', 'IndexOrder/getIsBus');
-
     //申请分销商 user_name mobile
     Route::post('IndexUser/applyChannel', 'IndexUser/applyChannel');
-
     Route::get('IndexUser/channelInfo', 'IndexUser/channelInfo');
-
     Route::get('IndexUser/channelCateSelect', 'IndexUser/channelCateSelect');
-
     Route::post('IndexUser/sendShortMsg', 'IndexUser/sendShortMsg');
-
     Route::post('IndexUser/bindUserPhone', 'IndexUser/bindUserPhone');
-
     Route::get('IndexUser/getStoreSelect', 'IndexUser/getStoreSelect');
-
-
     Route::group('IndexChannel', function () {
-
         Route::get('index', 'IndexChannel/index');
-
         Route::get('channelQr', 'IndexChannel/channelQr');
-
         Route::get('orderList', 'IndexChannel/orderList');
-
         Route::post('applyWallet', 'IndexChannel/applyWallet');
-
         Route::get('walletList', 'IndexChannel/walletList');
-
-
     });
-
     /********************按摩6.0接口**********************/
-
     //向导时间管理回显
     Route::get('IndexCoach/timeConfig', 'IndexCoach/getTimeConfig');
     //向导时间管理设置
@@ -873,54 +673,29 @@ Route::group('app', function () {
     Route::get('IndexCoach/appealList', 'IndexCoach/appealList');
     //订单列表
     Route::get('IndexCoach/appealOrder', 'IndexCoach/appealOrder');
-
     Route::get('IndexCoach/userLabelList', 'IndexCoach/userLabelList');
-
     Route::get('IndexCoach/labelList', 'IndexCoach/labelList');
-
     Route::get('IndexCoach/orderInfo', 'IndexCoach/orderInfo');
-
     Route::post('IndexCoach/userLabelAdd', 'IndexCoach/userLabelAdd');
-
     Route::get('IndexCoach/coachBalanceQr', 'IndexCoach/coachBalanceQr');
     Route::get('IndexCoach/coachLevel', 'IndexCoach/coachLevel');
-
     Route::get('IndexCoach/coachCommissionList', 'IndexCoach/coachCommissionList');
-
     Route::get('IndexCoach/coachCommissionData', 'IndexCoach/coachCommissionData');
-
     Route::get('IndexCoach/coachCommissionInfo', 'IndexCoach/coachCommissionInfo');
-
-
     Route::group('IndexCoach', function () {
-
         Route::get('getAttestationInfo', 'IndexCoach/getAttestationInfo');
-
         Route::get('getPersonVerifyUrl', 'IndexCoach/getPersonVerifyUrl');
-
         Route::post('Extsign', 'IndexCoach/Extsign');
-
-
     });
-
     Route::group('IndexReseller', function () {
-
         Route::get('partnerIndex', 'IndexReseller/partnerIndex');
-
         Route::get('partnerCoachList', 'IndexReseller/partnerCoachList');
-
     });
-
     Route::group('IndexArticle', function () {
-
         Route::get('articleList', 'IndexArticle/articleList');
-
         Route::get('articleInfo', 'IndexArticle/articleInfo');
-
         Route::post('subArticleForm', 'IndexArticle/subArticleForm');
-
     });
-
     //邀约订单下单
     Route::post('IndexOrder/payDemandOrder', 'IndexOrder/payDemandOrder');
     //邀约订单重新支付
@@ -945,13 +720,11 @@ Route::group('app', function () {
     Route::post('IndexDemand/orderInfo', 'IndexDemand/orderInfo');
     //订单详情
     Route::get('IndexCoach/getDemandNum', 'IndexCoach/getDemandNum');
-
     /***********1.3版本*************/
     //订单详情
     Route::get('Index/agreement', 'Index/agreement');
     //提交加盟商表单
     Route::post('Index/participate', 'Index/participate');
-
     /**********1.4**************/
     //门店申请
     Route::post('IndexStore/apply', 'IndexStore/apply');
@@ -963,7 +736,6 @@ Route::group('app', function () {
     Route::get('IndexStore/getList', 'IndexStore/getList');
     //详情
     Route::get('IndexStore/getInfo', 'IndexStore/getInfo');
-
     /***********1.5***********/
     //报名
     Route::post('IndexCoach/orderApply', 'IndexCoach/orderApply');
@@ -975,17 +747,14 @@ Route::group('app', function () {
     Route::post('IndexCoach/cancelApply', 'IndexCoach/cancelApply');
     //邀约明细
     Route::get('IndexCoach/demandCommissionDetail', 'IndexCoach/demandCommissionDetail');
-
     /***********1.6**********/
     //订单数量
     Route::get('IndexUser/getOrderNum', 'IndexUser/getOrderNum');
-
     /***********1.7**********/
     //申请分销商二维码
     Route::get('IndexUser/distribution', 'IndexUser/distribution');
     //我的收益
     Route::get('IndexUser/myTeamWater', 'IndexUser/myTeamWater');
-
     //渠道商生成邀请员工绑定二维码
     Route::post('IndexChannel/inviteStaffQr', 'IndexChannel/inviteStaffQr');
     //渠道商邀请员工绑定二维码详情
@@ -1002,8 +771,6 @@ Route::group('app', function () {
     Route::get('IndexChannelStaff/index', 'IndexChannelStaff/index');
     //员工渠道流水
     Route::get('IndexChannelStaff/commList', 'IndexChannelStaff/commList');
-
-
     /***********1.8**********/
     //完成服务
     Route::post('IndexOrder/completeOrder', 'IndexOrder/completeOrder');
@@ -1025,8 +792,6 @@ Route::group('app', function () {
     Route::get('IndexUser/shareWalletList', 'IndexUser/shareWalletList');
     //推广人佣金信息
     Route::get('IndexUser/shareCash', 'IndexUser/shareCash');
-
-
     /***********2.0版本**********/
     //发送模板消息
     Route::get('Index/sendMsg', 'Index/sendMsg');
@@ -1036,19 +801,13 @@ Route::group('app', function () {
     Route::get('IndexCoach/refundOrderList', 'IndexCoach/refundOrderList');
     //邀约重新发布
     Route::post('IndexOrder/rePayDemandManyOrder', 'IndexOrder/rePayDemandManyOrder');
-
-
     /***********2.3版本**********/
     //发送模板消息
     Route::get('Index/serviceTypeInfo', 'Index/serviceTypeInfo');
-
     /***********2.4版本**********/
     Route::post('IndexUser/updateFrom', 'IndexUser/updateFrom');
-
     Route::get('IndexUser/integralList', 'IndexUser/integralList');
-
 });
-
 
 //支付
 Route::any('IndexWxPay/returnPay', 'IndexWxPay/returnPay');
@@ -1063,18 +822,3 @@ Route::any('Test/test', 'Test/test');
 
 Route::any('Test/test1', 'Test/test1');
 Route::any('Test/test2', 'Test/test2');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

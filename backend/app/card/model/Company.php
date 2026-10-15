@@ -5,12 +5,10 @@ namespace app\card\model;
 use app\BaseModel;
 use think\Model;
 
-
 class Company extends BaseModel
 {
     //定义表名
     protected $name = 'longbing_card_company';
-
 
     protected static function init ()
     {
@@ -40,7 +38,6 @@ class Company extends BaseModel
     public function getInfo ( $uniacid = 0, $userId = 0, $company_id = 0 )
     {
         $company = [];
-
         if ( $userId )
         {
             $userInfo = UserInfo::where( [ [ 'fans_id', '=', $userId ] ] )
@@ -52,21 +49,18 @@ class Company extends BaseModel
                                ->find();
             }
         }
-
         if ( $company_id )
         {
             $company = self::where( [ [ 'id', '=', $company_id ], [ 'status', '=', 1 ] ] )
                 //                           ->withoutField( [ 'auth_code' ] )
                            ->find();
         }
-
         if ( is_array( $company ) && $company = [] )
         {
             $company = self::where( [ [ 'status', '=', 1 ], [ 'uniacid', '=', $uniacid ] ] )
                 //                           ->withoutField( [ 'auth_code' ] )
                            ->find();
         }
-
         if ( $company )
         {
             $company               = $company->toArray();
@@ -78,7 +72,6 @@ class Company extends BaseModel
         return $company;
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-08-21 14:02
@@ -86,32 +79,19 @@ class Company extends BaseModel
      */
 
     public function changeTopName($company){
-
         if(!empty($company['top_id'])){
-
             $dis = [
-
                 'status' => 1,
-
                 'id'     => $company['top_id'],
-
                 'uniacid'=> $company['uniacid']
-
             ];
-
             $top_name = $this->where($dis)->value('name');
-
             $short_name = $this->where($dis)->value('short_name');
-
             if(!empty($top_name)){
-
                 $company['name'] = $top_name;
-
                 $company['short_name'] = $short_name;
-
             }
         }
-
         return $company;
     }
 
@@ -131,15 +111,12 @@ class Company extends BaseModel
                                 ->order('top desc,pid asc,id desc')
                                ->select()
                                ->toArray();
-
             $sonList = self::where( [ [ 'uniacid', '=', $uniacid ], [ 'status', '=', 1, ], [ 'pid', '<>', 0 ] ] )
                            ->field( [ 'id', 'pid', 'name', 'logo', 'addr' ] )
                             ->order('top desc,pid asc,id desc')
                            ->select()
                            ->toArray();
-
             $companyList = self::handleCompanyLevel( $companyList, $sonList );
-
         }
         else
         {
@@ -153,7 +130,6 @@ class Company extends BaseModel
             {
                 return $this->getListByUser( $user_id, $uniacid, $is_all = 1 );
             }
-
             $tmpArr      = explode( ',', $check[ 'boss' ] );
             $companyList = self::where( [ [ 'uniacid', '=', $uniacid ], [ 'status', '=', 1, ], [ 'id', 'in', $tmpArr ] ] )
                                ->field( [ 'id', 'pid', 'name', 'logo', 'addr' ] )
@@ -164,11 +140,8 @@ class Company extends BaseModel
             {
                 $companyList[ $index ][ 'sec' ] = [];
             }
-
         }
-
         $companyList = transImagesOne( $companyList, [ 'logo' ] );
-
         foreach ( $companyList as $index => $item )
         {
             $companyList[ $index ][ 'selected' ] = 0;
@@ -177,7 +150,6 @@ class Company extends BaseModel
                 $companyList[ $index ][ 'selected' ] = 1;
             }
         }
-
         return $companyList;
     }
 
@@ -207,15 +179,11 @@ class Company extends BaseModel
                     unset( $son[ $key ] );
                 }
             }
-
             if ( $list[ $index ][ $item_name ] && count( $list[ $index ][ $item_name ] ) && count( $son ) )
             {
-
                 $list[ $index ][ $item_name ] = self::handleCompanyLevel( $list[ $index ][ $item_name ], $son, $item_name );
             }
         }
-
-
         return $list;
     }
 
@@ -248,12 +216,10 @@ class Company extends BaseModel
             default:
                 return false;
         }
-
         if ( $result === false )
         {
             return false;
         }
-
         return $result;
     }
 
@@ -272,7 +238,6 @@ class Company extends BaseModel
         $list = self::where( [ [ 'pid', '=', $company_id ] ] )
                     ->select()
                     ->toArray();
-
         foreach ( $list as $index => $item )
         {
             $check = self::where( [ [ 'pid', '=', $item[ 'id' ] ] ] )
@@ -283,7 +248,6 @@ class Company extends BaseModel
             }
             self::update( $data, [ 'id' => $item[ 'id' ] ] );
         }
-
         return true;
     }
 
@@ -300,28 +264,21 @@ class Company extends BaseModel
     {
         $info = self::where( [ [ 'id', '=', $company_id ] ] )
                     ->find();
-
         if ( !$info )
         {
             return [ '未设置公司', '未设置部门' ];
         }
-
         if ( $info[ 'pid' ] == 0 )
         {
             return [ $info[ 'name' ], '未设置部门' ];
         }
-
         $topCompany = $this->getTopCompany( $info[ 'pid' ] );
-
         $companyName = '未设置公司';
-
         if ( $topCompany && $topCompany[ 'status' ] )
         {
             $companyName = $topCompany[ 'name' ];
         }
-
         return [ $companyName, $info[ 'name' ] ];
-
     }
 
     protected function getTopCompany ( $pid )
@@ -332,12 +289,10 @@ class Company extends BaseModel
         {
             return '';
         }
-
         if ( $info[ 'pid' ] )
         {
             return $this->getTopCompany( $info[ 'pid' ] );
         }
-
         return $info;
     }
     

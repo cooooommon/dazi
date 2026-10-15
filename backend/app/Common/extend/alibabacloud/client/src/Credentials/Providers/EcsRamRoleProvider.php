@@ -45,17 +45,13 @@ class EcsRamRoleProvider extends Provider
     public function get()
     {
         $result = $this->getCredentialsInCache();
-
         if ($result === null) {
             $result = $this->request();
-
             if (!isset($result['AccessKeyId'], $result['AccessKeySecret'], $result['SecurityToken'])) {
                 throw new ServerException($result, $this->error, SDK::INVALID_CREDENTIAL);
             }
-
             $this->cache($result->toArray());
         }
-
         return new StsCredential(
             $result['AccessKeyId'],
             $result['AccessKeySecret'],
@@ -73,17 +69,14 @@ class EcsRamRoleProvider extends Provider
     public function request()
     {
         $result = $this->getResponse();
-
         if ($result->getStatusCode() === 404) {
             $message = 'The role was not found in the instance';
             throw new ClientException($message, SDK::INVALID_CREDENTIAL);
         }
-
         if (!$result->isSuccess()) {
             $message = 'Error retrieving credentials from result';
             throw new ServerException($result, $message, SDK::INVALID_CREDENTIAL);
         }
-
         return $result;
     }
 
@@ -101,14 +94,12 @@ class EcsRamRoleProvider extends Provider
          */
         $credential = $this->client->getCredential();
         $url        = $this->uri . $credential->getRoleName();
-
         $options = [
             'http_errors'     => false,
             'timeout'         => 1,
             'connect_timeout' => 1,
             'debug'           => $this->client->isDebug(),
         ];
-
         try {
             return RpcRequest::createClient()->request('GET', $url, $options);
         } catch (GuzzleException $exception) {
@@ -117,7 +108,6 @@ class EcsRamRoleProvider extends Provider
             } else {
                 $message = $exception->getMessage();
             }
-
             throw new ClientException(
                 $message,
                 SDK::SERVER_UNREACHABLE,

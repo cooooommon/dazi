@@ -6,7 +6,6 @@
  * Time: 18:29
  */
 
-
 //底部菜单自定义
 return [
     [
@@ -31,12 +30,9 @@ return [
             'shopCompoent',
             'operate'
         ],
-
         'bind_links' => [
-
             'shop'
         ],
         'page'=> []
     ],
-
 ];

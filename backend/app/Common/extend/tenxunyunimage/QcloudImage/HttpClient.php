@@ -55,9 +55,7 @@ class HttpClient {
         } else {
             $this->curlHandler = curl_init();
         }
-
         curl_setopt($this->curlHandler, CURLOPT_URL, $request['url']);
-
         $method = 'GET';
         if (isset($request['method']) &&
                 in_array(strtolower($request['method']), array('get', 'post', 'put', 'delete', 'head'))) {
@@ -65,22 +63,18 @@ class HttpClient {
         } else if (isset($request['data'])) {
             $method = 'POST';
         }
-
         $header = isset($request['header']) ? $request['header'] : array();
         $header[] = 'Connection: keep-alive';
         if ('POST' == $method) {
             $header[] = 'Expect: ';
         }
-
         isset($request['host']) && $header[] = 'Host:' . $request['host'];
         curl_setopt($this->curlHandler, CURLOPT_HTTPHEADER, $header);
-
         if (empty($this->proxy)) {
             curl_setopt($this->curlHandler, CURLOPT_PROXY, null);
         } else {
             curl_setopt($this->curlHandler, CURLOPT_PROXY, $this->proxy);
         }
-        
         curl_setopt($this->curlHandler, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($this->curlHandler, CURLOPT_CUSTOMREQUEST, $method);
         isset($request['timeout']) && curl_setopt($this->curlHandler, CURLOPT_TIMEOUT, $request['timeout']);

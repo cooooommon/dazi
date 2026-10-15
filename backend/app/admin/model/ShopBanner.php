@@ -73,5 +73,4 @@ class ShopBanner extends BaseModel
         return !empty($data) ? $data->toArray() : $data;
     }
 
-
 }

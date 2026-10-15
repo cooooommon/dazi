@@ -10,7 +10,6 @@ class CardUser extends BaseModel
     //定义表名
     protected $name = 'longbing_card_user';
 
-
     protected static function init()
     {
         //TODO:初始化内容

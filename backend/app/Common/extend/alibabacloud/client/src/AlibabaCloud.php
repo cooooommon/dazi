@@ -2,7 +2,6 @@
 
 namespace AlibabaCloud\Client;
 
-
 use AlibabaCloud\Client\Traits\LogTrait;
 use AlibabaCloud\Client\Traits\MockTrait;
 use AlibabaCloud\Client\Traits\ClientTrait;
@@ -46,13 +45,10 @@ class AlibabaCloud
     public static function __callStatic($product, $arguments)
     {
         $product = \ucfirst($product);
-
         $product_class = 'AlibabaCloud' . '\\' . $product . '\\' . $product;
-
         if (\class_exists($product_class)) {
             return new $product_class;
         }
-
         throw new ClientException(
             "May not yet support product $product quick access, "
             . 'you can use [Alibaba Cloud Client for PHP] to send any custom '

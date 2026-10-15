@@ -5,12 +5,10 @@ namespace app\card\model;
 use app\BaseModel;
 use think\Model;
 
-
 class CardUserLabel extends BaseModel
 {
     //定义表名
     protected $name = 'longbing_card_user_label';
-
 
     protected static function init ()
     {

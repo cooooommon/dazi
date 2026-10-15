@@ -91,7 +91,6 @@ class OssClientTest extends \PHPUnit_Framework_TestCase
             $ossClient->listBuckets();
             $this->assertFalse(true);
         } catch (OssException $e) {
-
         }
     }
 

@@ -28,7 +28,6 @@ class BearerTokenCredential implements CredentialsInterface
     public function __construct($bearerToken)
     {
         CredentialFilter::bearerToken($bearerToken);
-
         $this->bearerToken = $bearerToken;
     }
 

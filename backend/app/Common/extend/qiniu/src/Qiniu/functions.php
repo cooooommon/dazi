@@ -6,7 +6,6 @@ use Qiniu\Config;
 
 if (!defined('QINIU_FUNCTIONS_VERSION')) {
     define('QINIU_FUNCTIONS_VERSION', Config::SDK_VER);
-
     /**
      * 计算文件的crc32检验码:
      *
@@ -20,7 +19,6 @@ if (!defined('QINIU_FUNCTIONS_VERSION')) {
         $array = unpack('N', pack('H*', $hash));
         return sprintf('%u', $array[1]);
     }
-
     /**
      * 计算输入流的crc32检验码
      *
@@ -34,7 +32,6 @@ if (!defined('QINIU_FUNCTIONS_VERSION')) {
         $array = unpack('N', pack('H*', $hash));
         return sprintf('%u', $array[1]);
     }
-
     /**
      * 对提供的数据进行urlsafe的base64编码。
      *
@@ -49,7 +46,6 @@ if (!defined('QINIU_FUNCTIONS_VERSION')) {
         $replace = array('-', '_');
         return str_replace($find, $replace, base64_encode($data));
     }
-
     /**
      * 对提供的urlsafe的base64编码的数据进行解码
      *
@@ -63,7 +59,6 @@ if (!defined('QINIU_FUNCTIONS_VERSION')) {
         $replace = array('+', '/');
         return base64_decode(str_replace($find, $replace, $str));
     }
-
     /**
      * Wrapper for JSON decode that implements error detection with helpful
      * error messages.
@@ -86,12 +81,10 @@ if (!defined('QINIU_FUNCTIONS_VERSION')) {
             JSON_ERROR_SYNTAX => 'JSON_ERROR_SYNTAX - Syntax error, malformed JSON',
             JSON_ERROR_UTF8 => 'JSON_ERROR_UTF8 - Malformed UTF-8 characters, possibly incorrectly encoded'
         );
-
         if (empty($json)) {
             return null;
         }
         $data = \json_decode($json, $assoc, $depth);
-
         if (JSON_ERROR_NONE !== json_last_error()) {
             $last = json_last_error();
             throw new \InvalidArgumentException(
@@ -101,10 +94,8 @@ if (!defined('QINIU_FUNCTIONS_VERSION')) {
                     : 'Unknown error')
             );
         }
-
         return $data;
     }
-
     /**
      * 计算七牛API中的数据格式
      *
@@ -122,7 +113,6 @@ if (!defined('QINIU_FUNCTIONS_VERSION')) {
         }
         return base64_urlSafeEncode($en);
     }
-
     /**
      * array 辅助方法，无值时不set
      *
@@ -139,7 +129,6 @@ if (!defined('QINIU_FUNCTIONS_VERSION')) {
         }
         return $array;
     }
-
     /**
      * 缩略图链接拼接
      *
@@ -165,15 +154,12 @@ if (!defined('QINIU_FUNCTIONS_VERSION')) {
         $interlace = null,
         $ignoreError = 1
     ) {
-
         static $imageUrlBuilder = null;
         if (is_null($imageUrlBuilder)) {
             $imageUrlBuilder = new \Qiniu\Processing\ImageUrlBuilder;
         }
-
         return call_user_func_array(array($imageUrlBuilder, 'thumbnail'), func_get_args());
     }
-
     /**
      * 图片水印
      *
@@ -197,15 +183,12 @@ if (!defined('QINIU_FUNCTIONS_VERSION')) {
         $dy = null,
         $watermarkScale = null
     ) {
-
         static $imageUrlBuilder = null;
         if (is_null($imageUrlBuilder)) {
             $imageUrlBuilder = new \Qiniu\Processing\ImageUrlBuilder;
         }
-
         return call_user_func_array(array($imageUrlBuilder, 'waterImg'), func_get_args());
     }
-
     /**
      * 文字水印
      *
@@ -233,15 +216,12 @@ if (!defined('QINIU_FUNCTIONS_VERSION')) {
         $dx = null,
         $dy = null
     ) {
-
         static $imageUrlBuilder = null;
         if (is_null($imageUrlBuilder)) {
             $imageUrlBuilder = new \Qiniu\Processing\ImageUrlBuilder;
         }
-
         return call_user_func_array(array($imageUrlBuilder, 'waterText'), func_get_args());
     }
-
     /**
      *  从uptoken解析accessKey和bucket
      *

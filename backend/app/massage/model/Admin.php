@@ -26,7 +26,6 @@ class Admin extends BaseModel
         return $value;
     }
 
-
     /**
      * @param $value
      * @param $data
@@ -56,7 +55,6 @@ class Admin extends BaseModel
         return $this->insert($data);
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:05
@@ -66,7 +64,6 @@ class Admin extends BaseModel
     {
         return $this->where($dis)->update($data);
     }
-
 
     /**
      * @author chenniang
@@ -78,7 +75,6 @@ class Admin extends BaseModel
         return $this->where($dis)->order('id desc')->paginate($page)->toArray();
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:43
@@ -89,7 +85,6 @@ class Admin extends BaseModel
         $data = $this->where($dis)->find();
         return !empty($data) ? $data->toArray() : [];
     }
-
 
     /**
      * @author chenniang
@@ -107,7 +102,6 @@ class Admin extends BaseModel
             ->paginate($page)
             ->toArray();
     }
-
 
     /**
      * @author chenniang
@@ -135,59 +129,32 @@ class Admin extends BaseModel
      */
     function jionAdminCheck($input)
     {
-
         if (!empty($input['username'] && $input['username'] == 'admin')) {
-
             return ['code' => 500, 'msg' => '用户名不能和超管账号相同'];
-
         }
-
         $dis[] = ['user_id', '=', $input['user_id']];
-
         $dis[] = ['is_admin', '=', 0];
-
         $dis[] = ['uniacid', '=', $input['uniacid']];
-
         $dis[] = ['status', '>', -1];
-
         if (!empty($input['id'])) {
-
             $dis[] = ['id', '<>', $input['id']];
-
         }
-
         $find = $this->where($dis)->find();
-
         if (!empty($find)) {
-
             return ['code' => 500, 'msg' => '该用户已经绑定过加盟商'];
-
         }
-
         $where[] = ['username', '=', $input['username']];
-
         $where[] = ['uniacid', '=', $input['uniacid']];
-
         $where[] = ['status', '>', -1];
-
         if (!empty($input['id'])) {
-
             $where[] = ['id', '<>', $input['id']];
-
         }
-
         $find = $this->where($where)->find();
-
         if (!empty($find)) {
-
             return ['code' => 500, 'msg' => '已经有该用户名的账户'];
-
         }
-
         return true;
-
     }
-
 
     /**
      * @author chenniang
@@ -196,20 +163,13 @@ class Admin extends BaseModel
      */
     public function getAdminAndSon($admin_id)
     {
-
         $dis = [
-
             'admin_pid' => $admin_id
         ];
-
         $id = $this->where($dis)->column('id');
-
         $id[] = $admin_id;
-
         return $id;
-
     }
-
 
     /**
      * @author chenniang
@@ -218,33 +178,24 @@ class Admin extends BaseModel
      */
     public function agentBalanceData($admin_id, $order)
     {
-
         $admin = $this->dataInfo(['id' => $admin_id]);
         //平台抽层比列或代理商固定比例
         $order['admin_balance'] = !empty($admin) ? $admin['balance'] : 0;
-
         $order['admin_id'] = $admin_id;
         //县级代理商
         if (!empty($admin) && !empty($admin['admin_pid']) && in_array($admin['city_type'], [1, 2])) {
-
             $order['level_balance'] = $admin['level_balance'];
-
             $order['admin_pid'] = $admin['admin_pid'];
             //查看是否还有上级
             $admin_pdata = $this->dataInfo(['id' => $order['admin_pid']]);
             //只有市才有上级
             if (!empty($admin_pdata) && $admin_pdata['city_type'] == 1) {
-
                 $order['p_level_balance'] = $admin_pdata['level_balance'];
-
                 $order['p_admin_pid'] = $admin_pdata['admin_pid'];
             }
         }
-
         return $order;
-
     }
-
 
     /**
      * @author chenniang
@@ -253,32 +204,21 @@ class Admin extends BaseModel
      */
     public function agentCashData($order, $admin_cash)
     {
-
         if (isset($order['p_level_balance'])) {
             //上级代理提成
             $order['p_level_cash'] = round($order['p_level_balance'] * $order['true_service_price'] / 100, 2);
-
             $order['p_level_cash'] = $order['p_level_cash'] - $admin_cash > 0 ? $admin_cash : $order['p_level_cash'];
-
             $admin_cash -= $order['p_level_cash'];
-
         }
-
         if (isset($order['level_balance'])) {
             //上级代理提成
             $order['level_cash'] = round($order['level_balance'] * $order['true_service_price'] / 100, 2);
-
             $order['level_cash'] = $order['level_cash'] - $admin_cash > 0 ? $admin_cash : $order['level_cash'];
-
             $admin_cash -= $order['level_cash'];
-
         }
-
         $order['over_cash'] = $admin_cash;
-
         return $order;
     }
-
 
     /**
      * @author chenniang
@@ -287,44 +227,29 @@ class Admin extends BaseModel
      */
     public function agentBalanceDataCustom($admin_id, $order)
     {
-
         $admin = $this->dataInfo(['id' => $admin_id]);
-
         $order['admin_id'] = $admin_id;
         //县级代理商
         if (!empty($admin)) {
-
             $distri_model = new DistributionConfig();
             //查看是市代还是县代
             $name = $admin['city_type'] == 1 ? 'getCityCash' : 'getDistrictCash';
-
             $config = $distri_model->dataInfo(['uniacid' => $order['uniacid'], 'name' => $name]);
-
             $order[$config['balance_name']] = $config['balance'];
-
             $order['admin_balance_name'] = $config['balance_name'];
-
             $order['admin_cash_name'] = $admin['city_type'] == 1 ? 'city_cash' : 'district_cash';
             //查看是否还有上级
             $admin_pdata = $this->dataInfo(['id' => $admin['admin_pid']]);
             //只有市才有上级
             if (!empty($admin_pdata) && $admin_pdata['city_type'] == 1 && $admin['city_type'] == 2) {
-
                 $config = $distri_model->dataInfo(['uniacid' => $order['uniacid'], 'name' => 'getCityCash']);
-
                 $order[$config['balance_name']] = $config['balance'];
-
                 $order['admin_pid'] = $admin['admin_pid'];
-
                 $order['level_balance_name'] = $config['balance_name'];
-
                 $order['level_cash_name'] = 'city_cash';
             }
-
         }
-
         return $order;
-
     }
 
     /**

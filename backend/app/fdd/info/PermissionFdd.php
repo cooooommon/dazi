@@ -11,9 +11,7 @@
 // | After-sale service: +86-17361005938
 // +----------------------------------------------------------------------
 
-
 declare(strict_types=1);
-
 
 namespace app\fdd\info;
 
@@ -31,13 +29,11 @@ class PermissionFdd extends PermissionAbstract {
     public $saasKey ;
     const apiPaths = [];
 
-
     public function __construct($uniacid,$infoConfigOptions=[],$saasKey='FDD')
     {
         $this->saasKey  = longbing_get_auth_prefix($saasKey) ;
         parent::__construct($uniacid, self::tabbarKey, self::adminMenuKey, $this->saasKey, self::apiPaths , $infoConfigOptions);
     }
-
 
     /**
      * 返回saas端授权结果
@@ -46,11 +42,9 @@ class PermissionFdd extends PermissionAbstract {
     public function sAuth(): bool
     {
         return  true ;
-
         if(!$this->getAuthIsSaasCheck()){
             return  true ;
         }
-
        // dump($this->saasKey,$this->sassValue);exit;
         return true;
     }
@@ -62,24 +56,18 @@ class PermissionFdd extends PermissionAbstract {
     public function pAuth(): bool
     {
         return  true ;
-
-
         //代理管理端可以控制商城是否展示权限 , 这里需要判断权限
         $pAuthConfig = $this->getPAuthConfig();
         //必须平台授权才能使用
-
         //dump($this->getAuthIsPlatformCheck());exit;
         if($this->getAuthIsPlatformCheck()){
             //根据授权而定
             if ($pAuthConfig ){
-
 //                dump($pAuthConfig);exit;
                 return $pAuthConfig['shop_switch'] ? true : false ;
             }
         }
-
         return true;
-
     }
 
     /**
@@ -92,14 +80,7 @@ class PermissionFdd extends PermissionAbstract {
      */
     public function cAuth(int $user_id): bool
     {
-
         return true;
     }
-
-
-
-
-
-
 
 }

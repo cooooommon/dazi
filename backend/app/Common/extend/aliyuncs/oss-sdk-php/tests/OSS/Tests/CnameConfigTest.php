@@ -2,7 +2,6 @@
 
 namespace OSS\Tests;
 
-
 use OSS\Model\CnameConfig;
 use OSS\Core\OssException;
 
@@ -28,13 +27,11 @@ BBBB;
     {
         $cnameConfig = new CnameConfig();
         $cnameConfig->parseFromXml($this->xml1);
-
         $cnames = $cnameConfig->getCnames();
         $this->assertEquals(2, count($cnames));
         $this->assertEquals('www.foo.com', $cnames[0]['Domain']);
         $this->assertEquals('enabled', $cnames[0]['Status']);
         $this->assertEquals('20150101', $cnames[0]['LastModified']);
-
         $this->assertEquals('bar.com', $cnames[1]['Domain']);
         $this->assertEquals('disabled', $cnames[1]['Status']);
         $this->assertEquals('20160101', $cnames[1]['LastModified']);
@@ -45,14 +42,11 @@ BBBB;
         $cnameConfig = new CnameConfig();
         $cnameConfig->addCname('www.foo.com');
         $cnameConfig->addCname('bar.com');
-
         $xml = $cnameConfig->serializeToXml();
         $comp = new CnameConfig();
         $comp->parseFromXml($xml);
-
         $cnames1 = $cnameConfig->getCnames();
         $cnames2 = $comp->getCnames();
-
         $this->assertEquals(count($cnames1), count($cnames2));
         $this->assertEquals(count($cnames1[0]), count($cnames2[0]));
         $this->assertEquals(1, count($cnames1[0]));

@@ -6,9 +6,7 @@
  * @copyright Copyright (c) 1998-2014 Tencent Inc.
  */
 
-
 include_once "errorCode.php";
-
 
 class WXBizDataCrypt
 {
@@ -26,7 +24,6 @@ class WXBizDataCrypt
 		$this->appid = $appid;
 	}
 
-
 	/**
 	 * 检验数据的真实性，并且获取解密后的明文.
 	 * @param $encryptedData string 加密的用户数据
@@ -41,17 +38,12 @@ class WXBizDataCrypt
 			return ErrorCode::$IllegalAesKey;
 		}
 		$aesKey=base64_decode($this->sessionKey);
-
-        
 		if (strlen($iv) != 24) {
 			return ErrorCode::$IllegalIv;
 		}
 		$aesIV=base64_decode($iv);
-
 		$aesCipher=base64_decode($encryptedData);
-
 		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
-
 		$dataObj=json_decode( $result );
 		if( $dataObj  == NULL )
 		{
@@ -66,4 +58,3 @@ class WXBizDataCrypt
 	}
 
 }
-

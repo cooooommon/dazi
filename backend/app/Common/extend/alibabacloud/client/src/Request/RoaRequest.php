@@ -73,11 +73,9 @@ class RoaRequest extends Request
         if (isset($this->options['body'])) {
             return;
         }
-
         if (!isset($this->options['form_params'])) {
             return;
         }
-
         // Merge data, compatible with parameters set from constructor.
         $params = Arrays::merge(
             [
@@ -85,9 +83,7 @@ class RoaRequest extends Request
                 $this->options['form_params']
             ]
         );
-
         $this->encodeBody($params);
-
         unset($this->options['form_params']);
     }
 
@@ -99,14 +95,11 @@ class RoaRequest extends Request
     private function encodeBody(array $params)
     {
         $stringy = Stringy::create($this->options['headers']['Content-Type']);
-
         if ($stringy->contains('application/json', false)) {
             $this->options['body']                   = json_encode($params);
             $this->options['headers']['Content-MD5'] = base64_encode(md5($this->options['body'], true));
-
             return;
         }
-
         $this->options['body']                    = Encode::create($params)->ksort()->toString();
         $this->options['headers']['Content-MD5']  = base64_encode(md5($this->options['body'], true));
         $this->options['headers']['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
@@ -122,7 +115,6 @@ class RoaRequest extends Request
         $this->options['headers']['x-acs-version']   = $this->version;
         $this->options['headers']['x-acs-region-id'] = $this->realRegionId();
         $this->options['headers']['Date']            = gmdate($this->dateTimeFormat);
-
         $signature                                           = $this->httpClient()->getSignature();
         $this->options['headers']['x-acs-signature-method']  = $signature->getMethod();
         $this->options['headers']['x-acs-signature-nonce']   = Sign::uuid($this->product . $this->realRegionId());
@@ -130,7 +122,6 @@ class RoaRequest extends Request
         if ($signature->getType()) {
             $this->options['headers']['x-acs-signature-type'] = $signature->getType();
         }
-
         $this->resolveAccept();
         $this->resolveContentType();
         $this->resolveSecurityToken();
@@ -175,11 +166,9 @@ class RoaRequest extends Request
         if (!$this->credential() instanceof StsCredential) {
             return;
         }
-
         if (!$this->credential()->getSecurityToken()) {
             return;
         }
-
         $this->options['headers']['x-acs-security-token'] = $this->credential()->getSecurityToken();
     }
 
@@ -214,7 +203,6 @@ class RoaRequest extends Request
                                   $this->stringToSign(),
                                   $credential->getAccessKeySecret()
                               );
-
         return "acs $access_key_id:$signature";
     }
 
@@ -224,7 +212,6 @@ class RoaRequest extends Request
     private function resolveUri()
     {
         $path = Path::assign($this->pathPattern, $this->pathParameters);
-
         $this->uri = $this->uri->withPath($path)
                                ->withQuery(
                                    $this->queryString()
@@ -241,7 +228,6 @@ class RoaRequest extends Request
             $this->uri,
             $this->options['headers']
         );
-
         return Sign::roaString($request);
     }
 
@@ -253,7 +239,6 @@ class RoaRequest extends Request
         $query = isset($this->options['query'])
             ? $this->options['query']
             : [];
-
         return Encode::create($query)->ksort()->toString();
     }
 
@@ -269,16 +254,13 @@ class RoaRequest extends Request
     public function pathParameter($name, $value)
     {
         Filter::name($name);
-
         if ($value === '') {
             throw new ClientException(
                 'Value cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         $this->pathParameters[$name] = $value;
-
         return $this;
     }
 
@@ -293,9 +275,7 @@ class RoaRequest extends Request
     public function pathPattern($pattern)
     {
         ApiFilter::pattern($pattern);
-
         $this->pathPattern = $pattern;
-
         return $this;
     }
 
@@ -311,25 +291,19 @@ class RoaRequest extends Request
     {
         if (strncmp($name, 'get', 3) === 0) {
             $parameter_name = \mb_strcut($name, 3);
-
             return $this->__get($parameter_name);
         }
-
         if (strncmp($name, 'with', 4) === 0) {
             $parameter_name = \mb_strcut($name, 4);
             $this->__set($parameter_name, $arguments[0]);
             $this->pathParameters[$parameter_name] = $arguments[0];
-
             return $this;
         }
-
         if (strncmp($name, 'set', 3) === 0) {
             $parameter_name = \mb_strcut($name, 3);
             $with_method    = "with$parameter_name";
-
             throw new RuntimeException("Please use $with_method instead of $name");
         }
-
         throw new RuntimeException('Call to undefined method ' . __CLASS__ . '::' . $name . '()');
     }
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\massage\model;
-
 
 use app\BaseModel;
 
@@ -29,18 +27,12 @@ class JoinForm extends BaseModel
      */
     public function getMobileAttr($value, $data)
     {
-
         if (!empty($value) && isset($data['uniacid'])) {
-
             if (numberEncryption($data['uniacid']) == 1) {
-
                 return substr_replace($value, "****", 2, 4);
             }
-
         }
-
         return $value;
-
     }
 
     /**

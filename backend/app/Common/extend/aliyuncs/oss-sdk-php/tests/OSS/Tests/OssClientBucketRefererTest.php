@@ -7,7 +7,6 @@ use OSS\Model\RefererConfig;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'TestOssClientBase.php';
 
-
 class OssClientBucketRefererTest extends TestOssClientBase
 {
 
@@ -15,7 +14,6 @@ class OssClientBucketRefererTest extends TestOssClientBase
     {
         $refererConfig = new RefererConfig();
         $refererConfig->addReferer('http://www.aliyun.com');
-
         try {
             $this->ossClient->putBucketReferer($this->bucket, $refererConfig);
         } catch (OssException $e) {

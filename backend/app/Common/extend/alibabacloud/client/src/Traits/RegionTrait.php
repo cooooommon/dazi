@@ -27,7 +27,6 @@ trait RegionTrait
     public function regionId($regionId)
     {
         $this->regionId = ClientFilter::regionId($regionId);
-
         return $this;
     }
 }

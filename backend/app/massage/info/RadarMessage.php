@@ -15,7 +15,6 @@ $radar_msg = [
         "uniacid"=> 2,
         "status"=> 1
     ],
-
     [
         "sign"=> "view",
         "type"=> 1,
@@ -61,7 +60,6 @@ $radar_msg = [
         "uniacid"=> 2,
         "status"=> 1
     ],
-
     [
         "sign"=> "view",
         "type"=> 19,
@@ -197,8 +195,6 @@ $radar_msg = [
         "uniacid"=> 2,
         "status"=> 1
     ],
-
-
 ];
 
 return $radar_msg;

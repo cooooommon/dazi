@@ -63,7 +63,6 @@ class RpcRequest extends Request
         if (is_bool($value)) {
             return $value ? 'true' : 'false';
         }
-
         return $value;
     }
 
@@ -106,11 +105,9 @@ class RpcRequest extends Request
         if (!$this->credential() instanceof StsCredential) {
             return;
         }
-
         if (!$this->credential()->getSecurityToken()) {
             return;
         }
-
         $this->options['query']['SecurityToken'] = $this->credential()->getSecurityToken();
     }
 
@@ -150,7 +147,6 @@ class RpcRequest extends Request
         $query       = isset($this->options['query']) ? $this->options['query'] : [];
         $form_params = isset($this->options['form_params']) ? $this->options['form_params'] : [];
         $parameters  = Arrays::merge([$query, $form_params]);
-
         return Sign::rpcString($this->method, $parameters);
     }
 
@@ -179,25 +175,19 @@ class RpcRequest extends Request
     {
         if (strncmp($name, 'get', 3) === 0) {
             $parameter_name = \mb_strcut($name, 3);
-
             return $this->__get($parameter_name);
         }
-
         if (strncmp($name, 'with', 4) === 0) {
             $parameter_name = \mb_strcut($name, 4);
             $this->__set($parameter_name, $arguments[0]);
             $this->options['query'][$parameter_name] = $arguments[0];
-
             return $this;
         }
-
         if (strncmp($name, 'set', 3) === 0) {
             $parameter_name = \mb_strcut($name, 3);
             $with_method    = "with$parameter_name";
-
             throw new RuntimeException("Please use $with_method instead of $name");
         }
-
         throw new RuntimeException('Call to undefined method ' . __CLASS__ . '::' . $name . '()');
     }
 }

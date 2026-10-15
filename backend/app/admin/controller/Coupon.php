@@ -35,7 +35,6 @@ class Coupon extends Rest
         $this->success($data);
     }
 
-
     /**
      * 修改福包
      */
@@ -101,8 +100,6 @@ class Coupon extends Rest
         $dis['status'] = 1;
         $data = $goodsModel->goodsSelect($dis);
         $this->success($data);
-
     }
-
 
 }

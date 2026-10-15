@@ -22,34 +22,21 @@ class Update extends AdminRest
      */
     public function update()
     {
-
 //        return $this->success([]);
         $key = 'init_all_data';
-
         $data = getCache($key, $this->_uniacid);
-
         if (!empty($data)) {
-
             return $this->success([]);
-
         }
-
         setCache($key, 1, 7200, $this->_uniacid);
-
         UpdateService::installSql($this->_uniacid);
-
         UpdateService::initWeiqinConfigData();
-
         DiyService::addDefaultDiyData($this->_uniacid);
         //各个模块初始化数据事件
         event('InitModelData');
         //处理雷达
         lbInitRadarMsg($this->_uniacid);
-
         return $this->success([]);
-
     }
 
-
 }
-	

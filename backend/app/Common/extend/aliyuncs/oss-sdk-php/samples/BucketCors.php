@@ -10,7 +10,6 @@ $ossClient = Common::getOssClient();
 if (is_null($ossClient)) exit(1);
 $bucket = Common::getBucketName();
 
-
 //******************************* 简单使用 ****************************************************************
 
 // 设置cors配置
@@ -55,7 +54,6 @@ function putBucketCors($ossClient, $bucket)
     $rule->addAllowedMethod("POST");
     $rule->setMaxAgeSeconds(10);
     $corsConfig->addRule($rule);
-
     try {
         $ossClient->putBucketCors($bucket, $corsConfig);
     } catch (OssException $e) {
@@ -105,4 +103,3 @@ function deleteBucketCors($ossClient, $bucket)
     }
     print(__FUNCTION__ . ": OK" . "\n");
 }
-

@@ -28,7 +28,6 @@ class work
         if (!is_dir($path . 'runtime/data/tpl/web')) {
             mkdir($path . 'runtime/data/tpl/web',0777,true);
         }
-
     }
 
     /*
@@ -41,12 +40,10 @@ class work
             $data = json_encode($data, JSON_UNESCAPED_UNICODE);
         }
         $accessTokenWW = $this->getAccessTokenWW();
-
         if (is_array($accessTokenWW)) {
             return $accessTokenWW;
         }
         $url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={$accessTokenWW}";
-
         $res = $this->curlPost($url, $data);
         return $res;
     }
@@ -83,8 +80,6 @@ class work
                 return $data;
             }
             $access_token = $data['access_token'];
-
-
             file_put_contents(ROOT_PATH . 'runtime/data/tpl/web/' . $appidMd5 . '.txt', json_encode(['at' => $access_token, 'time' => time() + 6200]));
             return $access_token;
         }
@@ -98,7 +93,6 @@ class work
                     return $data;
                 }
                 $access_token = $data['access_token'];
-
                 file_put_contents(ROOT_PATH . '/data/tpl/web/' . $appidMd5 . '.txt', json_encode(['at' => $access_token, 'time' => time() + 6200]));
                 return $access_token;
             } else {
@@ -111,14 +105,12 @@ class work
                         return $data;
                     }
                     $access_token = $data['access_token'];
-
                     file_put_contents(ROOT_PATH . 'runtime/data/tpl/web/' . $appidMd5 . '.txt', json_encode(['at' => $access_token, 'time' => time() + 6200]));
                     return $access_token;
                 }
                 return $fileInfo['at'];
             }
         }
-
         return false;
     }
 
@@ -132,39 +124,27 @@ class work
     {
 //        if (!empty($data))
 //            $data = $this->arr2xml($data);
-
         //初使化init方法
         $ch = curl_init();
-
         //指定URL
         curl_setopt($ch, CURLOPT_URL, $url);
-
         //设定请求后返回结果
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
         //声明使用POST方式来进行发送
         curl_setopt($ch, CURLOPT_POST, 1);
-
         //发送什么数据呢
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-
-
         //忽略证书
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-
         //忽略header头信息
         curl_setopt($ch, CURLOPT_HEADER, 0);
-
         //设置超时时间
         curl_setopt($ch, CURLOPT_TIMEOUT, $time);
-
         //发送请求
         $output = curl_exec($ch);
-
         //关闭curl
         curl_close($ch);
-
         //返回数据
 //        $output = (array)\simplexml_load_string($output, null, LIBXML_NOCDATA | LIBXML_COMPACT);
         return $output;
@@ -181,47 +161,31 @@ class work
         global $_GPC, $_W;
         $mh = curl_multi_init();
         $curls = array();
-
         foreach ($array as $index => $item)
         {
             $tmp = curl_init();
-
             curl_setopt($tmp, CURLOPT_URL, $item['url']);
             curl_setopt($tmp, CURLOPT_HEADER, 0);
-
-
-
             //设定请求后返回结果
             curl_setopt($tmp, CURLOPT_RETURNTRANSFER, 1);
-
             //声明使用POST方式来进行发送
             curl_setopt($tmp, CURLOPT_POST, 1);
-
             //发送什么数据呢
             curl_setopt($tmp, CURLOPT_POSTFIELDS, $item['data']);
-
-
             //忽略证书
             curl_setopt($tmp, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($tmp, CURLOPT_SSL_VERIFYHOST, false);
-
             //忽略header头信息
             curl_setopt($tmp, CURLOPT_HEADER, 0);
-
             //设置超时时间
             curl_setopt($tmp, CURLOPT_TIMEOUT, 100);
-
-
             array_push($curls, $tmp);
             curl_multi_add_handle($mh, $tmp);
         }
-
         $running=null;
-
         do {
             $mrc = curl_multi_exec($mh, $running);
         } while ($mrc == CURLM_CALL_MULTI_PERFORM);
-
         while ($running && $mrc == CURLM_OK) {
             if (curl_multi_select($mh) != -1) {
                 do {
@@ -229,13 +193,11 @@ class work
                 } while ($mrc == CURLM_CALL_MULTI_PERFORM);
             }
         }
-
         foreach ($curls as $index => $item)
         {
             curl_multi_remove_handle($mh, $item);
         }
         curl_multi_close($mh);
-
         return true;
     }
 }

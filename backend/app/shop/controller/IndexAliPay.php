@@ -21,9 +21,7 @@ class IndexAliPay extends ApiRest
 
     public function __construct(App $app)
     {
-
     }
-
 
     /**
      * 查询订单
@@ -32,22 +30,14 @@ class IndexAliPay extends ApiRest
      */
     public function findOrder()
     {
-
         $pay_config = $this->payConfig();
-
         require_once EXTEND_PATH . 'alipay/aop/AopClient.php';
-
         require_once EXTEND_PATH . 'alipay/aop/request/AlipayTradeQueryRequest.php';
-
         $aop = new \AopClient ();
-
         $aop->gatewayUrl = 'https://openapi.alipay.com/gateway.do';
         // $aop->gatewayUrl = 'https://openapi.alipaydev.com/gateway.do';
-
         $aop->appId = $pay_config['payment']['ali_appid'];
-
         $aop->rsaPrivateKey = $pay_config['payment']['ali_privatekey'];
-
         $aop->alipayrsaPublicKey = $pay_config['payment']['ali_publickey'];
         $aop->apiVersion = '1.0';
         $aop->signType = 'RSA2';
@@ -59,12 +49,9 @@ class IndexAliPay extends ApiRest
         $json = json_encode($object);
         $request = new \AlipayTradeQueryRequest();
         $request->setBizContent($json);
-
         $result = $aop->execute($request);
-
         return $result;
     }
-
 
     /**
      * 支付宝支付
@@ -76,63 +63,35 @@ class IndexAliPay extends ApiRest
      */
     public function aliPay($params)
     {
-
         require_once EXTEND_PATH . 'alipay/aop/AopClient.php';
-
         require_once EXTEND_PATH . 'alipay/aop/request/AlipayTradeAppPayRequest.php';
         require_once EXTEND_PATH . 'alipay/aop/request/AlipayTradeWapPayRequest.php';
-
         $pay_config = $this->payConfig();
-
         $aop = new \AopClient ();
-
         $aop->gatewayUrl = 'https://openapi.alipay.com/gateway.do';
-
 //        $aop->gatewayUrl = 'https://openapi.alipaydev.com/gateway.do';
-
         $aop->appId = $pay_config['payment']['ali_appid'];
-
         $aop->rsaPrivateKey = $pay_config['payment']['ali_privatekey'];;
-
         $aop->alipayrsaPublicKey = $pay_config['payment']['ali_publickey'];;
-
         $aop->apiVersion = '1.0';
-
         $aop->signType = 'RSA2';
-
         $aop->postCharset = 'UTF-8';
-
         $aop->format = 'json';
         $object = new \stdClass();
-
         $object->out_trade_no = $params['order_code'];
-
         $object->total_amount = $params['price'];
-
         $object->subject = $params['body'];
-
         $object->product_code = 'QUICK_WAP_WAY';
-
         $object->passback_params = urlencode($params['passback_params']);
-
         //$object->time_expire = date('Y-m-d H:i:s',time());
-
         $json = json_encode($object);
-
 //        $request = new \AlipayTradeAppPayRequest();
         $request = $pay_config['is_app'] == 1 ? new \AlipayTradeAppPayRequest() : new \AlipayTradeWapPayRequest();
-
-
         $request->setNotifyUrl("https://" . $_SERVER['HTTP_HOST'] . '/index.php/shop/IndexAliPay/aliNotify');
-
         $request->setBizContent($json);
-
         $result = $pay_config['is_app'] == 1 ? $aop->sdkExecute($request) : $aop->pageExecute($request);
-
         return $result;
-
     }
-
 
     /**
      * 退款
@@ -143,49 +102,27 @@ class IndexAliPay extends ApiRest
      */
     public function aliRefund($order_code, $price)
     {
-
         require_once EXTEND_PATH . 'alipay/aop/AopClient.php';
-
         require_once EXTEND_PATH . 'alipay/aop/request/AlipayTradeRefundRequest.php';
-
         $pay_config = $this->payConfig();
-
         $aop = new \AopClient ();
-
         $aop->gatewayUrl = 'https://openapi.alipay.com/gateway.do';
-
         $aop->appId = $pay_config['payment']['ali_appid'];
-
         $aop->rsaPrivateKey = $pay_config['payment']['ali_privatekey'];;
-
         $aop->alipayrsaPublicKey = $pay_config['payment']['ali_publickey'];;
-
         $aop->apiVersion = '1.0';
-
         $aop->signType = 'RSA2';
-
         $aop->postCharset = 'UTF-8';
-
         $aop->format = 'json';
-
         $object = new \stdClass();
-
         $object->trade_no = $order_code;
-
         $object->refund_amount = $price;
-
         $object->out_request_no = 'HZ01RF001';
-
         $json = json_encode($object);
-
         $request = new \AlipayTradeRefundRequest();
-
         $request->setBizContent($json);
-
         $result = $aop->execute($request);
-
         return $result;
-
     }
 
     /**
@@ -194,37 +131,22 @@ class IndexAliPay extends ApiRest
     public function aliNotify()
     {
         require_once EXTEND_PATH . 'alipay/aop/AopClient.php';
-
         $data = $_POST;
-
         if (empty($data)) {
-
             $data = $_GET;
         }
-
         LogUtils::log('支付宝回调参数：        ' . json_encode($data), 'alipay_notify', 'alipay_notify');
-
         $data = json_decode(json_encode($data), true);
-
         $arr_ = urldecode($data['passback_params']);
-
         $arr_ = explode('&', $arr_);
-
         $arr = [];
-
         foreach ($arr_ as $item) {
-
             $item = explode('=', $item);
-
             $arr[$item[0]] = $item[1];
         }
-
         $aop = new \AopClient;
-
         $pay_config = $this->payConfig();
-
         $aop->alipayrsaPublicKey = $pay_config[ 'payment' ][ 'ali_publickey' ];
-
         $flag = $aop->rsaCheckV1($data, NULL, "RSA2");
         if (!$flag) {
             echo 'fail';

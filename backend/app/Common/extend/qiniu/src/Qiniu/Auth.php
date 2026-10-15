@@ -42,7 +42,6 @@ final class Auth
             $data .= '?' . $url['query'];
         }
         $data .= "\n";
-
         if ($body !== null && $contentType === 'application/x-www-form-urlencoded') {
             $data .= $body;
         }
@@ -58,7 +57,6 @@ final class Auth
     public function privateDownloadUrl($baseUrl, $expires = 3600)
     {
         $deadline = time() + $expires;
-
         $pos = strpos($baseUrl, '?');
         if ($pos !== false) {
             $baseUrl .= '&e=';
@@ -66,7 +64,6 @@ final class Auth
             $baseUrl .= '?e=';
         }
         $baseUrl .= $deadline;
-
         $token = $this->sign($baseUrl);
         return "$baseUrl&token=$token";
     }
@@ -78,11 +75,9 @@ final class Auth
         if ($key !== null) {
             $scope .= ':' . $key;
         }
-
         $args = self::copyPolicy($args, $policy, $strictPolicy);
         $args['scope'] = $scope;
         $args['deadline'] = $deadline;
-
         $b = json_encode($args);
         return $this->signWithData($b);
     }
@@ -97,23 +92,18 @@ final class Auth
         'callbackHost',
         'callbackBodyType',
         'callbackFetchKey',
-
         'returnUrl',
         'returnBody',
-
         'endUser',
         'saveKey',
         'insertOnly',
-
         'detectMime',
         'mimeLimit',
         'fsizeMin',
         'fsizeLimit',
-
         'persistentOps',
         'persistentNotifyUrl',
         'persistentPipeline',
-
         'deleteAfterDays',
         'fileType',
         'isPrefixalScope',
@@ -142,44 +132,36 @@ final class Auth
     {
         $urlItems = parse_url($url);
         $host = $urlItems['host'];
-
         if (isset($urlItems['port'])) {
             $port = $urlItems['port'];
         } else {
             $port = '';
         }
-
         $path = $urlItems['path'];
         if (isset($urlItems['query'])) {
             $query = $urlItems['query'];
         } else {
             $query = '';
         }
-
         //write request uri
         $toSignStr = $method . ' ' . $path;
         if (!empty($query)) {
             $toSignStr .= '?' . $query;
         }
-
         //write host and port
         $toSignStr .= "\nHost: " . $host;
         if (!empty($port)) {
             $toSignStr .= ":" . $port;
         }
-
         //write content type
         if (!empty($contentType)) {
             $toSignStr .= "\nContent-Type: " . $contentType;
         }
-
         $toSignStr .= "\n\n";
-
         //write body
         if (!empty($body)) {
             $toSignStr .= $body;
         }
-
         $sign = $this->sign($toSignStr);
         $auth = 'Qiniu ' . $sign;
         return array('Authorization' => $auth);

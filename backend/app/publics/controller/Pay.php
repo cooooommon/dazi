@@ -7,11 +7,8 @@ use think\facade\Request;
 
 class Pay extends BaseController {
 
-
     public function notify(){
-
         echo 'message ok ';
-
     }
 
 }

@@ -6,7 +6,6 @@ use app\BaseModel;
 use think\facade\Db;
 use app\admin\model\ShopOrderGoods;
 
-
 class ShopOrder extends BaseModel
 {
     //定义表名
@@ -78,6 +77,5 @@ class ShopOrder extends BaseModel
         return $this->whereIn('company_id', $company_id)->whereBetween('create_time',
             [$start, $end])->where('pay_status', 1)->where('order_status', 3)->sum('total_price');
     }
-
 
 }

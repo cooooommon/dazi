@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\massage\controller;
-
 
 use app\admin\controller\Update;
 use app\AdminRest;
@@ -31,7 +29,6 @@ class AdminStore extends AdminRest
     public function getList()
     {
         (new Diy())->chancelBanner($this->_uniacid);
-
         $name = $this->request->param('name', '');
         $start_time = $this->request->param('start_time', '');
         $end_time = $this->request->param('end_time', '');
@@ -90,26 +87,20 @@ class AdminStore extends AdminRest
     public function getListDiy()
     {
         $name = $this->request->param('title', '');
-
         $limit = $this->request->param('limit', '10');
-
         $where = [
             ['uniacid', '=', $this->_uniacid],
             ['status', '=', 2],
         ];
-
         if (!empty($name)) {
             $where[] = ['name', 'like', '%' . $name . '%'];
         }
-
         $data = StoreApply::getList($where, $limit);
-
         if (!empty($data['data'])) {
             foreach ($data['data'] as &$item) {
                 $item['title'] = $item['name'];
             }
         }
-
         return $this->success($data);
     }
 
@@ -125,9 +116,7 @@ class AdminStore extends AdminRest
             ['uniacid', '=', $this->_uniacid],
             ['status', '=', 2]
         ];
-
         $data = StoreApply::getListNoPage($where);
-
         return $this->success($data);
     }
 
@@ -171,7 +160,6 @@ class AdminStore extends AdminRest
         $id = $this->request->param('id', '');
         $data = StoreApplyUpdate::getInfo(['uniacid' => $this->_uniacid, 'store_id' => $id, 'status' => 1]);
         if (empty($data)) {
-
             StoreApply::update(['is_update' => 0], ['id' => $id]);
             return $this->error('无需审核');
         }
@@ -210,12 +198,9 @@ class AdminStore extends AdminRest
                 }
             }
             $update = array_merge($update, $info);
-
             if (isset($update['trade_week'])) {
-
                 StorePackage::where([['store_id', '=', $id], ['status', '>', -1]])->update(['use_trade_week' => $update['trade_week'], 'use_start_time' => $update['start_time'], 'use_end_time' => $update['end_time']]);
             }
-
         }
         StoreApply::update($update, ['id' => $id]);
         if ($res === false) {
@@ -231,47 +216,29 @@ class AdminStore extends AdminRest
     public function changeStatus()
     {
         $data = $this->request->only(['id', 'status']);
-
         if ($data['status'] == -1) {
-
             $store = StoreApply::find($data['id']);
-
             if ($store['cash'] > 0) {
-
                 return $this->error('此门店还有佣金未提现，不可删除');
             }
-
             $where = [
                 ['status', '=', 2],
-
                 ['store_id', '=', $data['id']]
             ];
-
             $order = PackageOrder::getFirst($where);
-
             if (!empty($order)) {
-
                 return $this->error('此门店还有未完成的订单，不可删除。订单id：' . $order['id']);
             }
-
             $wallet_dis = [
-
                 ['coach_id', '=', $data['id']],
-
                 ['status', '=', 1],
-
                 ['type', '=', 6]
             ];
-
             $wallet = (new Wallet())->dataInfo($wallet_dis);
-
             if (!empty($wallet)) {
-
                 $this->errorMsg('此门店还有提现申请中，无法删除。提现id：' . $wallet['id']);
-
             }
         }
-
         $res = StoreApply::update($data, ['id' => $data['id']]);
         if ($res === false) {
             return $this->error('审核失败');
@@ -288,18 +255,12 @@ class AdminStore extends AdminRest
     public function typeAdd()
     {
         $data = request()->only(['name', 'img', 'top']);
-
         $data['name'] = trim($data['name']);
-
         $data['uniacid'] = $this->_uniacid;
-
         if (StoreType::where(['status' => 1, 'name' => $data['name']])->count() > 0) {
-
             return $this->error('此分类已存在');
         }
-
         $res = StoreType::add($data);
-
         if ($res) {
             return $this->success('');
         }
@@ -315,19 +276,13 @@ class AdminStore extends AdminRest
     public function typeUpdate()
     {
         $data = request()->only(['id', 'name', 'img', 'top', 'status']);
-
         if (isset($data['status']) && $data['status'] == -1) {
-
             StoreApply::cancel($data['id']);
         }
-
         if (isset($data['name']) && StoreType::where([['status', '=', 1], ['name', '=', $data['name']], ['id', '<>', $data['id']]])->count() > 0) {
-
             return $this->error('此分类已存在');
         }
-
         $res = StoreType::update($data, ['id' => $data['id']]);
-
         return $this->success($res);
     }
 
@@ -342,33 +297,23 @@ class AdminStore extends AdminRest
     {
         $name = request()->param('name', '');
         $title = request()->param('title', '');
-
         $limit = request()->param('limit', 10);
-
         $where = [
             ['uniacid', '=', $this->_uniacid],
             ['status', '=', 1]
         ];
-
         if (!empty($name)) {
-
             $where[] = ['name', 'like', '%' . $name . '%'];
         }
         if (!empty($title)) {
-
             $where[] = ['name', 'like', '%' . $title . '%'];
         }
-
         $data = StoreType::getList($where, $limit);
-
         if (!empty($data['data'])) {
-
             foreach ($data['data'] as &$datum) {
-
                 $datum['title'] = $datum['name'];
             }
         }
-
         return $this->success($data);
     }
 
@@ -381,19 +326,13 @@ class AdminStore extends AdminRest
     public function addStore()
     {
         $data = request()->only(['user_id', 'name', 'cover', 'banner', 'mobile', 'license', 'lng', 'lat', 'address', 'info', 'tag', 'intro', 'type_id', 'trade_week', 'start_time', 'end_time', 'contact_type', 'qywx_kid']);
-
         $store = StoreApply::getInfo([['user_id', '=', $data['user_id']], ['status', 'in', [0, 1, 2, 3]]]);
-
         if (!empty($store)) {
-
             return $this->error('此用户已申请店铺，不可添加');
         }
-
         $data['banner'] = !empty($data['banner']) ? implode(',', $data['banner']) : '';
         $data['tag'] = !empty($data['tag']) ? implode(',', $data['tag']) : '';
         $data['trade_week'] = !empty($data['trade_week']) ? implode(',', $data['trade_week']) : '';
-
-
         $arr = [
             'uniacid' => $this->_uniacid,
             'is_admin' => 1,
@@ -402,21 +341,14 @@ class AdminStore extends AdminRest
             'create_time' => time(),
             'update_time' => time()
         ];
-
         $data = array_merge($data, $arr);
-
         $store = StoreApply::getInfo([['user_id', '=', $data['user_id']], ['status', '=', 4]]);
-
         if (empty($store)) {
-
             $res = StoreApply::insert($data);
         } else {
-
             $data['status'] = 2;
             $res = StoreApply::update($data, ['id' => $store['id']]);
         }
-
-
         return $this->success($res);
     }
 
@@ -432,19 +364,14 @@ class AdminStore extends AdminRest
     public function typeListNoPage()
     {
         $name = request()->param('name', '');
-
         $where = [
             ['uniacid', '=', $this->_uniacid],
             ['status', '=', 1]
         ];
-
         if (!empty($name)) {
-
             $where[] = ['name', 'like', '%' . $name . '%'];
         }
-
         $data = StoreType::getListNoPage($where);
-
         return $this->success($data);
     }
 
@@ -457,22 +384,16 @@ class AdminStore extends AdminRest
     public function storeTop()
     {
         $id = request()->param('id', '');
-
         $status = request()->param('status', '1');
-
         $where = [
             'uniacid' => $this->_uniacid
         ];
         if ($status == 1) {
-
             $top = StoreApply::where($where)->max('top');
-
             $res = StoreApply::update(['top' => $top + 1, 'is_top' => 1], ['id' => $id]);
         } else {
-
             $res = StoreApply::update(['top' => 0, 'is_top' => 0], ['id' => $id]);
         }
-
         return $this->success($res);
     }
 
@@ -484,34 +405,20 @@ class AdminStore extends AdminRest
      */
     public function storeUserList()
     {
-
         $input = $this->_param;
-
         $dis[] = ['uniacid', '=', $this->_uniacid];
-
         $dis[] = ['status', 'in', [0, 1, 2, 3]];
-
         $user_id = StoreApply::where($dis)->column('user_id');
-
         $where1 = [];
-
         if (!empty($input['nickName'])) {
-
             $where1[] = ['nickName', 'like', '%' . $input['nickName'] . '%'];
-
             $where1[] = ['phone', 'like', '%' . $input['nickName'] . '%'];
         }
-
         $user_model = new User();
-
         $where[] = ['uniacid', '=', $this->_uniacid];
-
         $where[] = ['id', 'not in', $user_id];
-
         $list = $user_model->dataList($where, $input['limit'], $where1);
-
         return $this->success($list);
-
     }
 
     /**
@@ -523,23 +430,16 @@ class AdminStore extends AdminRest
     public function editStore()
     {
         $data = request()->only(['id', 'user_id', 'name', 'cover', 'banner', 'mobile', 'license', 'lng', 'lat', 'address', 'info', 'tag', 'intro', 'type_id', 'trade_week', 'start_time', 'end_time', 'store_balance', 'share_balance', 'contact_type', 'qywx_kid']);
-
         if (isset($data['banner'])) {
-
             $data['banner'] = !empty($data['banner']) ? implode(',', $data['banner']) : '';
         }
-
         if (isset($data['tag'])) {
-
             $data['tag'] = !empty($data['tag']) ? implode(',', $data['tag']) : '';
         }
         if (isset($data['trade_week'])) {
-
             $data['trade_week'] = !empty($data['trade_week']) ? implode(',', $data['trade_week']) : '';
         }
-
         $res = StoreApply::update($data, ['id' => $data['id']]);
-
         return $this->success($res);
     }
 
@@ -552,13 +452,9 @@ class AdminStore extends AdminRest
     public function editStoreBalance()
     {
         $data = request()->only(['ids', 'store_balance']);
-
         $ids = $data['ids'];
-
         unset($data['ids']);
-
         $res = StoreApply::whereIn('id', $ids)->update($data);
-
         return $this->success($res);
     }
 

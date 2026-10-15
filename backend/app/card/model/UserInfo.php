@@ -4,7 +4,6 @@ namespace app\card\model;
 use app\BaseModel;
 use think\facade\Db;
 
-
 class UserInfo extends BaseModel
 {
     //定义表名

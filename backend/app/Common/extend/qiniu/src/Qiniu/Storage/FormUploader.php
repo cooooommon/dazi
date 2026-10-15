@@ -33,30 +33,24 @@ final class FormUploader
         $mime,
         $fname
     ) {
-
         $fields = array('token' => $upToken);
         if ($key === null) {
             $fname='nullkey';
         } else {
             $fields['key'] = $key;
         }
-
         //enable crc32 check by default
         $fields['crc32'] = \Qiniu\crc32_data($data);
-
         if ($params) {
             foreach ($params as $k => $v) {
                 $fields[$k] = $v;
             }
         }
-
         list($accessKey, $bucket, $err) = \Qiniu\explodeUpToken($upToken);
         if ($err != null) {
             return array(null, $err);
         }
-
         $upHost = $config->getUpHost($accessKey, $bucket);
-
         $response = Client::multipartPost($upHost, $fields, 'file', $fname, $data, $mime);
         if (!$response->ok()) {
             return array(null, new Error($upHost, $response));
@@ -89,15 +83,11 @@ final class FormUploader
         $params,
         $mime
     ) {
-
-
         $fields = array('token' => $upToken, 'file' => self::createFile($filePath, $mime));
         if ($key !== null) {
             $fields['key'] = $key;
         }
-
         $fields['crc32'] = \Qiniu\crc32_file($filePath);
-
         if ($params) {
             foreach ($params as $k => $v) {
                 $fields[$k] = $v;
@@ -105,14 +95,11 @@ final class FormUploader
         }
         $fields['key'] = $key;
         $headers = array('Content-Type' => 'multipart/form-data');
-
         list($accessKey, $bucket, $err) = \Qiniu\explodeUpToken($upToken);
         if ($err != null) {
             return array(null, $err);
         }
-
         $upHost = $config->getUpHost($accessKey, $bucket);
-
         $response = Client::post($upHost, $fields, $headers);
         if (!$response->ok()) {
             return array(null, new Error($upHost, $response));
@@ -127,13 +114,11 @@ final class FormUploader
         if (function_exists('curl_file_create')) {
             return curl_file_create($filename, $mime);
         }
-
         // Use the old style if using an older version of PHP
         $value = "@{$filename}";
         if (!empty($mime)) {
             $value .= ';type=' . $mime;
         }
-
         return $value;
     }
 }

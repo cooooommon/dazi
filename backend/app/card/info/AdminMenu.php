@@ -159,5 +159,3 @@ BUSINESSCARD;
 //return json_decode($menu, true) ;
 
 return ['card' => $menu];
-
-

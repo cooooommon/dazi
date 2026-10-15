@@ -19,9 +19,7 @@ Route::group('tmpl', function () {
     Route::post('AdminTmpl/getTmplId', 'AdminTmpl/getTmplId');
     //需改模版消息
     Route::post('AdminTmpl/tmplUpdate', 'AdminTmpl/tmplUpdate');
-
 });
-
 
 Route::group('someThing', function () {
     //获取公司
@@ -34,15 +32,11 @@ Route::group('someThing', function () {
     Route::post('getAllUser', 'SomeThing/getAllUser');
     //商品
     Route::post('goodsSelect', 'SomeThing/goodsSelect');
-
     Route::post('goodsSpeList', 'SomeThing/goodsSpeList');
-
     Route::post('getSpePrice', 'SomeThing/getSpePrice');
-
 });
 
 Route::group('Pay', function () {
     //支付成功通知
     Route::any('notify', 'Pay/notify');
-
 });

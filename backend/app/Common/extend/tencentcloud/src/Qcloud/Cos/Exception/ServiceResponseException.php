@@ -143,12 +143,10 @@ class ServiceResponseException extends \RuntimeException {
             . 'Cos Request ID: ' . $this->getRequestId() . ', '
             . 'Cos Error Type: ' . $this->getExceptionType() . ', '
             . 'Cos Error Message: ' . $this->getMessage();
-
         // Add the User-Agent if available
         if ($this->request) {
             $message .= ', ' . 'User-Agent: ' . $this->request->getHeader('User-Agent');
         }
-
         return $message;
     }
 

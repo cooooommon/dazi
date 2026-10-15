@@ -35,11 +35,8 @@ class Upload {
     //上传
     public function upload($type ,$file,$config=array())
     {
-
         if(!empty($config)){
-
             $this->config = $config;
-
         }
         $base_path = '/';
         $type_data = 1;
@@ -77,10 +74,8 @@ class Upload {
         }
         //根据时间生成路径
         $base_path = $base_path . $this->uniacid . '/' . date('y') . '/' . date('m');
-
         $info = null;
         $upload_status = false;
-
 //        dump($file,serialize($file));exit;
         //数据检查
         if($this->checkFile($type ,$file))
@@ -106,7 +101,6 @@ class Upload {
                         break;
                     case 1:
                         $oss_res = $this->aliyunUpload($info_path);
-
                         if(isset($this->config['aliyun_base_dir']) && !empty($this->config['aliyun_base_dir'])) $info_path = $this->config['aliyun_base_dir'] . '/' . $info_path;
                         if(in_array(substr($info_path,0,1) ,['/' ,"/"])) {
                             $info_path = substr($info_path,1,(strlen($info_path)-1));
@@ -122,7 +116,6 @@ class Upload {
                         break;
                     case 3:
                         $oss_res = $this->tenxunUpoload($info_path);
-
                         $info['longbing_driver'] = 'tengxunyun';
                         if(isset($oss_res['ETag'])  && isset($oss_res['ObjectURL'])) $upload_status = true;
                         break;
@@ -137,7 +130,6 @@ class Upload {
             }
         }
         if(!$upload_status) $info = null;
-
 //        dump($info);exit;
         return $info;
     }
@@ -213,32 +205,25 @@ class Upload {
         return $result;
     }
 
-
     public function checkFile($type ,$file)
     {
         $result = false;
-
         switch($type)
         {
-
             case 'picture':
                 $result = validate(['file' => ['fileSize' => 10 * 1024 * 1024, 'fileExt' => 'jpg,jpeg,bmp,png,image']])->check(['file' => $file]);
                 break;
             case 'audio':
                 $result = validate(['file' => ['fileSize' => 50 * 1024 * 1024, 'fileExt' => 'mp3,wma,wav,m4a']])->check(['file' => $file]);
-
                 break;
             case 'video':
-
                 $result = validate(['file' => ['fileSize' => 50 * 1024 * 1024, 'fileExt' => 'wmv,mp4,avi,mpg,rmvb,MPEG-4,MPEG,MOV,3GP,MPV,quicktime,Quicktime,mov']])->check(['file' => $file]);
-
                 break;
             case 'cert':
                 $result = validate(['file' => ['fileSize' => 50 * 1024 * 1024, 'fileExt' => 'cert,pem']])->check(['file' => $file]);
                 break;
             case 'wxuploadkey':
                 $result = validate(['file' => ['fileSize' => 50 * 1024 * 1024, 'fileExt' => 'cert,pem']])->check(['file' => $file]);
-
                 break;
             default:
                 break;
@@ -259,13 +244,10 @@ class Upload {
         return $result;
     }
     
-    
-    
     //本地保存
     public function fileLoaclSave($path ,$file ,$file_name = null)
     {
         if(empty($file_name)) $file_name = uuid() . '.' .  $file->getOriginalExtension();
-
 //        dump($path ,$file ,$file_name);exit;
         //保存
         $info = Filesystem::disk('longbing')->putFileAs($path ,$file ,$file_name);
@@ -304,7 +286,6 @@ class Upload {
         }
         //否则，完成上传操作
         return false;
-        
     }
     
     //七牛云上传
@@ -335,7 +316,6 @@ class Upload {
         }catch (\Exception $e){
             return false;
         }
-        
     }
     
     //腾讯云上传
@@ -345,7 +325,6 @@ class Upload {
             $path = ltrim($path,'/');//左边的/去掉
             //加载驱动
             require dirname(__FILE__)  . '/extend/tencentcloud/vendor/autoload.php';
-
            // dump(dirname(__FILE__)  . '/extend/tencentcloud/vendor/autoload.php');exit;
             // 需要填写你的 Access Key 和 Secret Key
             $appid    = $this->config['tenxunyun_appid'];
@@ -354,7 +333,6 @@ class Upload {
             $bucket   = $this->config['tenxunyun_bucket'];
             $region   = $this->config['tenxunyun_region'];
             $yuming   = $this->config['tenxunyun_yuming'];
-            
             //初始化对象
             $cosClient = new Client(array(
                 'region'      => $region, #地域，如ap-guangzhou,ap-beijing-1
@@ -363,20 +341,16 @@ class Upload {
                     'secretKey'=> $secretkey,
                 ),
             ));
-
             // 若初始化 Client 时未填写 appId，则 bucket 的命名规则为{name}-{appid} ，此处填写的存储桶名称必须为此格式
           //  $bucket = $bucket . '-' . $appid;
             // 要上传文件的本地路径
             $body =  FILE_UPLOAD_PATH . $path;
-
-
             try {
                 $result = $cosClient->putObject(array(
                     'Bucket' => $bucket,
                     'Key' => $path,
                     'Body' => file_get_contents($body)
                 ));
-
                 if(is_file($body)){
                     unlink($body);
                 }

@@ -5,7 +5,6 @@ namespace OSS\Result;
 use OSS\Core\OssException;
 use OSS\Http\ResponseCore;
 
-
 /**
  * Class Result, 操作结果类的基类，不同的请求在处理返回数据的时候有不同的逻辑，
  * 具体的解析逻辑推迟到子类实现
@@ -86,7 +85,6 @@ abstract class Result
             $code = $this->retrieveErrorCode($this->rawResponse->body);
             $message = $this->retrieveErrorMessage($this->rawResponse->body);
             $body = $this->rawResponse->body;
-
             $details = array(
                 'status' => $httpStatus,
                 'request-id' => $requestId,

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\agent\model;
-
 
 use app\BaseModel;
 use think\facade\Db;
@@ -26,7 +24,6 @@ class Cardauth2DefaultModel extends BaseModel
         return $res;
     }
 
-
     /**
      * 获得配置值
      *
@@ -36,12 +33,10 @@ class Cardauth2DefaultModel extends BaseModel
      * @DataTime: 2020/1/2 22:51
      */
     public function getDefaultValue($key ,$defualt = -1 ){
-
         $defaultConfig = $this->getinfo();
         $number = isset($defaultConfig[$key]) ? $defaultConfig[$key] : $defualt ;
         return  $number;
     }
-
 
     /**
      * 获得名片数量默认配置
@@ -51,7 +46,6 @@ class Cardauth2DefaultModel extends BaseModel
      * @DataTime: 2020/1/2 22:51
      */
     public  function  getCardNumber(){
-
         return $this->getDefaultValue('card_number');
     }
 

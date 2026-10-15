@@ -25,7 +25,6 @@ class ServiceType extends BaseModel
     public static function add($data)
     {
         $data['create_time'] = $data['update_time'] = time();
-
         return self::insert($data);
     }
 
@@ -74,14 +73,10 @@ class ServiceType extends BaseModel
     public static function getInfo($where)
     {
         $data = self::where($where)->field('id,name')->find();
-
         if ($data) {
-
             $data['banner'] = Banner::where(['service_type' => $data['id'], 'status' => 1])->order('top desc,id desc')->select()->toArray();
         }
-
         $data['banner'] = empty($data['banner']) ? '' : $data['banner'];
-
         return $data;
     }
 }

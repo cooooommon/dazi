@@ -49,7 +49,6 @@ class DefaultAcsClient
         if ($request instanceof Result) {
             return $request;
         }
-
         return $request->client($this->randClientName)->request();
     }
 }

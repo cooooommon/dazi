@@ -30,11 +30,9 @@ class PackageSku extends BaseModel
         Db::startTrans();
         try {
             if (self::where('package_id', $pack_id)->count() > 0) {
-
                 self::where('package_id', $pack_id)->delete();
             }
             if (SkuPrice::where('package_id', $pack_id)->count() > 0) {
-
                 SkuPrice::where('package_id', $pack_id)->delete();
             }
             if (!empty($sku)) {
@@ -45,21 +43,14 @@ class PackageSku extends BaseModel
                         'package_id' => $pack_id,
                         'create_time' => time()
                     ];
-
                     $id = self::insertGetId($insert);
-
                     if (!$id) {
                         throw new \Exception('规格添加失败');
                     }
-
                     $price = $item['price'] ?? [];
-
                     if (!empty($price)) {
-
                         $res = SkuPrice::updatePrice($price, $pack_id, $id, $uniacid);
-
                         if (isset($res['code'])) {
-
                             throw new \Exception($res['msg']);
                         }
                     }
@@ -67,7 +58,6 @@ class PackageSku extends BaseModel
             }
             Db::commit();
         } catch (\Exception $exception) {
-
             Db::rollback();
             return ['code' => 1, 'msg' => $exception->getMessage()];
         }

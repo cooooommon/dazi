@@ -2,7 +2,6 @@
 
 namespace OSS\Tests;
 
-
 use OSS\Result\GetWebsiteResult;
 use OSS\Http\ResponseCore;
 use OSS\Core\OssException;
@@ -44,7 +43,6 @@ BBBB;
             new GetWebsiteResult($response);
             $this->assertTrue(false);
         } catch (OssException $e) {
-
         }
     }
 }

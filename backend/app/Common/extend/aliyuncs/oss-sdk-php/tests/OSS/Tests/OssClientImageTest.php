@@ -23,7 +23,6 @@ class OssClinetImageTest extends \PHPUnit_Framework_TestCase
         $this->local_file = "example.jpg";
         $this->object = "oss-example.jpg";
         $this->download_file = "image.jpg";
-
         $this->client->uploadFile($this->bucketName, $this->object, $this->local_file);
     }
 

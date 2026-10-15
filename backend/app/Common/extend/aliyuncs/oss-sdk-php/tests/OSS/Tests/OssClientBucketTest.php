@@ -7,7 +7,6 @@ use OSS\OssClient;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'TestOssClientBase.php';
 
-
 class OssClientBucketTest extends TestOssClientBase
 {
     public function testBucketWithInvalidName()
@@ -33,7 +32,6 @@ class OssClientBucketTest extends TestOssClientBase
     public function testBucket()
     {
         $this->ossClient->createBucket($this->bucket, OssClient::OSS_ACL_TYPE_PUBLIC_READ_WRITE);
-
         $bucketListInfo = $this->ossClient->listBuckets();
         $this->assertNotNull($bucketListInfo);
         $bucketList = $bucketListInfo->getBucketList();
@@ -42,7 +40,6 @@ class OssClientBucketTest extends TestOssClientBase
         $this->ossClient->putBucketAcl($this->bucket, OssClient::OSS_ACL_TYPE_PUBLIC_READ_WRITE);
         Common::waitMetaSync();
         $this->assertEquals($this->ossClient->getBucketAcl($this->bucket), OssClient::OSS_ACL_TYPE_PUBLIC_READ_WRITE);
-
         $this->assertTrue($this->ossClient->doesBucketExist($this->bucket));
         $this->assertFalse($this->ossClient->doesBucketExist($this->bucket . '-notexist'));
     }

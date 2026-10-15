@@ -111,12 +111,10 @@ abstract class Request implements ArrayAccess
         $this->options['http_errors']     = false;
         $this->options['connect_timeout'] = self::CONNECT_TIMEOUT;
         $this->options['timeout']         = self::TIMEOUT;
-
         // Turn on debug mode based on environment variable.
         if (strtolower(\AlibabaCloud\Client\env('DEBUG')) === 'sdk') {
             $this->options['debug'] = true;
         }
-
         // Rewrite configuration if the user has a configuration.
         if ($options !== []) {
             $this->options($options);
@@ -133,11 +131,9 @@ abstract class Request implements ArrayAccess
     public function appendUserAgent($name, $value)
     {
         $filter_name = Filter::name($name);
-
         if (!UserAgent::isGuarded($filter_name)) {
             $this->userAgent[$filter_name] = Filter::value($value);
         }
-
         return $this;
     }
 
@@ -149,7 +145,6 @@ abstract class Request implements ArrayAccess
     public function withUserAgent(array $userAgent)
     {
         $this->userAgent = UserAgent::clean($userAgent);
-
         return $this;
     }
 
@@ -164,7 +159,6 @@ abstract class Request implements ArrayAccess
     public function format($format)
     {
         $this->format = ApiFilter::format($format);
-
         return $this;
     }
 
@@ -177,7 +171,6 @@ abstract class Request implements ArrayAccess
     public function contentType($contentType)
     {
         $this->options['headers']['Content-Type'] = HttpFilter::contentType($contentType);
-
         return $this;
     }
 
@@ -190,7 +183,6 @@ abstract class Request implements ArrayAccess
     public function accept($accept)
     {
         $this->options['headers']['Accept'] = HttpFilter::accept($accept);
-
         return $this;
     }
 
@@ -205,7 +197,6 @@ abstract class Request implements ArrayAccess
     public function body($body)
     {
         $this->options['body'] = HttpFilter::body($body);
-
         return $this;
     }
 
@@ -225,7 +216,6 @@ abstract class Request implements ArrayAccess
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $this->body(\json_encode($content));
     }
 
@@ -241,7 +231,6 @@ abstract class Request implements ArrayAccess
     {
         $this->scheme = HttpFilter::scheme($scheme);
         $this->uri    = $this->uri->withScheme($scheme);
-
         return $this;
     }
 
@@ -256,7 +245,6 @@ abstract class Request implements ArrayAccess
     public function host($host)
     {
         $this->uri = $this->uri->withHost(HttpFilter::host($host));
-
         return $this;
     }
 
@@ -269,7 +257,6 @@ abstract class Request implements ArrayAccess
     public function method($method)
     {
         $this->method = HttpFilter::method($method);
-
         return $this;
     }
 
@@ -282,7 +269,6 @@ abstract class Request implements ArrayAccess
     public function client($clientName)
     {
         $this->client = ClientFilter::clientName($clientName);
-
         return $this;
     }
 
@@ -295,11 +281,9 @@ abstract class Request implements ArrayAccess
         if (isset($this->options['debug'])) {
             return $this->options['debug'] === true;
         }
-
         if (isset($this->httpClient()->options['debug'])) {
             return $this->httpClient()->options['debug'] === true;
         }
-
         return false;
     }
 
@@ -310,18 +294,15 @@ abstract class Request implements ArrayAccess
     public function resolveOption()
     {
         $this->options['headers']['User-Agent'] = UserAgent::toString($this->userAgent);
-
         $this->cleanQuery();
         $this->cleanFormParams();
         $this->resolveHost();
         $this->resolveParameter();
-
         if (isset($this->options['form_params'])) {
             $this->options['form_params'] = \GuzzleHttp\Psr7\parse_query(
                 Encode::create($this->options['form_params'])->toString()
             );
         }
-
         $this->mergeOptionsIntoClient();
     }
 
@@ -334,15 +315,12 @@ abstract class Request implements ArrayAccess
     {
         $this->resolveOption();
         $result = $this->response();
-
         if ($this->shouldServerRetry($result)) {
             return $this->request();
         }
-
         if (!$result->isSuccess()) {
             throw new ServerException($result);
         }
-
         return $result;
     }
 
@@ -353,7 +331,6 @@ abstract class Request implements ArrayAccess
     public function requestAsync()
     {
         $this->resolveOption();
-
         return self::createClient($this)->requestAsync(
             $this->method,
             (string)$this->uri,
@@ -374,24 +351,19 @@ abstract class Request implements ArrayAccess
         } else {
             $stack = HandlerStack::create();
         }
-
         if (AlibabaCloud::isRememberHistory()) {
             $stack->push(Middleware::history(AlibabaCloud::referenceHistory()));
         }
-
         if (AlibabaCloud::getLogger()) {
             $stack->push(Middleware::log(
                 AlibabaCloud::getLogger(),
                 new LogFormatter(AlibabaCloud::getLogFormat())
             ));
         }
-
         $stack->push(Middleware::mapResponse(static function (ResponseInterface $response) use ($request) {
             return new Result($response, $request);
         }));
-
         self::$config['handler'] = $stack;
-
         return new Client(self::$config);
     }
 

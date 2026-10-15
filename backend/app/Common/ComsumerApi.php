@@ -36,7 +36,6 @@ class ConsumerApi{
                 $gets = $q->get(AMQP_AUTOACK);
     		    $messages[] = $gets->getBody();
             }
-           
             $this->conn->disconnect();
             return $messages;
 	}

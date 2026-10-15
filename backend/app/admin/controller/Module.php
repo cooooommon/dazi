@@ -48,7 +48,6 @@ class Module extends Rest
             //移除module_app信息
             unset($module['module_app']);
             $result[] = $module;
-
         }
         //返回数据
         return $this->success($result);
@@ -80,10 +79,7 @@ class Module extends Rest
             if (!empty($module['is_public']) || !empty($module['is_base'])) {
                 $module['status'] = 1;
             } else {
-
             }
-
-
             //判断是否是公共模块
             if (empty($module['is_public'])) {
                 //数据处理    

@@ -12,7 +12,6 @@ class Config extends BaseModel
     //定义表名
     protected $name = 'shequshop_school_config';
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:04
@@ -22,7 +21,6 @@ class Config extends BaseModel
     {
         return $this->insert($data);
     }
-
 
     /**
      * @author chenniang
@@ -34,7 +32,6 @@ class Config extends BaseModel
         return $this->where($dis)->update($data);
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:06
@@ -44,7 +41,6 @@ class Config extends BaseModel
     {
         return $this->where($dis)->order('id desc')->paginate($page)->toArray();
     }
-
 
     /**
      * @author chenniang
@@ -62,6 +58,5 @@ class Config extends BaseModel
             $data = $this->where($dis)->find();
         }
         return !empty($data) ? $data->toArray() : [];
-
     }
 }

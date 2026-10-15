@@ -56,7 +56,6 @@ class IniCredential
         if (getenv('HOME')) {
             return getenv('HOME');
         }
-
         return (getenv('HOMEDRIVE') && getenv('HOMEPATH'))
             ? getenv('HOMEDRIVE') . getenv('HOMEPATH')
             : null;
@@ -121,10 +120,8 @@ class IniCredential
             foreach (self::$hasLoaded[$this->filename] as $projectName => $client) {
                 $client->name($projectName);
             }
-
             return self::$hasLoaded[$this->filename];
         }
-
         return $this->loadFile();
     }
 
@@ -139,7 +136,6 @@ class IniCredential
         if (!\AlibabaCloud\Client\inOpenBasedir($this->filename)) {
             return [];
         }
-
         if (!\is_readable($this->filename) || !\is_file($this->filename)) {
             if ($this->filename === $this->getDefaultFile()) {
                 // @codeCoverageIgnoreStart
@@ -151,7 +147,6 @@ class IniCredential
                 SDK::INVALID_CREDENTIAL
             );
         }
-
         return $this->parseFile();
     }
 
@@ -201,7 +196,6 @@ class IniCredential
                 self::setProxy($configures, $clientInstance);
             }
         }
-
         return isset(self::$hasLoaded[$this->filename])
             ? self::$hasLoaded[$this->filename]
             : [];

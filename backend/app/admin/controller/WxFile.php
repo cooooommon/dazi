@@ -39,7 +39,6 @@ class WxFile extends ApiRest
         if (isset($input['type'])) {
             $type = $input['type'];
         }
-
         $info = $uploda_model->upload($type, $file);
         $result = false;
         if (!empty($info)) {
@@ -91,7 +90,6 @@ class WxFile extends ApiRest
         foreach ($files as $file) {
             //上传文件
             $info = $uploda_model->upload($type, $file);
-
             if (!empty($info)) {
                 if (isset($info['attachment']) && !empty($info['attachment'])) {
                     $info['attachment_path'] = $info['attachment'];

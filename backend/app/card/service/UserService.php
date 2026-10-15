@@ -15,7 +15,6 @@ declare(strict_types=1);
 
 namespace app\card\service;
 
-
 use app\card\model\CardBoss;
 use app\card\model\Company;
 use app\card\model\User;
@@ -25,7 +24,6 @@ class UserService
 {
 
     private $_uniacid ;
-
 
     /**
      * 初始化系统没有员工的情况
@@ -43,7 +41,6 @@ class UserService
         if (!$count){
             $result = $this->addUserToStaff($staff_id , [] , $uniacid) ;
         }
-
         return $result ;
     }
 
@@ -59,14 +56,10 @@ class UserService
      * @DataTime: 2019/12/30 16:50
      */
     public function addUserToStaff($staff_id , $companyIds ,$uniacid){
-
         $params = [ 'staff_id' =>  $staff_id  , 'company_ids' => $companyIds];
-
         $this->_uniacid = $uniacid ;
-
         //检查数据是否存在
         if(!isset($params['staff_id']) || empty($params['staff_id'])) return lang('not staff');
-
         $user   = longbingGetUser($params[ 'staff_id' ] ,$this->_uniacid);
         //判断用户是否存在
         if(empty($user)) return lang('not user');
@@ -95,12 +88,9 @@ class UserService
             if(!isset($params['company_ids']) || empty($params['company_ids'])) return lang('not company id');
             CardBoss::where( [ [ 'user_id', '=', $params[ 'staff_id' ] ] ] )
                 ->delete();
-
             $boss = implode( ',', $params[ 'company_ids' ] );
-
             $result = CardBoss::create( [ 'user_id' => $params[ 'staff_id' ], 'boss' => $boss, 'uniacid' => $this->_uniacid ] );
         }
-
         if ( $result === false )
         {
             return 'edit failed' ;
@@ -135,10 +125,8 @@ class UserService
                     $staff['company_id'] = $company_id;
                     longbingSetUserInfo($params[ 'staff_id' ] ,$this->_uniacid ,$staff);
                 }
-
             }
         }
-
         return $result ;
     }
 
@@ -151,7 +139,6 @@ class UserService
      * @DataTime: 2020/1/2 17:04
      */
      public static function  getDefaultStraffNumber($uniacid){
-
          $count = User::alias( 'a' )
              ->join( 'longbing_card_user_info b', 'b.fans_id = a.id' )
              ->where('a.is_staff' , 1)
@@ -160,10 +147,8 @@ class UserService
              ->where('a.uniacid',$uniacid)
              ->where('b.uniacid',$uniacid)
              ->count();
-
          return $count ;
      }
-
 
     /**
      * 生成员工头像二维码
@@ -175,15 +160,12 @@ class UserService
      * @DataTime: 2020/1/2 21:15
      */
      public static function createHeaderQr($_uniacid , $params){
-
          $staff  = longbingGetUserInfo($params['staff_id'] ,$_uniacid);
-
          if(empty($staff) || empty($staff['is_staff'])) return lang('staff info not found');
          //生成数据
          $data   = ["data" => ["staff_id" => $params['staff_id'] ,"pid" => $params['staff_id'] ,"type" => 4 ,"key" => 1]];
          //生成二维码
          $result = longbingCreateWxCode($_uniacid,$data);
-
          if(isset($result['qr_path'])) $result = transImagesOne($result ,['qr_path'] ,$_uniacid);
          //获取名片设置
          $config = longbingGetAppConfig($_uniacid);
@@ -191,7 +173,6 @@ class UserService
          if(!empty($staff['avatar']) && !empty($result) &&  !empty($result['qr_path']) && !empty($result['path']) && isset($config['qr_avatar_switch']) && !empty($config['qr_avatar_switch']))
          {
              $staff = transImagesOne($staff ,['avatar'] ,$_uniacid);
-
              $dat   = longbingUpdateQrByAvatar($staff['avatar'] ,$result['qr_path'] , $_uniacid ,$result['path']);
          }
          //判断是否成功
@@ -200,7 +181,6 @@ class UserService
          User::update( [ 'qr_path' => $result['qr_path'] ], [ 'id' => $params[ 'staff_id' ] ] );
          //更新缓存
          longbingGetUser($params['staff_id'] , $_uniacid ,true);
-
          return $result;
      }
 
@@ -212,14 +192,11 @@ class UserService
      * @DataTime: 2020/1/7 17:22
      */
      public static function getLastStaffId($_uniacid,$userId){
-
          $where[] = ['uniacid','=' , $_uniacid ];
          $where[] = ['id','=' , $userId ];
          $last_staff_id = User::where($where)->value('last_staff_id');
-
          return $last_staff_id;
      }
-
 
     /**
      * @param $_uniacid

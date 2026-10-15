@@ -6,17 +6,14 @@ use app\publics\model\TmplConfig;
 use longbingcore\wxcore\WxTmpl;
 use think\App;
 
-
 class IndexTmpl extends ApiRest
 {
 
     protected $model;
     public function __construct(App $app) {
         parent::__construct($app);
-
         $this->model = new TmplConfig();
     }
-
 
     /**
      * @author chenniang
@@ -31,10 +28,5 @@ class IndexTmpl extends ApiRest
         $data  = $this->model->tmplIdList($dis);
         return $this->success($data);
     }
-
-
-
-
-
 
 }

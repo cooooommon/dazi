@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\massage\model;
-
 
 use app\BaseModel;
 use app\store\model\StorePackage;
@@ -20,18 +18,12 @@ class StoreApply extends BaseModel
      */
     public function getMobileAttr($value, $data)
     {
-
         if (!empty($value) && isset($data['uniacid'])) {
-
             if (numberEncryption($data['uniacid']) == 1) {
-
                 return substr_replace($value, "****", 2, 4);
             }
-
         }
-
         return $value;
-
     }
 
     /**
@@ -128,12 +120,10 @@ class StoreApply extends BaseModel
     public static function cancel($type_id)
     {
         $where[] = ['', 'exp', Db::raw("find_in_set({$type_id},type_id)")];
-
         $data = self::where($where)->select()->toArray();
         if (!empty($data)) {
             foreach ($data as $datum) {
                 $arr = explode(',', $datum['type_id']);
-
                 foreach ($arr as $key => $item) {
                     if ($item == $type_id) {
                         unset($arr[$key]);

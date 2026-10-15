@@ -33,18 +33,14 @@ class BucketCnameTest extends \PHPUnit_Framework_TestCase
     {
         $this->client->addBucketCname($this->bucketName, 'www.baidu.com');
         $this->client->addBucketCname($this->bucketName, 'www.qq.com');
-
         $ret = $this->client->getBucketCname($this->bucketName);
         $this->assertEquals(2, count($ret->getCnames()));
-
         // add another 2 cnames
         $this->client->addBucketCname($this->bucketName, 'www.sina.com.cn');
         $this->client->addBucketCname($this->bucketName, 'www.iqiyi.com');
-
         $ret = $this->client->getBucketCname($this->bucketName);
         $cnames = $ret->getCnames();
         $cnameList = array();
-
         foreach ($cnames as $c) {
             $cnameList[] = $c['Domain'];
         }
@@ -62,13 +58,10 @@ class BucketCnameTest extends \PHPUnit_Framework_TestCase
     {
         $this->client->addBucketCname($this->bucketName, 'www.baidu.com');
         $this->client->addBucketCname($this->bucketName, 'www.qq.com');
-
         $ret = $this->client->getBucketCname($this->bucketName);
         $this->assertEquals(2, count($ret->getCnames()));
-
         // delete one cname
         $this->client->deleteBucketCname($this->bucketName, 'www.baidu.com');
-
         $ret = $this->client->getBucketCname($this->bucketName);
         $this->assertEquals(1, count($ret->getCnames()));
         $cnames = $ret->getCnames();

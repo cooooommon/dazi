@@ -17,21 +17,18 @@ namespace Qiniu\Tests {
 
     class AuthTest extends \PHPUnit_Framework_TestCase
     {
-
         public function testSign()
         {
             global $dummyAuth;
             $token = $dummyAuth->sign('test');
             $this->assertEquals('abcdefghklmnopq:mSNBTR7uS2crJsyFr2Amwv1LaYg=', $token);
         }
-
         public function testSignWithData()
         {
             global $dummyAuth;
             $token = $dummyAuth->signWithData('test');
             $this->assertEquals('abcdefghklmnopq:-jP8eEV9v48MkYiBGs81aDxl60E=:dGVzdA==', $token);
         }
-
         public function testSignRequest()
         {
             global $dummyAuth;
@@ -41,7 +38,6 @@ namespace Qiniu\Tests {
             $token = $dummyAuth->signRequest('http://www.qiniu.com?go=1', 'test', $ctype);
             $this->assertEquals($token, 'abcdefghklmnopq:svWRNcacOE-YMsc70nuIYdaa1e4=');
         }
-
         public function testPrivateDownloadUrl()
         {
             global $dummyAuth;
@@ -51,7 +47,6 @@ namespace Qiniu\Tests {
             $this->assertEquals($expect, $url);
             unset($_SERVER['override_qiniu_auth_time']);
         }
-
         public function testUploadToken()
         {
             global $dummyAuth;
@@ -63,7 +58,6 @@ namespace Qiniu\Tests {
             $this->assertEquals($exp, $token);
             unset($_SERVER['override_qiniu_auth_time']);
         }
-
         public function testVerifyCallback()
         {
         }

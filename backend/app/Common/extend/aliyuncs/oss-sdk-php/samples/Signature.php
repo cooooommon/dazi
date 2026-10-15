@@ -88,7 +88,6 @@ function getSignedUrlForPuttingObject($ossClient, $bucket)
     }
     print(__FUNCTION__ . ": signedUrl: " . $signedUrl . "\n");
     $content = file_get_contents(__FILE__);
-
     $request = new RequestCore($signedUrl);
     $request->set_method('PUT');
     $request->add_header('Content-Type', '');
@@ -126,7 +125,6 @@ function getSignedUrlForPuttingObjectFromFile($ossClient, $bucket)
         return;
     }
     print(__FUNCTION__ . ": signedUrl: " . $signedUrl . "\n");
-
     $request = new RequestCore($signedUrl);
     $request->set_method('PUT');
     $request->add_header('Content-Type', 'txt');

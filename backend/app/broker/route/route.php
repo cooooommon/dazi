@@ -11,7 +11,6 @@ use think\facade\Route;
 
 //后端路由表
 Route::group('admin', function () {
-
     Route::group('broker', function () {
         //用户列表
         Route::get('userList', 'Admin/userList');
@@ -28,8 +27,6 @@ Route::group('admin', function () {
         //经纪人向导列表
         Route::get('coachList', 'Admin/coachList');
     });
-
-
 });
 
 Route::group('app', function () {

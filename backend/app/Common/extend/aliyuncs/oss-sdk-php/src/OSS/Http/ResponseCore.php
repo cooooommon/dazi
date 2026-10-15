@@ -35,7 +35,6 @@ class ResponseCore
         $this->header = $header;
         $this->body = $body;
         $this->status = $status;
-
         return $this;
     }
 
@@ -50,7 +49,6 @@ class ResponseCore
         if (is_array($codes)) {
             return in_array($this->status, $codes);
         }
-
         return $this->status === $codes;
     }
 }

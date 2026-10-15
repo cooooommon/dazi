@@ -14,9 +14,7 @@ Route::group('admin', function () {
     Route::post('AdminSetting/msgConfigInfo', 'AdminSetting/msgConfigInfo');
     //通知配置修改
     Route::post('AdminSetting/msgConfigUpdate', 'AdminSetting/msgConfigUpdate');
-
     Route::post('AdminSetting/payConfigInfo', 'AdminSetting/payConfigInfo');
-
     Route::post('AdminSetting/payConfigUpdate', 'AdminSetting/payConfigUpdate');
     //banne列表
     Route::post('AdminSetting/bannerList', 'AdminSetting/bannerList');
@@ -84,10 +82,7 @@ Route::group('admin', function () {
     Route::get('AdminExcel/orderList', 'AdminExcel/orderList');
     //财务导出
     Route::get('AdminExcel/dateCount', 'AdminExcel/dateCount');
-
-
 });
-
 
 //商城后端路由表
 Route::group('app', function () {
@@ -95,7 +90,6 @@ Route::group('app', function () {
     Route::post('IndexUser/userUpdate', 'IndexUser/userUpdate');
     //申请团长
     Route::post('IndexUser/capApply', 'IndexUser/capApply');
-
     Route::get('IndexUser/userInfo', 'IndexUser/userInfo');
     //用户|团长个人中心
     Route::get('IndexUser/index', 'IndexUser/index');
@@ -111,7 +105,6 @@ Route::group('app', function () {
     Route::post('IndexUser/addressUpdate', 'IndexUser/addressUpdate');
     //删除地址
     Route::post('IndexUser/addressDel', 'IndexUser/addressDel');
-
     Route::get('Index/index', 'Index/index');
     //获取配置信息
     Route::get('Index/configInfo', 'Index/configInfo');
@@ -149,7 +142,6 @@ Route::group('app', function () {
     Route::get('IndexCap/orderList', 'IndexCap/orderList');
     //商品审核列表
     Route::get('IndexCap/shList', 'IndexCap/shList');
-
     Route::get('IndexCap/shInfo', 'IndexCap/shInfo');
     //团长端退款列表
     Route::get('IndexCap/refundOrderList', 'IndexCap/refundOrderList');
@@ -163,7 +155,6 @@ Route::group('app', function () {
     Route::get('IndexCap/capCashList', 'IndexCap/capCashList');
     //申请提现(apply_cash,text)
     Route::post('IndexCap/applyWallet', 'IndexCap/applyWallet');
-
     Route::get('IndexGoods/indexCapList', 'IndexGoods/indexCapList');
     //选择楼长(cap_id)
     Route::post('IndexGoods/selectCap', 'IndexGoods/selectCap');
@@ -187,7 +178,6 @@ Route::group('app', function () {
     Route::post('IndexGoods/carUpdate', 'IndexGoods/carUpdate');
     //
     Route::post('IndexOrder/payOrder', 'IndexOrder/payOrder');
-
     Route::get('IndexOrder/payOrderInfo', 'IndexOrder/payOrderInfo');
     //用户订单列表（pay_type,name）
     Route::get('IndexOrder/orderList', 'IndexOrder/orderList');
@@ -207,32 +197,10 @@ Route::group('app', function () {
     Route::get('IndexOrder/refundOrderInfo', 'IndexOrder/refundOrderInfo');
     //刷新订单二维码(id)
     Route::post('IndexOrder/refreshQr', 'IndexOrder/refreshQr');
-
-
 });
-
 
 //支付
 Route::any('IndexWxPay/returnPay', 'IndexWxPay/returnPay');
 
 //回调
 Route::any('IndexAliPay/aliNotify', 'IndexAliPay/aliNotify');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

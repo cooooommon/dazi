@@ -5,12 +5,10 @@ namespace app\card\model;
 use app\BaseModel;
 use app\dynamic\model\CardStatistics;
 
-
 class CardMessage extends BaseModel
 {
     //定义表名
     protected $name = 'longbing_card_message';
-
 
     protected static function init ()
     {

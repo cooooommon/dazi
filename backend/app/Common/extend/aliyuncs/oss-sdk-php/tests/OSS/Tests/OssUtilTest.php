@@ -2,7 +2,6 @@
 
 namespace OSS\Tests;
 
-
 use OSS\Core\OssException;
 use OSS\Core\OssUtil;
 
@@ -69,23 +68,19 @@ class OssUtilTest extends \PHPUnit_Framework_TestCase
     public function testValidateOption()
     {
         $option = 'string';
-
         try {
             OssUtil::validateOptions($option);
             $this->assertFalse(true);
         } catch (OssException $e) {
             $this->assertEquals("string:option must be array", $e->getMessage());
         }
-
         $option = null;
-
         try {
             OssUtil::validateOptions($option);
             $this->assertTrue(true);
         } catch (OssException $e) {
             $this->assertFalse(true);
         }
-
     }
 
     public function testCreateDeleteObjectsXmlBody()
@@ -186,7 +181,6 @@ BBBB;
         } catch (OssException $e) {
             $this->assertEquals('http body content is invalid', $e->getMessage());
         }
-
         $notnull = "x";
         try {
             OssUtil::validateContent($notnull);

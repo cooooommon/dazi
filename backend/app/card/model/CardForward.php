@@ -6,12 +6,10 @@ use app\BaseModel;
 use app\dynamic\model\CardStatistics;
 use think\Model;
 
-
 class CardForward extends BaseModel
 {
     //定义表名
     protected $name = 'longbing_card_forward';
-
 
     protected static function init ()
     {

@@ -94,7 +94,6 @@ final class Response
         if ($error !== null) {
             return;
         }
-
         if ($body === null) {
             if ($code >= 400) {
                 $this->error = self::$statusTexts[$code];

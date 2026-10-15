@@ -27,7 +27,6 @@ class UserPackageCollect extends BaseModel
     public static function checkCollect($user_id, $id)
     {
         $count = self::where(['user_id' => $user_id, 'package_id' => $id])->count();
-
         if ($count > 0) {
             return 1;
         }
@@ -46,9 +45,7 @@ class UserPackageCollect extends BaseModel
     public static function collect($where)
     {
         $count = self::where($where)->count();
-
         if ($count == 0) {
-
             $where = [
                 'create_time' => time()
             ];

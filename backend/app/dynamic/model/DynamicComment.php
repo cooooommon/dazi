@@ -9,13 +9,9 @@ class DynamicComment extends BaseModel
     //定义表名
     protected $name = 'massage_dynamic_comment';
 
-
     protected $append = [
-
-
         'friend_time'
     ];
-
 
     /**
      * @author chenniang
@@ -23,14 +19,10 @@ class DynamicComment extends BaseModel
      * @功能说明:处理友好时间
      */
     public function getFriendTimeAttr($value,$data){
-
         if(isset($data['create_time'])){
-
             return lbGetDates($data['create_time']);
         }
-
     }
-
 
     /**
      * @author chenniang
@@ -38,16 +30,10 @@ class DynamicComment extends BaseModel
      * @功能说明:添加
      */
     public function dataAdd($data){
-
         $data['create_time'] = time();
-
         $res = $this->insert($data);
-
         return $res;
-
     }
-
-
 
     /**
      * @author chenniang
@@ -55,13 +41,9 @@ class DynamicComment extends BaseModel
      * @功能说明:编辑
      */
     public function dataUpdate($dis,$data){
-
         $res = $this->where($dis)->update($data);
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -69,13 +51,9 @@ class DynamicComment extends BaseModel
      * @功能说明:列表
      */
     public function dataList($dis,$page){
-
         $data = $this->where($dis)->order('status desc,id desc')->paginate($page)->toArray();
-
         return $data;
-
     }
-
 
     /**
      * @author chenniang
@@ -83,14 +61,9 @@ class DynamicComment extends BaseModel
      * @功能说明:
      */
     public function dataInfo($dis){
-
         $data = $this->where($dis)->find();
-
         return !empty($data)?$data->toArray():[];
-
     }
-
-
 
     /**
      * @author chenniang
@@ -98,7 +71,6 @@ class DynamicComment extends BaseModel
      * @功能说明:评论列表
      */
     public function getCommentList($dis,$page=10,$where=[]){
-
         $data = $this->alias('a')
             ->join('massage_service_user_list b','a.user_id = b.id','left')
             ->join('massage_dynamic_list c','a.dynamic_id = c.id','left')
@@ -111,14 +83,7 @@ class DynamicComment extends BaseModel
             ->order('a.id desc')
             ->paginate($page)
             ->toArray();
-
         return $data;
     }
-
-
-
-
-
-
 
 }

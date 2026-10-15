@@ -5,18 +5,15 @@ namespace app\card\model;
 use app\BaseModel;
 use think\Model;
 
-
 class CardType extends BaseModel
 {
     //定义表名
     protected $name = 'longbing_card_card_type';
 
-
     protected static function init ()
     {
         //TODO:初始化内容
     }
-
 
     /**
      * @Purpose: 初始化名片样式
@@ -46,11 +43,9 @@ class CardType extends BaseModel
         $list = self::where( [ [ 'uniacid', '=', $uniacid ], [ 'status', '=', 1 ] ] )
                     ->select()
                     ->toArray();
-
         foreach ( $list as $index => $item )
         {
             $list[$index]['selected'] = 0;
-
             if ($item['card_type'] == $type)
             {
                 $list[$index]['selected'] = 1;

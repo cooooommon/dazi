@@ -30,7 +30,6 @@ Common::println($result['body']);
 $content = $ossClient->getObject($bucket, "b.file");
 Common::println("b.file is fetched, the content is: " . $content);
 
-
 // 下载object到本地文件
 $options = array(
     OssClient::OSS_FILE_DOWNLOAD => "./c.file.localcopy",
@@ -125,7 +124,6 @@ function putObject($ossClient, $bucket)
     print(__FUNCTION__ . ": OK" . "\n");
 }
 
-
 /**
  * 上传指定的本地文件内容
  *
@@ -138,7 +136,6 @@ function uploadFile($ossClient, $bucket)
     $object = "oss-php-sdk-test/upload-test-object-name.txt";
     $filePath = __FILE__;
     $options = array();
-
     try {
         $ossClient->uploadFile($bucket, $object, $filePath, $options);
     } catch (OssException $e) {
@@ -207,12 +204,10 @@ function listAllObjects($ossClient, $bucket)
         $ossClient->putObject($bucket, "dir/obj" . strval($i), "hi");
         $ossClient->createObjectDir($bucket, "dir/obj" . strval($i));
     }
-
     $prefix = 'dir/';
     $delimiter = '/';
     $nextMarker = '';
     $maxkeys = 30;
-
     while (true) {
         $options = array(
             'delimiter' => $delimiter,
@@ -283,7 +278,6 @@ function getObjectToLocalFile($ossClient, $bucket)
     $options = array(
         OssClient::OSS_FILE_DOWNLOAD => $localfile,
     );
-
     try {
         $ossClient->getObject($bucket, $object, $options);
     } catch (OssException $e) {
@@ -317,7 +311,6 @@ function copyObject($ossClient, $bucket)
     $toBucket = $bucket;
     $toObject = $fromObject . '.copy';
     $options = array();
-
     try {
         $ossClient->copyObject($fromBucket, $fromObject, $toBucket, $toObject, $options);
     } catch (OssException $e) {
@@ -405,7 +398,6 @@ function deleteObject($ossClient, $bucket)
     print(__FUNCTION__ . ": OK" . "\n");
 }
 
-
 /**
  * 批量删除object
  *
@@ -448,4 +440,3 @@ function doesObjectExist($ossClient, $bucket)
     print(__FUNCTION__ . ": OK" . "\n");
     var_dump($exist);
 }
-

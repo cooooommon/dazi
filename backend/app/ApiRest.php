@@ -10,8 +10,6 @@ use app\massage\model\Coach;
 use app\massage\model\Config;
 use app\massage\model\Order;
 use app\massage\model\PayConfig;
-use app\restaurant\model\Table;
-use app\shop\model\Cap;
 use app\store\model\StoreList;
 use longbingcore\tools\LongbingArr;
 use Qiniu\Auth;
@@ -73,7 +71,6 @@ abstract class ApiRest extends BaseController
         'image' => 'https://lbqnyv2.migugu.com/lbCardDefaultImage.png',
     );
 
-
     protected $check_url = "";
 
     /**
@@ -85,39 +82,27 @@ abstract class ApiRest extends BaseController
     //@ioncube.dk myk("sha256", "cnjdbvjdnjd") -> "cff6bcac6bd92467e0cee72e5c879cdbf7044386eda8f464c817bd5c5c963d6f" RANDOM
     public function __construct(App $app)
     {
-
         parent::__construct($app);
-
         if (in_array($this->_method, ['options', 'Options', 'OPTIONS'])) {
-
             echo true;
             exit;
         }
         //获取头部信息
         $this->_header = $this->request->header();
-
         $this->_action = $this->request->action();
-
         if (defined('IS_WEIQIN')) {
             global $_GPC, $_W;
             $this->_uniacid = $_W['uniacid'];
-
         } else {
-
             $this->_uniacid = !empty($this->_param['i']) ? $this->_param['i'] : 666;
         }
-
         if (defined('LONGBING_CARD_UNIACID')) {
-
             define('LONGBING_CARD_UNIACID', $this->_uniacid);
         }
-
         $this->is_app = !empty($this->_header['isapp']) ? $this->_header['isapp'] : 0;
-
         $this->shareChangeDatas($this->_param);
         //获取autograph 小程序用户唯一标示
         if (isset($this->_header['autograph'])) {
-
             $this->autograph = $this->_header['autograph'];
         }
         //获取配置信息
@@ -126,19 +111,12 @@ abstract class ApiRest extends BaseController
         if (isset($this->_header['lang'])) {
             $this->_token = $this->_header['lang'];
         }
-
         if (isset($this->autograph) && !empty($this->autograph)) {
-
             $this->_user_id = $this->getUserId();
-
             $this->_user = $this->getUserInfo();
-
             setCache($this->autograph, $this->_user, 86400 * 3, 999999999999);
-
         }
-
     }
-
 
     /**
      * @author chenniang
@@ -147,12 +125,9 @@ abstract class ApiRest extends BaseController
      */
     public function shareChangeDatas($input)
     {
-
         if (!empty($input['pid']) || $this->is_app == 0) {
-
             return true;
         }
-
         $arr = [
             'massage/app/Index/configInfo',
             'shop/app/Index/configInfo',
@@ -194,17 +169,12 @@ abstract class ApiRest extends BaseController
             'seckill/app/seckillList',
             'seckill/app/seckillInfo'
         ];
-
         if (!empty($input['urls']) && in_array($input['urls'], $arr)) {
-
             $input['urls'] = trim(strrchr($input['urls'], '/'), '/');
-
             $this->noNeedLogin[] = $input['urls'];
         }
-
         return true;
     }
-
 
     /**
      * @author chenniang
@@ -213,22 +183,18 @@ abstract class ApiRest extends BaseController
      */
     public function match($arr)
     {
-
         $arr = is_array($arr) ? $arr : explode(',', $arr);
         if (!$arr) {
             return false;
         }
         $arr = array_map('strtolower', $arr);
-
         // 是否存在
         if (in_array(strtolower($this->request->action()), $arr) || in_array('*', $arr)) {
             return true;
         }
-
         // 没找到匹配
         return false;
     }
-
 
     /**
      * REST 调用
@@ -268,49 +234,26 @@ abstract class ApiRest extends BaseController
     {
         $value = !empty(getCache($this->autograph, 999999999999)) ? getCache($this->autograph,
             999999999999) : getCache($this->autograph, $this->_uniacid);
-
         if (empty($value) && !$this->match($this->noNeedLogin)) {
-
             $this->errorMsg('need login', 401);
         }
-
         if (!empty($value)) {
-
             $user_model = new \app\massage\model\User();
-
             $value['balance'] = $user_model->where(['id' => $value['id']])->value('balance');
-
             $is_blacklist = $user_model->where(['id' => $value['id']])->value('is_blacklist');
-
             if ($is_blacklist == 1) {
-
                 $this->errorMsg('no auth', 407);
             }
-
-
             if ($this->is_app == 1) {
-
                 $value['openid'] = $value['app_openid'];
-
             } elseif ($this->is_app == 0) {
-
                 $value['openid'] = $value['wechat_openid'];
-
             } else {
-
                 $value['openid'] = $value['web_openid'];
-
             }
-
         }
-
         return $value;
-
     }
-
-
-
-
 
     /**
      * @Purpose: 通过小程序端的用户标示获取用户id
@@ -324,13 +267,9 @@ abstract class ApiRest extends BaseController
     {
         $value = !empty(getCache($this->autograph, 999999999999)) ? getCache($this->autograph,
             999999999999) : getCache($this->autograph, $this->_uniacid);
-
         if ($value === false && !$this->match($this->noNeedLogin)) {
-
             $this->errorMsg('need login', 401);
-
         }
-
         return !empty($value['id']) ? $value['id'] : 0;
     }
 
@@ -344,27 +283,17 @@ abstract class ApiRest extends BaseController
     //@ioncube.dk myk("sha256", "cnjdbvjdnjd") -> "cff6bcac6bd92467e0cee72e5c879cdbf7044386eda8f464c817bd5c5c963d6f" RANDOM
     public function payConfig($uniacid = '', $is_app = 7)
     {
-
         if ($is_app == 7) {
-
             $is_app = $this->is_app;
         }
-
         $uniacid_id = !empty($uniacid) ? $uniacid : $this->_uniacid;
-
         $pay_model = new PayConfig();
-
         $config_model = new Config();
-
         $pay = $pay_model->dataInfo(['uniacid' => $uniacid_id]);
-
         $config = $config_model->dataInfo(['uniacid' => $uniacid_id]);
-
         if (empty($pay['mch_id']) || empty($pay['pay_key'])) {
-
             $this->errorMsg('未配置支付信息'.$uniacid_id);
         }
-
         $setting['payment'] = [
             'merchant_id' => $pay['mch_id'],
             'key' => $pay['pay_key'],
@@ -378,39 +307,20 @@ abstract class ApiRest extends BaseController
             'alipayRootCret' => $pay['alipayRootCret'],
             'alipay_type' => $pay['alipay_type'],
         ];
-
         $setting['company_pay'] = $config['company_pay'];
-
         if ($is_app == 0) {
-
             $setting['app_id'] = $config['appid'];
-
             $setting['secret'] = $config['appsecret'];
-
         } elseif ($is_app == 1) {
-
             $setting['app_id'] = $config['app_app_id'];
-
             $setting['secret'] = $config['app_app_secret'];
-
         } else {
-
             $setting['app_id'] = $config['web_app_id'];
-
             $setting['secret'] = $config['web_app_secret'];
-
         }
-
         $setting['is_app'] = $is_app;
-
         return $setting;
     }
-
-
-
-
-
-
 
     /**
      * 根据时间获取时间维度
@@ -426,139 +336,79 @@ abstract class ApiRest extends BaseController
     protected function getTimeData($start_time, $end_time, $coach_id, $time_, $is_coach = 0, $is_store = 0)
     {
         $time_ = (int) $time_;
-
         $config_model = new Config();
-
         $store_model = new StoreList();
-
         $config = $config_model->dataInfo(['uniacid' => $this->_uniacid]);
-
         $end_time = strtotime($end_time) - strtotime(date("Y-m-d", time())) + strtotime(date("Y-m-d", $time_));
-
         $start_time = strtotime($start_time) - strtotime(date("Y-m-d", time())) + strtotime(date("Y-m-d", $time_));
-
         $coach_model = new Coach();
-
         $coach = $coach_model->dataInfo(['id' => $coach_id]);
-
         $rest_arr = $coach_model->getCoachRestTime($coach, $start_time, $end_time, $config);
-
         $end_time = $end_time > $start_time ? $end_time : $end_time + 86400;
-
         $i = 0;
-
         $data = [];
-
         $time = $start_time;
-
         $time_interval = $is_coach == 1 ? 0 : $config['time_interval'] * 60 - 1;
-
         $where[] = ['coach_id', '=', $coach_id];
-
         $where[] = ['end_time', '>=', time()];
-
         $where[] = ['pay_type', 'not in', [-1, 7]];
-
         $order = Db::name('massage_service_order_list')->where($where)->field('start_time,end_time,order_end_time,pay_type')->select();
-
         while ($time < $end_time) {
-
             $time = $start_time + $config['time_unit'] * $i * 60;
-
             $times = date("Y-m-d", $time) == date("Y-m-d", $time_) ? $time : $time - 86400;
-
             if ($time >= $end_time) {
-
                 break;
             }
-
             if (!empty($data[0]) && $times == $data[0]['time_str']) {
-
                 $i++;
-
                 continue;
             }
             //过期时间直接不显示
             if ($times < time() && $is_coach == 0) {
-
                 $i++;
-
                 continue;
             }
-
             $max_time = $times + $config['time_unit'] * 60 - 1;
             //时间戳
             $data[$i]['time_str'] = $times;
-
             $data[$i]['time_text'] = date('H:i', $times);
-
             $data[$i]['time_texts'] = date('Y-m-d', $times);
-
             $data[$i]['is_click'] = 0;
-
             $data[$i]['is_order'] = 0;
-
             $data[$i]['status'] = 1;
-
             if (!empty($order)) {
-
                 foreach ($order as $value) {
-
                     $res = is_time_crossV2($times, $max_time, $value['start_time'] - $time_interval,
                         $value['end_time'] + $time_interval);
-
                     if ($res == false) {
-
                         $data[$i]['is_order'] = 1;
-
                         $data[$i]['status'] = 0;
-
                     }
-
                 }
-
             }
-
             if (!empty($rest_arr) && $data[$i]['status'] == 1) {
-
                 $order_model = new Order();
-
                 $res = $order_model->checkCoachRestTime($rest_arr, $times, $max_time);
-
                 if (!empty($res['code'])) {
-
                     $data[$i]['status'] = 0;
-
                     $data[$i]['is_click'] = 1;
                 }
-
             }
-
             if ($times - $time_interval <= time()) {
-
                 $data[$i]['status'] = 0;
-
             }
             //门店订单 判断门店时间
             if ($is_store == 1 && !empty($coach['store_id'])) {
-
                 $store_status = $store_model->checkStoreStatus($coach['store_id'], $times, $max_time);
-
                 if (!empty($store_status['code'])) {
-
                     $data[$i]['status'] = 0;
                 }
-
             }
-
             $i++;
         }
-
         $data = !empty($data) ? arraySort($data, 'time_str') : $data;
-
         return $data;
     }
-
 
     protected function getTimeDataV2($start_time, $end_time, $coach_id, $time_)
     {
@@ -593,79 +443,46 @@ abstract class ApiRest extends BaseController
             }
             return $info;
         }
-
         $end_time = strtotime($end_time) - strtotime(date("Y-m-d", time())) + strtotime(date("Y-m-d", $time_));
-
         $start_time = strtotime($start_time) - strtotime(date("Y-m-d", time())) + strtotime(date("Y-m-d", $time_));
-
         $end_time = $end_time > $start_time ? $end_time : $end_time + 86400;
-
         $i = 0;
-
         $data = [];
-
         $time = $start_time;
-
         while ($time < $end_time) {
-
             $time = $start_time + $config['time_unit'] * $i * 60;
-
             $times = date("Y-m-d", $time) == date("Y-m-d", $time_) ? $time : $time - 86400;
-
             if ($time > $end_time) {
-
                 break;
             }
-
             if (!empty($data[0]) && $times == $data[0]['time_str']) {
-
                 continue;
             }
             //时间戳
             $data[$i]['time_str'] = $times;
-
             $data[$i]['time_text'] = date('H:i', $times);
-
             $data[$i]['time_texts'] = date('Y-m-d', $times);
-
             $data[$i]['is_click'] = 0;
-
             $where = [];
-
             $where[] = ['coach_id', '=', $coach_id];
-
             $where[] = ['start_time', '<=', $times];
-
             $where[] = ['end_time', '>=', $times];
-
             $where[] = ['pay_type', 'not in', [-1]];
-
             $order = Db::name('massage_service_order_list')->where($where)->find();
-
             if (!empty($order)) {
                 $data[$i]['is_order'] = 1;
-
                 $data[$i]['status'] = 0;
-
             } else {
                 $data[$i]['is_order'] = 0;
-
                 $data[$i]['status'] = 1;
-
             }
-
             $t = '1666281540';
-
             $data[$i]['status'] = $times < $t ? 0 : $data[$i]['status'];
-
             $i++;
         }
-
         $data = !empty($data) ? arraySort($data, 'time_str') : $data;
-
         return $data;
     }
-
 
     /**
      * 支付宝配置

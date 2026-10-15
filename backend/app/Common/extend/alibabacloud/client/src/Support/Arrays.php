@@ -24,18 +24,15 @@ class Arrays
                     $result[] = $value;
                     continue;
                 }
-
                 if (isset($result[$key]) && is_array($result[$key])) {
                     $result[$key] = self::merge(
                         [$result[$key], $value]
                     );
                     continue;
                 }
-
                 $result[$key] = $value;
             }
         }
-
         return $result;
     }
 }

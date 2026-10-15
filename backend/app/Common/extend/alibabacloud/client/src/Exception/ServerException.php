@@ -43,7 +43,6 @@ class ServerException extends AlibabaCloudException
         $this->resolvePropertiesByReturn();
         $this->distinguishSignatureErrors();
         $this->bodyAsErrorMessage();
-
         parent::__construct(
             $this->getMessageString(),
             $this->result->getStatusCode()
@@ -109,7 +108,6 @@ class ServerException extends AlibabaCloudException
     private function getMessageString()
     {
         $message = "$this->errorCode: $this->errorMessage RequestId: $this->requestId";
-
         if ($this->getResult()->getRequest()) {
             $method  = $this->getResult()->getRequest()->method;
             $uri     = (string)$this->getResult()->getRequest()->uri;
@@ -118,7 +116,6 @@ class ServerException extends AlibabaCloudException
                 $message .= ' ' . $this->result->getStatusCode();
             }
         }
-
         return $message;
     }
 

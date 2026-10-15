@@ -19,21 +19,17 @@ class BucketTest extends \PHPUnit_Framework_TestCase
         $this->bucketName = $bucketName;
         $this->key = $key;
         $this->key2 = $key2;
-
         global $testAuth;
         $this->bucketManager = new BucketManager($testAuth);
-
         global $dummyAuth;
         $this->dummyBucketManager = new BucketManager($dummyAuth);
     }
 
     public function testBuckets()
     {
-
         list($list, $error) = $this->bucketManager->buckets();
         $this->assertTrue(in_array($this->bucketName, $list));
         $this->assertNull($error);
-
         list($list2, $error) = $this->dummyBucketManager->buckets();
         $this->assertEquals(401, $error->code());
         $this->assertNull($list2);
@@ -53,12 +49,10 @@ class BucketTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($stat);
         $this->assertNull($error);
         $this->assertNotNull($stat['hash']);
-
         list($stat, $error) = $this->bucketManager->stat($this->bucketName, 'nofile');
         $this->assertNull($stat);
         $this->assertEquals(612, $error->code());
         $this->assertNotNull($error->message());
-
         list($stat, $error) = $this->bucketManager->stat('nobucket', 'nofile');
         $this->assertNull($stat);
         $this->assertEquals(631, $error->code());
@@ -71,7 +65,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(612, $error->code());
     }
 
-
     public function testRename()
     {
         $key = 'renamefrom' . rand();
@@ -83,12 +76,10 @@ class BucketTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($error);
     }
 
-
     public function testCopy()
     {
         $key = 'copyto' . rand();
         $this->bucketManager->delete($this->bucketName, $key);
-
         $error = $this->bucketManager->copy(
             $this->bucketName,
             $this->key,
@@ -96,7 +87,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
             $key
         );
         $this->assertNull($error);
-
         //test force copy
         $error = $this->bucketManager->copy(
             $this->bucketName,
@@ -106,16 +96,12 @@ class BucketTest extends \PHPUnit_Framework_TestCase
             true
         );
         $this->assertNull($error);
-
         list($key2Stat,) = $this->bucketManager->stat($this->bucketName, $this->key2);
         list($key2CopiedStat,) = $this->bucketManager->stat($this->bucketName, $key);
-
         $this->assertEquals($key2Stat['hash'], $key2CopiedStat['hash']);
-
         $error = $this->bucketManager->delete($this->bucketName, $key);
         $this->assertNull($error);
     }
-
 
     public function testChangeMime()
     {
@@ -145,7 +131,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertArrayHasKey('hash', $ret);
         $this->assertNull($error);
-
         list($ret, $error) = $this->bucketManager->fetch(
             'http://developer.qiniu.com/docs/v6/sdk/php-sdk.html',
             $this->bucketName,
@@ -153,7 +138,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertArrayHasKey('key', $ret);
         $this->assertNull($error);
-
         list($ret, $error) = $this->bucketManager->fetch(
             'http://developer.qiniu.com/docs/v6/sdk/php-sdk.html',
             $this->bucketName
@@ -219,7 +203,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
         $key = rand();
         $err = $this->bucketManager->deleteAfterDays($this->bucketName, $key, 1);
         $this->assertEquals(612, $err->code());
-
         $this->bucketManager->copy($this->bucketName, $this->key, $this->bucketName, $key);
         $err = $this->bucketManager->deleteAfterDays($this->bucketName, $key, 1);
         $this->assertEquals(null, $err);

@@ -11,9 +11,7 @@
 // | After-sale service: +86-17361005938
 // +----------------------------------------------------------------------
 
-
 declare(strict_types=1);
-
 
 namespace app\shop\info;
 
@@ -31,14 +29,11 @@ class PermissionShop extends PermissionAbstract {
     public $saasKey ;
     const apiPaths = [];
 
-
     public function __construct( $uniacid,$infoConfigOptions = [])
     {
-
         $this->saasKey  = longbing_get_auth_prefix('AUTH_SHOP') ;
         parent::__construct($uniacid, self::tabbarKey, self::adminMenuKey, $this->saasKey, self::apiPaths , $infoConfigOptions);
     }
-
 
     /**
      * 返回saas端授权结果
@@ -58,23 +53,18 @@ class PermissionShop extends PermissionAbstract {
      */
     public function pAuth(): bool
     {
-  
         //代理管理端可以控制商城是否展示权限 , 这里需要判断权限
         $pAuthConfig = $this->getPAuthConfig();
         //必须平台授权才能使用
-
         //dump($this->getAuthIsPlatformCheck());exit;
         if($this->getAuthIsPlatformCheck()){
             //根据授权而定
             if ($pAuthConfig ){
-
 //                dump($pAuthConfig);exit;
                 return $pAuthConfig['shop_switch'] ? true : false ;
             }
         }
-
         return true;
-
     }
 
     /**
@@ -87,7 +77,6 @@ class PermissionShop extends PermissionAbstract {
      */
     public function cAuth(int $user_id): bool
     {
-
         return true;
     }
 
@@ -99,6 +88,5 @@ class PermissionShop extends PermissionAbstract {
      */
     public function getAddGoodsNumber(){
         return $this->getAuthVaule(  longbing_get_auth_prefix('AUTH_GOODS') , 4);
-
     }
 }

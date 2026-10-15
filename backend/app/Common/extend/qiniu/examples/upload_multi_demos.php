@@ -23,7 +23,6 @@ if ($err !== null) {
     var_dump($ret);
 }
 
-
 //----------------------------------------upload demo2 ----------------------------------------
 // 上传文件到七牛
 $filePath = './php-logo.png';
@@ -36,7 +35,6 @@ if ($err !== null) {
     var_dump($ret);
 }
 
-
 //----------------------------------------upload demo3 ----------------------------------------
 // 上传文件到七牛后， 七牛将文件名和文件大小回调给业务服务器.
 // 可参考文档: http://developer.qiniu.com/docs/v6/api/reference/security/put-policy.html
@@ -48,7 +46,6 @@ $policy = array(
 );
 $token = $auth->uploadToken($bucket, null, 3600, $policy);
 
-
 list($ret, $err) = $uploadMgr->putFile($token, null, $key);
 echo "\n====> putFile result: \n";
 if ($err !== null) {
@@ -56,7 +53,6 @@ if ($err !== null) {
 } else {
     var_dump($ret);
 }
-
 
 //----------------------------------------upload demo4 ----------------------------------------
 //上传视频，上传完成后进行m3u8的转码， 并给视频打水印
@@ -67,7 +63,6 @@ $pfop = "avthumb/m3u8/wmImage/$wmImg";
 $notifyUrl = 'http://notify.fake.com';
 
 //独立的转码队列：https://portal.qiniu.com/mps/pipeline
-
 
 $policy = array(
     'persistentOps' => $pfop,

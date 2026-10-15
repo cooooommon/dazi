@@ -15,7 +15,6 @@ class GetLiveChannelHistory implements XmlConfig
     public function parseFromXml($strXml)
     {
         $xml = simplexml_load_string($strXml);
-
         if (isset($xml->LiveRecord)) {
             foreach ($xml->LiveRecord as $record) {
             $liveRecord = new LiveChannelHistory();

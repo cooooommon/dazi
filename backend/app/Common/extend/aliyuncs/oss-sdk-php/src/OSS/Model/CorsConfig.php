@@ -2,7 +2,6 @@
 
 namespace OSS\Model;
 
-
 use OSS\Core\OssException;
 
 /**
@@ -30,7 +29,6 @@ class CorsConfig implements XmlConfig
     {
         return $this->rules;
     }
-
 
     /**
      * 添加一条CorsRule

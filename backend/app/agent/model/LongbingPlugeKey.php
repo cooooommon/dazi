@@ -6,7 +6,6 @@ use app\BaseModel;
 Class LongbingPlugeKey extends BaseModel
 {
     protected $name = 'lb_pluge_key';
-    
     public function getPlugeKey($filter = [])
     {
         $result = $this;
@@ -19,12 +18,10 @@ Class LongbingPlugeKey extends BaseModel
         }
         return $result;
     }
-    
     public function updatePlugeKey($filter ,$data = [])
     {
         $data['update_time'] = time();
         $result = $this->where($filter)->update($data);
         return !empty($result);
     }
-    
 }

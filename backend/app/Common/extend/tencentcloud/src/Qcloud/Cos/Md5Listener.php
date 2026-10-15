@@ -28,7 +28,6 @@ class Md5Listener implements EventSubscriberInterface
     {
         $command = $event['command'];
         $operation = $command->getOperation();
-
         if ($operation->getData('contentMd5')) {
             // Add the MD5 if it is required for all signers
             $this->addMd5($command);

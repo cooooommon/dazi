@@ -38,7 +38,6 @@ class Role extends BaseModel
         return $this->belongsTo('AdminUser', 'role_id', 'role_id');
     }
 
-
     //获取权限信息
     public function getRole($filter)
     {

@@ -22,7 +22,6 @@ Route::group('admin', function () {
         Route::get('getAppConfig', 'Config/getAppConfig');
         //获取模版消息配置
 //        Route::post('test' ,'Config/test');
-
         Route::get('test', 'Config/test');
         //自动同步小程序模信息
         Route::get('async', 'Config/autoServiceNoticeTemplate');
@@ -52,15 +51,11 @@ Route::group('admin', function () {
         //删除分组
         Route::post('delGroup', 'File/delGroup');
         Route::post('delAllGroup', 'File/delAllGroup');
-
         //上传文件
         Route::post('uploadFiles', 'File/uploadFiles');
-
         //上传文件
         Route::post('uploadFile', 'File/uploadFile');
-
         Route::get('uploadConfig', 'File/uploadConfig');
-
         Route::post('addFile', 'File/addFile');
         //获取文件列表
         Route::get('listFile', 'File/listFile');
@@ -68,26 +63,17 @@ Route::group('admin', function () {
         Route::get('getFile/:file_id', 'File/getFile');
         //删除文件
         Route::post('delFile', 'File/delFile');
-
         //移动分组(file_id 一维数组可批量传，group_id:分组id)
         Route::post('moveGroup', 'File/moveGroup');
     });
-
     Route::get('checkAuthDelFile', 'index/checkAuthDelFile');
-
     Route::get('createData', 'index/createData');
-
     Route::get('unlinkData', 'index/unlinkData');
     //更新后台模块数据信息
     Route::get('updateModel', 'Update/update');
-
     Route::get('checkAuth', 'Admin/checkAuth');
-
     Route::get('giveAuth', 'Admin/giveAuth');
-
     Route::get('isSaas', 'Admin/isSaas');
-
-
 });
 
 Route::group('app', function () {
@@ -110,8 +96,6 @@ Route::group('wx', function () {
 });
 //By.jingshuixian  跳转代理管理端
 Route::get('', function () {
-
     header('Location:'.'/agent/index');
     header('Refresh: ');
-
 });

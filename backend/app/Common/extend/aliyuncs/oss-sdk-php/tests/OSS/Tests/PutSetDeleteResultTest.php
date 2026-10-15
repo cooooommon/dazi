@@ -50,17 +50,14 @@ class ResultTest extends \PHPUnit_Framework_TestCase
             new PutSetDeleteResult($response);
             $this->assertFalse(true);
         } catch (OssException $e) {
-
         }
     }
 
     public function setUp()
     {
-
     }
 
     public function tearDown()
     {
-
     }
 }

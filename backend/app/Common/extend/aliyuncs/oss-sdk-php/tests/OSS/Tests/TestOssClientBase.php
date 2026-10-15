@@ -31,7 +31,6 @@ class TestOssClientBase extends \PHPUnit_Framework_TestCase
         if (!$this->ossClient->doesBucketExist($this->bucket)) {
             return;
         }
-
         $objects = $this->ossClient->listObjects(
             $this->bucket, array('max-keys' => 1000, 'delimiter' => ''))->getObjectList();
         $keys = array();
@@ -45,7 +44,6 @@ class TestOssClientBase extends \PHPUnit_Framework_TestCase
         foreach ($uploads as $up) {
             $this->ossClient->abortMultipartUpload($this->bucket, $up->getKey(), $up->getUploadId());
         }
-
         $this->ossClient->deleteBucket($this->bucket);
     }
 }

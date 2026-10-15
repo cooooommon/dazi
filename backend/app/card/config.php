@@ -9,7 +9,6 @@
  * ${THROWS_DOC}
  */
 
-
 $tabbar_BusinessCard = [
     "key"             => 1,
     "is_show"         => 1,
@@ -23,13 +22,9 @@ $tabbar_BusinessCard = [
 ];
 
 $page_BusinessCard = [
-
 ];
 
-
 return [
-
     'BusinessCard_tabbar' => $tabbar_BusinessCard,
     'BusinessCard_page'   => $page_BusinessCard
-
 ];

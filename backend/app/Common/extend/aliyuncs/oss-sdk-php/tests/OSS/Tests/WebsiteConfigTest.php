@@ -2,7 +2,6 @@
 
 namespace OSS\Tests;
 
-
 use OSS\Model\WebsiteConfig;
 
 class WebsiteConfigTest extends \PHPUnit_Framework_TestCase

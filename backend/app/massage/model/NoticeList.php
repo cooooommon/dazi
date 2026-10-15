@@ -19,13 +19,9 @@ class NoticeList extends BaseModel
      */
     public function getCreateTimeAttr($value, $data)
     {
-
         if (!empty($value)) {
-
             return date('Y-m-d H:i:s', $value);
-
         }
-
     }
     /**
      * @author chenniang
@@ -35,23 +31,14 @@ class NoticeList extends BaseModel
     //type1订单 2退单 3拒单 4未接单
     public function dataAdd($uniacid, $order_id, $type = 1, $admin_id = 0)
     {
-
         $data['uniacid'] = $uniacid;
-
         $data['order_id'] = $order_id;
-
         $data['type'] = $type;
-
         $data['admin_id'] = $admin_id;
-
         $data['create_time'] = time();
-
         $res = $this->insert($data);
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -60,13 +47,9 @@ class NoticeList extends BaseModel
      */
     public function dataUpdate($dis, $data)
     {
-
         $res = $this->where($dis)->update($data);
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -75,13 +58,9 @@ class NoticeList extends BaseModel
      */
     public function dataList($dis, $page)
     {
-
         $data = $this->where($dis)->order('id desc')->paginate($page)->toArray();
-
         return $data;
-
     }
-
 
     /**
      * @author chenniang
@@ -90,9 +69,7 @@ class NoticeList extends BaseModel
      */
     public function dataInfo($dis)
     {
-
         $data = $this->where($dis)->find();
-
 //        if(empty($data)){
 //
 //            $this->dataAdd($dis);
@@ -100,9 +77,7 @@ class NoticeList extends BaseModel
 //            $data = $this->where($dis)->find();
 //
 //        }
-
         return !empty($data) ? $data->toArray() : [];
-
     }
 
     /***
@@ -131,6 +106,5 @@ class NoticeList extends BaseModel
         }
         return $data;
     }
-
 
 }

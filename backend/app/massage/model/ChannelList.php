@@ -10,11 +10,8 @@ class ChannelList extends BaseModel
     //定义表名
     protected $name = 'massage_channel_list';
 
-
     protected $append = [
-
         'cate_text'
-
     ];
 
     /**
@@ -25,20 +22,13 @@ class ChannelList extends BaseModel
      */
     public function getMobileAttr($value, $data)
     {
-
         if (!empty($value) && isset($data['uniacid'])) {
-
             if (numberEncryption($data['uniacid']) == 1) {
-
                 return substr_replace($value, "****", 2, 4);
             }
-
         }
-
         return $value;
-
     }
-
 
     /**
      * @param $value
@@ -49,16 +39,10 @@ class ChannelList extends BaseModel
      */
     public function getCateTextAttr($value, $data)
     {
-
         if (isset($data['cate_id'])) {
-
             $cate_model = new ChannelCate();
-
             return $cate_model->where(['id' => $data['cate_id']])->value('title');
-
         }
-
-
     }
 
     /**
@@ -68,15 +52,10 @@ class ChannelList extends BaseModel
      */
     public function dataAdd($data)
     {
-
         $data['create_time'] = time();
-
         $res = $this->insert($data);
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -85,13 +64,9 @@ class ChannelList extends BaseModel
      */
     public function dataUpdate($dis, $data)
     {
-
         $res = $this->where($dis)->update($data);
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -100,13 +75,9 @@ class ChannelList extends BaseModel
      */
     public function dataList($dis, $page)
     {
-
         $data = $this->where($dis)->order('id desc')->paginate($page)->toArray();
-
         return $data;
-
     }
-
 
     /**
      * @author chenniang
@@ -115,13 +86,9 @@ class ChannelList extends BaseModel
      */
     public function dataInfo($dis)
     {
-
         $data = $this->where($dis)->find();
-
         return !empty($data) ? $data->toArray() : [];
-
     }
-
 
     /**
      * @author chenniang
@@ -130,7 +97,6 @@ class ChannelList extends BaseModel
      */
     public function adminDataList($dis, $page = 10, $where = [])
     {
-
         $data = $this->alias('a')
             ->join('massage_service_user_list b', 'a.user_id = b.id', 'left')
             ->where($dis)
@@ -142,10 +108,7 @@ class ChannelList extends BaseModel
             ->order('a.id desc')
             ->paginate($page)
             ->toArray();
-
         return $data;
-
     }
-
 
 }

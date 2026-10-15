@@ -2,7 +2,6 @@
 
 namespace OSS\Model;
 
-
 /**
  * Class LoggingConfig
  * @package OSS\Model

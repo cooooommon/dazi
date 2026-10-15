@@ -34,7 +34,6 @@ class AccessKeyCredential implements CredentialsInterface
     public function __construct($accessKeyId, $accessKeySecret)
     {
         CredentialFilter::AccessKey($accessKeyId, $accessKeySecret);
-
         $this->accessKeyId     = $accessKeyId;
         $this->accessKeySecret = $accessKeySecret;
     }

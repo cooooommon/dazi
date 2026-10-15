@@ -54,13 +54,10 @@ class PublisherApi {
         $channel->exchange_declare($this->exchangeName, 'direct', false, false, false);
         $channel->queue_declare($this->queueName, false, true, false, false, false);
         $channel->queue_bind($this->queueName, $this->exchangeName, $this->routingKey);
-
         $msg = new AMQPMessage($message, array(
             'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT,
         ));
-
         $channel->basic_publish($msg, $this->exchangeName, $this->routingKey);
-
         $channel->close();
         $connection->close();
     }
@@ -75,29 +72,22 @@ class PublisherApi {
         $connection = $this->connection;
 //		var_dump($connection);die;
         $channel = $connection->channel();
-
         $cache_exchange_name = 'cache_exchange' . $expiration;
-		
         $cache_queue_name = 'cache_queue' . $expiration;
         $channel->exchange_declare($this->exchangeName, 'direct', false, false, false);
         $channel->exchange_declare($cache_exchange_name, 'direct', false, false, false);
-
         $tale = new AMQPTable();
         $tale->set('x-dead-letter-exchange', $this->exchangeName);
         $tale->set('x-dead-letter-routing-key', $this->routingKey);
         $tale->set('x-message-ttl', $expiration);
         $channel->queue_declare($cache_queue_name, false, true, false, false, false,$tale);
         $channel->queue_bind($cache_queue_name, $cache_exchange_name, '');
-
         $channel->queue_declare($this->queueName, false, true, false, false, false);
         $channel->queue_bind($this->queueName, $this->exchangeName, $this->routingKey);
-
         $msg = new AMQPMessage($message, array(
             'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT,
         ));
-
         $channel->basic_publish($msg, $cache_exchange_name, '');
-
         $channel->close();
         $connection->close();
     }
@@ -111,30 +101,22 @@ class PublisherApi {
         );
         $connection = $this->connection;
         $channel = $connection->channel();
-
         $schedule_exchange_name = 'schedule_exchange_' . $taskName;
         $schedule_queue_name = 'schedule_queue_' . $taskName;
-
         $channel->exchange_declare($this->exchangeName, 'direct', false, false, false);
         $channel->exchange_declare($schedule_exchange_name, 'direct', false, false, false);
-
         $tale = new AMQPTable();
         $tale->set('x-dead-letter-exchange', $this->exchangeName);
         $tale->set('x-dead-letter-routing-key', $this->routingKey);
         $tale->set('x-message-ttl', $expiration);
-
         $channel->queue_declare($schedule_queue_name, false, false, false, false, false,$tale);
         $channel->queue_bind($schedule_queue_name, $schedule_exchange_name, '');
-
         $channel->queue_declare($this->queueName, false, true, false, false, false);
         $channel->queue_bind($this->queueName, $this->exchangeName, $this->routingKey);
-
         $msg = new AMQPMessage($message, array(
             'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT,
         ));
-
         $channel->basic_publish($msg, $schedule_exchange_name, '');
-
         $channel->close();
         $connection->close();
     }
@@ -148,15 +130,12 @@ class PublisherApi {
         );
         $connection = $this->connection;
         $channel = $connection->channel();
-
         $schedule_queue_name = 'schedule_queue_' . $taskName;
-
         $tale = new AMQPTable();
         $tale->set('x-dead-letter-exchange', $this->exchangeName);
         $tale->set('x-dead-letter-routing-key', $this->routingKey);
         $tale->set('x-message-ttl', $expiration);
         $result = $channel->queue_declare($schedule_queue_name, false, false, false, false, false,$tale);
-
         $channel->close();
         $connection->close();
         $result = $result ?: [0, 0];
@@ -191,7 +170,6 @@ class PublisherApi {
             // message原文位于消息对象body属性中
             messagesProcess($msg);
         };
-		
         //流量控制
         $channel->basic_qos(null, $this->qos_limit, null);
         $channel->basic_consume($this->queueName, '', false, false, false, false, $callback);
@@ -202,4 +180,3 @@ class PublisherApi {
         $connection->close();
     }
 }
-

@@ -58,7 +58,6 @@ Route::group('admin', function () {
     Route::any('upgrade', 'AppUpgrade/upgrade');
     //更新管理后台系统
     Route::any('uploadWxapp', 'AppUpgrade/uploadWxapp');
-
 });
 
 Route::group('user' ,function() {
@@ -74,22 +73,18 @@ Route::group('CopyRightAgent', function () {
     Route::post('destory', 'CopyRightAgentController/destroy');
 });
 
-
 Route::group('ConfigDefault', function () {
     Route::get('getOne', 'ConfigDefault/getOne');
     Route::post('update', 'ConfigDefault/update');
 });
 
-
 Route::group('Permission', function () {
     Route::get('getAgentPermission', 'PermissionContrller/getAgentPermission');
 });
 
-
 Route::group('MessageConfig', function () {
     Route::post('delMessageByDay', 'MessageConfigController/delMessageByDay');
 });
-
 
 Route::group('AritcleConfig', function () {
     Route::get('list', 'AritcleController/list');
@@ -103,20 +98,17 @@ Route::group('ActivityConfig', function () {
     Route::post('extendedOneYear', 'ActivityController/extendedOneYear');
 });
 
-
 Route::group('HouseConfig', function () {
     Route::get('list', 'HouseController/list');
     Route::post('create', 'HouseController/create');
     Route::post('extendedOneYear', 'HouseController/extendedOneYear');
 });
 
-
 Route::group('BossConfig', function () {
     Route::get('list', 'BossController/list');
     Route::post('create', 'BossController/create');
     Route::post('extendedOneYear', 'BossController/extendedOneYear');
 });
-
 
 Route::group('App', function () {
     Route::get('list$', 'AppController/list');
@@ -131,7 +123,6 @@ Route::group('App', function () {
     Route::any('websitebind$', 'AppController/websitebind');
     Route::post('updateApp$' ,'AppController/updateApp');
 });
-
 
 //新的授权列表路由
 Route::group('AdmincardAuth', function () {

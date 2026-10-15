@@ -28,7 +28,6 @@ trait HttpTrait
     public function timeout($seconds)
     {
         $this->options['timeout'] = ClientFilter::timeout($seconds);
-
         return $this;
     }
 
@@ -42,7 +41,6 @@ trait HttpTrait
     {
         ClientFilter::milliseconds($milliseconds);
         $seconds = $milliseconds / 1000;
-
         return $this->timeout($seconds);
     }
 
@@ -55,7 +53,6 @@ trait HttpTrait
     public function connectTimeout($seconds)
     {
         $this->options['connect_timeout'] = ClientFilter::connectTimeout($seconds);
-
         return $this;
     }
 
@@ -69,7 +66,6 @@ trait HttpTrait
     {
         ClientFilter::milliseconds($milliseconds);
         $seconds = $milliseconds / 1000;
-
         return $this->connectTimeout($seconds);
     }
 
@@ -81,7 +77,6 @@ trait HttpTrait
     public function debug($debug)
     {
         $this->options['debug'] = $debug;
-
         return $this;
     }
 
@@ -95,7 +90,6 @@ trait HttpTrait
     public function cert($cert)
     {
         $this->options['cert'] = $cert;
-
         return $this;
     }
 
@@ -109,7 +103,6 @@ trait HttpTrait
     public function proxy($proxy)
     {
         $this->options['proxy'] = $proxy;
-
         return $this;
     }
 
@@ -121,7 +114,6 @@ trait HttpTrait
     public function verify($verify)
     {
         $this->options['verify'] = $verify;
-
         return $this;
     }
 
@@ -135,7 +127,6 @@ trait HttpTrait
         if ($options !== []) {
             $this->options = Arrays::merge([$this->options, $options]);
         }
-
         return $this;
     }
 }

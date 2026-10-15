@@ -4,7 +4,6 @@ namespace Qcloud\Cos;
 
 use Guzzle\Http\ReadLimitEntityBody;
 
-
 class Copy {
     /**
      * const var: part size from 5MB to 5GB, and max parts of 10000 are allowed for each upload.
@@ -42,7 +41,6 @@ class Copy {
             'Key' => $this->options['Key'],
             'UploadId' => $uploadId,
             'Parts' => $this->parts));
-
     }
     public function uploadParts($uploadId) {
         $commands = array();
@@ -52,7 +50,6 @@ class Copy {
         $finishedNum = 0;
         $this->parts = array();
         for (;;) {
-
             if ($offset + $partSize  >= $this->size)
             {
                 $partSize = $this->size - $offset;
@@ -112,9 +109,7 @@ class Copy {
         } else {
             return -1;
         }
-
     }
-
 
     private function calculatePartSize($minPartSize)
     {
@@ -122,7 +117,6 @@ class Copy {
         $partSize = max($minPartSize, $partSize);
         $partSize = min($partSize, self::MAX_PART_SIZE);
         $partSize = max($partSize, self::MIN_PART_SIZE);
-
         return $partSize;
     }
 

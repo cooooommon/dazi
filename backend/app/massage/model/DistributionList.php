@@ -9,9 +9,7 @@ use think\facade\Db;
 class DistributionList extends BaseModel
 {
 
-
     protected $name = 'massage_distribution_list';
-
 
     /**
      * 电话号码加密
@@ -21,18 +19,12 @@ class DistributionList extends BaseModel
      */
     public function getMobileAttr($value, $data)
     {
-
         if (!empty($value) && isset($data['uniacid'])) {
-
             if (numberEncryption($data['uniacid']) == 1) {
-
                 return substr_replace($value, "****", 2, 4);
             }
-
         }
-
         return $value;
-
     }
 
     /**
@@ -42,15 +34,10 @@ class DistributionList extends BaseModel
      */
     public function dataAdd($data)
     {
-
         $data['create_time'] = time();
-
         $res = $this->insert($data);
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -59,13 +46,9 @@ class DistributionList extends BaseModel
      */
     public function dataUpdate($dis, $data)
     {
-
         $res = $this->where($dis)->update($data);
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -74,13 +57,9 @@ class DistributionList extends BaseModel
      */
     public function dataList($dis, $page)
     {
-
         $data = $this->where($dis)->order('id desc')->paginate($page)->toArray();
-
         return $data;
-
     }
-
 
     /**
      * @author chenniang
@@ -89,13 +68,9 @@ class DistributionList extends BaseModel
      */
     public function dataInfo($dis)
     {
-
         $data = $this->where($dis)->find();
-
         return !empty($data) ? $data->toArray() : [];
-
     }
-
 
     /**
      * @param $user_id
@@ -106,27 +81,16 @@ class DistributionList extends BaseModel
      */
     public function teamCount($user_id, $type = 1)
     {
-
         $user_model = new User();
-
         $dis[] = ['is_fx', '=', 1];
-
         if ($type == 1) {
-
             $dis[] = ['pid', '=', $user_id];
-
         } else {
-
             $top_id = $user_model->where(['pid' => $user_id, 'is_fx' => 1])->column('id');
-
             $dis[] = ['pid', 'in', $top_id];
-
         }
-
         $data = $user_model->where($dis)->count();
-
         return $data;
-
     }
 
     /**
@@ -136,7 +100,6 @@ class DistributionList extends BaseModel
      */
     public function adminDataList($dis, $page = 10, $where = [])
     {
-
         $data = $this->alias('a')
             ->join('massage_service_user_list b', 'a.user_id = b.id', 'left')
             ->where($dis)
@@ -148,11 +111,8 @@ class DistributionList extends BaseModel
             ->order('a.id desc')
             ->paginate($page)
             ->toArray();
-
         return $data;
-
     }
-
 
     /**
      * @param $dis
@@ -163,9 +123,7 @@ class DistributionList extends BaseModel
      */
     public function userProfitList($dis, $page = 10, $where = [])
     {
-
         $user_model = new User();
-
         $data = $user_model->alias('a')
             ->join('massage_distribution_list b', 'a.id = b.user_id', 'left')
             ->where($dis)
@@ -177,10 +135,8 @@ class DistributionList extends BaseModel
             ->order('a.id desc')
             ->paginate($page)
             ->toArray();
-
         return $data;
     }
-
 
     /**
      * @param $dis
@@ -191,9 +147,7 @@ class DistributionList extends BaseModel
      */
     public function userProfitSelect($dis, $where = [])
     {
-
         $user_model = new User();
-
         $data = $user_model->alias('a')
             ->join('massage_distribution_list b', 'a.id = b.user_id', 'left')
             ->where($dis)
@@ -205,10 +159,8 @@ class DistributionList extends BaseModel
             ->order('a.id desc')
             ->select()
             ->toArray();
-
         return $data;
     }
-
 
     /**
      * @param $dis
@@ -220,9 +172,7 @@ class DistributionList extends BaseModel
      */
     public function userDataList($dis, $where, $page = 10)
     {
-
         $user_model = new User();
-
         $data = $user_model
             ->alias('a')
             ->join('massage_distribution_list b', 'a.id = b.user_id', 'left')
@@ -235,11 +185,8 @@ class DistributionList extends BaseModel
             ->order('sh_time desc,a.id desc')
             ->paginate($page)
             ->toArray();
-
         if (!empty($data['data'])) {
-
             $coach_model = new Coach();
-
             foreach ($data['data'] as &$v) {
                 //邀请向导数量
                 $v['coach_count'] = $coach_model->where(['status' => 2, 'partner_id' => $v['id'], 'agent_type' => 2])->count();
@@ -248,12 +195,9 @@ class DistributionList extends BaseModel
                 //订单量
                 $v['order_count'] = $this->partnerOrderCount($v['id']);
             }
-
         }
-
         return $data;
     }
-
 
     /**
      * @param $partner_id
@@ -263,14 +207,10 @@ class DistributionList extends BaseModel
      */
     public function partnerOrderCount($partner_id)
     {
-
         $commis_model = new Commission();
-
         $count = $commis_model->where(['top_id' => $partner_id, 'status' => 2])->where('type', 'in', [1, 9])->group('order_id')->count();
-
         return $count;
     }
-
 
     /**
      * @param $partner_id
@@ -280,17 +220,11 @@ class DistributionList extends BaseModel
      */
     public function partnerOrderPrice($partner_id)
     {
-
         $commis_model = new Commission();
-
         $order_model = new Order();
-
         $order_id = $commis_model->where(['top_id' => $partner_id, 'status' => 2])->where('type', 'in', [1, 9])->column('order_id');
-
         $count = $order_model->where('id', 'in', $order_id)->sum('true_service_price');
-
         return $count;
     }
-
 
 }

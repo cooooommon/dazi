@@ -2,7 +2,6 @@
 
 namespace OSS\Model;
 
-
 /**
  * Class LifecycleRule
  * @package OSS\Model
@@ -85,7 +84,6 @@ class LifecycleRule
     {
         $this->actions = $actions;
     }
-
 
     /**
      * LifecycleRule constructor.

@@ -2,7 +2,6 @@
 
 namespace OSS\Tests;
 
-
 use OSS\Core\OssException;
 use OSS\Result\UploadPartResult;
 use OSS\Http\ResponseCore;

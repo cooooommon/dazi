@@ -2,7 +2,6 @@
 
 namespace OSS\Result;
 
-
 /**
  * Class PutSetDeleteResult
  * @package OSS\Result

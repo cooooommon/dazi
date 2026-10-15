@@ -9,7 +9,6 @@ use OSS\OssClient;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'TestOssClientBase.php';
 
-
 class OssClientSignatureTest extends TestOssClientBase
 {
     function testGetSignedUrlForGettingObject()
@@ -22,7 +21,6 @@ class OssClientSignatureTest extends TestOssClientBase
         } catch (OssException $e) {
             $this->assertFalse(true);
         }
-
         $request = new RequestCore($signedUrl);
         $request->set_method('GET');
         $request->add_header('Content-Type', '');
@@ -72,7 +70,6 @@ class OssClientSignatureTest extends TestOssClientBase
         } catch (OssException $e) {
             $this->assertFalse(true);
         }
-
     }
 
     public function tearDown()
@@ -101,7 +98,6 @@ class OssClientSignatureTest extends TestOssClientBase
                 'x-oss-meta-self-define-title' => 'user define meta info',
             ),
         );
-
         try {
             $this->ossClient->putObject($this->bucket, $object, $content, $options);
         } catch (OssException $e) {

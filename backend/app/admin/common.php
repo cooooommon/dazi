@@ -5,7 +5,6 @@ use app\admin\model\Role as RoleModel;
 
 //通过Token获取用户信息
 
-
 //删除用户登录信息
 function delUserForToken($token)
 {
@@ -36,7 +35,6 @@ function getAccountList($uniacid = 7777)
         return $result;
     }
     //缓存数据不存在时，从数据库获取数据，同时写入缓存
-
     return $result;
 }
 
@@ -52,7 +50,6 @@ function setAccountToCache($account, $uniacid = 7777)
 //移除账号缓存
 function delAccountToCache($account, $uniacid = 7777)
 {
-
 }
 
 //检查检查用户账号是否存在

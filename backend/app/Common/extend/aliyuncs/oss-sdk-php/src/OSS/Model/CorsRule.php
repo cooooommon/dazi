@@ -4,7 +4,6 @@ namespace OSS\Model;
 
 use OSS\Core\OssException;
 
-
 /**
  * Class CorsRule
  * @package OSS\Model

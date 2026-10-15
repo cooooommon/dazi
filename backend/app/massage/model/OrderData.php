@@ -12,7 +12,6 @@ class OrderData extends BaseModel
     //定义表名
     protected $name = 'massage_service_order_list_data';
 
-
 //    /**
 //     * @param $value
 //     * @param $data
@@ -36,13 +35,9 @@ class OrderData extends BaseModel
      */
     public function dataAdd($data)
     {
-
         $res = $this->insert($data);
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -51,13 +46,9 @@ class OrderData extends BaseModel
      */
     public function dataUpdate($dis, $data)
     {
-
         $res = $this->where($dis)->update($data);
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -66,13 +57,9 @@ class OrderData extends BaseModel
      */
     public function dataList($dis, $page)
     {
-
         $data = $this->where($dis)->order('id desc')->paginate($page)->toArray();
-
         return $data;
-
     }
-
 
     /**
      * @author chenniang
@@ -81,19 +68,12 @@ class OrderData extends BaseModel
      */
     public function dataInfo($dis)
     {
-
         $data = $this->where($dis)->field('sign_time,sign_img')->find();
-
         if (empty($data)) {
-
             $this->dataAdd($dis);
-
             $data = $this->where($dis)->field('sign_time,sign_img')->find();
-
         }
-
         return !empty($data) ? $data->toArray() : [];
-
     }
 
     /**
@@ -110,16 +90,12 @@ class OrderData extends BaseModel
     {
         $data = self::where(['uniacid' => $uniacid, 'order_id' => $order_update['order_id']])->find();
         if (empty($data)) {
-
             $order_update['uniacid'] = $uniacid;
-
             $res = self::insert($order_update);
         } else {
-
             $res = self::update($order_update, ['id' => $data['id']]);
         }
         return $res;
     }
-
 
 }

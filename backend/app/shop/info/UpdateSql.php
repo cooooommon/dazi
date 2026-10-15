@@ -5,7 +5,6 @@ $prefix = longbing_get_prefix();
 //每个一个sql语句结束，都必须以英文分号结束。因为在执行sql时，需要分割单个脚本执行。
 //表前缀需要自己添加{$prefix} 以下脚本被测试脚本
 
-
 $sql = <<<updateSql
 
 CREATE TABLE IF NOT EXISTS `{$prefix}massage_service_address` (
@@ -747,8 +746,5 @@ alter table `{$prefix}shequshop_school_config` modify COLUMN  `time_unit` int(11
 alter table `{$prefix}shequshop_school_config` modify COLUMN  `max_day` int(11) DEFAULT '3' COMMENT '最长预约时间';
 
 updateSql;
-
-
-
 
 return $sql;

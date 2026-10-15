@@ -28,14 +28,12 @@ class Filter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($name === '') {
             throw new ClientException(
                 'Name cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $name;
     }
 
@@ -54,14 +52,12 @@ class Filter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($value === '') {
             throw new ClientException(
                 'Value cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $value;
     }
 }

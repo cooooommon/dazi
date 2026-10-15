@@ -6,7 +6,6 @@
  * Time: 18:29
  */
 
-
 $copyRight    = '{"name": "CopyrightConfig","url": "/sys/copyright"},' ;
 
 $uplode_wecht = !longbingIsWeiqin()|| config('app.AdminModelList')['app_model_name'] =='longbing_card'?',{"name": "SProWechat","url": "/sys/wechat"}':'';
@@ -279,5 +278,3 @@ SYS;
 
 //return json_decode(['System' => $menu], true);
 return ['admin' => $menu];
-
-

@@ -30,52 +30,29 @@ class PackageOrderComment extends BaseModel
     public static function comment($data)
     {
         $order = PackageOrder::where('id', $data['order_id'])->find();
-
         $data['store_id'] = $order['store_id'];
-
         $data['create_time'] = $data['update_time'] = time();
-
         $data['img'] = empty($data['img']) ? '' : implode(',', $data['img']);
-
         Db::startTrans();
-
         $res = self::insert($data);
-
         if ($res == 0) {
-
             Db::rollback();
-
             return false;
-
         }
-
         $res = PackageOrder::where('id', $data['order_id'])->update(['is_comment' => 1]);
-
         if ($res === false) {
-
             Db::rollback();
-
             return false;
-
         }
         $star = self::where('store_id', $order['store_id'])->sum('star');
-
         $count = self::where('store_id', $order['store_id'])->count();
-
         $new_str = round($star / $count, 1);
-
         $res = StoreApply::where('id', $order['store_id'])->update(['star' => $new_str]);
-
         if ($res === false) {
-
             Db::rollback();
-
             return false;
-
         }
-
         Db::commit();
-
         return true;
     }
 
@@ -89,9 +66,7 @@ class PackageOrderComment extends BaseModel
     public static function add($data)
     {
         $data['create_time'] = $data['update_time'] = time();
-
         return self::insert($data);
-
     }
 
     /**
@@ -113,7 +88,6 @@ class PackageOrderComment extends BaseModel
             ->order('a.create_time desc')
             ->paginate($limit)
             ->toArray();
-
     }
 
     /**
@@ -133,17 +107,11 @@ class PackageOrderComment extends BaseModel
             ->order('a.create_time desc')
             ->paginate($limit)
             ->toArray();
-
         if (!empty($data['data'])) {
-
             foreach ($data['data'] as &$item) {
-
                 if (empty($item['user_id']) || $item['is_hide'] == 1) {
-
                     $item['nickName'] = '匿名用户';
-
                     $item['avatarUrl'] = 'https://lbqny.migugu.com/admin/farm/default-user.png';
-
 //                    $item['img'] = empty($item['img']) ? '' : explode(',', $item['img']);
 //
 //                    $item['img_count'] = 0;
@@ -151,11 +119,9 @@ class PackageOrderComment extends BaseModel
 //                    if (is_array($item['img'])) {
 //                        $item['img_count'] = count($item['img']);
 //                    }
-
                 }
             }
         }
-
         return $data;
     }
 
@@ -175,11 +141,8 @@ class PackageOrderComment extends BaseModel
             ['status', '>', -1]
         ];
         $star = self::where($where)->sum('star');
-
         $count = self::where($where)->count();
-
         $new_star = $count > 0 ? (round($star / $count, 1) > 5 ? 5 : round($star / $count, 1)) : 5;
-
         return StoreApply::update(['star' => $new_star], ['id' => $store_id]);
     }
 
@@ -225,13 +188,9 @@ class PackageOrderComment extends BaseModel
             ->leftJoin('massage_service_user_list b', 'a.user_id=b.id')
             ->order('a.create_time desc')
             ->find();
-
         if (empty($item['user_id']) || $item['is_hide'] == 1) {
-
             $item['nickName'] = '匿名用户';
-
             $item['avatarUrl'] = 'https://lbqny.migugu.com/admin/farm/default-user.png';
-
 //            $item['img'] = empty($item['img']) ? '' : explode(',', $item['img']);
 //
 //            $item['img_count'] = 0;
@@ -239,9 +198,7 @@ class PackageOrderComment extends BaseModel
 //            if (is_array($item['img'])) {
 //                $item['img_count'] = count($item['img']);
 //            }
-
         }
-
         return $item;
     }
 }

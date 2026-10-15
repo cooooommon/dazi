@@ -7,10 +7,8 @@ class Index
 {
     public function index()
     {
-
         $lockPath = dirname(__FILE__) .DS . 'install.lock';
         if(!file_exists($lockPath)){
-
             //更新数据库
             UpdateService::installSql(8888);
 //
@@ -34,15 +32,10 @@ class Index
 //                'uniacid' => '8888'
 //            ];
 //            AdminUserService::bindAppAdmin($appAdminData) ;
-
             file_put_contents($lockPath,time());
-
             echo ' install ok ;' ;
         }else{
             echo ' install no ;' ;
         }
-
-
-
     }
 }

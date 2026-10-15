@@ -70,7 +70,6 @@ trait RetryTrait
         $this->serverRetry            = ClientFilter::retry($times);
         $this->serverRetryStrings     = $strings;
         $this->serverRetryStatusCodes = $statusCodes;
-
         return $this;
     }
 
@@ -87,7 +86,6 @@ trait RetryTrait
         $this->clientRetry            = ClientFilter::retry($times);
         $this->clientRetryStrings     = $strings;
         $this->clientRetryStatusCodes = $codes;
-
         return $this;
     }
 
@@ -101,21 +99,16 @@ trait RetryTrait
         if ($this->serverRetry <= 0) {
             return false;
         }
-
         if (in_array($result->getStatusCode(), $this->serverRetryStatusCodes)) {
             $this->serverRetry--;
-
             return true;
         }
-
         foreach ($this->serverRetryStrings as $message) {
             if (Stringy::create($result->getBody())->contains($message)) {
                 $this->serverRetry--;
-
                 return true;
             }
         }
-
         return false;
     }
 
@@ -129,21 +122,16 @@ trait RetryTrait
         if ($this->clientRetry <= 0) {
             return false;
         }
-
         if (in_array($exception->getCode(), $this->clientRetryStatusCodes, true)) {
             $this->clientRetry--;
-
             return true;
         }
-
         foreach ($this->clientRetryStrings as $message) {
             if (Stringy::create($exception->getMessage())->contains($message)) {
                 $this->clientRetry--;
-
                 return true;
             }
         }
-
         return false;
     }
 }

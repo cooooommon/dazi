@@ -37,7 +37,6 @@ class RsaKeyPairCredential implements CredentialsInterface
     {
         CredentialFilter::publicKeyId($publicKeyId);
         CredentialFilter::privateKeyFile($privateKeyFile);
-
         $this->publicKeyId = $publicKeyId;
         try {
             $this->privateKey = file_get_contents($privateKeyFile);

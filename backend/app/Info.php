@@ -16,7 +16,6 @@ return [
     'app_model_title' => '龙兵陪玩',
     //DIY默认数据
     'diy_default_data' =>[
-
     ] ,
     //控制能开放多少个小程序使用  这个是一个通用权限控制 , 请求授权时,应该知道是那个行业的  暂时还没用到
     'saas_auth_number_config' =>[
@@ -26,7 +25,6 @@ return [
     ],
     //控制后台能展示的模块
     'saas_auth_admin_model_list' => [
-
         'shop'=>[
             'auth_platform'   => true ,
             'auth_is_platform_check' => true ,
@@ -113,7 +111,6 @@ return [
             'auth_is_saas_check' => true,
         ],
     ],
-
     //独立版升级使用
     //版本ID
     'version_id'    => '64c7ad0322f14b9c894e95220c9d00d5',
@@ -125,6 +122,4 @@ return [
     'auth_uniacid'  => 1 ,
     //授权的产品ID
     'auth_goods_id' => 21
-
-
 ];

@@ -26,7 +26,6 @@ class MimeTypes
                 return self::$mime_types[$ext];
             }
         }
-
         return null;
     }
 

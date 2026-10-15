@@ -2,7 +2,6 @@
 
 namespace OSS\Model;
 
-
 /**
  * Class LiveChannelConfig
  * @package OSS\Model
@@ -84,26 +83,20 @@ EOF;
         if (isset($this->description)) {
             $xml->addChild('Description', $this->description);
         }
-
         if (isset($this->status)) {
             $xml->addChild('Status', $this->status);
         }
-
         $node = $xml->addChild('Target');
         $node->addChild('Type', $this->type);
-
         if (isset($this->fragDuration)) {
             $node->addChild('FragDuration', $this->fragDuration);
         }
-
         if (isset($this->fragCount)) {
             $node->addChild('FragCount', $this->fragCount);
         }
-
         if (isset($this->playListName)) {
             $node->addChild('PlayListName', $this->playListName);
         }
-
         return $xml->asXML();
     }
 

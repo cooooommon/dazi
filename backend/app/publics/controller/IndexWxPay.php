@@ -6,7 +6,6 @@ use think\App;
 use app\shop\controller\IndexPayResunt;
 use think\facade\Db;
 
-
 class IndexWxPay extends ApiRest
 {
 
@@ -15,7 +14,6 @@ class IndexWxPay extends ApiRest
     {
         $this->app = $app;
     }
-
 
     /**
      * @param $paymentApp
@@ -44,20 +42,15 @@ class IndexWxPay extends ApiRest
         define('WX_CURL_PROXY_HOST', '0.0.0.0');
         define('WX_CURL_PROXY_PORT', 0);
         define('WX_REPORT_LEVENL', 0);
-
-
         require_once PAY_PATH . "/weixinpay/lib/WxPay.Api.php";
         require_once PAY_PATH . "/weixinpay/example/WxPay.JsApiPay.php";
-
         $tools = new \JsApiPay();
         $input = new \WxPayUnifiedOrder();
-
         $input->SetBody($body);
         $input->SetAttach(json_encode($attach));
         $input->SetOut_trade_no($attach['out_trade_no']);
         $input->SetTotal_fee($totalprice *100);
         $input->SetTime_start(date("YmdHis"));
-
         $param_arr=[
             'i' => $uniacid,
             't' => $_GPC['t'],
@@ -90,15 +83,11 @@ class IndexWxPay extends ApiRest
             $this->errorMsg($order['return_msg']);
         }
         $jsApiParameters = $tools->GetJsApiParameters($order);
-
         $jsApiParameters = json_decode($jsApiParameters, true) ;
         if (!empty($jsApiParameters['return_code']))
              $this->errorMsg( '发起支付失败');
         return $jsApiParameters;
     }
-
-
-
 
     /**
      * @param $data
@@ -126,37 +115,31 @@ class IndexWxPay extends ApiRest
      */
 
     public function returnPay(){
-
         $this->lb_logOutput("in--mingpianNotify");
         $xmlData = file_get_contents('php://input');
         if(empty($xmlData)){
             $xmlData = 'empty   xmlData';
         }
         $this->lb_logOutput('xmlData in mingpian:-----'.$xmlData);
-
         $this->lb_logOutput("in-mingpian2");
         global $_GPC;
         $xmlData = file_get_contents('php://input');
         $this->lb_logOutput('in-mingpian-$xmlData:-----'.$xmlData);
         //获取配置
-
         if(defined( 'IS_WEIQIN' )){
             $uniacid=$_GPC['i'];
         }else{
             $uniacid = $_GET['i'];
         }
-
         $paymentApp = $this->payConfig($uniacid);
        // dump($paymentApp);exit;
         $this->lb_logOutput('in-mingpian-uniacid:-----'.$uniacid);
-
         $setting['mini_appid']         = $paymentApp['app_id'];
         $setting['mini_appsecrept']    = $paymentApp['secret'];
         $setting['mini_mid']           = $paymentApp['payment']['merchant_id'];
         $setting['mini_apicode']       = $paymentApp['payment']['key'];
         $setting['apiclient_cert']     = $paymentApp['payment']['cert_path'];
         $setting['apiclient_cert_key'] = $paymentApp['payment']['key_path'];
-
         define('WX_APPID', $setting['mini_appid']);
         define('WX_MCHID', $setting['mini_mid']);
         define('WX_KEY', $setting['mini_apicode']);
@@ -170,9 +153,5 @@ class IndexWxPay extends ApiRest
         $WxPay = new \WxOrderNotify($this->app);
         $WxPay->Handle(false);
     }
-
-
-
-
 
 }

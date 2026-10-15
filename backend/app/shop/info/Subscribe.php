@@ -39,10 +39,8 @@ class Subscribe extends BaseSubscribe
      */
     public function onAddWorkCenterModelMenu()
     {
-
         $permissson = new PermissionShop($this->_uniacid);
         if ($permissson->pAuth()) {
-
             $modelMenu = [
                 "title" => '商品服务',
                 "desc" => '',
@@ -81,11 +79,9 @@ class Subscribe extends BaseSubscribe
                     ]
                 ]
             ];
-
             return [$modelMenu];
         }
         return [];
-
     }
 
     /**
@@ -98,18 +94,15 @@ class Subscribe extends BaseSubscribe
      */
     public function onCardInfo($params)
     {
-
         //获取推荐商品 By.jingshuixian
         $modelExtension = new CardExtension();
         $goods_list = $modelExtension->cardExtensionList($params['staff_id'], $this->_uniacid);
-
         $collage_model = new IndexShopCollage();
         foreach ($goods_list as $key => $val) {
             $goods_list[$key]['is_collage'] = 0;
             $count = $collage_model->getCollage(['goods_id' => $val['id'], 'uniacid' => $this->_uniacid, 'status' => 1]);
             if (!empty($count)) $goods_list[$key]['is_collage'] = 1;
         }
-
         return ['goods_list' => $goods_list];
     }
 
@@ -131,13 +124,10 @@ class Subscribe extends BaseSubscribe
                 ['refund_status', '=', 0]]
         )
             ->count();
-
         $returnData['count'] = $orderCount;
         $returnData['title'] = "订单";
-
         return [$returnData];
     }
-
 
     /**
      * @param $data
@@ -147,24 +137,16 @@ class Subscribe extends BaseSubscribe
      */
     public function onDiyModuleMenuShop($data)
     {
-
-
         if (!empty($data['data']['list'])) {
-
             foreach ($data['data']['list'] as $v) {
-
                 if ($v['icon'] != 'icontemplate' || $data['shop_auth'] == true) {
-
                     $arr[] = $v;
                 }
-
             }
             $data['data']['list'] = $arr;
         }
-
         return $data;
     }
-
 
     /**
      * 监听用户中心模块
@@ -176,11 +158,8 @@ class Subscribe extends BaseSubscribe
     public function onAddUcenterCompoent()
     {
         $this->getUserId();
-
         $user = longbingGetUserInfo($this->getUserId(), $this->_uniacid);
-
         $last_staff_id = !empty($user['last_staff_id']) ? $user['last_staff_id'] : 0;
-
         $moduleMenuShopOrder = <<<COMPOENT
 {
     "title": "商城订单",
@@ -272,7 +251,6 @@ class Subscribe extends BaseSubscribe
     }
 }
 COMPOENT;
-
         $tmp = sassAuth() == 1 ? ',
             {
             
@@ -287,12 +265,8 @@ COMPOENT;
                     "url": "/shop/pages/purchase/list?staff_id=' . $last_staff_id . '"' . '
                 }
             }' : '';
-
-
         $bargain_p = new PermissionBargain($this->_uniacid);
-
         $bargain_auth = $bargain_p->pAuth();
-
         $bargain = $bargain_auth == true ? ',
             {
                 "title": "我的砍价",
@@ -302,7 +276,6 @@ COMPOENT;
                     "url": "/shop/pages/bargain/record"
                 }
             }' : '';
-
         $moduleMenuShop = <<<COMPOENT
 {
     "title": "商城工具",
@@ -396,8 +369,6 @@ COMPOENT;
 
 }
 COMPOENT;
-
-
         $permission = new PermissionShop($this->_uniacid);
         $compoentList = [];
         if ($permission->pAuth()) {
@@ -406,10 +377,8 @@ COMPOENT;
                 json_decode($moduleMenuShop, true)
             ];
         }
-
         return $compoentList;
     }
-
 
     /**
      * 监听代理管理端授权小程序事件
@@ -421,36 +390,25 @@ COMPOENT;
      */
     public function onAgentAppAuthEdit($config)
     {
-
-
         $returnArr = [];
-
         $permission = new PermissionShop(0);
         $shop_switch = [];
         if ($permission->sAuth() && $permission->infoConfig['auth_platform']) {
-
             $shop_switch['formType'] = 'radio';
             $shop_switch['name'] = 'shop_switch';
-
             $shop_switch['value'] = $config ? $config[$shop_switch['name']] : 0;
             $shop_switch['title'] = $permission->info['title'];
             $returnArr[] = $shop_switch;
         }
-
-
         $pay_shop = [];
         if ($permission->sAuth() && $permission->infoConfig['auth_platform']) {
-
             $pay_shop['formType'] = 'radio';
             $pay_shop['name'] = 'pay_shop';
-
             $pay_shop['value'] = $config ? $config[$pay_shop['name']] : 0;
             $pay_shop['title'] = $permission->info['title'] . '支付';
             $returnArr[] = $pay_shop;
         }
-
         return $returnArr;
     }
-
 
 }

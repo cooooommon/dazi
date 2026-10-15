@@ -56,14 +56,12 @@ class GetLiveChannelStatus implements XmlConfig
         return $this->audioCodec;
     }
 
-
     public function parseFromXml($strXml)
     {
         $xml = simplexml_load_string($strXml);
         $this->status = strval($xml->Status);
         $this->connectedTime = strval($xml->ConnectedTime);
         $this->remoteAddr = strval($xml->RemoteAddr);
-
         if (isset($xml->Video)) {
             foreach ($xml->Video as $video) {
             $this->videoWidth = intval($video->Width);
@@ -73,7 +71,6 @@ class GetLiveChannelStatus implements XmlConfig
             $this->videoCodec = strval($video->Codec);
            }
         }
-        
         if (isset($xml->Video)) {
             foreach ($xml->Audio as $audio) {
             $this->audioBandwidth = intval($audio->Bandwidth);
@@ -81,7 +78,6 @@ class GetLiveChannelStatus implements XmlConfig
             $this->audioCodec = strval($audio->Codec);
            }
         }
-
     }
 
     public function serializeToXml()
@@ -103,5 +99,4 @@ class GetLiveChannelStatus implements XmlConfig
     private $audioSampleRate;
     private $audioCodec;
     
-
 }

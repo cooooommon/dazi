@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\agent\model;
-
 
 use app\BaseModel;
 

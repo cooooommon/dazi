@@ -34,19 +34,15 @@ class RsaKeyPairProvider extends Provider
     public function get($timeout = Request::TIMEOUT, $connectTimeout = Request::CONNECT_TIMEOUT)
     {
         $credential = $this->getCredentialsInCache();
-
         if ($credential === null) {
             $result = $this->request($timeout, $connectTimeout);
-
             if (!isset($result['SessionAccessKey']['SessionAccessKeyId'],
                 $result['SessionAccessKey']['SessionAccessKeySecret'])) {
                 throw new ServerException($result, $this->error, SDK::INVALID_CREDENTIAL);
             }
-
             $credential = $result['SessionAccessKey'];
             $this->cache($credential);
         }
-
         return new StsCredential(
             $credential['SessionAccessKeyId'],
             $credential['SessionAccessKeySecret']
@@ -67,7 +63,6 @@ class RsaKeyPairProvider extends Provider
     {
         $clientName = __CLASS__ . \uniqid('rsa', true);
         $credential = $this->client->getCredential();
-
         AlibabaCloud::client(
             new AccessKeyCredential(
                 $credential->getPublicKeyId(),
@@ -75,7 +70,6 @@ class RsaKeyPairProvider extends Provider
             ),
             new ShaHmac256WithRsaSignature()
         )->name($clientName);
-
         return (new GenerateSessionAccessKey($credential->getPublicKeyId()))
             ->client($clientName)
             ->timeout($timeout)

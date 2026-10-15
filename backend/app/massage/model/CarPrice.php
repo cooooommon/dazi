@@ -9,12 +9,9 @@ class CarPrice extends BaseModel
     //定义表名
     protected $name = 'massage_service_car_price';
 
-
     protected $append = [
-
         'city_name'
     ];
-
 
     /**
      * @param $value
@@ -24,17 +21,11 @@ class CarPrice extends BaseModel
      * @DataTime: 2023-02-02 16:33
      */
     public function getCityNameAttr($value,$data){
-
         if(!empty($data['city_id'])){
-
             $city_model = new City();
-
             $name = $city_model->where(['id'=>$data['city_id']])->value('title');
-
             return $name;
-
         }
-
     }
     /**
      * @author chenniang
@@ -42,16 +33,10 @@ class CarPrice extends BaseModel
      * @功能说明:添加
      */
     public function dataAdd($data){
-
         $data['create_time'] = time();
-
         $res = $this->insert($data);
-
         return $res;
-
     }
-
-
 
     /**
      * @author chenniang
@@ -59,13 +44,9 @@ class CarPrice extends BaseModel
      * @功能说明:编辑
      */
     public function dataUpdate($dis,$data){
-
         $res = $this->where($dis)->update($data);
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -73,13 +54,9 @@ class CarPrice extends BaseModel
      * @功能说明:列表
      */
     public function dataList($dis,$page){
-
         $data = $this->where($dis)->order('id desc')->paginate($page)->toArray();
-
         return $data;
-
     }
-
 
     /**
      * @author chenniang
@@ -87,21 +64,13 @@ class CarPrice extends BaseModel
      * @功能说明:
      */
     public function dataInfo($dis){
-
         $data = $this->where($dis)->find();
-
         if(empty($data)){
-
             $this->dataAdd($dis);
-
             $data = $this->where($dis)->find();
-
         }
-
         return !empty($data)?$data->toArray():[];
-
     }
-
 
     /**
      * @param $uniacid
@@ -111,33 +80,18 @@ class CarPrice extends BaseModel
      * @DataTime: 2023-02-08 10:08
      */
     public function getCityConfig($uniacid,$city_id){
-
         $dis = [
-
             'uniacid' => $uniacid,
-
             'city_id' => $city_id,
-
             'status'  => 1
         ];
-
         $data = $this->where($dis)->find();
-
         if(!empty($data)){
-
             $data = $data->toArray();
         }else{
-
             $data = $this->dataInfo(['uniacid'=>$uniacid]);
         }
-
         return $data;
     }
-
-
-
-
-
-
 
 }

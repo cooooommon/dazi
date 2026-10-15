@@ -22,7 +22,6 @@ class Path
         foreach ($parameters as $key => $value) {
             $pattern = str_replace("[$key]", $value, $pattern);
         }
-
         return $pattern;
     }
 }

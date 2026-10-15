@@ -68,18 +68,15 @@ class Admin extends BaseModel
     //获取admin列表
     public function listAdmin($filter, $page_config)
     {
-
     }
 
     //获取admin总数
     public function listAdminCount($filter)
     {
-
     }
 
     //获取所有admin
     public function listAdminAll($filter)
     {
-
     }
 }

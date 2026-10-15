@@ -5,13 +5,10 @@ namespace app\card\model;
 use app\BaseModel;
 use think\Model;
 
-
 class CardJob extends BaseModel
 {
     //定义表名
     protected $name = 'longbing_card_job';
-
-    
 
     protected static function init ()
     {
@@ -32,12 +29,10 @@ class CardJob extends BaseModel
                     ->order( 'top', 'desc' )
                     ->select()
                     ->toArray();
-
         if ( !$list )
         {
             $list = $this->initCardJob( $uniacid );
         }
-
         foreach ( $list as $index => $item )
         {
             $list[ $index ][ 'selected' ] = 0;
@@ -46,7 +41,6 @@ class CardJob extends BaseModel
                 $list[ $index ][ 'selected' ] = 1;
             }
         }
-
         return $list;
     }
 

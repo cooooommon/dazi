@@ -50,17 +50,14 @@ class Client extends GSClient {
             'http://cos.' . $this->region . '.myqcloud.com/',    // base url
             array('request.options' => array('timeout' => $this->timeout, 'connect_timeout' => $this->connect_timeout),
             )); // show curl verbose or not
-
         $desc = ServiceDescription::factory(Service::getService());
         $this->setDescription($desc);
         $this->setUserAgent('cos-php-sdk-v5.' . Client::VERSION, true);
-
         $this->addSubscriber(new ExceptionListener());
         $this->addSubscriber(new Md5Listener($this->signature));
         $this->addSubscriber(new TokenListener($this->token));
         $this->addSubscriber(new SignatureListener($this->secretId, $this->secretKey));
         $this->addSubscriber(new BucketStyleListener($this->appId));
-
         // Allow for specifying bodies with file paths and file handles
         $this->addSubscriber(new UploadBodyListener(array('PutObject', 'UploadPart')));
     }
@@ -119,14 +116,12 @@ class Client extends GSClient {
     public function getObjectUrl($bucket, $key, $expires = null, array $args = array())
     {
         $command = $this->getCommand('GetObject', $args + array('Bucket' => $bucket, 'Key' => $key));
-
         if ($command->hasKey('Scheme')) {
             $scheme = $command['Scheme'];
             $request = $command->remove('Scheme')->prepare()->setScheme($scheme)->setPort(null);
         } else {
             $request = $command->prepare();
         }
-
         return $expires ? $this->createPresignedUrl($request, $expires) : $request->getUrl();
     }
     public function Upload($bucket, $key, $body, $options = array()) {
@@ -141,7 +136,6 @@ class Client extends GSClient {
                     'Key'    => $key,
                     'Body'   => $body,
                 ) + $options['params']);
-
             $rt['Location'] = $rt['ObjectURL'];
             unset($rt['ObjectURL']);
         }
@@ -151,7 +145,6 @@ class Client extends GSClient {
                     'Key' => $key,
                     'Body' => $body,
                 ) + $options['params']);
-
             $rt = $multipartUpload->performUploading();
         }
         return $rt;
@@ -168,13 +161,11 @@ class Client extends GSClient {
                 'Body' => $body,
                 'UploadId' => $uploadId,
             ) + $options['params']);
-
         $rt = $multipartUpload->resumeUploading();
         return $rt;
     }
 
     public function Copy($bucket, $key, $copysource, $options = array()) {
-
         $options = Collection::fromConfig(array_change_key_case($options), array(
             'min_part_size' => Copy::MIN_PART_SIZE,
             'params'        => $options));
@@ -200,7 +191,6 @@ class Client extends GSClient {
             'Key'=>$sourcekey,
             'VersionId'=>$sourceversion));
         $contentlength =$rt['ContentLength'];
-
         if ($contentlength < $options['min_part_size']) {
             return $this->copyObject(array(
                     'Bucket' => $bucket,
@@ -212,7 +202,6 @@ class Client extends GSClient {
                 'Bucket' => $bucket,
                 'Key'    => $key
             ) + $options['params']);
-
         return $copy->copy();
     }
 

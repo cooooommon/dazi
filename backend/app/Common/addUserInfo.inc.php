@@ -1,7 +1,6 @@
 <?php
 defined( 'LONGBING_NEW_AUTH' ) or define( 'LONGBING_NEW_AUTH', 1 );
 
-
 $default_card      = 0;
 $default_goods     = 0;
 $default_timeline  = 0;

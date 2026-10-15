@@ -38,7 +38,6 @@ class Sign
         foreach ($array as $sortMapKey => $sortMapValue) {
             $string .= $sortMapKey . ':' . $sortMapValue[0] . self::$headerSeparator;
         }
-
         return $string;
     }
 
@@ -65,24 +64,19 @@ class Sign
             $string .= $headers['Accept'][0];
         }
         $string .= self::$headerSeparator;
-
         if (isset($headers['Content-MD5'][0])) {
             $string .= $headers['Content-MD5'][0];
         }
         $string .= self::$headerSeparator;
-
         if (isset($headers['Content-Type'][0])) {
             $string .= $headers['Content-Type'][0];
         }
         $string .= self::$headerSeparator;
-
         if (isset($headers['Date'][0])) {
             $string .= $headers['Date'][0];
         }
         $string .= self::$headerSeparator;
-
         $string .= self::acsHeaderString($headers);
-
         return $string;
     }
 
@@ -96,7 +90,6 @@ class Sign
         $result = urlencode($string);
         $result = str_replace(['+', '*'], ['%20', '%2A'], $result);
         $result = preg_replace('/%7E/', '~', $result);
-
         return $result;
     }
 
@@ -113,7 +106,6 @@ class Sign
         foreach ($parameters as $key => $value) {
             $canonicalized .= '&' . self::percentEncode($key) . '=' . self::percentEncode($value);
         }
-
         return $method . '&%2F&' . self::percentEncode(substr($canonicalized, 1));
     }
 

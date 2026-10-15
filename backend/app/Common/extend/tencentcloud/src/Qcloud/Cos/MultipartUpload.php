@@ -26,14 +26,12 @@ class MultipartUpload {
 
     public function performUploading() {
         $uploadId = $this->initiateMultipartUpload();
-
         $partNumber = 1;
         $parts = array();
         for (;;) {
             if ($this->source->isConsumed()) {
                 break;
             }
-
             $body = new ReadLimitEntityBody($this->source, $this->partSize, $this->source->ftell());
             if ($body->getContentLength() == 0) {
                 break;
@@ -80,22 +78,17 @@ class MultipartUpload {
             if ($this->source->isConsumed()) {
                 break;
             }
-
             $body = new ReadLimitEntityBody($this->source, $this->partSize, $this->source->ftell());
             if ($body->getContentLength() == 0) {
                 break;
             }
-
-
             if (array_key_exists($partNumber-1,$parts)){
-
                 if (md5($body) != substr($parts[$partNumber-1]['ETag'], 1, -1)){
                     throw new CosException("ETag check inconsistency");
                 }
                 $body->setOffset($offset);
                 continue;
             }
-
             $result = $this->client->uploadPart(array(
                 'Bucket' => $this->options['Bucket'],
                 'Key' => $this->options['Key'],
@@ -106,7 +99,6 @@ class MultipartUpload {
                 throw new CosException("ETag check inconsistency");
             }
             $parts[$partNumber-1] = array('PartNumber' => $partNumber, 'ETag' => $result['ETag']);
-
         }
         $rt = $this->client->completeMultipartUpload(array(
             'Bucket' => $this->options['Bucket'],
@@ -121,7 +113,6 @@ class MultipartUpload {
         $partSize = max($minPartSize, $partSize);
         $partSize = min($partSize, self::MAX_PART_SIZE);
         $partSize = max($partSize, self::MIN_PART_SIZE);
-
         return $partSize;
     }
 

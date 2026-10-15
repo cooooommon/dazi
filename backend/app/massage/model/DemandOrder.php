@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\massage\model;
-
 
 use app\BaseModel;
 use app\integral\model\OrderIntegral;
@@ -26,18 +24,12 @@ class DemandOrder extends BaseModel
      */
     public function getPhoneAttr($value, $data)
     {
-
         if (!empty($value) && isset($data['uniacid'])) {
-
             if (numberEncryption($data['uniacid']) == 1) {
-
                 return substr_replace($value, "****", 2, 4);
             }
-
         }
-
         return $value;
-
     }
 
     /**
@@ -117,9 +109,7 @@ class DemandOrder extends BaseModel
                 throw new \Exception('修改订单失败');
             }
             if ($order['pay_type'] == 3) {
-
                 $water_model = new BalanceWater();
-
                 //添加余额流水
                 $insert = [
                     'uniacid' => $order['uniacid'],
@@ -132,7 +122,6 @@ class DemandOrder extends BaseModel
                     throw new \Exception('增加余额流水失败');
                 }
             }
-
             $integral = [
                 'uniacid' => $order['uniacid'],
                 'user_id' => $order['user_id'],
@@ -141,37 +130,26 @@ class DemandOrder extends BaseModel
             ];
             //积分相关
             $res = OrderIntegral::getIntegralData($integral, 2, 1);
-
             if ($res !== true) {
-
                 throw new \Exception('处理订单积分失败');
             }
-
             Db::commit();
         } catch (\Exception $exception) {
             Db::rollback();
             LogUtils::log('邀约订单回调失败，失败信息：' . $exception->getMessage(), 'demand_order');
             return false;
         }
-
         if ($update['status'] == 2) {
-
             curlSend("https://" . $_SERVER['HTTP_HOST'] . '/massage/app/Index/sendMsg?id=' . $order['id'] . '&urls=massage/app/Index/sendMsg&i=' . $order['uniacid']);
         }
-
         if ($order['pay_type'] == 3) {
-
             $type = 2;
         } elseif ($order['pay_type'] == 1) {
-
             $type = 3;
         } else {
-
             $type = 1;
         }
-
         SendMsgConfig::paySuccess($order['uniacid'], $order['user_id'], $data['total_money'], $type);
-
         return true;
     }
 
@@ -208,7 +186,6 @@ class DemandOrder extends BaseModel
 
     public static function getExcelList($where)
     {
-
         $data = self::alias('a')
             ->field('a.id,content,a.img,is_hide,a.price,a.start_time,a.end_time,a.status,order_code,coach_id,a.address,a.create_time,a.check_text,a.is_refund,b.nickName,b.avatarUrl,c.name,a.phone,d.coach_name,a.pay_type,a.transaction_id')
             ->where($where)
@@ -225,7 +202,6 @@ class DemandOrder extends BaseModel
                 $item['create_time'] = handleTime($item['create_time'], 'Y-m-d H:i');
                 $item['img'] = !empty($item['img']) ? explode(',', $item['img']) : [];
             }
-
         }
         return $data;
     }
@@ -290,7 +266,6 @@ class DemandOrder extends BaseModel
         if ($res === false) {
             return ['code' => 1, 'msg' => '审核失败'];
         }
-
         //主动发送了  不需要了
         /*if ($update['status'] == 2) {
 
@@ -323,19 +298,15 @@ class DemandOrder extends BaseModel
                     break;
                 case 2:
                     $pay_price = ManyDemandOrder::where('transaction_id', $order['transaction_id'])->value('pay_price');
-
                     $pay_price = !empty($pay_price) ? $pay_price : $order['pay_price'];
-
                     $res = orderRefundApi($pay_config, $pay_price, $order['pay_price'], $order['transaction_id']);
                     if (!empty($res['code'])) {
                         throw new \Exception($res['msg']);
                     }
                     if (isset($res['return_code']) && isset($res['result_code']) && ($res['return_code'] != 'SUCCESS' || $res['result_code'] != 'SUCCESS')) {
                         $discption = !empty($res['err_code_des']) ? $res['err_code_des'] : $res['return_msg'];
-
                         throw new \Exception($discption);
                     }
-
                     if ($res != true) {
                         throw new \Exception('退款失败，请重试');
                     }
@@ -364,9 +335,7 @@ class DemandOrder extends BaseModel
             }
             //将积分记录关闭
             $res = OrderIntegral::refundIntegral($order, 2);
-
             if ($res === false) {
-
                 throw new \Exception('积分记录关闭失败，请重试');
             }
             Db::commit();
@@ -482,15 +451,11 @@ class DemandOrder extends BaseModel
                 return false;
             }
         }
-
         $res = OrderIntegral::endIntegral($order['id'], 2);
-
         if ($res !== true) {
-
             Db::rollback();
             return false;
         }
-
         Db::commit();
         return true;
     }
@@ -561,7 +526,6 @@ class DemandOrder extends BaseModel
     public static function handleDemandOrder($data, $pay_config)
     {
         $order = self::where('id', $data['id'])->find();
-
         if ($data['status'] == 1) {
             $update = [
                 'status' => -1,
@@ -572,9 +536,7 @@ class DemandOrder extends BaseModel
             if ($code['code'] == 1) {
                 return ['code' => 1, 'msg' => $code['msg']];
             }
-
             if ($order['coach_id'] > 0) {
-
                 $send = [
                     'coach_id' => $order['coach_id'],
                     'uniacid' => $order['uniacid'],
@@ -585,7 +547,6 @@ class DemandOrder extends BaseModel
                     'order_id' => $order['id']
                 ];
             }
-
             $us_send = [
                 'user_id' => $order['user_id'],
                 'uniacid' => $order['uniacid'],
@@ -597,7 +558,6 @@ class DemandOrder extends BaseModel
             User::refundPassSendMsg($us_send, 2);
         } else {
             if ($order['coach_id'] > 0) {
-
                 $send = [
                     'coach_id' => $order['coach_id'],
                     'uniacid' => $order['uniacid'],
@@ -607,13 +567,11 @@ class DemandOrder extends BaseModel
                     'status' => '已拒绝',
                     'order_id' => $order['id']
                 ];
-
             }
             $update = [
                 'is_refund' => 3,
                 'cancel_time' => time(),
             ];
-
             $us_send = [
                 'user_id' => $order['user_id'],
                 'uniacid' => $order['uniacid'],
@@ -624,18 +582,14 @@ class DemandOrder extends BaseModel
             //发送消息-用户
             User::refundNoPassSendMsg($us_send, 2);
         }
-
         $res = self::where('id', $data['id'])->update($update);
         if ($res === false) {
             return ['code' => 1, 'msg' => '退款失败'];
         }
-
         //发送消息-技师
         if (!empty($send)) {
-
             Coach::refundOrderSendMsg($send, 2);
         }
-
         return ['code' => 0];
     }
 
@@ -739,23 +693,15 @@ class DemandOrder extends BaseModel
     public static function chooseSendMsg($data)
     {
         $coach = Coach::where('id', $data['coach_id'])->find();
-
         $user_info = User::where('id', $coach['user_id'])->find();
-
         $data['user_id'] = $coach['user_id'];
         //type 1小程序 2公众号
         $type = $user_info['last_login_type'] == 0 && !empty($user_info['wechat_openid']) ? 1 : 2;
-
         if ($type == 1) {
-
             $res = self::chooseSendMsgWechat($data);
-
         } else {
-
             $res = self::chooseSendMsgWeb($data);
-
         }
-
         return $res;
     }
 
@@ -767,89 +713,60 @@ class DemandOrder extends BaseModel
     public static function chooseSendMsgWechat($data)
     {
         $cap_model = new Coach();
-
         $config_model = new SendMsgConfig();
-
         $config_model->initData($data['uniacid']);
-
         $x_config = $config_model->dataInfo(['uniacid' => $data['uniacid']]);
-
         if ($data['status'] == 2 && empty($x_config['apply_ok_tmp_id'])) {
             return false;
         } elseif ($data['status'] == 3 && empty($x_config['apply_ok_tmp_id'])) {
             return false;
         }
-
         if (empty($x_config['gzh_appid'])) {
-
             return false;
         }
-
         $config = longbingGetAppConfig($data['uniacid']);
-
         $openid = $cap_model->capOpenid($data['coach_id'], 1);
-
         $page = "find/pages/invitation/list?tab=1";
-
         $access_token = longbingGetAccessToken($data['uniacid']);
-
         //post地址
         $url = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send?access_token={$access_token}";
-
-
         $arr = [
             //用户小程序openid
             'touser' => $openid,
-
             'mp_template_msg' => [
                 //公众号appid
                 'appid' => $x_config['gzh_appid'],
-
                 "url" => "http://weixin.qq.com/download",
                 //公众号模版id
                 'template_id' => $data['status'] == 2 ? $x_config['apply_ok_tmp_id'] : $x_config['apply_no_tmp_id'],
-
                 'miniprogram' => [
                     //小程序appid
                     'appid' => $config['appid'],
                     //跳转小程序地址
                     'page' => $page,
                 ],
-
                 'data' => array(
                     //审核时间
                     'time3' => array(
-
                         'value' => date('Y-m-d H:i:s'),
-
                         'color' => '#0000ff',
                     ),
                     //结果
                     'thing4' => array(
                         //内容
                         'value' => $data['status'] == 2 ? '恭喜你！报名成功' : '很抱歉，对方拒绝了你的报名',
-
                         'color' => '#0000ff',
                     ),
-
                 )
-
             ]
-
         ];
-
         $arr = json_encode($arr);
-
         $tmp = [
-
             'url' => $url,
-
             'data' => $arr,
         ];
         $rest = lbCurlPost($tmp['url'], $tmp['data']);
-
         $rest = json_decode($rest, true);
-
         return $rest;
     }
 
@@ -861,31 +778,23 @@ class DemandOrder extends BaseModel
     public static function chooseSendMsgWeb($data)
     {
         $cap_model = new Coach();
-
         $config_model = new SendMsgConfig();
-
         $config_model->initData($data['uniacid']);
-
         $x_config = $config_model->dataInfo(['uniacid' => $data['uniacid']]);
-
         if ($data['status'] == 2 && empty($x_config['apply_ok_tmp_id'])) {
             return false;
         } elseif ($data['status'] == 3 && empty($x_config['apply_ok_tmp_id'])) {
             return false;
         }
-
         if (empty($x_config['gzh_appid'])) {
-
             return false;
         }
         $openid = $cap_model->capOpenid($data['coach_id'], 2);
-
         if ($data['status'] == 2) {
             $key = explode('&', $x_config['apply_ok_tmp_id']);
         } else {
             $key = explode('&', $x_config['apply_no_tmp_id']);
         }
-
         $arr = [
             1 => 'time3',
             2 => 'thing4'
@@ -895,55 +804,38 @@ class DemandOrder extends BaseModel
                 $arr[$i] = $key[$i];
             }
         }
-
         $arr = [
             //用户小程序openid
             'touser' => $openid,
             //公众号appid
             'appid' => $x_config['gzh_appid'],
-
             "url" => 'https://' . $_SERVER['HTTP_HOST'] . '/h5/?#/find/pages/invitation/list?tab=1',
             //公众号模版id
             'template_id' => $key[0],
-
             'data' => array(
-
                 //审核时间
                 $arr[1] => array(
-
                     'value' => date('Y-m-d H:i:s'),
-
                     'color' => '#0000ff',
                 ),
                 //结果
                 $arr[2] => array(
                     //内容
                     'value' => $data['status'] == 2 ? '恭喜你！报名成功' : '很抱歉，对方拒绝了你的报名',
-
                     'color' => '#0000ff',
                 ),
             )
-
         ];
-
         $wx_setting = new WxSetting($data['uniacid']);
-
         $access_token = $wx_setting->getGzhToken();
-
         $url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={$access_token}";
-
         $arr = json_encode($arr);
-
         $tmp = [
-
             'url' => $url,
-
             'data' => $arr,
         ];
         $rest = lbCurlPost($tmp['url'], $tmp['data']);
-
         $rest = json_decode($rest, true);
-
         return $rest;
     }
 
@@ -960,27 +852,16 @@ class DemandOrder extends BaseModel
     public static function handleOrder($data)
     {
         $data['member_discount'] = $data['member_status'] = $data['member_balance'] = 0;
-
         $status = MemberOrder::getStatus($data['user_id'], $data['uniacid']);
-
         if (!$status) {
-
             return $data;
         }
-
         $config = MemberConfig::getInfo(['uniacid' => $data['uniacid']]);
-
         $member_price = round($data['price'] * $config['discount'] / 10, 2);
-
         $data['member_discount'] = $data['price'] - $member_price;
-
         $data['member_balance'] = $config['discount'];
-
         $data['member_status'] = 1;
-
         $data['price'] = $member_price;
-
         return $data;
-
     }
 }

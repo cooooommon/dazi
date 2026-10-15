@@ -33,20 +33,16 @@ class RamRoleArnProvider extends Provider
     public function get($timeout = Request::TIMEOUT, $connectTimeout = Request::CONNECT_TIMEOUT)
     {
         $credential = $this->getCredentialsInCache();
-
         if (null === $credential) {
             $result = $this->request($timeout, $connectTimeout);
-
             if (!isset($result['Credentials']['AccessKeyId'],
                 $result['Credentials']['AccessKeySecret'],
                 $result['Credentials']['SecurityToken'])) {
                 throw new ServerException($result, $this->error, SDK::INVALID_CREDENTIAL);
             }
-
             $credential = $result['Credentials'];
             $this->cache($credential);
         }
-
         return new StsCredential(
             $credential['AccessKeyId'],
             $credential['AccessKeySecret'],
@@ -68,12 +64,10 @@ class RamRoleArnProvider extends Provider
     {
         $clientName = __CLASS__ . \uniqid('ak', true);
         $credential = $this->client->getCredential();
-
         AlibabaCloud::accessKeyClient(
             $credential->getAccessKeyId(),
             $credential->getAccessKeySecret()
         )->name($clientName);
-
         return (new AssumeRole($credential))
             ->client($clientName)
             ->timeout($timeout)

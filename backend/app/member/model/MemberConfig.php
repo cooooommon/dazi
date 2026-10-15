@@ -24,29 +24,21 @@ class MemberConfig extends BaseModel
     public static function getInfo($where)
     {
         $data = self::where($where)->find();
-
         if (empty($data)) {
-
             self::insert($where);
-
             $data = self::where($where)->find();
         }
-
         return $data;
     }
 
     public static function getStatus($uniacid)
     {
         $p = new PermissionMember((int)$uniacid);
-
         $auth = $p->pAuth();
-
         if (!$auth) {
-
             return 0;
         }
         $data = self::getInfo(['uniacid' => $uniacid]);
-
         return $data['status'];
     }
 }

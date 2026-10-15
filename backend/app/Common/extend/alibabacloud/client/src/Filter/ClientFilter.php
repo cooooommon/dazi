@@ -27,14 +27,12 @@ class ClientFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($regionId === '') {
             throw new ClientException(
                 'Region ID cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return strtolower($regionId);
     }
 
@@ -53,14 +51,12 @@ class ClientFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($clientName === '') {
             throw new ClientException(
                 'Client Name cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return strtolower($clientName);
     }
 
@@ -79,7 +75,6 @@ class ClientFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $times;
     }
 
@@ -97,7 +92,6 @@ class ClientFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $connectTimeout;
     }
 
@@ -115,7 +109,6 @@ class ClientFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $timeout;
     }
 
@@ -133,7 +126,6 @@ class ClientFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $Milliseconds;
     }
 }

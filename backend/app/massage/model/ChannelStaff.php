@@ -107,7 +107,6 @@ class ChannelStaff extends BaseModel
             ->order('a.id desc')
             ->paginate($limit)
             ->toArray();
-
         if ($data['data']) {
             $arr = self::alias('a')
                 ->field('a.id,ifnull(sum(c.true_service_price),0)as price')
@@ -118,7 +117,6 @@ class ChannelStaff extends BaseModel
                 ->order('a.id desc')
                 ->select()
                 ->toArray();
-
             $arr1 = self::alias('a')
                 ->field('a.id,ifnull(sum(c.channel_cash*c.channel_staff_balance/100),0)as wait_cash')
                 ->where($where_)
@@ -128,7 +126,6 @@ class ChannelStaff extends BaseModel
                 ->order('a.id desc')
                 ->select()
                 ->toArray();
-
             $arr2 = self::alias('a')
                 ->field('a.id,ifnull(sum(c.channel_cash*c.channel_staff_balance/100),0)as total_cash')
                 ->where($where_)
@@ -138,40 +135,27 @@ class ChannelStaff extends BaseModel
                 ->order('a.id desc')
                 ->select()
                 ->toArray();
-
             foreach ($data['data'] as &$datum) {
-
                 foreach ($arr as $item) {
-
                     if ($datum['id'] == $item['id']) {
-
                         $datum['price'] = round($item['price'], 2);
                     }
                 }
-
                 foreach ($arr1 as $item) {
-
                     if ($datum['id'] == $item['id']) {
-
                         $datum['wait_cash'] = round($item['wait_cash'], 2);
                     }
                 }
                 foreach ($arr2 as $item) {
-
                     if ($datum['id'] == $item['id']) {
-
                         $datum['total_cash'] = round($item['total_cash'], 2);
                     }
                 }
-
                 $datum['price'] = $datum['price'] ?? 0;
-
                 $datum['total_cash'] = $datum['total_cash'] ?? 0;
-
                 $datum['wait_cash'] = $datum['wait_cash'] ?? 0;
             }
         }
-
         return $data;
     }
 
@@ -222,15 +206,11 @@ class ChannelStaff extends BaseModel
     public static function changeChannel($data)
     {
         $channel = (new ChannelList)->dataInfo(['id' => $data['channel_id']]);
-
         $staff = self::where('id', $data['channel_staff_id'])->find();
-
         if ($data['channel_id'] == $staff['channel_id']) {
             return true;
         }
-
         $login_type = User::where('id', $staff['user_id'])->value('last_login_type');
-
         $insert = [
             'uniacid' => $staff['uniacid'],
             'status' => $staff['status'],
@@ -242,27 +222,17 @@ class ChannelStaff extends BaseModel
             'create_time' => time(),
             'update_time' => time()
         ];
-
         $id = self::insertGetId($insert);
-
         if ($login_type == 0) {
-
             $input['page'] = 'pages/service';
-
             $input['channel_staff_id'] = $id;
-
             $user_model = new User();
-
             $qr = $user_model->orderQr($input, $staff['uniacid']);
-
         } else {
             $page = 'https://' . $_SERVER['HTTP_HOST'] . '/h5/#/pages/service?channel_staff_id=' . $id;
-
             $qr = base64ToPng(getCode($staff['uniacid'], $page));
         }
-
         self::where('id', $data['channel_staff_id'])->update(['status' => -1]);
-
         return self::update(['qr_path' => $qr], ['id' => $id]);
     }
 }

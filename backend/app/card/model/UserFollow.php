@@ -3,8 +3,6 @@ namespace app\card\model;
 
 use app\BaseModel;
 
-
-
 class UserFollow extends BaseModel
 {
     //定义表名

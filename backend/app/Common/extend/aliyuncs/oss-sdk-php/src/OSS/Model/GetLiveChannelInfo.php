@@ -40,10 +40,8 @@ class GetLiveChannelInfo implements XmlConfig
     public function parseFromXml($strXml)
     {
         $xml = simplexml_load_string($strXml);
-
         $this->description = strval($xml->Description);
         $this->status = strval($xml->Status);
-
         if (isset($xml->Target)) {
             foreach ($xml->Target as $target) {
             $this->type = strval($target->Type);

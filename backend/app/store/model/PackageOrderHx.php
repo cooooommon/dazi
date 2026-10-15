@@ -15,5 +15,4 @@ class PackageOrderHx extends BaseModel
 {
     protected $name = 'massage_store_package_order_hx_list';
 
-
 }

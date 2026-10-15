@@ -2,7 +2,6 @@
 
 namespace OSS\Result;
 
-
 /**
  * Class CallbackResult
  * @package OSS\Result

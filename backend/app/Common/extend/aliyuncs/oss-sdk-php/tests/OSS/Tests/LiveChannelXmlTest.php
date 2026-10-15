@@ -123,11 +123,9 @@ BBBB;
     {
         $stat = new GetLiveChannelStatus();
         $stat->parseFromXml($this->status);
-  
         $this->assertEquals('Live', $stat->getStatus());
         $this->assertEquals('2016-10-20T14:25:31.000Z', $stat->getConnectedTime());
         $this->assertEquals('10.1.2.4:47745', $stat->getRemoteAddr());
-
         $this->assertEquals(1280, $stat->getVideoWidth());
         $this->assertEquals(536, $stat->getVideoHeight());
         $this->assertEquals(24, $stat->getVideoFrameRate());
@@ -136,46 +134,38 @@ BBBB;
         $this->assertEquals(6519, $stat->getAudioBandwidth());
         $this->assertEquals(44100, $stat->getAudioSampleRate());
         $this->assertEquals('AAC', $stat->getAudioCodec());
-
     }
 
     public function testLiveChannelHistory()
     {
         $history = new GetLiveChannelHistory();
         $history->parseFromXml($this->history);
-
         $recordList = $history->getLiveRecordList();
         $this->assertEquals(3, count($recordList));
-
         $list0 = $recordList[0];
         $this->assertEquals('2013-11-24T14:25:31.000Z', $list0->getStartTime());
         $this->assertEquals('2013-11-24T15:25:31.000Z', $list0->getEndTime());
         $this->assertEquals('10.101.194.148:56861', $list0->getRemoteAddr());
-   
         $list1 = $recordList[1];
         $this->assertEquals('2014-11-24T14:25:31.000Z', $list1->getStartTime());
         $this->assertEquals('2014-11-24T15:25:31.000Z', $list1->getEndTime());
         $this->assertEquals('10.101.194.148:56862', $list1->getRemoteAddr());
-
         $list2 = $recordList[2];
         $this->assertEquals('2015-11-24T14:25:31.000Z', $list2->getStartTime());
         $this->assertEquals('2015-11-24T15:25:31.000Z', $list2->getEndTime());
         $this->assertEquals('10.101.194.148:56863', $list2->getRemoteAddr());
-
     }
 
     public function testLiveChannelConfig()
     {
         $config = new LiveChannelConfig(array('name' => 'live-1'));
         $config->parseFromXml($this->config);
-
         $this->assertEquals('xxx', $config->getDescription());
         $this->assertEquals('enabled', $config->getStatus());
         $this->assertEquals('hls', $config->getType());
         $this->assertEquals(1000, $config->getFragDuration());
         $this->assertEquals(5, $config->getFragCount());
         $this->assertEquals('hello.m3u8', $config->getPlayListName());
-
         $xml = $config->serializeToXml();
         $config2 = new LiveChannelConfig(array('name' => 'live-2'));
         $config2->parseFromXml($xml);
@@ -191,7 +181,6 @@ BBBB;
     {
         $info = new LiveChannelInfo(array('name' => 'live-1'));
         $info->parseFromXml($this->info);
-
         $this->assertEquals('live-1', $info->getName());
         $this->assertEquals('xxx', $info->getDescription());
         $this->assertEquals('enabled', $info->getStatus());
@@ -199,7 +188,6 @@ BBBB;
         $pubs = $info->getPublishUrls();
         $this->assertEquals(1, count($pubs));
         $this->assertEquals('rtmp://bucket.oss-cn-hangzhou.aliyuncs.com/live/213443245345', $pubs[0]);
-
         $plays = $info->getPlayUrls();
         $this->assertEquals(1, count($plays));
         $this->assertEquals('http://bucket.oss-cn-hangzhou.aliyuncs.com/213443245345/播放列表.m3u8', $plays[0]);
@@ -209,16 +197,13 @@ BBBB;
     {
         $list = new LiveChannelListInfo();
         $list->parseFromXml($this->list);
-
         $this->assertEquals('xxx', $list->getPrefix());
         $this->assertEquals('yyy', $list->getMarker());
         $this->assertEquals(100, $list->getMaxKeys());
         $this->assertEquals(false, $list->getIsTruncated());
         $this->assertEquals('121312132', $list->getNextMarker());
-
         $channels = $list->getChannelList();
         $this->assertEquals(2, count($channels));
-
         $chan1 = $channels[0];
         $this->assertEquals('12123214323431', $chan1->getName());
         $this->assertEquals('xxx', $chan1->getDescription());
@@ -227,11 +212,9 @@ BBBB;
         $pubs = $chan1->getPublishUrls();
         $this->assertEquals(1, count($pubs));
         $this->assertEquals('rtmp://bucket.oss-cn-hangzhou.aliyuncs.com/live/1', $pubs[0]);
-
         $plays = $chan1->getPlayUrls();
         $this->assertEquals(1, count($plays));
         $this->assertEquals('http://bucket.oss-cn-hangzhou.aliyuncs.com/1/播放列表.m3u8', $plays[0]);
-
         $chan2 = $channels[1];
         $this->assertEquals('432423432423', $chan2->getName());
         $this->assertEquals('yyy', $chan2->getDescription());
@@ -240,7 +223,6 @@ BBBB;
         $pubs = $chan2->getPublishUrls();
         $this->assertEquals(1, count($pubs));
         $this->assertEquals('rtmp://bucket.oss-cn-hangzhou.aliyuncs.com/live/2', $pubs[0]);
-
         $plays = $chan2->getPlayUrls();
         $this->assertEquals(1, count($plays));
         $this->assertEquals('http://bucket.oss-cn-hangzhou.aliyuncs.com/2/播放列表.m3u8', $plays[0]);

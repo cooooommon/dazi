@@ -1,6 +1,5 @@
 <?php
 
-
 namespace app\card\controller;
 
 use app\BaseController;
@@ -27,9 +26,7 @@ class GetImage extends BaseController
         $path = str_replace("https://"  , "http://" , $path) ;
         //判断类型
         $type_img = getimagesize($path);
-
         ob_start();
-
         if ( strpos($type_img[ 'mime' ], 'jpeg') ) {
             $resourch = imagecreatefromjpeg($path);
             imagejpeg($resourch);
@@ -37,7 +34,6 @@ class GetImage extends BaseController
             $resourch = imagecreatefrompng($path);
             imagepng($resourch);
         }
-
         $content = ob_get_clean();
         imagedestroy($resourch);
         return response($content, 200, [ 'Content-Length' => strlen($content) ])->contentType('image/png');

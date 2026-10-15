@@ -23,7 +23,6 @@ final class PersistentFop
      * */
     private $config;
 
-
     public function __construct($auth, $config = null)
     {
         $this->auth = $auth;
@@ -80,7 +79,6 @@ final class PersistentFop
     public function status($id)
     {
         $scheme = "http://";
-
         if ($this->config->useHTTPS === true) {
             $scheme = "https://";
         }

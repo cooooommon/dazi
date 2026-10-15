@@ -31,14 +31,11 @@ class Auth {
 		if ($howlong <= 0) {
 			return false;
 		}
-		
         $now = time();
 		$expiration = $now + $howlong;
         $random = rand();
-		
         $plainText = "a=".$this->appId."&b=$bucket&k=".$this->secretId."&e=$expiration&t=$now&r=$random&f=";
         $bin = hash_hmac('SHA1', $plainText, $this->secretKey, true);
-
         return base64_encode($bin.$plainText);
     }
 	

@@ -2,7 +2,6 @@
 
 namespace OSS\Result;
 
-
 /**
  * Class BodyResult
  * @package OSS\Result

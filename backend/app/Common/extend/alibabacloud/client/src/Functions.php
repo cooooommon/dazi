@@ -30,20 +30,16 @@ function inOpenBasedir($filename, $throwException = false)
     if (!$open_basedir) {
         return true;
     }
-
     $dirs = explode(PATH_SEPARATOR, $open_basedir);
     if (empty($dirs)) {
         return true;
     }
-
     if (inDir($filename, $dirs)) {
         return true;
     }
-
     if ($throwException === false) {
         return false;
     }
-
     throw new ClientException(
         'open_basedir restriction in effect. '
         . "File($filename) is not within the allowed path(s): ($open_basedir)",
@@ -63,12 +59,10 @@ function inDir($filename, array $dirs)
         if (!Stringy::create($dir)->endsWith(DIRECTORY_SEPARATOR)) {
             $dir .= DIRECTORY_SEPARATOR;
         }
-
         if (0 === strpos($filename, $dir)) {
             return true;
         }
     }
-
     return false;
 }
 
@@ -207,15 +201,12 @@ function block($result, $title)
 function env($key, $default = null)
 {
     $value = getenv($key);
-
     if ($value === false) {
         return value($default);
     }
-
     if (envSubstr($value)) {
         return substr($value, 1, -1);
     }
-
     return envConversion($value);
 }
 
@@ -227,11 +218,9 @@ function env($key, $default = null)
 function envConversion($value)
 {
     $key = strtolower($value);
-
     if ($key === 'null' || $key === '(null)') {
         return null;
     }
-
     $list = [
         'true'    => true,
         '(true)'  => true,
@@ -240,7 +229,6 @@ function envConversion($value)
         'empty'   => '',
         '(empty)' => '',
     ];
-
     return isset($list[$key]) ? $list[$key] : $value;
 }
 
@@ -262,7 +250,6 @@ function envNotEmpty($key)
     if ($value) {
         return $value;
     }
-
     return false;
 }
 

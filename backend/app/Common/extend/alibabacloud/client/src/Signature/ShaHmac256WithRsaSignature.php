@@ -61,7 +61,6 @@ class ShaHmac256WithRsaSignature extends Signature implements SignatureInterface
                 SDK::INVALID_CREDENTIAL
             );
         }
-
         return base64_encode($binarySignature);
     }
 }

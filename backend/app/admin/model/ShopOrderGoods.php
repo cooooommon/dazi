@@ -5,14 +5,12 @@ namespace app\admin\model;
 use app\BaseModel;
 use think\facade\Db;
 
-
 class ShopOrderGoods extends BaseModel
 {
     //定义表名
     protected $name = 'longbing_card_shop_order_item';
 
     //初始化
-
 
     protected static function init()
     {
@@ -27,6 +25,5 @@ class ShopOrderGoods extends BaseModel
     {
         return self::where($dis)->select()->toArray();
     }
-
 
 }

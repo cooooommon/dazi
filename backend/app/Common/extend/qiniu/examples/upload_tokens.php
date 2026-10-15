@@ -45,7 +45,6 @@ $policy = array(
 $upToken = $auth->uploadToken($bucket, null, $expires, $policy, true);
 print($upToken . "\n");
 
-
 //带回调业务服务器的凭证（application/x-www-form-urlencoded）
 $policy = array(
     'callbackUrl' => 'http://api.example.com/qiniu/upload/callback',

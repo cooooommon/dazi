@@ -42,7 +42,6 @@ class Config
         if (!self::$configManager instanceof ConfigManager) {
             self::$configManager = new ConfigManager(__DIR__ . DIRECTORY_SEPARATOR . 'Data.php');
         }
-
         return self::$configManager;
     }
 
@@ -56,7 +55,6 @@ class Config
     public static function set($configPath, $newValue)
     {
         self::getConfigManager()->setValue(\strtolower($configPath), $newValue);
-
         return self::getConfigManager()->saveConfigFile();
     }
 }

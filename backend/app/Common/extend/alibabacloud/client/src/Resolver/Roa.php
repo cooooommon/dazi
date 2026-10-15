@@ -28,7 +28,6 @@ abstract class Roa extends RoaRequest
     public function __construct(array $options = [])
     {
         parent::__construct($options);
-
         $this->resolveActionName();
         $this->appendSdkUA();
     }

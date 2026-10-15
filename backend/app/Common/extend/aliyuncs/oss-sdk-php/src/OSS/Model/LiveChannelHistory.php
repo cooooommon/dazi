@@ -32,11 +32,9 @@ class LiveChannelHistory implements XmlConfig
         if (isset($xml->StartTime)) {
             $this->startTime = strval($xml->StartTime);
         }
-
         if (isset($xml->EndTime)) {
             $this->endTime = strval($xml->EndTime);
         }
-
         if (isset($xml->RemoteAddr)) {
             $this->remoteAddr = strval($xml->RemoteAddr);
         }

@@ -11,9 +11,7 @@
 // | After-sale service: +86-17361005938
 // +----------------------------------------------------------------------
 
-
 declare(strict_types=1);
-
 
 namespace app\card\info;
 
@@ -32,13 +30,11 @@ class PermissionCard extends PermissionAbstract {
     public $saasKey ;
     const apiPaths = [];
 
-
     public function __construct(int $uniacid,$infoConfigOptions = [])
     {
         $this->saasKey  = longbing_get_auth_prefix('AUTH_CARD') ;
         parent::__construct($uniacid, self::tabbarKey, self::adminMenuKey, $this->saasKey, self::apiPaths , $infoConfigOptions);
     }
-
 
     /**
      * 返回saas端授权结果
@@ -71,7 +67,6 @@ class PermissionCard extends PermissionAbstract {
         return true;
     }
 
-
     /**
      * 添加名片数量
      *
@@ -83,49 +78,30 @@ class PermissionCard extends PermissionAbstract {
         $returnAuthNumber = -1;
         //代理管理端控制的数量
         $pAuthConfig    = $this->getPAuthConfig();
-
         $authCardNumber = $this->getAuthVaule($this->saasKey, 5);
-
         $pAuthNumber    = isset($pAuthConfig['number']) ? $pAuthConfig['number'] : -1;
         //全局设置配置
         $cardauth2DefaultModel = new Cardauth2DefaultModel();
-
         $defaultAuthNumber =  $cardauth2DefaultModel->getCardNumber() ;
-
         if ($authCardNumber > 0) {
-
             if ($pAuthNumber > 0){
-
                 $returnAuthNumber = $pAuthNumber >= $authCardNumber ? $authCardNumber : $pAuthNumber;
-
             } else {
-
                 $returnAuthNumber = $authCardNumber;
-
             }
-
         }else if( $authCardNumber == 0 ){
             //无限开模式
             if ($pAuthNumber >=0) {
-
                 $returnAuthNumber = $pAuthNumber;
-
             }else if($defaultAuthNumber >= 0 ){
-
                 $returnAuthNumber = $defaultAuthNumber;
-
             }else{
-
                 $returnAuthNumber = $pAuthNumber;
             }
-
         } else {
-
             $returnAuthNumber = $pAuthNumber;
         }
-
         return $returnAuthNumber;
-
     }
 
 }

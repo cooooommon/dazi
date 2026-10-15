@@ -10,12 +10,10 @@ use app\shop\model\IndexUserShop;
 use think\facade\Db;
 use think\Model;
 
-
 class CardExtension extends BaseModel
 {
     //定义表名
     protected $name = 'longbing_card_extension';
-
 
     protected static function init ()
     {
@@ -31,40 +29,24 @@ class CardExtension extends BaseModel
      */
     public function cardExtensionList ( $staff_id, $uniacid )
     {
-
-
         $user_model = new IndexUserInfo();
-
         $company_id = $user_model->getCompanyId(['fans_id'=>$staff_id],$uniacid);
-
         $member_model= new Member();
-
         $arr         = [];
-
         if($member_model->getAuth($uniacid)==true){
-
             $arr[] = ['b.is_member','=',0];
-
         }
-
         $dis[] = ['d.company_id','=',$company_id];
-
         $dis[] = ['b.public_goods','=',1];
-
         $config = longbingGetAppConfig($uniacid);
         //自选
         if($config['myshop_switch']==1){
             $user_shop = new IndexUserShop();
-
             $my_goods  = $user_shop->MyGoodList(['user_id'=>$staff_id,'uniacid'=>$uniacid]);
-
             $arrs[] = ['a.id','in',$my_goods];
-
         }else{
-
             $arrs[] = ['a.index_show', '=', 1];
         }
-
         $data = self::where( [ [ 'a.user_id', '=', $staff_id ], [ 'a.status', '=', 1 ], [ 'b.status', '=', 1 ], [ 'a.uniacid', '=', $uniacid ] ] )
                     ->where($arr)
                     ->alias( 'a' )
@@ -80,9 +62,6 @@ class CardExtension extends BaseModel
                     ->order('a.status desc,b.recommend desc,b.top desc,b.id desc,b.update_time desc')
                     ->select()
                     ->toArray();
-
-
-
          if($data){
              $spe_price = new AdminShopSpePrice();
              foreach ($data as $key=>$val){
@@ -96,9 +75,6 @@ class CardExtension extends BaseModel
          }
         $data = transImagesOne($data, ['cover']);
         $data = formatNumberPrice($data);
-
-
-
         return $data;
     }
     public function getlist($dis){
@@ -117,6 +93,5 @@ class CardExtension extends BaseModel
     public function getCount($where){
         return $this->where($where)->count();
     }
-
 
 }

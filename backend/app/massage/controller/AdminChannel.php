@@ -26,10 +26,8 @@ use think\App;
 use app\shop\model\Order as Model;
 use think\facade\Db;
 
-
 class AdminChannel extends AdminRest
 {
-
 
     protected $model;
 
@@ -37,16 +35,10 @@ class AdminChannel extends AdminRest
 
     public function __construct(App $app)
     {
-
         parent::__construct($app);
-
         $this->model = new ChannelList();
-
         $this->cate_model = new ChannelCate();
-
-
     }
-
 
     /**
      * @author chenniang
@@ -55,25 +47,15 @@ class AdminChannel extends AdminRest
      */
     public function cateList()
     {
-
         $input = $this->_param;
-
         $dis[] = ['uniacid', '=', $this->_uniacid];
-
         $dis[] = ['status', '>', -1];
-
         if (!empty($input['title'])) {
-
             $dis[] = ['title', 'like', '%' . $input['title'] . '%'];
-
         }
-
         $data = $this->cate_model->dataList($dis, $input['limit']);
-
         return $this->success($data);
-
     }
-
 
     /**
      * @author chenniang
@@ -82,17 +64,11 @@ class AdminChannel extends AdminRest
      */
     public function cateSelect()
     {
-
         $input = $this->_param;
-
         $dis[] = ['uniacid', '=', $this->_uniacid];
-
         $dis[] = ['status', '=', 1];
-
         $data = $this->cate_model->where($dis)->select()->toArray();
-
         return $this->success($data);
-
     }
 
     /**
@@ -102,17 +78,11 @@ class AdminChannel extends AdminRest
      */
     public function cateAdd()
     {
-
         $input = $this->_input;
-
         $input['uniacid'] = $this->_uniacid;
-
         $res = $this->cate_model->dataAdd($input);
-
         return $this->success($res);
-
     }
-
 
     /**
      * @author chenniang
@@ -121,22 +91,14 @@ class AdminChannel extends AdminRest
      */
     public function cateUpdate()
     {
-
         $input = $this->_input;
-
         $dis = [
-
             'id' => $input['id']
         ];
-
         $input['uniacid'] = $this->_uniacid;
-
         $res = $this->cate_model->dataUpdate($dis, $input);
-
         return $this->success($res);
-
     }
-
 
     /**
      * @author chenniang
@@ -145,20 +107,13 @@ class AdminChannel extends AdminRest
      */
     public function cateInfo()
     {
-
         $input = $this->_param;
-
         $dis = [
-
             'id' => $input['id']
         ];
-
         $res = $this->cate_model->dataInfo($dis);
-
         return $this->success($res);
-
     }
-
 
     /**
      * @author chenniang
@@ -167,19 +122,12 @@ class AdminChannel extends AdminRest
      */
     public function channelSelect()
     {
-
         $input = $this->_param;
-
         $dis[] = ['uniacid', '=', $this->_uniacid];
-
         $dis[] = ['status', 'in', [2, 3]];
-
         $data = $this->model->where($dis)->field('id,user_name')->select()->toArray();
-
         return $this->success($data);
-
     }
-
 
     /**
      * @author chenniang
@@ -188,81 +136,45 @@ class AdminChannel extends AdminRest
      */
     public function channelList()
     {
-
         $input = $this->_param;
-
         $dis[] = ['a.uniacid', '=', $this->_uniacid];
-
         if (!empty($input['status'])) {
-
             $dis[] = ['a.status', '=', $input['status']];
-
         } else {
-
             $dis[] = ['a.status', '>', -1];
-
         }
-
         if (!empty($input['start_time']) && !empty($input['end_time'])) {
-
             $start_time = $input['start_time'];
-
             $end_time = $input['end_time'];
-
             $dis[] = ['a.create_time', 'between', "$start_time,$end_time"];
-
         }
-
         $where = [];
-
         if (!empty($input['name'])) {
-
             $where[] = ['a.user_name', 'like', '%' . $input['name'] . '%'];
-
             $where[] = ['a.mobile', 'like', '%' . $input['name'] . '%'];
         }
-
         if (!empty($input['ids'])) {
-
             $dis[] = ['a.id', 'not in', $input['ids']];
         }
-
         $data = $this->model->adminDataList($dis, $input['limit'], $where);
-
         $list = [
-
             0 => 'all',
-
             1 => 'ing',
-
             2 => 'pass',
-
             4 => 'nopass'
         ];
-
         foreach ($list as $k => $value) {
-
             $dis_s = [];
-
             $dis_s[] = ['uniacid', '=', $this->_uniacid];
-
             if (!empty($k)) {
-
                 $dis_s[] = ['status', '=', $k];
-
             } else {
-
                 $dis_s[] = ['status', '>', -1];
-
             }
-
             $data[$value] = $this->model->where($dis_s)->count();
-
         }
-
         return $this->success($data);
     }
-
 
     /**
      * @author chenniang
@@ -271,37 +183,21 @@ class AdminChannel extends AdminRest
      */
     public function channelInfo()
     {
-
         $input = $this->_param;
-
         $dis = [
-
             'id' => $input['id']
         ];
-
         $info = $this->model->dataInfo($dis);
-
         $user_model = new User();
-
         $user = $user_model->where(['id' => $info['user_id']])->find();
-
         $info['nickName'] = $user['nickName'];
-
         $info['avatarUrl'] = $user['avatarUrl'];
-
         $info['staff_count'] = ChannelStaff::where(['status' => 1, 'channel_id' => $input['id']])->where('user_id', '>', 0)->count();
-
         $order = (new Order())->channelData($input['id']);
-
         $info['order_price'] = $order['order_price'];
-
         $info['extract_total_price'] = (new \app\massage\model\Wallet())->capCash($input['id'], 2, 5);
-
-
         return $this->success($info);
-
     }
-
 
     /**
      * @author chenniang
@@ -310,40 +206,26 @@ class AdminChannel extends AdminRest
      */
     public function channelUpdate()
     {
-
         $input = $this->_input;
-
         $diss = [
-
             'id' => $input['id']
         ];
-
         $info = $this->model->dataInfo($diss);
-
         if (!empty($input['status']) && in_array($input['status'], [2, 4, -1])) {
-
             if ($input['status'] == -1) {
-
                 if (!empty(floatval($info['cash']))) {
-
                     return $this->error('未全部提现的用户不可删除渠道商身份');
                 }
                 //删除渠道商、和员工解除绑定关系
                 ChannelStaff::where('channel_id', $input['id'])->update(['status' => -1]);
             }
-
             $input['sh_time'] = time();
         }
-
         if (isset($input['cash']) && $input['cash'] != $info['cash']) {
-
             ChannelCashWater::record($this->_uniacid, $input['id'], $info['cash'], $input['cash']);
         }
-
         $data = $this->model->dataUpdate($diss, $input);
-
         return $this->success($data);
-
     }
 
     /**
@@ -355,7 +237,6 @@ class AdminChannel extends AdminRest
     public function staffList()
     {
         $input = $this->_param;
-
         $where = [
             ['a.uniacid', '=', $this->_uniacid],
             ['a.channel_id', '=', $input['id']],
@@ -363,30 +244,20 @@ class AdminChannel extends AdminRest
             ['a.user_id', '>', 0],
         ];
         $where_ = $where;
-
         $dis = [];
         if (!empty($input['name'])) {
-
             $dis[] = ['a.name', 'like', '%' . $input['name'] . '%'];
             $dis[] = ['b.nickName', 'like', '%' . $input['name'] . '%'];
         }
-
         if (!empty($input['start_time'])) {
-
             $where_[] = ['c.create_time', '>', $input['start_time']];
         }
-
         if (!empty($input['end_time'])) {
-
             $where_[] = ['c.create_time', '<=', $input['end_time']];
         }
-
         $data = ChannelStaff::staffList($where, $dis, $where_, $input['limit'] ?? 10);
-
         $order = (new Order())->channelData($input['id'], $input);
-
         $data['order_price'] = $order['order_price'];
-
         return $this->success($data);
     }
 
@@ -399,9 +270,7 @@ class AdminChannel extends AdminRest
     public function changeChannel()
     {
         $data = request()->only(['channel_id', 'channel_staff_id']);
-
         $res = ChannelStaff::changeChannel($data);
-
         return $this->success($res);
     }
 
@@ -414,11 +283,8 @@ class AdminChannel extends AdminRest
     public function changeBalance()
     {
         $data = request()->only(['ids', 'balance']);
-
         $res = $this->model->update(['balance' => $data['balance']], [['id', 'in', $data['ids']], ['status', '=', 2]]);
-
         return $this->success($res);
-
     }
 
     /**
@@ -431,14 +297,11 @@ class AdminChannel extends AdminRest
     public function getCashList()
     {
         $input = $this->_param;
-
         $where = [
             ['uniacid', '=', $this->_uniacid],
             ['channel_id', '=', $input['id']]
         ];
-
         $data = ChannelCashWater::getCashList($where, $input['limit'] ?? 10);
-
         return $this->success($data);
     }
 
@@ -451,16 +314,11 @@ class AdminChannel extends AdminRest
     public function setBindTime()
     {
         $ids = request()->param('ids', []);
-
         $channel_bind_time = request()->param('channel_bind_time', 0);
-
         if (empty($ids)) {
-
             return $this->error('请选择渠道商');
         }
-
         $res = $this->model->update(['channel_bind_time' => $channel_bind_time], [['id', 'in', $ids]]);
-
         return $this->success($res);
     }
 

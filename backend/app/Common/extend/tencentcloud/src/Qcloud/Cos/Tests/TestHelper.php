@@ -20,7 +20,6 @@ class TestHelper {
                 }
             }
             $cosClient->deleteBucket(array('Bucket' => $bucket));
-
             while(True){
                 $result = $cosClient->ListMultipartUploads(
                     array('Bucket' => $bucket,

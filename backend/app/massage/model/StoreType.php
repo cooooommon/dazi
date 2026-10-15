@@ -25,7 +25,6 @@ class StoreType extends BaseModel
     public static function add($data)
     {
         $data['create_time'] = $data['update_time'] = time();
-
         return self::insert($data);
     }
 

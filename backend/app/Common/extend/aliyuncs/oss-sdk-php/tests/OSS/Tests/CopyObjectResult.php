@@ -45,7 +45,6 @@ BBBB;
             new CopyObjectResult($response);
             $this->assertFalse(true);
         } catch (OssException $e) {
-
         }
     }
 

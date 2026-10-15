@@ -18,14 +18,11 @@ class ExceptionParser {
             'request_id' => null,
             'parsed'     => null
         );
-
         $body = $response->getBody(true);
-
         if (!$body) {
             $this->parseHeaders($request, $response, $data);
             return $data;
         }
-
         try {
             $xml = new \SimpleXMLElement($body);
             $this->parseBody($xml, $data);
@@ -53,11 +50,9 @@ class ExceptionParser {
             $data['request_id'] = $requestId;
             $data['message'] .= " (Request-ID: $requestId)";
         }
-
         // Get the request
         $status  = $response->getStatusCode();
         $method  = $request->getMethod();
-
         // Attempt to determine code for 403s and 404s
         if ($status === 403) {
             $data['code'] = 'AccessDenied';
@@ -66,7 +61,6 @@ class ExceptionParser {
             $host   = explode('.', $request->getHost());
             $bucket = (count($host) >= 4) ? $host[0] : array_shift($path);
             $object = array_shift($path);
-
             if ($bucket && $object) {
                 $data['code'] = 'NoSuchKey';
             } elseif ($bucket) {
@@ -83,7 +77,6 @@ class ExceptionParser {
      */
     protected function parseBody(\SimpleXMLElement $body, array &$data) {
         $data['parsed'] = $body;
-
         $namespaces = $body->getDocNamespaces();
         if (isset($namespaces[''])) {
             // Account for the default namespace being defined and PHP not being able to handle it :(
@@ -92,15 +85,12 @@ class ExceptionParser {
         } else {
             $prefix = '';
         }
-
         if ($tempXml = $body->xpath("//{$prefix}Code[1]")) {
             $data['code'] = (string) $tempXml[0];
         }
-
         if ($tempXml = $body->xpath("//{$prefix}Message[1]")) {
             $data['message'] = (string) $tempXml[0];
         }
-
         $tempXml = $body->xpath("//{$prefix}RequestId[1]");
         if (empty($tempXml)) {
             $tempXml = $body->xpath("//{$prefix}RequestID[1]");

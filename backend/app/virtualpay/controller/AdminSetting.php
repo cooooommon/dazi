@@ -19,10 +19,8 @@ class AdminSetting extends AdminRest
     public function __construct ( App $app )
     {
         parent::__construct($app);
-
         $this->app = $app;
     }
-
 
     /**
      * 配置详情
@@ -30,15 +28,11 @@ class AdminSetting extends AdminRest
     public function configInfo ()
     {
         $config = Db::name('virtualpay_config')->where(['uniacid' => $this->_uniacid])->find();
-
         if (!empty($config['app_key'])) {
-
             $config['app_key'] = substr($config['app_key'], 0, 4) . '****';
         }
-
         return $this->success(['config' => $config ?: null]);
     }
-
 
     /**
      * 配置保存（app_key 留空表示不修改）
@@ -46,7 +40,6 @@ class AdminSetting extends AdminRest
     public function configUpdate ()
     {
         $input = $this->request->only(['offer_id', 'app_key', 'env', 'enabled', 'coin_rate']);
-
         $data = [
             'offer_id'    => trim((string)($input['offer_id'] ?? '')),
             'env'         => intval($input['env'] ?? 0),
@@ -54,42 +47,27 @@ class AdminSetting extends AdminRest
             'coin_rate'   => intval($input['coin_rate'] ?? 1),
             'update_time' => time(),
         ];
-
         if (!empty($input['app_key'])) {
-
             $data['app_key'] = trim((string)$input['app_key']);
         }
-
         if (!empty($data['offer_id']) && empty($data['app_key'])) {
-
             $exists = Db::name('virtualpay_config')->where(['uniacid' => $this->_uniacid])->value('app_key');
-
             if (empty($exists)) {
-
                 $this->errorMsg('请填写现网 AppKey');
             }
         }
-
         $exists = Db::name('virtualpay_config')->where(['uniacid' => $this->_uniacid])->find();
-
         if (!empty($exists)) {
-
             Db::name('virtualpay_config')->where(['uniacid' => $this->_uniacid])->update($data);
-
         } else {
-
             $data['uniacid']     = $this->_uniacid;
             $data['create_time'] = time();
-
             //开启态必须有密钥才能落库；关闭态允许先保存，密钥后续补填
             if (!empty($data['enabled']) && empty($data['app_key'])) {
-
                 $this->errorMsg('请填写现网 AppKey');
             }
-
             Db::name('virtualpay_config')->insert($data);
         }
-
         return $this->success(true);
     }
 

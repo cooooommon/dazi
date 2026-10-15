@@ -21,28 +21,22 @@ class MessageConfigController extends AgentRest
         if (!isset($this->_input['modular_id']) || !isset($this->_input['days'])) {
             return $this->success('success');
         }
-
         $validate = new Validate();
         $validate->rule([
             'days|清除时间' => 'integer',
         ]);
-
         if (!$validate->check($this->_input)) {
             return $this->error($validate->getError());
         }
-
         $modular_id = $this->_input['modular_id'];
         $days = $this->_input['days'];
-
         if ($days > 0) {
             $beginTime = mktime(0, 0, 0, date('m'), date('d') - $days, date('Y'));
         } else {
             $beginTime = 99999999999;
         }
-
         $rst = Db::name('longbing_card_message')->where([['uniacid', '=', $modular_id], ['create_time', '<', $beginTime]])->delete(true);
         return $this->success($rst);
     }
-
 
 }

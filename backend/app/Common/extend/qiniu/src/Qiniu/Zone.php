@@ -29,7 +29,6 @@ final class Zone
         $apiHost = "api.qiniu.com",
         $iovipHost = null
     ) {
-
         $this->srcUpHosts = $srcUpHosts;
         $this->cdnUpHosts = $cdnUpHosts;
         $this->rsHost = $rsHost;
@@ -89,7 +88,6 @@ final class Zone
             "api-z1.qiniu.com",
             "iovip-z1.qbox.me"
         );
-
         return $Zone_z1;
     }
 
@@ -151,7 +149,6 @@ final class Zone
         $r = ($ret->body === null) ? array() : $ret->json();
         //print_r($ret);
         //parse zone;
-
         $iovipHost = $r['io']['src']['main'][0];
         $zone->iovipHost = $iovipHost;
         $accMain = $r['up']['acc']['main'][0];
@@ -168,7 +165,6 @@ final class Zone
                 array_push($zone->srcUpHosts, $value);
             }
         }
-
         //set specific hosts
         if (strstr($zone->iovipHost, "z1") !== false) {
             $zone->rsHost = "rs-z1.qbox.me";
@@ -191,7 +187,6 @@ final class Zone
             $zone->rsfHost = "rsf.qbox.me";
             $zone->apiHost = "api.qiniu.com";
         }
-
         return $zone;
     }
 }

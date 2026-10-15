@@ -11,7 +11,6 @@ class Police extends BaseModel
     //定义表名
     protected $name = 'massage_service_coach_police';
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:04
@@ -23,7 +22,6 @@ class Police extends BaseModel
         return $this->insert($data);
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:05
@@ -33,7 +31,6 @@ class Police extends BaseModel
     {
         return $this->where($dis)->update($data);
     }
-
 
     /**
      * @author chenniang
@@ -52,7 +49,6 @@ class Police extends BaseModel
             ->toArray();
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:43
@@ -63,7 +59,6 @@ class Police extends BaseModel
         $data = $this->where($dis)->find();
         return !empty($data) ? $data->toArray() : [];
     }
-
 
     /**
      * @author chenniang
@@ -88,7 +83,6 @@ class Police extends BaseModel
         $data = [
             //用户小程序openid
             'touser' => $openid,
-
             'mp_template_msg' => [
                 //公众号appid
                 'appid' => $x_config['gzh_appid'],
@@ -129,7 +123,6 @@ class Police extends BaseModel
         $rest = lbCurlPost($tmp['url'], $tmp['data']);
         return json_decode($rest, true);
     }
-
 
     /**
      * @author chenniang
@@ -186,7 +179,6 @@ class Police extends BaseModel
         return json_decode($rest, true);
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2022-06-01 15:17
@@ -231,7 +223,6 @@ class Police extends BaseModel
             }
         }
         return $res ?? true;
-
     }
 
     /**

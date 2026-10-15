@@ -2,7 +2,6 @@
 
 namespace OSS\Result;
 
-
 use OSS\Model\LifecycleConfig;
 
 /**

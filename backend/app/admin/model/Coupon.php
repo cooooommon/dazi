@@ -10,7 +10,6 @@ class Coupon extends BaseModel
     //定义表名
     protected $name = 'longbing_card_coupon';
 
-
 //    protected static function init()
 //    {
 //        //TODO:初始化内容
@@ -74,7 +73,6 @@ class Coupon extends BaseModel
      */
     public function couponList($dis, $page = 10)
     {
-
         $data = self::where($dis)->order('top desc')->paginate($page)->toArray();
         return $data;
     }
@@ -111,6 +109,5 @@ class Coupon extends BaseModel
         $data = Db::name($this->name)->where($dis)->find();
         return $data;
     }
-
 
 }

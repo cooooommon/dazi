@@ -12,22 +12,14 @@ use think\Response;
 class Admin extends BaseController
 {
 
-
     protected $model;
 
     protected $config_model;
 
-
-
     public function __construct(App $app) {
-
         parent::__construct($app);
-
         $this->model = new Model();
-
-
     }
-
 
     /**
      * @author chenniang
@@ -35,49 +27,29 @@ class Admin extends BaseController
      * @功能说明:登陆
      */
     public function login(){
-
 //        $input = $this->_input;
-
         initLogin();
-
         $input = json_decode( $this->request->getInput(), true );
-
         //dump($input);exit;
-
         $dis = [
-
            // 'uniacid' => $this->_uniacid,
-
             'username'=> $input['username']
         ];
-
         $data = $this->model->dataInfo($dis);
-
         if(empty($data)){
-
             return $this->error('该用户不存在', 400);
-
         }
-
         if($data['passwd']!=checkPass($input['passwd'])){
-
-
             return $this->error('密码错误', 400);
         }
-
         $result['user'] = $data;
-
         $result['token'] = uuid();
-
         if (empty($result['token'])) {
-
             return $this->error('系统错误', 400);
         }
         //添加缓存数据
         setUserForToken($result['token'], $data, 99999999);
-
         return $this->success($result);
-
     }
 
     public function success ( $data, $code = 200 )
@@ -91,7 +63,6 @@ class Admin extends BaseController
         //		}
         //简单的签名
         if ( !empty( $this->_token ) ) $result[ 'sign' ] = createSimpleSign( $this->_token, is_string( $data ) ? $data : json_encode( $data ) );
-
         return $this->response( $result, 'json', $code  );
     }
 
@@ -115,18 +86,5 @@ class Admin extends BaseController
     {
         return Response::create( $data, $type )->code( $code );
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

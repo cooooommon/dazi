@@ -76,13 +76,11 @@ class LiveChannelListInfo implements XmlConfig
     public function parseFromXml($strXml)
     {
         $xml = simplexml_load_string($strXml);
-
         $this->prefix = strval($xml->Prefix);
         $this->marker = strval($xml->Marker);
         $this->maxKeys = intval($xml->MaxKeys);
         $this->isTruncated = (strval($xml->IsTruncated) == 'true');
         $this->nextMarker = strval($xml->NextMarker);
-
         if (isset($xml->LiveChannel)) {
             foreach ($xml->LiveChannel as $chan) {
                 $channel = new LiveChannelInfo();

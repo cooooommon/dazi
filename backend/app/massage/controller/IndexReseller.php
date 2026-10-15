@@ -14,11 +14,8 @@ use app\massage\model\Wallet;
 use longbingcore\wxcore\YsCloudApi;
 use think\App;
 
-
-
 class IndexReseller extends ApiRest
 {
-
 
     protected $model;
 
@@ -30,23 +27,14 @@ class IndexReseller extends ApiRest
 
     protected $coach_model;
 
-
     public function __construct(App $app) {
-
         parent::__construct($app);
-
         $this->model        = new DistributionList();
-
         $this->user_model   = new User();
-
         $this->cash_model   = new Commission();
-
         $this->wallet_model = new Wallet();
-
         $this->coach_model  = new Coach();
-
     }
-
 
     /**
      * @author chenniang
@@ -54,13 +42,10 @@ class IndexReseller extends ApiRest
      * @功能说明:合伙人中心
      */
     public function partnerIndex(){
-
         $order_model = new Order();
         //超时自动取消订单
         $order_model->coachBalanceArr($this->_uniacid);
-
         $data = $this->user_model->dataInfo(['id'=>$this->_user['id']],'nickName,avatarUrl,new_cash,cash');
-
         $data['order_cash'] = $this->model->partnerOrderPrice($this->_user['id']);
         //已提现金额
         $data['wallet_cash'] = $this->wallet_model->where(['user_id'=>$this->_user['id'],'type'=>4])->where('status','<>',3)->sum('apply_price');
@@ -78,17 +63,11 @@ class IndexReseller extends ApiRest
         $data['total_user_count'] = $this->user_model->where(['pid'=>$this->_user['id']])->count();
         //今日邀请用户
         $data['today_user_count'] = $this->user_model->where(['pid'=>$this->_user['id']])->whereTime('create_time','today')->count();
-
         $data['order_cash'] = round($data['order_cash'],2);
-
         $data['wallet_cash']= round($data['wallet_cash'],2);
-
         $data['not_recorded']= round($data['not_recorded'],2);
-
         return $this->success($data);
-
     }
-
 
     /**
      * @author chenniang
@@ -96,55 +75,25 @@ class IndexReseller extends ApiRest
      * @功能说明:合伙人邀请的向导
      */
     public function partnerCoachList(){
-
         $dis = [
-
             'status'     => 2,
-
             'agent_type' => 2,
-
             'partner_id' => $this->_user['id']
         ];
-
         $data = $this->coach_model->where($dis)->field('id,coach_name,work_img,city_id')->order('partner_time desc,id desc')->paginate(10)->toArray();
-
         if(!empty($data['data'])){
-
             $config_model = new Config();
-
             $level_model  = new CoachLevel();
-
             $city_model   = new City();
-
             $config = $config_model->dataInfo(['uniacid'=>$this->_uniacid]);
-
             $level_cycle = $config['level_cycle'];
-
             $is_current  = $config['is_current'];
-
             foreach ($data['data'] as &$v){
-
                 $v['order_count'] = $level_model->getMinCount($v['id'],$level_cycle,0,$is_current);
-
                 $v['city'] = $city_model->where(['id'=>$v['city_id']])->value('city');
             }
-
         }
         return $this->success($data);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

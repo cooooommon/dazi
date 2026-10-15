@@ -5,14 +5,12 @@ namespace app\admin\model;
 use app\BaseModel;
 use think\Model;
 
-
 class WxUpload extends BaseModel
 {
     //定义表名
     protected $name = 'massage_wx_upload';
 
     protected $resultSetType = 'collection';
-
 
     /**
      * @author chenniang
@@ -21,17 +19,12 @@ class WxUpload extends BaseModel
      */
     public function settingInfo($dis, $field = '*')
     {
-
         $data = $this->where($dis)->find();
-
         if (empty($data)) {
-
             $this->insert($dis);
         }
-
         return $this->where($dis)->field($field)->find()->toArray();
     }
-
 
     /**
      * @author chenniang
@@ -40,12 +33,9 @@ class WxUpload extends BaseModel
      */
     public function settingAdd($data)
     {
-
         $res = $this->insert($data);
-
         return $res;
     }
-
 
     /**
      * @author chenniang
@@ -54,13 +44,9 @@ class WxUpload extends BaseModel
      */
     public function settingUpdate($dis, $data)
     {
-
         $data['app_id'] = !empty($data['app_id']) ? implode(',', $data['app_id']) : '';
-
         $res = $this->where($dis)->update($data);
-
         return $res;
     }
-
 
 }

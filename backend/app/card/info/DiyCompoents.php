@@ -6,13 +6,11 @@
  * Time: 18:29
  */
 
-
 $gzh = <<<GZH
 
  {"title":"公众号组件","type":"official","icon":"iconOfficial","isDelete":true,"addNumber":1,"data":{"title":"公众号组件"}}
 
 GZH;
-
 
 $acrd = <<<CARD
 
@@ -29,59 +27,40 @@ $vr = <<<VR
 {"title":"VR全景","type":"myVR","icon":"iconMyVR","isDelete":true,"addNumber":1,"data":{"title":"VR全景"},"dataList":[]}
 VR;
 
-
 $video = <<<VIDEO
 
  {"title":"我的视频","type":"myVideo","icon":"iconMyVideo","isDelete":true,"addNumber":1,"data":{"title":"我的视频"},"dataList":[]}
 VIDEO;
 
-
 $photo = <<<PHOTO
  {"title":"我的照片","type":"myPhoto","icon":"iconMyPhoto","isDelete":true,"addNumber":1,"data":{"title":"我的照片"},"dataList":[]}
 PHOTO;
-
 
 $goods = <<<GOODS
 
  {"model_name_key":"shop","title":"主推商品","type":"myGoods","icon":"iconMyGoods","isDelete":true,"addNumber":1,"data":{"title":"主推商品"},"dataList":[]}
 GOODS;
 
-
 $dynamic = <<<DYNAMIC
 
 {"model_name_key":"dynamic","title":"我的动态","type":"myDynamic","icon":"iconDynamicList","isDelete":true,"addNumber":1,"attr":[{"title":"点击图片/视频","type":"Radio","name":"clickType","data":[{"label":1,"title":"查看图片/视频"},{"label":2,"title":"进入详情"}]},{"title":"显示数量","type":"InputNumber","name":"row"}],"data":{"title":"我的动态","clickType":1,"row":{"number":3,"min":1,"max":3,"label":"请输入"},"dataList":[]}}
 DYNAMIC;
 
-
-
-
-
-
-
 //模块组件 后台DIY页面的左侧
 
 return [
-
     [
         "title" => "业务组件",
         'type' => 'cardCompoent',
         "data" => [
             json_decode($gzh, true),
-
             json_decode($acrd, true),
-
             json_decode($userinfo, true),
-
             json_decode($vr, true),
-
             json_decode($video, true),
-
             json_decode($photo, true),
-
             json_decode($goods, true),
-
             json_decode($dynamic, true),
         ]
     ]
-
 ];

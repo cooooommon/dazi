@@ -26,14 +26,12 @@ class CredentialFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($bearerToken === '') {
             throw new ClientException(
                 'Bearer Token cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $bearerToken;
     }
 
@@ -51,14 +49,12 @@ class CredentialFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($publicKeyId === '') {
             throw new ClientException(
                 'Public Key ID cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $publicKeyId;
     }
 
@@ -76,14 +72,12 @@ class CredentialFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($privateKeyFile === '') {
             throw new ClientException(
                 'Private Key File cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $privateKeyFile;
     }
 
@@ -102,14 +96,12 @@ class CredentialFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($roleName === '') {
             throw new ClientException(
                 'Role Name cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $roleName;
     }
 
@@ -127,21 +119,18 @@ class CredentialFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($accessKeyId === '') {
             throw new ClientException(
                 'AccessKey ID cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if (!is_string($accessKeySecret)) {
             throw new ClientException(
                 'AccessKey Secret must be a string',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($accessKeySecret === '') {
             throw new ClientException(
                 'AccessKey Secret cannot be empty',

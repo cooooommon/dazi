@@ -25,17 +25,14 @@ class CredentialsProvider
     public static function chain()
     {
         $providers = func_get_args();
-
         if (empty($providers)) {
             throw new ClientException('No providers in chain', SDK::INVALID_ARGUMENT);
         }
-
         foreach ($providers as $provider) {
             if (!$provider instanceof Closure) {
                 throw new ClientException('Providers must all be Closures', SDK::INVALID_ARGUMENT);
             }
         }
-
         self::$customChains = $providers;
     }
 
@@ -82,7 +79,6 @@ class CredentialsProvider
             self::ini(),
             self::instance(),
         ];
-
         foreach ($providers as $provider) {
             $provider();
             if (AlibabaCloud::has($clientName)) {
@@ -99,7 +95,6 @@ class CredentialsProvider
         return static function () {
             $accessKeyId     = \AlibabaCloud\Client\envNotEmpty('ALIBABA_CLOUD_ACCESS_KEY_ID');
             $accessKeySecret = \AlibabaCloud\Client\envNotEmpty('ALIBABA_CLOUD_ACCESS_KEY_SECRET');
-
             if ($accessKeyId && $accessKeySecret) {
                 AlibabaCloud::accessKeyClient($accessKeyId, $accessKeySecret)->asDefaultClient();
             }
@@ -113,7 +108,6 @@ class CredentialsProvider
     {
         return static function () {
             $ini = \AlibabaCloud\Client\envNotEmpty('ALIBABA_CLOUD_CREDENTIALS_FILE');
-
             if ($ini) {
                 AlibabaCloud::load($ini);
             } else {
@@ -121,7 +115,6 @@ class CredentialsProvider
                 AlibabaCloud::load();
                 // @codeCoverageIgnoreEnd
             }
-
             self::compatibleWithGlobal();
         };
     }
@@ -147,11 +140,9 @@ class CredentialsProvider
     public static function getDefaultName()
     {
         $name = \AlibabaCloud\Client\envNotEmpty('ALIBABA_CLOUD_PROFILE');
-
         if ($name) {
             return $name;
         }
-
         return 'default';
     }
 

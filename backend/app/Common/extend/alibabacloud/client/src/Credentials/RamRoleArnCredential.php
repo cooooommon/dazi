@@ -52,7 +52,6 @@ class RamRoleArnCredential implements CredentialsInterface
     public function __construct($accessKeyId, $accessKeySecret, $roleArn, $roleSessionName, $policy = '')
     {
         CredentialFilter::AccessKey($accessKeyId, $accessKeySecret);
-
         $this->accessKeyId     = $accessKeyId;
         $this->accessKeySecret = $accessKeySecret;
         $this->roleArn         = $roleArn;

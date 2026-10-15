@@ -36,23 +36,18 @@ class UserAgent
     public static function toString(array $append = [])
     {
         self::defaultFields();
-
         $os        = \PHP_OS;
         $osVersion = php_uname('r');
         $osMode    = php_uname('m');
         $userAgent = "AlibabaCloud ($os $osVersion; $osMode) ";
-
         $newUserAgent = [];
-
         $append = self::clean($append);
-
         $append = Arrays::merge(
             [
                 self::$userAgent,
                 $append,
             ]
         );
-
         foreach ($append as $key => $value) {
             if ($value === null) {
                 $newUserAgent[] = $key;
@@ -60,7 +55,6 @@ class UserAgent
             }
             $newUserAgent[] = "$key/$value";
         }
-
         return $userAgent . \implode(' ', $newUserAgent);
     }
 
@@ -90,7 +84,6 @@ class UserAgent
                 continue;
             }
         }
-
         return $append;
     }
 
@@ -116,9 +109,7 @@ class UserAgent
     {
         Filter::name($name);
         Filter::value($value);
-
         self::defaultFields();
-
         if (!self::isGuarded($name)) {
             self::$userAgent[$name] = $value;
         }

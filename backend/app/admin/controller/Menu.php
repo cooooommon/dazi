@@ -128,7 +128,6 @@ class Menu extends AdminRest
                         if (isset($leval_2_menu['component'])) {
                             $child_data['component'] = $leval_2_menu['component'];
                         }
-
                         if (isset($leval_2_menu['title'])) {
                             $child_data['meta']['title'] = $leval_2_menu['title'];
                         }
@@ -137,19 +136,15 @@ class Menu extends AdminRest
                         if (!empty($leval_2_menu['isOnly'])) {
                             $child_data['meta']['isOnly'] = true;
                         }
-
                         $child_data['meta']['auth'] = [];
-
                         if (!empty($leval_2_menu['is_son_menu'])) {
                             $pagePermissions = [];
                             $menu_filter['parent_id'] = $leval_2_menu['menu_id'];
                             $menu_filter['is_action'] = 0;
                             $leval_3_menus = $meun_model->listMenu($menu_filter);
-
 //                            if(in_array('c3', [$leval_2_menu['menu_id']])){
 //                                var_dump(json_encode($leval_3_menus));die;
 //                            }
-
                             foreach ($leval_3_menus as $leval_3_menu) {
                                 $pagePermission = [];
                                 if (isset($leval_3_menu['title'])) {
@@ -171,7 +166,6 @@ class Menu extends AdminRest
                         $child[] = $child_data;
                     }
                     $subNavNames[] = $subNavName;
-
                 }
             }
             $data['meta']['subNavName'] = $subNavNames;
@@ -195,7 +189,6 @@ class Menu extends AdminRest
         $module_model = new ModuleModel();
         //获取模块信息
         $module = $module_model->getModule($module_filter, $this->_uniacid);
-
         if (empty($module)) {
             $this->success([]);
         }
@@ -306,7 +299,6 @@ class Menu extends AdminRest
                     if (isset($leval_2_menu['component'])) {
                         $child_data['component'] = $leval_2_menu['component'];
                     }
-
                     if (isset($leval_2_menu['title'])) {
                         $child_data['meta']['title'] = $leval_2_menu['title'];
                     }
@@ -315,19 +307,15 @@ class Menu extends AdminRest
                     if (!empty($leval_2_menu['isOnly'])) {
                         $child_data['meta']['isOnly'] = true;
                     }
-
                     $child_data['meta']['auth'] = [];
-
                     if (!empty($leval_2_menu['is_son_menu'])) {
                         $pagePermissions = [];
                         $menu_filter['parent_id'] = $leval_2_menu['menu_id'];
                         $menu_filter['is_action'] = 0;
                         $leval_3_menus = $meun_model->listMenu($menu_filter);
-
 //                            if(in_array('c3', [$leval_2_menu['menu_id']])){
 //                                var_dump(json_encode($leval_3_menus));die;
 //                            }
-
                         foreach ($leval_3_menus as $leval_3_menu) {
                             $pagePermission = [];
                             if (isset($leval_3_menu['title'])) {
@@ -367,8 +355,6 @@ class Menu extends AdminRest
         //测试新的载入方式
         $menu_data = longbing_init_info_data('AdminMenu');
         return $this->success($menu_data);
-
-
         //所有的菜单的json文件
         $allAdminMenus = include APP_PATH."Common/extend/menu/allAdminMenus.php";
         //平台的菜单配置
@@ -376,8 +362,6 @@ class Menu extends AdminRest
         //菜单权限
         $pluginAuth = longbingGetPluginAuth($this->_uniacid);
         $auth = $pluginAuth['web_manage_meta_config'];
-
-
         $auth_meta_permission = [];//前端导航栏配置json
         foreach ($memu_config as $menu_name) {
             if (!isset($allAdminMenus[$menu_name]) || ($menu_name !== 'App' && $auth[$menu_name] !== 1)) {
@@ -385,14 +369,8 @@ class Menu extends AdminRest
             }
             $menu_data = json_decode($allAdminMenus[$menu_name], true);
             //如果代理管理端有版权设置， 【系统】菜单中的子菜单【版权管理】不展示
-
-
             $auth_meta_permission[] = $menu_data;
-
         }
-
         return $this->success($auth_meta_permission);
-
-
     }
 }

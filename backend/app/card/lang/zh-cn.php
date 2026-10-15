@@ -30,5 +30,4 @@ return [
     'card share text' => '您好,我是您的专属客户经理,这是我的名片,请惠存。',
     'At least one staff is required' => '系统必须保留一名推荐员工。',
     'create qr error' => '生成失败，请重试！',
-
 ];

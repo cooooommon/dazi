@@ -6,7 +6,6 @@ use app\admin\model\ShopOrderGoods;
 use app\BaseModel;
 use think\facade\Db;
 
-
 class SellingProfit extends BaseModel
 {
     //定义表名
@@ -49,6 +48,5 @@ class SellingProfit extends BaseModel
         $res = self::where($dis)->update($data);
         return $res;
     }
-
 
 }

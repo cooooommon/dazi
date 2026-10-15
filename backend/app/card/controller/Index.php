@@ -93,19 +93,14 @@ class Index extends ApiRest
     {
         $userId   = $this->getUserId();
         $userInfo = $this->getUserInfo();
-
         $verify = [ 'avatarUrl' => '', 'city' => '', 'country' => '', 'gender' => '', 'language' => '', 'nickName' => '',
             'province'  => '' ];
-
         $params = lbGetParamVerify( $this->_input, $verify );
-
         $result = User::update( $params, [ 'id' => $userId ] );
-
         if ( $result === false )
         {
             return $this->error( 'update failed' );
         }
-
         $key = 'longbing_user_autograph_' . $userId;
         $key = md5( $key );
         $userInfo[ 'need_auth' ] = 0;
@@ -142,15 +137,12 @@ class Index extends ApiRest
         $userInfo = longbingGetUser($userId, $this->_uniacid);
         //       $modelCompany = new Company();
 //        $company = $modelCompany->getInfo($this->_uniacid, $userId, 0);
-
         $page = isset( $this->_param[ 'page' ] ) ? $this->_param[ 'page' ] : 1;
-
         //  判断有没有浏览过名片
         $checkCollection = $this->modelCollection->where( [ [ 'uniacid', '=', $this->_uniacid ], [ 'uid', '=', $userId ],
                 [ 'status', '=', 1 ] ]
         )
             ->count();
-
         //  浏览过名片，返回已绑定的名片列表
         if ( $checkCollection )
         {
@@ -161,10 +153,8 @@ class Index extends ApiRest
         {
             $cardList = $this->modelCollection->defaultCardList( $page, $this->_uniacid ,$userId);
         }
-
 //        $cardList['company_info'] = $company;
         $cardList['is_staff'] = $userInfo['is_staff'];
-
         return $this->success( $cardList, 200 );
     }
 
@@ -177,17 +167,12 @@ class Index extends ApiRest
      */
     public function userInfo ()
     {
-
         $uniacid = $this->_uniacid;
-
-
         $permissionAdmin = new PermissionAdmin($this->_uniacid);
         $longbing_auth_mini = $permissionAdmin->getAuthNumber();
-
         $userModel = new User();
         $userInfoModel   = new UserInfo();
         $cardCountModel  = new CardCount();
-
         //By.jingshuixian  2020年4月21日12:12:53
         //解决微擎版本同一个域名授权问题
         if($this->_is_weiqin ){
@@ -202,7 +187,6 @@ class Index extends ApiRest
                 ->order('account_wxapp.uniacid asc')
                 ->select()
                 ->toArray();
-
             $check_mini_user_count =  count($wxapp) ;
             if ( $check_mini_user_count > $longbing_auth_mini) {
                 foreach ($wxapp as $index => $item) {
@@ -215,17 +199,13 @@ class Index extends ApiRest
                     }
                 }
             }
-
-
         }else{
             $check_mini_user = $userModel
                 ->field('uniacid')
                 ->group('uniacid')
                 ->order('id asc')
                 ->select();
-
             $check_mini_user_count = count($check_mini_user);
-
             if ($check_mini_user_count > $longbing_auth_mini) {
                 foreach ($check_mini_user as $index => $item) {
                     $now = $index + 1;
@@ -237,14 +217,12 @@ class Index extends ApiRest
                     }
                 }
             }
-
             $check_mini_info = $userInfoModel
                 ->field('uniacid')
                 ->group('uniacid')
                 ->order('id asc')
                 ->select();
             $check_mini_info_count = count($check_mini_user);
-
             if ($check_mini_info_count > $longbing_auth_mini) {
                 foreach ($check_mini_info as $index => $item) {
                     $now = $index + 1;
@@ -256,13 +234,11 @@ class Index extends ApiRest
                     }
                 }
             }
-
             $check_mini_count = $cardCountModel
                 ->field('uniacid')
                 ->group('uniacid')
                 ->order('id asc')
                 ->select();
-
             $check_mini_count_count = count($check_mini_user);
             if ($check_mini_count_count > $longbing_auth_mini) {
                 foreach ($check_mini_count as $index => $item) {
@@ -272,17 +248,13 @@ class Index extends ApiRest
                         $msg = '小程序数量达到上限!!! 请联系管理员' . $check_mini_count_count . '-' . $longbing_auth_mini;
                         //echo json_encode(['code' => 402, 'error' => $msg]);
                         //exit;
-
                         return $this->error( $msg , 402);
                     }
                 }
             }
         }
-
         $user_id = $this->getUserId();
         $userInfo = longbingGetUser($user_id, $this->_uniacid);
-
-
         //最后访问的名片处理
         if (!empty($userInfo) && isset($userInfo['last_staff_id'])) {
             //判断last_staff_id是否是员工 chenniang
@@ -301,7 +273,6 @@ class Index extends ApiRest
         //是员工则把名片信息查出来
         if (isset($userInfo['is_staff']) && $userInfo['is_staff'] == 1) {
             $key = 'longbing_user_card_info_' . $userInfo['id'];
-
 //            $value = getCache( $key, $this->_uniacid );
             $value = [];
             if ($value && false) {
@@ -313,10 +284,8 @@ class Index extends ApiRest
                 $cardInfo = longbingGetUserInfo($user_id, $this->_uniacid);
                 if ($cardInfo) {
 //                  $cardInfo = $cardInfo->toArray();
-
                     $job = Job::where([['id', '=', $cardInfo['job_id']]])
                         ->find();
-
                     if (!$job) {
                         $cardInfo['job_name'] = '未设置职位';
                     } else {
@@ -330,27 +299,20 @@ class Index extends ApiRest
                     if (isset($cardInfo['my_video']) && is_array($cardInfo['my_video']) && !empty($cardInfo['my_video'])) {
                         $cardInfo['my_video_vid'] = lbGetTencentVideo($cardInfo['my_video'][0]);
                     }
-
                     $modelCount = new RadarCount();
                     list($viewCount, $thumbCount) = $modelCount->RadarNumber($userInfo['id'], $this->_uniacid);
                     $cardInfo['viewCount'] = $viewCount;
                     $cardInfo['thumbCount'] = $thumbCount;
                     //获取公司信息
-
                     $company = longbingGetUserCompany($cardInfo['company_id'], $uniacid);
                     if (isset($company['name'])) $company_name = $company['name'];
-
                     $cardInfo['company_info'] = $company;
-
                     $modelCompany = new Company();
-
                     $cardInfo[ 'company_info' ] = $modelCompany->changeTopName($cardInfo[ 'company_info' ]);
-
                     $cardInfo['company_name']   = !empty($cardInfo[ 'company_info' ]['name'])? $cardInfo[ 'company_info' ]['name']:$cardInfo['company_name'];
                     //获取递名片数量
                     $radar_model = new RadarCount();
                     $cardInfo['share_number'] = $radar_model->getShareNumberV2($user_id);
-
                     //生成活动二维码
                     $qrData = [
                         'pid' => $this->_user_id,
@@ -358,8 +320,6 @@ class Index extends ApiRest
                         'type' => 12,
                         'key' => 1
                     ];
-
-
                     $src = 'image/' . $this->_uniacid . '/' . 'wxcode/' . md5($this->_uniacid . json_encode($qrData, true)) . '.jpeg';
                     if (!longbingHasLocalFile($src)) {
                         $push_data = array(
@@ -380,7 +340,6 @@ class Index extends ApiRest
                     } else {
                         $cardInfo = transImagesOne($cardInfo, ['share_img']);
                     }
-
                     //
                     $cardInfo['posterQr'] = $src;
                     $cardInfo = transImagesOne($cardInfo, ['posterQr'], $this->_uniacid);
@@ -392,8 +351,6 @@ class Index extends ApiRest
                         $cardInfo['qr_path'] = $qr_path;
                     } else {
                         $wxcode_data = longbingCreateWxCode($this->_uniacid, $card_code_data);
-
-
                         if (isset($wxcode_data['path']) && !empty($wxcode_data['path'])) $cardInfo['qr_path'] = $wxcode_data['path'];
                     }
                     if (!empty($cardInfo['qr_path'])) $cardInfo = transImagesOne($cardInfo, ['qr_path'], $this->_uniacid);
@@ -401,7 +358,6 @@ class Index extends ApiRest
                     setCache($key, $cardInfo, 1800, $this->_uniacid);
                     //数据处理
                     if (isset($cardInfo['share_text']) && !empty($cardInfo['share_text'])) {
-
                         $share_text = $cardInfo['share_text'];
                         if (strpos($share_text, '#公司#')) $share_text = str_replace('#公司#', $company_name, $share_text);
                         if (strpos($share_text, '#职务#')) $share_text = str_replace('#职务#', $cardInfo['job_name'], $share_text);
@@ -430,17 +386,11 @@ class Index extends ApiRest
      */
     public function config ()
     {
-
         $data = longbingGetAppConfig($this->_uniacid);
-
         unset( $data[ 'auth_code' ] );
-
         $exist = Db::query( 'show tables like "%longbing_card_config%"' );
-
         $auth_info = false;
-
         $cardauth2_config_exist = Db::query('show tables like "%longbing_cardauth2_config%"');
-
         if (!empty($exist) && !empty($cardauth2_config_exist)) {
             $auth_info = Db::name('longbing_cardauth2_config')
                 ->where([['modular_id', '=', $this->_uniacid]])
@@ -452,29 +402,17 @@ class Index extends ApiRest
         {
             $data[ 'is_pay_shop' ] = 0;
         }
-
         if ( isset( $data[ 'btn_talk' ] ) && !$data[ 'btn_talk' ] )
         {
-
             $data[ 'btn_talk' ] = '面议';
-
         }
         $data['tabBar1'] = [];
         //tabbar用新的方式返回
         $data['tabBar1'] = Tabbar::all($this->_uniacid, $this->_user_id);
-
         $pluginAuth      = longbingGetPluginAuth($this->_uniacid, $this->_user_id, $auth_info);
-
-
         $data            = array_merge($data, $pluginAuth);
-
         return $this->success($data);
-
     }
-
-
-
-
 
     /**
      * @Purpose: 小程序允许使用的名片样式
@@ -488,18 +426,14 @@ class Index extends ApiRest
     public function cardType ()
     {
         $userId = $this->getUserId();
-
         $card = UserInfo::where( [ [ 'fans_id', '=', $userId ], [ 'is_staff', '=', 1 ], [ 'uniacid', '=', $this->_uniacid ] ] )
             ->field( [ 'card_type' ] )
             ->find();
-
         if ( !$card )
         {
             $this->error( 'card info not found', 402 );
         }
-
         $modelCardType = new CardType();
-
         $count = $modelCardType->where( [ [ 'uniacid', '=', $this->_uniacid ] ] )
             ->count();
         if ( !$count )
@@ -513,7 +447,6 @@ class Index extends ApiRest
                 ->field( [ 'card_type', 'img' ] )
                 ->select();
         }
-
         foreach ( $data as $index => $item )
         {
             $data[ $index ][ 'selected' ] = 0;
@@ -522,7 +455,6 @@ class Index extends ApiRest
                 $data[ $index ][ 'selected' ] = 1;
             }
         }
-
         return $this->success( $data );
     }
 
@@ -538,23 +470,17 @@ class Index extends ApiRest
     public function editCardType ()
     {
         $userId = $this->getUserId();
-
         $verify = [ 'card_type' => 'required' ];
-
         $params = lbGetParamVerify( $this->_input, $verify );
-
         $card = UserInfo::where( [ [ 'fans_id', '=', $userId ], [ 'is_staff', '=', 1 ], [ 'uniacid', '=', $this->_uniacid ] ] )
             ->field( [ 'card_type' ] )
             ->find();
-
         if ( !$card )
         {
             $this->error( 'card info not found', 402 );
         }
-
         $card->card_type = $params[ 'card_type' ];
         $result          = $card->save();
-
         if ( $result === false )
         {
             $this->error( 'edit fail', 402 );
@@ -578,24 +504,18 @@ class Index extends ApiRest
     public function editCardVoice ()
     {
         $userId = $this->getUserId();
-
         $verify = [ 'voice_id' => 'required', 'voice_time' => 0 ];
-
         $params = lbGetParamVerify( $this->_input, $verify );
-
         $card = UserInfo::where( [ [ 'fans_id', '=', $userId ], [ 'is_staff', '=', 1 ], [ 'uniacid', '=', $this->_uniacid ] ] )
             ->field( [ 'voice', 'voice_time' ] )
             ->find();
-
         if ( !$card )
         {
             $this->error( 'card info not found', 402 );
         }
-
         $card->voice      = $params[ 'voice_id' ];
         $card->voice_time = $params[ 'voice_time' ];
         $result           = $card->save();
-
         if ( $result === false )
         {
             $this->error( 'edit fail', 402 );
@@ -621,33 +541,22 @@ class Index extends ApiRest
     {
         $userId   = $this->getUserId();
         $userInfo = $this->getUserInfo();
-
         $modelCompany = new Company();
         $modelJob     = new CardJob();
         $modelType    = new CardType();
-
         $card = UserInfo::where( [ [ 'uniacid', '=', $this->_uniacid ], [ 'fans_id', '=', $userId ] ] )
             ->find();
-
         if ( $card )
         {
             $card                   = $card->toArray();
-
             $data                   = transImagesOne( $card, [ 'avatar' ] ,$this->_uniacid);
-
             $data[ 'companyList' ]  = $modelCompany->getListByUser( $userId, $this->_uniacid, 0, $card[ 'company_id' ] );
-
             $data[ 'jobList' ]      = $modelJob->getListByUser( $card[ 'job_id' ], $this->_uniacid );
-
             $data[ 'typeList' ]     = $modelType->getCardTypeList( $this->_uniacid, $card[ 'card_type' ] );
-
             $data[ 'company_info' ] = $modelCompany->getInfo( $this->_uniacid, 0, $card[ 'company_id' ] );
-
             if(!empty($data['company_info'])){
-
                 $data[ 'company_info' ]['top_name'] = $modelCompany->where(['id'=>$data['company_info']['top_id'],'status'=>1])->value('name');
             }
-
         }
         else
         {
@@ -658,11 +567,8 @@ class Index extends ApiRest
             $data[ 'typeList' ]     = $modelType->getCardTypeList( $this->_uniacid );
             $data[ 'company_info' ] = [];
         }
-
         $config = $this->modelConfig->getConfig( $this->_uniacid );
-
         $data[ 'job_switch' ] = $config[ 'job_switch' ];
-
         return $this->success( $data );
     }
 
@@ -684,12 +590,8 @@ class Index extends ApiRest
         $verify = [ 'staff_id' => 'required' ];
         $params = lbGetParamVerify( $this->_param, $verify );
         $staff_id = $params['staff_id'];
-
         $staff = longbingGetUserInfo($staff_id ,$this->_uniacid);
         if(empty($staff) || empty($staff['is_staff'])) return $this->error(lang('card info not found') ,403);
-
-
-
         /*
          //获取缓存数据
          $key = 'longbing_card_info_'.$staff_id;
@@ -702,8 +604,6 @@ class Index extends ApiRest
 
          }
          */
-
-
         //获取名片数据
         $card = UserInfo::alias( 'a' )
             ->field( [ 'a.*', 'b.name as job_name' ] )
@@ -752,13 +652,10 @@ class Index extends ApiRest
         {
             $cardInfo[ 'bg' ] = $config[ 'default_voice' ];
         }
-
         if ( !$cardInfo[ 'bg_switch' ] )
         {
             $cardInfo[ 'bg_switch' ] = $config[ 'default_voice_switch' ];
         }
-
-
         // 处理图片
         $cardInfo = transImages( $cardInfo, [ 'images' ], ',' );
         $cardInfo = transImagesOne( $cardInfo, [ 'avatar', 'voice', 'my_url', 'my_video', 'my_video_cover', 'bg', 'vr_cover',
@@ -768,7 +665,6 @@ class Index extends ApiRest
         list( $viewCount, $thumbCount ) = $modelCount->RadarNumber( $cardInfo[ 'fans_id' ] ,$this->_uniacid);
         $cardInfo[ 'viewCount' ]  = $viewCount;
         $cardInfo[ 'thumbCount' ] = $thumbCount;
-
         //  名片最近浏览情况
         list( $cardInfo[ 'view_list' ], $cardInfo[ 'view_count' ] ) = $modelCount->getCardViewInfo( $params[ 'staff_id' ], $this->_uniacid );
         //获取公司信息
@@ -842,13 +738,8 @@ class Index extends ApiRest
         //默认视频(处理)
         if ( isset( $cardInfo[ 'my_video' ] ) && $cardInfo[ 'my_video' ] ) $cardInfo[ 'my_video_vid' ] = lbGetTencentVideo( $cardInfo[ 'my_video' ] );
         $modelTags = new CardTags();
-
         $cardInfo[ 'tag_list' ] = $modelTags->cardTagList( $params[ 'staff_id' ], $userId, $this->_uniacid );
-
-
-
         //获取商品推荐列表  By.jingshuixian
-
         /*$modelExtension = new CardExtension();
 
         $cardInfo[ 'goods_list' ] = $modelExtension->cardExtensionList( $params[ 'staff_id' ], $this->_uniacid );
@@ -859,17 +750,10 @@ class Index extends ApiRest
             $count          = $collage_model->getCollage(['goods_id' => $val['id'] ,'uniacid' => $this->_uniacid ,'status' => 1]);
             if(!empty($count)) $cardInfo[ 'goods_list'][$key]['is_collage'] = 1;
         }*/
-
-
-
-
-
         if ( isset( $cardInfo[ 'vr_tittle' ] ) && !$cardInfo[ 'vr_tittle' ] )
         {
             $cardInfo[ 'vr_tittle' ] = 'VR全景';
         }
-
-
         //  是否语音点赞
         $checkVoice = CardCount::where( [ [ 'type', '=', 1 ], [ 'user_id', '=', $userId ],
                 [ 'to_uid', '=', $params[ 'staff_id' ] ], [ 'sign', '=', 'praise' ] ]
@@ -899,20 +783,14 @@ class Index extends ApiRest
         {
             $cardInfo[ 'isThumbs' ] = 0;
         }
-
         $cardInfo[ 'view_count' ] = $cardInfo[ 'view_count' ] + $cardInfo[ 'view_number' ];
         $cardInfo[ 'thumbCount' ] = $cardInfo[ 'thumbCount' ] + $cardInfo[ 't_number' ];
         $cardInfo[ 'share_number' ] = $share_number;
-
-
-
         $time = time();
-
         $coupon = CardCoupon::where( [ [ 'end_time', '>', $time ], [ 'status', '=', 1 ], [ 'uniacid', '=', $this->_uniacid ] , [ 'number' , '>' , 0]] )
             ->order( [ 'top' => 'desc', 'id' => 'desc' ] )
             ->select()
             ->toArray();
-
         $cardInfo[ 'coupon' ]                  = array();
         $cardInfo[ 'coupon_last_record' ]      = array();
         $cardInfo[ 'coupon_last_record_user' ] = array();
@@ -923,7 +801,6 @@ class Index extends ApiRest
                 $record_list = CardCouponRecord::where( [ [ 'coupon_id', '=', $item[ 'id' ] ],
                     [ 'staff_id', '=', $params[ 'staff_id' ] ],
                     [ 'uniacid', '=', $this->_uniacid ] ,
-
                 ] )
                     ->order( [ 'id' => 'desc' ] )
                     ->select()
@@ -951,15 +828,11 @@ class Index extends ApiRest
                 $cardInfo[ 'coupon_last_record' ][ $index ][ 'user_info' ] = $user;
             }
         }
-
-
         //By.jingshuixian  删除 缓存 和 装修
-
         /*if(!empty($cardInfo)) setCache($key ,$cardInfo ,600 ,$this->_uniacid);
         $cardInfo['plugin'] = $plugin_model->trigger('decorate');*/
         return $this->success( $cardInfo );
     }
-
 
     /**
      * @Purpose: 名片信息
@@ -972,11 +845,9 @@ class Index extends ApiRest
      */
     public function cardInfoV2 ()
     {
-
         //获取用户id
         $userId = (string) $this->getUserId();
         $uniacid = $this->_uniacid;
-
         //获取必要参数
         $verify = [ 'staff_id' => 'required' ,'is_base' => 0];
         $params = lbGetParamVerify( $this->_param, $verify );
@@ -996,7 +867,6 @@ class Index extends ApiRest
         if(!longbingHasLocalFile($qr_path))
         {
             $push_data = array(
-
                 'action'     => 'longbingCreateWxCode',
                 'event'      => 'longbingCreateWxCode',
                 'uniacid'    => $this->_uniacid,
@@ -1004,50 +874,33 @@ class Index extends ApiRest
                 'page'    => '',
                 'type'    => 3
             );
-
             publisher(json_encode($push_data ,true));
-
         }
         $cardInfo['qr_path'] = $qr_path;
-
         if(!empty($cardInfo['qr_path'])) $cardInfo = transImagesOne($cardInfo ,['qr_path']);
-
-
         $modelCompany = new Company();
         //检查公司默认数据
         if ( empty($cardInfo['company_info']) )
         {
             //jingshuixian 0 =  $cardInfo['fans_id']
             $company = $modelCompany->getInfo( $this->_uniacid, $cardInfo['fans_id'], 0 );
-
             $cardInfo[ 'company_info' ] = $company;
-
             if(isset($company['name'])) $company_name = $company['name'];
         }
-
         $cardInfo[ 'company_info' ] = $modelCompany->changeTopName($cardInfo[ 'company_info' ]);
-
         $cardInfo['company_name']   = !empty($cardInfo[ 'company_info' ]['name'])? $cardInfo[ 'company_info' ]['name']:$cardInfo['company_name'];
-
         //设置分享数据
         if(isset($cardInfo['share_text']) && !empty($cardInfo['share_text']))
         {
             $share_text = $cardInfo['share_text'];
-
             if(strpos($share_text,'#公司#')) $share_text = str_replace('#公司#',$cardInfo[ 'company_name' ],$share_text);
-
             if(strpos($share_text,'#职务#')) $share_text = str_replace('#职务#',$cardInfo[ 'job_name' ],$share_text);
-
             if(strpos($share_text,'#我的名字#')) $share_text = str_replace('#我的名字#',$cardInfo[ 'name' ],$share_text);
-
             if(strpos($share_text,'$company')) $share_text = str_replace('$company',$cardInfo[ 'company_name' ],$share_text);
-
             if(strpos($share_text,'$job')) $share_text = str_replace('$job',$cardInfo[ 'job_name' ],$share_text);
-
             if(strpos($share_text,'$name')) $share_text = str_replace('$name',$cardInfo[ 'name' ],$share_text);
             $cardInfo['share_text'] = $share_text;
         }else{
-
 //            $cardInfo['share_text'] = lang("card share text");
             $cardInfo['share_text'] = '您好，我是'.$cardInfo[ 'company_name' ].'的'.$cardInfo[ 'job_name' ].$cardInfo[ 'name' ].',请惠存';
         }
@@ -1060,10 +913,6 @@ class Index extends ApiRest
         }else{
             $cardInfo = transImagesOne($cardInfo, ['share_img']);
         }
-
-
-
-
         //更新最后查看信息
         //By.jingshuixian 最后访问的员工ID不同是更新
 //        if(!in_array($userId, [$params[ 'staff_id' ]]))
@@ -1075,8 +924,6 @@ class Index extends ApiRest
             longbingSetUser($userId ,$this->_uniacid ,$user);
         }
 //        }
-
-
         //是否只需要基础数据======================================================================================================有返回结果==============================
         if(isset($params['is_base']) && !empty($params['is_base']))
         {
@@ -1084,8 +931,6 @@ class Index extends ApiRest
             return $this->success($cardInfo);
         }
         //是否只需要基础数据======================================================================================================有返回结果==============================
-
-
         //默认vr数据
         if(!isset($cardInfo['vr_tittle']) || empty($cardInfo['vr_tittle']))
         {
@@ -1097,14 +942,12 @@ class Index extends ApiRest
                 $cardInfo['vr_tittle'] = lang('panoramic');
             }
         }
-
         $config      = longbingGetAppConfig($this->_uniacid);
         //默认背景音乐
         if ( !$cardInfo[ 'bg' ] )
         {
             $cardInfo[ 'bg' ] = $config[ 'default_voice' ];
         }
-
         if ( !$cardInfo[ 'bg_switch' ] )
         {
             $cardInfo[ 'bg_switch' ] = $config[ 'default_voice_switch' ];
@@ -1114,10 +957,8 @@ class Index extends ApiRest
         $cardInfo = transImagesOne( $cardInfo, [ 'avatar', 'voice', 'my_url', 'my_video', 'my_video_cover', 'bg', 'vr_cover',
                 'vr_path' ]
         );
-
         //判断视频等参数
         $config = longbingGetAppConfig($this->_uniacid);
-
         //默认视频
         if(isset($config['default_video']) && empty($cardInfo['my_video'])) $cardInfo['my_video'] = $config['default_video'];
         //默认视频图片
@@ -1141,13 +982,11 @@ class Index extends ApiRest
         {
             $cardInfo[ 'vr_tittle' ] = 'VR全景';
         }
-
         if(isset($input['is_update'])&&$input['is_update']!=1){
             //新的默认配置模型
             $defult_setting = new DefaultSetting();
             //默认配置数据
             $defult_setting_data = $defult_setting->settingInfo(['uniacid'=>$this->_uniacid]);
-
             $defult_setting_data = transImages($defult_setting_data,['my_photo_cover']);
             //我的签名
             $cardInfo['desc']   = !empty($cardInfo['desc'])?$cardInfo['desc']:$defult_setting_data['my_sign'];
@@ -1160,19 +999,14 @@ class Index extends ApiRest
             //我的语音时长
             $cardInfo['voice_time']  = !empty($cardInfo['voice_time'])?$cardInfo['voice_time']:$defult_setting_data['voice_time'];
         }
-
         //获取福报
 //        $coupon = CardCoupon::where( [ [ 'end_time', '>', time() ], [ 'status', '=', 1 ], [ 'uniacid', '=', $this->_uniacid ] , [ 'number' , '>' , 0]] )
 //            ->order( [ 'top' => 'desc', 'id' => 'desc' ] )
 //            ->select()
 //            ->toArray();
-
         $coupon_dis    = ['status'=>1,'uniacid'=>$this->_uniacid];
-
         $coupon_model  = new IndexCoupon();
-
         $coupon        = $coupon_model->couponListSelect($coupon_dis,$this->getUserId(),$staff_id,100);
-
         $cardInfo[ 'coupon' ]                  = array();
         $cardInfo[ 'coupon_last_record' ]      = array();
         $cardInfo[ 'coupon_last_record_user' ] = array();
@@ -1183,7 +1017,6 @@ class Index extends ApiRest
                 $record_list = CardCouponRecord::where( [ [ 'coupon_id', '=', $item[ 'id' ] ],
                     [ 'staff_id', '=', $params[ 'staff_id' ] ],
                     [ 'uniacid', '=', $this->_uniacid ] ,
-
                 ] )
                     ->order( [ 'id' => 'desc' ] )
                     ->select()
@@ -1199,11 +1032,8 @@ class Index extends ApiRest
                 }
             }
         }
-
-
         if ( !empty( $cardInfo[ 'coupon_last_record' ] ) )
         {
-
             foreach ( $cardInfo[ 'coupon_last_record' ] as $index => $item )
             {
 //
@@ -1212,18 +1042,14 @@ class Index extends ApiRest
                 {
                     $user[ 'nickName' ] = mb_substr( $user[ 'nickName' ], 0, 4, "UTF-8" );
                 }
-
                 $cardInfo[ 'coupon_last_record' ][ $index ][ 'user_info' ] = $user;
             }
-
         }
-
         //数据统计
         $modelCount = new RadarCount();
         list( $viewCount, $thumbCount ) = $modelCount->RadarNumber( $staff_id ,$this->_uniacid);
         $cardInfo[ 'view_count' ]  = $viewCount;
         $cardInfo[ 'thumbCount' ] = $thumbCount;
-
         //  是否语音点赞
         $checkVoice = CardCount::where( [ [ 'type', '=', 1 ], [ 'user_id', '=', $userId ],
                 [ 'to_uid', '=', $params[ 'staff_id' ] ], [ 'sign', '=', 'praise' ] ]
@@ -1253,20 +1079,16 @@ class Index extends ApiRest
         {
             $cardInfo[ 'isThumbs' ] = 0;
         }
-
         $cardInfo[ 'view_count' ] = $cardInfo[ 'view_count' ] + $cardInfo[ 'view_number' ];
         $cardInfo[ 'thumbCount' ] = $cardInfo[ 'thumbCount' ] + $cardInfo[ 't_number' ];
         $cardInfo[ 'share_number' ] = $share_number;
         $modelTags = new CardTags();
         $cardInfo[ 'tag_list' ] = $modelTags->cardTagList( $params[ 'staff_id' ], $userId, $this->_uniacid );
-
-
         //By.jingshuixian
         //监听获取名片展示信息
         $eventCardInfoData  = event("CardInfo" , $params);
         //兼容老数据
         foreach ($eventCardInfoData as $items){
-
             foreach ($items as $key => $item){
                 if( $key  == 'decorate'){  //装修老板兼容
                     $cardInfo['plugin'] = $item ;
@@ -1274,12 +1096,9 @@ class Index extends ApiRest
                     $cardInfo[$key] = $item ;
                 }
             }
-
         }
-
         return $this->success( $cardInfo );
     }
-
 
     /**
      * @Purpose: 名片信息
@@ -1292,21 +1111,17 @@ class Index extends ApiRest
      */
     public function cardInfoV3 ()
     {
-
         //获取diy的数据
         $diy_data = DiyModel::where([['status', '=', 1],['uniacid', '=', $this->_uniacid]])->find();
         //获取商城的
         $page_data= json_decode($diy_data['page'], true)[1] ?? [];
         //判断有没有diy过
         if(empty($page_data)|| (array_key_exists('list',$page_data) && empty($page_data['list']))){
-
             $page_data = longbing_default_Page(1);
-
         }
         //获取用户id
         $userId = (string) $this->getUserId();
         $uniacid = $this->_uniacid;
-
         //获取必要参数
         $verify = [ 'staff_id' => 'required' ,'is_base' => 0];
         $params = lbGetParamVerify( $this->_param, $verify );
@@ -1338,47 +1153,32 @@ class Index extends ApiRest
                 'type'    => 3
             );
             publisher(json_encode($push_data ,true));
-
             $cardInfo['qr_path'] = $qr_path;
-
         }
-
         if(!empty($cardInfo['qr_path'])) $cardInfo = transImagesOne($cardInfo ,['qr_path']);
-
         $modelCompany = new Company();
-
         //检查公司默认数据
         if ( empty($cardInfo['company_info']) )
         {
             //jingshuixian 0 =  $cardInfo['fans_id']
             $company = $modelCompany->getInfo( $this->_uniacid, $cardInfo['fans_id'], 0 );
-
             $cardInfo[ 'company_info' ] = $company;
             if(isset($company['name'])) $company_name = $company['name'];
         }
         $cardInfo[ 'company_info' ] = $modelCompany->changeTopName($cardInfo[ 'company_info' ]);
-
         $cardInfo['company_name']   = !empty($cardInfo[ 'company_info' ]['name'])? $cardInfo[ 'company_info' ]['name']:$cardInfo['company_name'];
-
         //设置分享数据
         if(isset($cardInfo['share_text']) && !empty($cardInfo['share_text']))
         {
             $share_text = $cardInfo['share_text'];
-
             if(strpos($share_text,'#公司#')) $share_text = str_replace('#公司#',$cardInfo[ 'company_name' ],$share_text);
-
             if(strpos($share_text,'#职务#')) $share_text = str_replace('#职务#',$cardInfo[ 'job_name' ],$share_text);
-
             if(strpos($share_text,'#我的名字#')) $share_text = str_replace('#我的名字#',$cardInfo[ 'name' ],$share_text);
-
             if(strpos($share_text,'$company')) $share_text = str_replace('$company',$cardInfo[ 'company_name' ],$share_text);
-
             if(strpos($share_text,'$job')) $share_text = str_replace('$job',$cardInfo[ 'job_name' ],$share_text);
-
             if(strpos($share_text,'$name')) $share_text = str_replace('$name',$cardInfo[ 'name' ],$share_text);
             $cardInfo['share_text'] = $share_text;
         }else{
-
 //            $cardInfo['share_text'] = lang("card share text");
             $cardInfo['share_text'] = '您好，我是'.$cardInfo[ 'company_name' ].'的'.$cardInfo[ 'job_name' ].$cardInfo[ 'name' ].',请惠存';
         }
@@ -1391,10 +1191,6 @@ class Index extends ApiRest
         }else{
             $cardInfo = transImagesOne($cardInfo, ['share_img']);
         }
-
-
-
-
         //更新最后查看信息
         //By.jingshuixian 最后访问的员工ID不同是更新
 //        if(!in_array($userId, [$params[ 'staff_id' ]]))
@@ -1406,8 +1202,6 @@ class Index extends ApiRest
             longbingSetUser($userId ,$this->_uniacid ,$user);
         }
 //        }
-
-
         //是否只需要基础数据======================================================================================================有返回结果==============================
         if(isset($params['is_base']) && !empty($params['is_base']))
         {
@@ -1415,8 +1209,6 @@ class Index extends ApiRest
             return $this->success($cardInfo);
         }
         //是否只需要基础数据======================================================================================================有返回结果==============================
-
-
         //默认vr数据
         if(!isset($cardInfo['vr_tittle']) || empty($cardInfo['vr_tittle']))
         {
@@ -1428,14 +1220,12 @@ class Index extends ApiRest
                 $cardInfo['vr_tittle'] = lang('panoramic');
             }
         }
-
         $config      = longbingGetAppConfig($this->_uniacid);
         //默认背景音乐
         if ( !$cardInfo[ 'bg' ] )
         {
             $cardInfo[ 'bg' ] = $config[ 'default_voice' ];
         }
-
         if ( !$cardInfo[ 'bg_switch' ] )
         {
             $cardInfo[ 'bg_switch' ] = $config[ 'default_voice_switch' ];
@@ -1445,10 +1235,8 @@ class Index extends ApiRest
         $cardInfo = transImagesOne( $cardInfo, [ 'avatar', 'voice', 'my_url', 'my_video', 'my_video_cover', 'bg', 'vr_cover',
                 'vr_path' ]
         );
-
         //判断视频等参数
         $config = longbingGetAppConfig($this->_uniacid);
-
         //默认视频
         if(isset($config['default_video']) && empty($cardInfo['my_video'])) $cardInfo['my_video'] = $config['default_video'];
         //默认视频图片
@@ -1472,13 +1260,11 @@ class Index extends ApiRest
         {
             $cardInfo[ 'vr_tittle' ] = 'VR全景';
         }
-
         if(empty($input['is_update'])){
             //新的默认配置模型
             $defult_setting = new DefaultSetting();
             //默认配置数据
             $defult_setting_data = $defult_setting->settingInfo(['uniacid'=>$this->_uniacid]);
-
             $defult_setting_data = transImages($defult_setting_data,['my_photo_cover']);
             //我的签名
             $cardInfo['desc']   = !empty($cardInfo['desc'])?$cardInfo['desc']:$defult_setting_data['my_sign'];
@@ -1491,31 +1277,22 @@ class Index extends ApiRest
             //我的语音时长
             $cardInfo['voice_time']  = !empty($cardInfo['voice_time'])?$cardInfo['voice_time']:$defult_setting_data['voice_time'];
         }
-
         //获取福报
 //        $coupon = CardCoupon::where( [ [ 'end_time', '>', time() ], [ 'status', '=', 1 ], [ 'uniacid', '=', $this->_uniacid ] , [ 'number' , '>' , 0]] )
 //            ->order( [ 'top' => 'desc', 'id' => 'desc' ] )
 //            ->select()
 //            ->toArray();
-
         $coupon_model  = new IndexCoupon();
         //循环diy获取优惠券样式
         foreach ($page_data['list'] as &$value){
-
             if($value['type']=='couponList'&&empty($value['data']['dataList'])) {
-
                 $coupon_dis = ['status'=>1,'uniacid'=>$this->_uniacid];
-
                 $dataList   = $coupon_model->couponListSelect($coupon_dis,$this->getUserId(),$staff_id);
-
                 if(!empty($dataList)){
                     //列表样式
                     if($value['data']['type']==2){
-
                         $value['data']['dataList'] = $dataList;
-
                         $cardInfo['coupon'] = $dataList;
-
                     }else{
                         //弹窗样式
                         $cardInfo['coupon'] = $dataList[0];
@@ -1529,10 +1306,8 @@ class Index extends ApiRest
                             'uniacid'   => $this->_uniacid
                         ];
                         $cardInfo['coupon_last_record'] = CardCouponRecord::where($r_dis)->order('id desc')->limit(3)->select()->toArray();
-
                         if ( !empty( $cardInfo[ 'coupon_last_record' ] ) )
                         {
-
                             foreach ( $cardInfo[ 'coupon_last_record' ] as $index => $item )
                             {
 //
@@ -1541,14 +1316,11 @@ class Index extends ApiRest
                                 {
                                     $user[ 'nickName' ] = mb_substr( $user[ 'nickName' ], 0, 4, "UTF-8" );
                                 }
-
                                 $cardInfo[ 'coupon_last_record' ][ $index ][ 'user_info' ] = $user;
                             }
-
                         }
                     }
                 }
-
             }
         }
         //数据统计
@@ -1556,7 +1328,6 @@ class Index extends ApiRest
         list( $viewCount, $thumbCount ) = $modelCount->RadarNumber( $staff_id ,$this->_uniacid);
         $cardInfo[ 'view_count' ]  = $viewCount;
         $cardInfo[ 'thumbCount' ] = $thumbCount;
-
         //  是否语音点赞
         $checkVoice = CardCount::where( [ [ 'type', '=', 1 ], [ 'user_id', '=', $userId ],
                 [ 'to_uid', '=', $params[ 'staff_id' ] ], [ 'sign', '=', 'praise' ] ]
@@ -1586,23 +1357,16 @@ class Index extends ApiRest
         {
             $cardInfo[ 'isThumbs' ] = 0;
         }
-
-
-
         $cardInfo[ 'view_count' ] = $cardInfo[ 'view_count' ] + $cardInfo[ 'view_number' ];
         $cardInfo[ 'thumbCount' ] = $cardInfo[ 'thumbCount' ] + $cardInfo[ 't_number' ];
         $cardInfo[ 'share_number' ] = $share_number;
         $modelTags = new CardTags();
         $cardInfo[ 'tag_list' ] = $modelTags->cardTagList( $params[ 'staff_id' ], $userId, $this->_uniacid );
-
-
         //By.jingshuixian
         //监听获取名片展示信息
         $eventCardInfoData  = event("CardInfo" , $params);
-
         //兼容老数据
         foreach ($eventCardInfoData as $items){
-
             foreach ($items as $key => $item){
                 if( $key  == 'decorate'){  //装修老板兼容
                     $cardInfo['plugin'] = $item ;
@@ -1610,12 +1374,9 @@ class Index extends ApiRest
                     $cardInfo[$key] = $item ;
                 }
             }
-
         }
         $arr_data['card_info'] = $cardInfo;
-
         $arr_data['list']      = $page_data['list'];
-
         return $this->success( $arr_data );
     }
     /**
@@ -1624,11 +1385,8 @@ class Index extends ApiRest
      * @功能说明:默认配置
      */
     public function defaultSetting(){
-
         $d_model = new DefaultSetting();
-
         $data  = $d_model->settingInfo(['uniacid'=>$this->_uniacid]);
-
         return $this->success( $data );
     }
     /**
@@ -1648,8 +1406,6 @@ class Index extends ApiRest
         $cardInfo_default = longbingGetUserCard($staff_id ,$this->_uniacid);
         if(empty($cardInfo_default) || empty($cardInfo_default['is_staff'])) return $this->success([]);
         $cardInfo=[];
-
-
         //  名片最近浏览情况
         $modelCount = new RadarCount();
         list( $cardInfo[ 'view_list' ] ) = $modelCount->getCardViewInfo( $params[ 'staff_id' ], $this->_uniacid );
@@ -1667,23 +1423,17 @@ class Index extends ApiRest
     public function editDesc ()
     {
         $userId = $this->getUserId();
-
         $verify = [ 'desc' => '' ];
-
         $params = lbGetParamVerify( $this->_input, $verify );
-
         $card = UserInfo::where( [ [ 'fans_id', '=', $userId ], [ 'is_staff', '=', 1 ], [ 'uniacid', '=', $this->_uniacid ] ] )
             ->field( [ 'desc' ] )
             ->find();
-
         if ( !$card )
         {
             $this->error( 'card info not found', 402 );
         }
-
         $card->desc = $params[ 'desc' ] ?? '';
         $result     = $card->save();
-
         if ( $result === false )
         {
             $this->error( 'edit fail', 402 );
@@ -1708,27 +1458,18 @@ class Index extends ApiRest
     public function editImages ()
     {
         $userId = $this->getUserId();
-
         $verify = [ 'images' => 'required' ];
-
         $params = lbGetParamVerify( $this->_input, $verify );
-
         $card = UserInfo::where( [ [ 'fans_id', '=', $userId ], [ 'is_staff', '=', 1 ], [ 'uniacid', '=', $this->_uniacid ] ] )
             ->field( [ 'images' ] )
             ->find();
-
         if ( !$card )
         {
             $this->error( 'card info not found', 402 );
         }
-
-
         $params[ 'images' ] = implode(',', $params[ 'images' ]);
-
-
         $card->images = trim( $params[ 'images' ], ',' );
         $result       = $card->save();
-
         if ( $result === false )
         {
             $this->error( 'edit fail', 402 );
@@ -1754,46 +1495,33 @@ class Index extends ApiRest
     {
         $userId  = $this->getUserId();
         $uniacid = $this->_uniacid;
-
         $verify = [ 'avatar'     => '', 'name' => 'required', 'job_id' => 'required', 'phone' => 'required', 'email' => '',
             'company_id' => 'required', 'auth_code' => '', 'ww_account' => '', 'telephone' => '', 'wechat' => '' ];
-
         $params = lbGetParamVerify( $this->_input, $verify );
         //微信库类
         $service_model = new WxSetting($this->_uniacid);
         //违禁词检查
         $rest          = $service_model->wxContentRlue($params['name']);
-
         if($rest['errcode'] != 0){
-
             return $this->error('内容含有违法违规内容');
         }
-
-
         $modelConfig = new Config();
-
 //      $config = $modelConfig->getConfig( $this->_uniacid );
         //获取配置信息
         $config = longbingGetAppConfig($this->_uniacid);
-
         $defaultCode = $config[ 'code' ];
-
         $companyInfo = $this->modelCompany->getInfo( $this->_uniacid, 0, $params[ 'company_id' ] );
-
         if ( !$companyInfo )
         {
             return $this->error( lang('not the company') );
         }
-
         $modelCompany= new Company();
-
         $companyInfo = $modelCompany->changeTopName($companyInfo);
         //获取工作信息
         $job_model = new CardJob();
         $job = $job_model->getJob(['uniacid' => $uniacid ,'id' => $params['job_id']]);
         if(empty($job)) return $this->error( lang('not the job') );
         $companyCode = $companyInfo[ 'auth_code' ];
-
         //  是否需要免审口令
         $code = '';
         if ( $companyCode )
@@ -1804,8 +1532,6 @@ class Index extends ApiRest
         {
             $code = $defaultCode;
         }
-
-
         $modelUserInfo = new UserInfo();
         $userInfo      = $modelUserInfo->where( [ [ 'fans_id', '=', $userId ], [ 'uniacid', '=', $this->_uniacid ] ] )
             ->find();
@@ -1826,8 +1552,6 @@ class Index extends ApiRest
             }
             return $this->error(lang('code error') ,402);
         }
-
-
         //  编辑
         if(empty($userInfo) || empty($userInfo['is_staff']))
         {
@@ -1847,13 +1571,9 @@ class Index extends ApiRest
             $userInfo->company_id = $params[ 'company_id' ];
             $userInfo->ww_account = $params[ 'ww_account' ];
             $userInfo->telephone  = $params[ 'telephone' ];
-
             $userInfo->wechat     = !empty($params[ 'wechat' ])?$params[ 'wechat' ]:'';
-
             $userInfo->is_staff   = 1;
-
             User::update( [ 'is_staff' => 1 ], [ 'id' => $userId ] );
-
             $result = $userInfo->save();
             //清除名片缓存
             $key = 'longbing_card_info_' . $userId;
@@ -1862,8 +1582,6 @@ class Index extends ApiRest
         //  创建
         else
         {
-
-
             $modelUserInfo             = new UserInfo();
             $modelUserInfo->uniacid    = $this->_uniacid;
             $modelUserInfo->fans_id    = $userId;
@@ -1885,10 +1603,7 @@ class Index extends ApiRest
 //              User::update( [ 'is_staff' => $is_staff ], [ 'id' => $userId ] );
 //          }
             $result = $modelUserInfo->save();
-
         }
-
-
         //By.jingshuixian   判断是否拥有分公司的boss权限
         $permissions = new  PermissionBoss($uniacid);
         //有分公司权限  自动绑定当前公司
@@ -1899,8 +1614,6 @@ class Index extends ApiRest
                 CardBoss::create( [ 'user_id' => $userId , 'boss' => $params[ 'company_id' ], 'uniacid' => $this->_uniacid ] );
             }
         }
-
-
         if ( $result === false )
         {
             return $this->error( 'operation failed' );
@@ -1922,7 +1635,6 @@ class Index extends ApiRest
             );
             if(empty($gData['company_logo'])) $gData['company_logo'] = $this->defaultImage['image'];
             if(empty($gData['img'])) $gData['img'] = $this->defaultImage['avatar'];
-
             try{
 //              longbingCreateSharePng( $gData, $userId, $uniacid );
                 $push_data = array(
@@ -1955,11 +1667,8 @@ class Index extends ApiRest
     public function thumbStaff ()
     {
         $userId = $this->getUserId();
-
         $verify = [ 'staff_id' => 'required', 'type' => 0 ];
-
         $params = lbGetParamVerify( $this->_input, $verify );
-
         if ( $params[ 'type' ] == 0 )
         {
             //  是否给名片点赞
@@ -1978,8 +1687,6 @@ class Index extends ApiRest
                 ->find();
             $type  = 1;
         }
-
-
         if ( $check )
         {
             $check  = $check->toArray();
@@ -1987,14 +1694,10 @@ class Index extends ApiRest
                 ->delete();
         }
         else {
-
-
             $result = CardCount::create( [ 'type' => $type, 'user_id' => $userId, 'to_uid' => $params[ 'staff_id' ],
                     'sign' => 'praise', 'uniacid' => $this->_uniacid ]
             );
         }
-
-
         return $this->success( [] );
     }
 
@@ -2010,14 +1713,10 @@ class Index extends ApiRest
     public function thumbTag ()
     {
         $userId = $this->getUserId();
-
         $verify = [ 'tag_id' => 'required' ];
-
         $params = lbGetParamVerify( $this->_input, $verify );
-
         $check = CardUserTags::where( [ [ 'user_id', '=', $userId ], [ 'tag_id', '=', $params[ 'tag_id' ] ] ] )
             ->find();
-
         if ( $check )
         {
             CardUserTags::where( [ [ 'id', '=', $check[ 'id' ] ] ] )
@@ -2033,8 +1732,6 @@ class Index extends ApiRest
                 ->inc( 'count' )
                 ->update();
         }
-
-
         return $this->success( [] );
     }
 
@@ -2050,11 +1747,8 @@ class Index extends ApiRest
     public function getFormIdFromMini ()
     {
         $userId = $this->getUserId();
-
         $verify = [ 'form_id' => 'required' ];
-
         $params = lbGetParamVerify( $this->_input, $verify );
-
         $data = explode( ',', $params[ 'form_id' ] );
         $insertData = [];
         foreach ( $data as $index => $item )
@@ -2071,7 +1765,6 @@ class Index extends ApiRest
             'data'       => $insertData
         );
         publisher(json_encode($push_data ,true));
-
         return $this->success( [] );
     }
 
@@ -2087,32 +1780,22 @@ class Index extends ApiRest
     public function reportPhone ()
     {
         $userId = $this->getUserId();
-
-
         $verify = [ 'staff_id' => 'required', 'encryptedData' => 'required', 'iv' => 'required' ];
-
         $params = lbGetParamVerify( $this->_input, $verify );
-
         $staff_id      = $params[ 'staff_id' ];
         $uniacid       = $this->_uniacid;
         $encryptedData = $params[ 'encryptedData' ];
         $iv            = $params[ 'iv' ];
-
         $info = UserPhone::where( [ [ 'user_id', '=', $userId ], [ 'uniacid', '=', $uniacid ] ] )
             ->find();
-
         if ( $info )
         {
             return $this->success( [ 'phone' => $info[ 'phone' ], 'new' => 3, 'iv' => $iv ] );
         }
-
-
         $config    = longbingGetAppConfig($this->_uniacid);
         // var_dump(json_encode($config));die;
         $appid     = $config[ 'appid' ];
         $appsecret = $config[ 'app_secret' ];
-
-
         $check_sk = UserSk::where( [ [ 'user_id', '=', $userId ] ] )
             ->find();
         if ( !$check_sk )
@@ -2123,25 +1806,19 @@ class Index extends ApiRest
         {
             $session_key = $check_sk[ 'sk' ];
         }
-
-
         $data = null;
         //  解密
         $errCode = decryptDataLongbing( $appid, $session_key, $encryptedData, $iv, $data );
 //        $errCode = baiduDecryptDataLongbing( $appid, $session_key, $encryptedData, $iv, $data );
-
         if ( $errCode == 0 )
         {
             $data = json_decode( $data, true );
-
             $phone = $data[ 'purePhoneNumber' ];
-
         }
         else
         {
             return $this->error( $errCode );
         }
-
         $data = [ 'user_id' => $userId, 'to_uid' => $params[ 'staff_id' ], 'phone' => $phone, 'uniacid' => $uniacid ];
         $data = UserPhone::create( $data );
         if(!empty($data))
@@ -2152,7 +1829,6 @@ class Index extends ApiRest
         }
         return $this->success( [ 'phone' => $phone, 'new' => 1, ] );
     }
-
 
     /**
      * @Purpose: 上报手机号
@@ -2166,30 +1842,21 @@ class Index extends ApiRest
     public function baiduReportPhone ()
     {
         $userId = $this->getUserId();
-
         $verify = [ 'staff_id' => 'required', 'encryptedData' => 'required', 'iv' => 'required' ];
-
         $params = lbGetParamVerify( $this->_input, $verify );
-
         $staff_id      = $params[ 'staff_id' ];
         $uniacid       = $this->_uniacid;
         $encryptedData = $params[ 'encryptedData' ];
         $iv            = $params[ 'iv' ];
-
         $info = UserPhone::where( [ [ 'user_id', '=', $userId ], [ 'uniacid', '=', $uniacid ] ] )
             ->find();
-
         if ( $info )
         {
             return $this->success( [ 'phone' => $info[ 'phone' ], 'new' => 3, 'iv' => $iv ] );
         }
-
-
         $config    = Db::name('longbing_card_baidu_setting')->where(['uniacid'=>$this->_uniacid])->find();
         $appid     = $config[ 'client_id' ];
         $appsecret = $config[ 'client_secret' ];
-
-
         $check_sk = UserSk::where( [ [ 'user_id', '=', $userId ] ] )->find();
         if ( !$check_sk )
         {
@@ -2199,12 +1866,9 @@ class Index extends ApiRest
         {
             $session_key = $check_sk[ 'sk' ];
         }
-
         $data = null;
         //  解密
         $errCode = baiduDecryptDataLongbing( $encryptedData,$iv,$appid, $session_key);
-
-
         if ( $errCode!=false)
         {
             $errCode = json_decode($errCode,true);
@@ -2235,17 +1899,14 @@ class Index extends ApiRest
     public function reviewTags ()
     {
         $userId = $this->getUserId();
-
         $staffTags = CardTags::where( [ [ 'user_id', '=', $userId ], [ 'uniacid', '=', $this->_uniacid ], [ 'status', '=', 1 ] ] )
             ->field( [ 'id', 'tag', 'count' ] )
             ->select()
             ->toArray();
-
         $sysTags = CardTags::where( [ [ 'user_id', '=', 0 ], [ 'uniacid', '=', $this->_uniacid ], [ 'status', '=', 1 ] ] )
             ->field( [ 'id', 'tag', 'count' ] )
             ->select()
             ->toArray();
-
         foreach ( $sysTags as $index => $item )
         {
             $sysTags[ $index ][ 'selected' ] = 0;
@@ -2258,10 +1919,8 @@ class Index extends ApiRest
                 }
             }
         }
-
         $data[ 'staffTags' ] = $staffTags;
         $data[ 'sysTags' ]   = $sysTags;
-
         return $this->success( $data );
     }
 
@@ -2277,22 +1936,15 @@ class Index extends ApiRest
     public function editTags ()
     {
         $userId = $this->getUserId();
-
         $verify = [ 'tags' => 'required' ];
-
         $params = lbGetParamVerify( $this->_input, $verify );
-
         $model = new CardTags();
-
         $staffTags = $model->where( [ [ 'user_id', '=', $userId ], [ 'uniacid', '=', $this->_uniacid ], [ 'status', '=', 1 ] ] )
             ->field( [ 'id', 'tag', 'count' ] )
             ->select()
             ->toArray();
-
         $tmpArr = [];
-
         $updateData = [];
-
         foreach ( $staffTags as $index => $item )
         {
             $tmpArr[] = $item[ 'tag' ];
@@ -2305,9 +1957,7 @@ class Index extends ApiRest
         {
             $model->saveAll( $updateData );
         }
-
         $insertData = [];
-
         foreach ( $params[ 'tags' ] as $index => $item )
         {
             if ( !in_array( $item, $tmpArr ) )
@@ -2320,8 +1970,6 @@ class Index extends ApiRest
         {
             $model->saveAll( $insertData );
         }
-
-
         return $this->success( [] );
     }
     //收藏名片
@@ -2431,7 +2079,6 @@ class Index extends ApiRest
         return $this->success($result);
     }
 
-
     //获取微信小程序码信息
     public function getWxCodeData()
     {
@@ -2439,18 +2086,14 @@ class Index extends ApiRest
         if(isset($this->_param['code_id'])) $code_id = $this->_param['code_id'];
         if(empty($code_id)) return $this->error('not code id ,please check param.');
         $result = longbingGetWxCode($code_id ,$this->_uniacid , $is_update = false);
-
         return $this->success($result);
     }
-
-
 
     /**
      * 将线上图片转为本地图片用于前端cavans画图
      */
     public function getImage ()
     {
-
         $path = $this->_param['path'] ?? 'http://longbing.cncnconnect.com/attachment/image/2/wxcode/8e1cc25f24bd0c10ad238e1ce8b7a2e2.jpeg' ;
         if (!$path ) {
             return $this->error('请传入参数');
@@ -2460,12 +2103,9 @@ class Index extends ApiRest
 //        $position = strpos($path, 'getImage&path=');
 //        $sub_str  = substr($path, $position + 14);
 //        $path     = urldecode($sub_str);
-
         //判断类型
         $type_img = getimagesize($path);
-
         ob_start();
-
         if ( strpos($type_img[ 'mime' ], 'jpeg') ) {
             $resourch = imagecreatefromjpeg($path);
             imagejpeg($resourch);
@@ -2478,8 +2118,6 @@ class Index extends ApiRest
         return response($content, 200, [ 'Content-Length' => strlen($content) ])->contentType('image/png');
     }
 
-
-
     /**
      * 剩余通知条数
      * @access public
@@ -2490,15 +2128,12 @@ class Index extends ApiRest
         global $_GPC, $_W;
         $uid       =  $this->_user_id ?? $_GPC[ 'user_id' ] ?? null;
         $beginTime = mktime( 0, 0, 0, date( 'm' ), date( 'd' ) - 7, date( 'Y' ) );
-
         $m_form_id = new LongbingCardFromId();
         $count = $m_form_id->where([
             ['uniacid', '=', $this->_uniacid],
             ['user_id', '=', $uid],
             ['create_time', '>', $beginTime]
-
         ])->count();
-
         return  $this->success(['count' => $count]);
     }
 
@@ -2552,9 +2187,6 @@ class Index extends ApiRest
         $info['is_staff'] = $is_staff;
         return $this->success($info);
     }
-
-
-
 
 //    public function
 

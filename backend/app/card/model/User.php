@@ -5,13 +5,10 @@ use app\BaseModel;
 use longbingcore\wxcore\Excel;
 use think\Model;
 
-
-
 class User extends BaseModel
 {
     //定义表名
     protected $name = 'longbing_card_user';
-
 
     protected static function init ()
     {
@@ -45,9 +42,7 @@ class User extends BaseModel
     }
     public function listUser($filter)
     {
-        
     }
-
 
     /**
      * @param $where
@@ -56,7 +51,6 @@ class User extends BaseModel
      * @DataTime: 2020-04-14 14:41
      */
     public function cardExcel($where,$mapor,$type=0,$start_time='',$end_time=''){
-
         $data = User::alias( 'a' )
                 ->join( 'longbing_card_user_info b', 'b.fans_id = a.id' ,'LEFT')
                 ->join( 'longbing_card_company c', 'b.company_id = c.id', 'LEFT' )
@@ -73,16 +67,10 @@ class User extends BaseModel
                 ->order( [ 'a.is_boss' => 'desc', 'a.is_staff' => 'desc', 'a.update_time' => 'desc', 'a.id' => 'desc' ] )
                 ->select()
                 ->toArray();
-
-
         if(!empty($data)){
-
             foreach ($data as $k=>$v){
-
                 if(empty($v['top_company_name'])){
-
                     $data[$k]['top_company_name'] = $v['company_name'];
-
                     $data[$k]['company_name']     = '未设置部门';
                 }
                 $data[$k]['name'] = !empty($v['name'])?$v['name']:$v['nickName'];
@@ -112,7 +100,6 @@ class User extends BaseModel
                 $data[$k]['new_dz']         = $this->dzCount($v['id'],$v['uniacid'],$start_time,$end_time);
             }
         }
-
         $header=[
             '序号',
             '分公司',
@@ -131,7 +118,6 @@ class User extends BaseModel
             '累计被点赞',
             '',
         ];
-
         if($type==1){
             $header_one=[
                 '',
@@ -152,7 +138,6 @@ class User extends BaseModel
                 '总数',
             ];
         }else{
-
             $header_one=[
                 '',
                 '',
@@ -173,72 +158,40 @@ class User extends BaseModel
             ];
         }
         $new_data = [];
-
         $new_data[] = $header_one;
-
         $data = array_values($data);
-
         foreach ($data as $k=>$v){
-
             $info   = array();
-
             $info[] = $k+1;
-
             $info[] = $v['top_company_name'];
-
             $info[] = $v['company_name'];
-
             $info[] = $v['name'];
-
             $info[] = $v['new_customer'];
-
             $info[] = $v['all_customer'];
-
             $info[] = $v['new_collection'];
-
             $info[] = $v['all_collection'];
-
             $info[] = $v['new_visit'];
-
             $info[] = $v['all_visit'];
-
             $info[] = $v['new_zf'];
-
             $info[] = $v['all_zf'];
-
             $info[] = $v['new_save'];
-
             $info[] = $v['all_save'];
-
             $info[] = $v['new_dz'];
-
             $info[] = $v['all_dz'];
-
             $new_data[] = $info;
         }
-
         $excel = new Excel();
-
         $name  = '员工列表';
-
         if($type==1){
-
             $name  = date('Y-m-d',$start_time).'——'.'员工列表';
         }
-
         if($type==0&&!empty($start_time)&&!empty($end_time)){
-
             $name = date('Y-m-d',$start_time).'——'.date('Y-m-d',$end_time).'-'.'员工列表';
         }
-
-
 //        dump($name);exit;
         $fileName=$excel->excelExport($name,$header,$new_data,1);
-
         return $data;
-
     }
-
 
     /**
      * @param $user_id
@@ -251,28 +204,18 @@ class User extends BaseModel
     public function customerCount($user_id,$uniacid,$start_time='',$end_time=''){
         //线索模型
         $collect    = new Collection();
-
         $whez[] =[
-
             ['a.uid','<>',$user_id],
-
             ['intention','=',1],
-
             ['a.to_uid','=',$user_id],
-
             ['a.uniacid','=',$uniacid]
         ];
-
         //如果选了时间
         if(!empty($start_time)||!empty($end_time)){
-
             $whez[] = ['a.create_time','between',"$start_time,$end_time"];
         }
-
         $new_customer = $collect->todayUid($whez);
-
         return $new_customer;
-
     }
 
     /**
@@ -286,29 +229,18 @@ class User extends BaseModel
     public function collectionCount($user_id,$uniacid,$start_time='',$end_time=''){
         //线索模型
         $collect    = new Collection();
-
-
         $whes[] = [
-
             ['a.uid','<>',$user_id],
-
             ['a.to_uid','=',$user_id],
-
             ['a.uniacid','=',$uniacid],
-
 //            ['intention','=',0],
         ];
-
         //如果选了时间
         if(!empty($start_time)||!empty($end_time)){
-
             $whes[] = ['a.create_time','between',"$start_time,$end_time"];
         }
-
         $data = $collect->todayUid($whes);
-
         return $data;
-
     }
 
     /**
@@ -320,30 +252,21 @@ class User extends BaseModel
      * @DataTime: 2020-04-14 16:14
      */
     public function visitCount($user_id,$uniacid,$start_time='',$end_time=''){
-
         //雷达模型
         $card_count = new CardCount();
-
         $wheres[] = [
             ['to_uid','=',$user_id],
-
             ['sign','=','praise'],
-
             ['type','=',2],
-
             ['uniacid','=',$uniacid]
         ];
-
         //如果选了时间
         if(!empty($start_time)||!empty($end_time)){
-
             $wheres[] = ['create_time','between',"$start_time,$end_time"];
         }
         //新增浏览量
         $data = $card_count->getCount($wheres);
-
         return $data;
-
     }
 
     /**
@@ -355,31 +278,21 @@ class User extends BaseModel
      * @DataTime: 2020-04-14 16:14
      */
     public function zfCount($user_id,$uniacid,$start_time='',$end_time=''){
-
         //雷达模型
         $card_count = new CardCount();
-
         $where4[] = [
-
             ['to_uid','=',$user_id],
-
             ['type','=',4],
-
             ['sign','=','praise'],
-
             ['uniacid','=',$uniacid]
         ];
-
         //如果选了时间
         if(!empty($start_time)||!empty($end_time)){
-
             $where4[] = ['create_time','between',"$start_time,$end_time"];
         }
         //新增浏览量
         $data = $card_count->getCount($where4);
-
         return $data;
-
     }
 
     /**
@@ -393,27 +306,19 @@ class User extends BaseModel
     public function saveCount($user_id,$uniacid,$start_time='',$end_time=''){
         //雷达模型
         $card_count = new CardCount();
-
         $where6[] = [
-
             ['to_uid','=',$user_id],
-
             ['type','=',1],
-
             ['sign','=','copy'],
-
             ['uniacid','=',$uniacid]
         ];
         //如果选了时间
         if(!empty($start_time)||!empty($end_time)){
-
             $where6[] = ['create_time','between',"$start_time,$end_time"];
         }
         //保存
         $data = $card_count->getCount($where6);
-
         return $data;
-
     }
 
     /**
@@ -427,27 +332,19 @@ class User extends BaseModel
     public function dzCount($user_id,$uniacid,$start_time='',$end_time=''){
         //雷达模型
         $card_count = new CardCount();
-
         $where5[] = [
-
             ['to_uid','=',$user_id],
-
             ['type','=',3],
-
             ['sign','=','praise'],
-
             ['uniacid','=',$uniacid]
         ];
         //如果选了时间
         if(!empty($start_time)&&!empty($end_time)){
-
             $where5[] = ['create_time','between',"$start_time,$end_time"];
         }
         //点赞
         $data = $card_count->getCount($where5);
-
         return $data;
-
     }
 
 }

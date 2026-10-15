@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\massage\controller;
-
 
 use app\ApiRest;
 use app\massage\model\StoreApply;
@@ -53,28 +51,20 @@ class IndexStore extends ApiRest
     public function getStore()
     {
         $type = request()->param('time_type', 1);
-
         $data = StoreApply::getInfo([['user_id', '=', $this->getUserId()], ['status', '>', -1]]);
         $data = empty($data) ? '' : $data;
-
         if ($type == 1) {
-
             $timestamp = time();
             $start = strtotime(date('Y-m-d', strtotime("this week Monday", $timestamp)));
             $end = strtotime(date('Y-m-d', strtotime("this week Sunday", $timestamp))) + 24 * 3600 - 1;
         } else if ($type == 2) {
-
             $start = mktime(0, 0, 0, date('m'), 1, date('Y'));
             $end = mktime(23, 59, 59, date('m'), date('t'), date('Y'));
         }
-
         $data = PackageOrder::getShopData($data, $start, $end);
-
         if (!empty($data)){
-
             $data['qywx_company_id'] = getConfigSetting($this->_uniacid, 'qywx_company_id');
         }
-
         return $this->success($data);
     }
 
@@ -111,12 +101,9 @@ class IndexStore extends ApiRest
             ['status', '=', 2]
         ];
         if (!empty($input['name'])) {
-
             $where[] = ['name', 'like', '%' . $input['name'] . '%'];
         }
-
         if (!empty($input['type_id'])) {
-
             $where[] = ['', 'exp', Db::raw("find_in_set({$input['type_id']},type_id)")];
         }
         $alh = 'ACOS(SIN((' . $input['lat'] . ' * 3.1415) / 180 ) *SIN((lat * 3.1415) / 180 ) +COS((' . $input['lat'] . ' * 3.1415) / 180 ) * COS((lat * 3.1415) / 180 ) *COS((' . $input['lng'] . ' * 3.1415) / 180 - (lng * 3.1415) / 180 ) ) * 6378.137*1000 as distance';
@@ -131,21 +118,14 @@ class IndexStore extends ApiRest
     public function getInfo()
     {
         $id = $this->request->param('id', '');
-
         $data = StoreApply::getInfo(['id' => $id]);
-
         if (empty($data)) {
             return $this->error('门店不存在');
         }
-
         $data['type_name'] = StoreType::where('id', 'in', explode(',', $data['type_id']))->column('name');
-
         $status = getTradeStatus($data);
-
         $data = array_merge($data->toArray(), $status);
-
         $data['qywx_company_id'] = getConfigSetting($this->_uniacid, 'qywx_company_id');
-
         return $this->success($data);
     }
 
@@ -164,9 +144,7 @@ class IndexStore extends ApiRest
             ['uniacid', '=', $this->_uniacid],
             ['status', '=', 1]
         ];
-
         $data = StoreType::getListNoPage($where);
-
         return $this->success($data);
     }
 
@@ -181,23 +159,17 @@ class IndexStore extends ApiRest
         $limit = request()->param('limit', 5);
         $type = request()->param('type', 0);
         $store_id = request()->param('store_id', 0);
-
         $where = [
             ['a.uniacid', '=', $this->_uniacid],
             ['a.status', '=', 1],
             ['a.store_id', '=', $store_id]
         ];
-
         if ($type == 1) {
-
             $where[] = ['a.star', '>', 3];
         } elseif ($type == 2) {
-
             $where[] = ['a.star', '<=', 3];
         }
-
         $data = PackageOrderComment::getList($where, $limit);
-
         $where = [
             ['uniacid', '=', $this->_uniacid],
             ['status', '=', 1],
@@ -205,7 +177,6 @@ class IndexStore extends ApiRest
             ['star', '>', 3]
         ];
         $data['star_good'] = PackageOrderComment::getCount($where);
-
         $where = [
             ['uniacid', '=', $this->_uniacid],
             ['status', '=', 1],
@@ -213,7 +184,6 @@ class IndexStore extends ApiRest
             ['star', '<=', 3]
         ];
         $data['star_bad'] = PackageOrderComment::getCount($where);
-
         return $this->success($data);
     }
 }

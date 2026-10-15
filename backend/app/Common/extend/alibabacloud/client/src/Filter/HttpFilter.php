@@ -27,14 +27,12 @@ class HttpFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($host === '') {
             throw new ClientException(
                 'Host cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $host;
     }
 
@@ -53,14 +51,12 @@ class HttpFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($scheme === '') {
             throw new ClientException(
                 'Scheme cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $scheme;
     }
 
@@ -78,14 +74,12 @@ class HttpFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($body === '') {
             throw new ClientException(
                 'Body cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $body;
     }
 
@@ -103,14 +97,12 @@ class HttpFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($method === '') {
             throw new ClientException(
                 'Method cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return \strtoupper($method);
     }
 
@@ -128,14 +120,12 @@ class HttpFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($contentType === '') {
             throw new ClientException(
                 'Content-Type cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $contentType;
     }
 
@@ -153,14 +143,12 @@ class HttpFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($accept === '') {
             throw new ClientException(
                 'Accept cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $accept;
     }
 }

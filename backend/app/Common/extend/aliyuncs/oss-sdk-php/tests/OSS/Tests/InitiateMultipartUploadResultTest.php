@@ -2,7 +2,6 @@
 
 namespace OSS\Tests;
 
-
 use OSS\Core\OssException;
 use OSS\Result\InitiateMultipartUploadResult;
 use OSS\Http\ResponseCore;
@@ -26,7 +25,6 @@ BBBB;
 </InitiateMultipartUploadResult>
 BBBB;
 
-
     public function testParseValidXml()
     {
         $response = new ResponseCore(array(), $this->validXml, 200);
@@ -41,7 +39,6 @@ BBBB;
             $result = new InitiateMultipartUploadResult($response);
             $this->assertTrue(false);
         } catch (OssException $e) {
-
         }
     }
 }

@@ -44,11 +44,9 @@ class Encode
             $encode = rawurlencode($value);
             $string .= "$key=$encode&";
         }
-
         if (0 < count($this->data)) {
             $string = substr($string, 0, -1);
         }
-
         return $string;
     }
 
@@ -58,7 +56,6 @@ class Encode
     public function ksort()
     {
         ksort($this->data);
-
         return $this;
     }
 }

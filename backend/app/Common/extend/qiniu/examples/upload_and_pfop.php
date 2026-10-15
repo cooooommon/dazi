@@ -9,7 +9,6 @@ $secretKey = getenv('QINIU_SECRET_KEY');
 $bucket = getenv('QINIU_TEST_BUCKET');
 $auth = new Auth($accessKey, $secretKey);
 
-
 // 在七牛保存的文件名
 $key = 'php-logo.png';
 $uploadMgr = new UploadManager();

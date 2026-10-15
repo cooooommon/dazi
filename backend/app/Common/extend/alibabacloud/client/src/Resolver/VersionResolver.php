@@ -35,18 +35,14 @@ abstract class VersionResolver
     {
         $version = \ucfirst($version);
         $product = $this->getProductName();
-
         $position = strpos($product, 'Version');
         if ($position !== false && $position !== 0) {
             $product = \str_replace('Version', '', $product);
         }
-
         $class = "AlibabaCloud\\{$product}\\$version\\{$product}ApiResolver";
-
         if (\class_exists($class)) {
             return new $class();
         }
-
         throw new ClientException(
             "$product Versions contains no {$version}",
             'SDK.VersionNotFound'
@@ -60,11 +56,9 @@ abstract class VersionResolver
     private function getProductName()
     {
         $array = \explode('\\', \get_class($this));
-
         if (isset($array[1])) {
             return $array[1];
         }
-
         throw new ClientException(
             'Service name not found.',
             'SDK.ServiceNotFound'

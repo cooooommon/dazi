@@ -126,7 +126,6 @@ final class BucketManager
         return $error;
     }
 
-
     /**
      * 给资源进行重命名，本质为move操作。
      *
@@ -206,7 +205,6 @@ final class BucketManager
         return $error;
     }
 
-
     /**
      * 修改指定资源的存储类型
      *
@@ -267,14 +265,11 @@ final class BucketManager
      */
     public function fetch($url, $bucket, $key = null)
     {
-
         $resource = \Qiniu\base64_urlSafeEncode($url);
         $to = \Qiniu\entry($bucket, $key);
         $path = '/fetch/' . $resource . '/to/' . $to;
-
         $ak = $this->auth->getAccessKey();
         $ioHost = $this->config->getIovipHost($ak, $bucket);
-
         $url = $ioHost . $path;
         return $this->post($url, null);
     }
@@ -292,10 +287,8 @@ final class BucketManager
     {
         $resource = \Qiniu\entry($bucket, $key);
         $path = '/prefetch/' . $resource;
-
         $ak = $this->auth->getAccessKey();
         $ioHost = $this->config->getIovipHost($ak, $bucket);
-
         $url = $ioHost . $path;
         list(, $error) = $this->post($url, null);
         return $error;
@@ -412,24 +405,20 @@ final class BucketManager
         return self::twoKeyBatch('/copy', $source_bucket, $key_pairs, $target_bucket, $force);
     }
 
-
     public static function buildBatchRename($bucket, $key_pairs, $force)
     {
         return self::buildBatchMove($bucket, $key_pairs, $bucket, $force);
     }
-
 
     public static function buildBatchMove($source_bucket, $key_pairs, $target_bucket, $force)
     {
         return self::twoKeyBatch('/move', $source_bucket, $key_pairs, $target_bucket, $force);
     }
 
-
     public static function buildBatchDelete($bucket, $keys)
     {
         return self::oneKeyBatch('/delete', $bucket, $keys);
     }
-
 
     public static function buildBatchStat($bucket, $keys)
     {

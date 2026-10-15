@@ -27,7 +27,6 @@ final class Etag
         return array($byteArray, null);
     }
 
-
     public static function sum($filename)
     {
         $fhandler = fopen($filename, 'r');
@@ -35,7 +34,6 @@ final class Etag
         if ($err !== null) {
             return array(null, $err);
         }
-
         $fstat = fstat($fhandler);
         $fsize = $fstat['size'];
         if ((int)$fsize === 0) {
@@ -44,7 +42,6 @@ final class Etag
         }
         $blockCnt = self::blockCount($fsize);
         $sha1Buf = array();
-
         if ($blockCnt <= 1) {
             array_push($sha1Buf, 0x16);
             $fdata = fread($fhandler, Config::BLOCK_SIZE);

@@ -80,7 +80,6 @@ trait ManageTrait
     public function name($name)
     {
         Filter::name($name);
-
         return AlibabaCloud::set($name, $this);
     }
 
@@ -92,7 +91,6 @@ trait ManageTrait
         if (isset($this->options['debug'])) {
             return $this->options['debug'] === true && PHP_SAPI === 'cli';
         }
-
         return false;
     }
 }

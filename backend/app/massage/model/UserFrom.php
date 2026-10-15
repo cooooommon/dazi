@@ -31,36 +31,25 @@ class UserFrom extends BaseModel
     {
         //判断是否为分销员
         if (in_array($from_type, [2, 3, 10])) {
-
 //            $config = longbingGetAppConfig($uniacid,true);
 //
 //            if ($config['fx_check']==1){
 //
 //
 //            }
-
-
             $distribu_model = new DistributionList();
-
             $dis = [
-
                 'user_id' => $from_id,
-
                 'status' => 2
             ];
-
             $distribu_user = $distribu_model->dataInfo($dis);
-
             if ($distribu_user) {
                 $from_type = $from_type == 2 ? 3 : $from_type;
-
                 $from_id = $distribu_user['id'];
             } else {
-
                 $from_type = 2;
             }
         }
-
         $insert = [
             'uniacid' => $uniacid,
             'user_id' => $user_id,
@@ -68,7 +57,6 @@ class UserFrom extends BaseModel
             'from_id' => $from_id,
             'create_time' => time()
         ];
-
         return self::insert($insert);
     }
 
@@ -94,11 +82,8 @@ class UserFrom extends BaseModel
             ->leftJoin('massage_channel_staff_list i', 'a.from_id=i.id and a.from_type=9')
             ->select()
             ->toArray();
-
         $arr = [];
-
         $attendant_name = getConfigSetting($uniacid, 'attendant_name');
-
         if (!empty($data)) {
             foreach ($data as $item) {
                 switch ($item['from_type']) {
@@ -153,7 +138,6 @@ class UserFrom extends BaseModel
                 ];
             }
         }
-
         return $arr;
     }
 
@@ -180,9 +164,7 @@ class UserFrom extends BaseModel
     public static function updateFrom($data)
     {
         $count = self::where(['user_id' => $data['user_id']])->count();
-
         if ($count > 0) {
-
             return self::where(['user_id' => $data['user_id']])->update($data);
         } else {
             $data['create_time'] = time();

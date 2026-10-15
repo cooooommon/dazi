@@ -57,7 +57,6 @@ class Common
         try {
             $ossClient->createBucket($bucket, $acl);
         } catch (OssException $e) {
-
             $message = $e->getMessage();
             if (\OSS\Core\OssUtil::startsWith($message, 'http status: 403')) {
                 echo "Please Check your AccessKeyId and AccessKeySecret" . "\n";

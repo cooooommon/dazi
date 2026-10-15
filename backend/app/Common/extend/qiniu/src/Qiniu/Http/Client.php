@@ -36,14 +36,12 @@ final class Client
     ) {
         $data = array();
         $mimeBoundary = md5(microtime());
-
         foreach ($fields as $key => $val) {
             array_push($data, '--' . $mimeBoundary);
             array_push($data, "Content-Disposition: form-data; name=\"$key\"");
             array_push($data, '');
             array_push($data, $val);
         }
-
         array_push($data, '--' . $mimeBoundary);
         $finalMimeType = empty($mimeType) ? 'application/octet-stream' : $mimeType;
         $finalFileName = self::escapeQuotes($fileName);
@@ -51,10 +49,8 @@ final class Client
         array_push($data, "Content-Type: $finalMimeType");
         array_push($data, '');
         array_push($data, $fileBody);
-
         array_push($data, '--' . $mimeBoundary . '--');
         array_push($data, '');
-
         $body = implode("\r\n", $data);
         $contentType = 'multipart/form-data; boundary=' . $mimeBoundary;
         $headers['Content-Type'] = $contentType;
@@ -65,14 +61,10 @@ final class Client
     private static function userAgent()
     {
         $sdkInfo = "QiniuPHP/" . Config::SDK_VER;
-
         $systemInfo = php_uname("s");
         $machineInfo = php_uname("m");
-
         $envInfo = "($systemInfo/$machineInfo)";
-
         $phpVer = phpversion();
-
         $ua = "$sdkInfo $envInfo PHP/$phpVer";
         return $ua;
     }
@@ -91,12 +83,10 @@ final class Client
             CURLOPT_CUSTOMREQUEST => $request->method,
             CURLOPT_URL => $request->url,
         );
-
         // Handle open_basedir & safe mode
         if (!ini_get('safe_mode') && !ini_get('open_basedir')) {
             $options[CURLOPT_FOLLOWLOCATION] = true;
         }
-
         if (!empty($request->headers)) {
             $headers = array();
             foreach ($request->headers as $key => $val) {
@@ -105,7 +95,6 @@ final class Client
             $options[CURLOPT_HTTPHEADER] = $headers;
         }
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
-
         if (!empty($request->body)) {
             $options[CURLOPT_POSTFIELDS] = $request->body;
         }

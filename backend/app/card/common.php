@@ -158,4 +158,3 @@ if ( !function_exists( 'wxContentRlue' ) ) {
         return $rest;
     }
 }
-

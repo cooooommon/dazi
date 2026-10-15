@@ -3,8 +3,6 @@ namespace app\card\model;
 
 use app\BaseModel;
 
-
-
 class UserSk extends BaseModel
 {
     //定义表名

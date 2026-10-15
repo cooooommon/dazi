@@ -13,5 +13,4 @@ return [
     'old passwd error'  => '原密码错误,请检查原密码。',
     'This copyright is in use and cannot be deleted'  => '该版权正在被使用 无法删除',
     'app_name is empty'  => '应用名称不能为空。',
-
 ];

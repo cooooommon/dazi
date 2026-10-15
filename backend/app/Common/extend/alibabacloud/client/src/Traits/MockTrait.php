@@ -38,7 +38,6 @@ trait MockTrait
         if (is_array($body) || is_object($body)) {
             $body = json_encode($body);
         }
-
         self::$mockQueue[] = new Response($status, $headers, $body);
         self::createHandlerStack();
     }
@@ -69,7 +68,6 @@ trait MockTrait
             $previous,
             $handlerContext
         );
-
         self::createHandlerStack();
     }
 

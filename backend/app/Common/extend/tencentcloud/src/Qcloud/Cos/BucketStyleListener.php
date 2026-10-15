@@ -36,7 +36,6 @@ class BucketStyleListener implements EventSubscriberInterface {
         $command = $event['command'];
         $bucket = $command['Bucket'];
         $request = $command->getRequest();
-
         if ($command->getName() == 'ListBuckets')
         {
             $request->setHost('service.cos.myqcloud.com');
@@ -50,14 +49,12 @@ class BucketStyleListener implements EventSubscriberInterface {
         }
         $request->setHeader('Date', gmdate('D, d M Y H:i:s T'));
         $request->setPath(preg_replace("#^/{$bucket}#", '', $request->getPath()));
-
         if ($this->appId != null && endWith($bucket,'-'.$this->appId) == False)
         {
             $bucket = $bucket.'-'.$this->appId;
         }
         // Set the key and bucket on the request
         $request->getParams()->set('bucket', $bucket)->set('key', $key);
-
         //$request->setPath(urldecode($request->getPath()));
         // Switch to virtual hosted bucket
         $request->setHost($bucket. '.' . $request->getHost());

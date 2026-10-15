@@ -5,7 +5,6 @@ use app\admin\model\Role as RoleModel;
 use app\agent\model\LongbingPlugeKey;
 use think\facade\Config;
 
-
 //删除用户登录信息
 function delUserForToken($token) {
     return delCache("Token_".$token);
@@ -30,7 +29,6 @@ function getAccountList($uniacid = 7777){
     //数据存在返回数据
     if(!empty($result)) return $result;
     //缓存数据不存在时，从数据库获取数据，同时写入缓存
-
     return $result;
 }
 
@@ -41,7 +39,6 @@ function setAccountToCache($account ,$uniacid = 7777){
 }
 //移除账号缓存
 function delAccountToCache($account ,$uniacid = 7777){
-    
 }
 
 //检查检查用户账号是否存在
@@ -527,7 +524,6 @@ function longbingGetFile($url, $save_dir = '', $filename = '', $type = 0) {
     $size = strlen($content);
     //文件大小
     $fp2 = @fopen($save_dir . $filename, 'a');
-
     fwrite($fp2, $content);
     fclose($fp2);
 //  unset($content, $url);
@@ -597,7 +593,6 @@ function longbingGetBetween($input, $start, $end) {
     return $str;
 }
 
-
 function longbingGetZipName ($url) {
     return longbingGetBetween($url ,"/" ,".zip");
 }
@@ -608,12 +603,9 @@ function longbingGetZipName ($url) {
 function longbingUpdateAppFile($down_url ,$save_dir, $file_name ,$cp_dir) {
     $file_name = longbingGetZipName('/' .$file_name);
     $download_file = longbingGetFile($down_url, $save_dir, $filename = $file_name.'.zip', $type = 1);
-
-
     if(empty($download_file)) return FALSE;
     $zip_url = $save_dir . "/" . $file_name.".zip";
     $get_app_file  = longbingUnZipFile($zip_url ,$save_dir);
-
     if(empty($get_app_file)) return FALSE;
     $update_file   = longbingCopyDir($save_dir. "/" . $file_name , $cp_dir);
     return $update_file;

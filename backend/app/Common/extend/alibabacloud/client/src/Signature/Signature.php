@@ -25,9 +25,7 @@ abstract class Signature
     public function roa($accessKeyId, $accessKeySecret, Request $request)
     {
         $string = Sign::roaString($request);
-
         $signature = $this->sign($string, $accessKeySecret);
-
         return "acs $accessKeyId:$signature";
     }
 
@@ -43,7 +41,6 @@ abstract class Signature
     public function rpc($accessKeySecret, $method, array $parameters)
     {
         $string = Sign::rpcString($method, $parameters);
-
         return $this->sign($string, $accessKeySecret . '&');
     }
 }

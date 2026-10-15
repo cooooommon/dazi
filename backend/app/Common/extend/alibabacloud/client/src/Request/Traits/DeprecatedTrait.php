@@ -152,7 +152,6 @@ trait DeprecatedTrait
     public function addHeader($headerKey, $headerValue)
     {
         $this->options['headers'][$headerKey] = $headerValue;
-
         return $this;
     }
 
@@ -178,7 +177,6 @@ trait DeprecatedTrait
     public function setQueryParameters($name, $value)
     {
         $this->options['query'][$name] = $value;
-
         return $this;
     }
 
@@ -204,7 +202,6 @@ trait DeprecatedTrait
     public function putDomainParameters($name, $value)
     {
         $this->options['form_params'][$name] = $value;
-
         return $this;
     }
 

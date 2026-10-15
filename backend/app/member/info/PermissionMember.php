@@ -11,9 +11,7 @@
 // | After-sale service: +86-17361005938
 // +----------------------------------------------------------------------
 
-
 declare(strict_types=1);
-
 
 namespace app\member\info;
 
@@ -32,13 +30,11 @@ class PermissionMember extends PermissionAbstract
     public $saasKey;
     const apiPaths = [];
 
-
     public function __construct(int $uniacid, $infoConfigOptions = [], $saasKey = 'MEMBER')
     {
         $this->saasKey = longbing_get_auth_prefix($saasKey);
         parent::__construct($uniacid, self::tabbarKey, self::adminMenuKey, $this->saasKey, self::apiPaths, $infoConfigOptions);
     }
-
 
     /**
      * 返回saas端授权结果
@@ -46,7 +42,6 @@ class PermissionMember extends PermissionAbstract
      */
     public function sAuth(): bool
     {
-
         return true;
     }
 
@@ -56,9 +51,7 @@ class PermissionMember extends PermissionAbstract
      */
     public function pAuth(): bool
     {
-
         return true;
-
     }
 
     /**
@@ -71,8 +64,6 @@ class PermissionMember extends PermissionAbstract
      */
     public function cAuth(int $user_id): bool
     {
-
         return true;
-
     }
 }

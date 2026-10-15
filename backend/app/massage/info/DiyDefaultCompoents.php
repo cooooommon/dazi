@@ -6,7 +6,6 @@
  * Time: 18:29
  */
 
-
 $defaultPage=<<<DEFAULT
 
 {
@@ -269,8 +268,6 @@ $defaultPage=<<<DEFAULT
 
 DEFAULT;
 
-
 $pages = json_decode( $defaultPage , true);
-
 
 return $pages;

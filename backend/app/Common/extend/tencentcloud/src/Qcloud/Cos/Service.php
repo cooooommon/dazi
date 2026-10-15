@@ -9,7 +9,6 @@ class Service {
             'name' => 'Cos Service',
             'apiVersion' => 'V5',
             'description' => 'Cos V5 API Service',
-
             'operations' => array(
                 /**
                 舍弃一个分块上传且删除已上传的分片块的方法.

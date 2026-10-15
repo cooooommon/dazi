@@ -28,7 +28,6 @@ class EcsRamRoleCredential implements CredentialsInterface
     public function __construct($roleName)
     {
         CredentialFilter::roleName($roleName);
-
         $this->roleName = $roleName;
     }
 

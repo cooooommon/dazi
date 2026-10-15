@@ -26,7 +26,6 @@ abstract class Rpc extends RpcRequest
     public function __construct(array $options = [])
     {
         parent::__construct($options);
-
         $this->resolveActionName();
         $this->appendSdkUA();
     }

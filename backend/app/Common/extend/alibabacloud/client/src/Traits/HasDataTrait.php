@@ -227,7 +227,6 @@ trait HasDataTrait
         if (!isset($this->all()[$name])) {
             return null;
         }
-
         return \json_decode(\json_encode($this->all()))->$name;
     }
 
@@ -267,7 +266,6 @@ trait HasDataTrait
     {
         $this->dot->add($keys, $value);
     }
-
 
     /*
      * --------------------------------------------------------------

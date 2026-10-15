@@ -21,7 +21,6 @@ use think\Validate;
 use think\Response;
 use think\facade\Lang;
 
-
 /**
  * 控制器基础类
  */
@@ -93,7 +92,6 @@ abstract class AdminRest extends BaseController
         $admin_model->initAgentName();
     }
 
-
     /**
      * @param $data
      * @param  int  $code
@@ -115,7 +113,6 @@ abstract class AdminRest extends BaseController
         $this->controlActionLog($obj_id);
         return $this->response($result, 'json', $code);
     }
-
 
     /**
      * @author chenniang
@@ -185,9 +182,7 @@ abstract class AdminRest extends BaseController
             }
         }
         return true;
-
     }
-
 
     /**
      * @author chenniang
@@ -198,7 +193,6 @@ abstract class AdminRest extends BaseController
     {
         //县级代理
         if (isset($user['city_type']) && $user['city_type'] == 2) {
-
             return [$user['id']];
         }
         //市级代理
@@ -206,25 +200,17 @@ abstract class AdminRest extends BaseController
             $admin_model = new \app\massage\model\Admin();
             $id = $admin_model->where(['admin_pid' => $user['id']])->column('id');
             $id[] = $user['id'];
-
             return $id;
         }
         //省级代理
         if (isset($user['city_type']) && $user['city_type'] == 3) {
-
             $admin_model = new \app\massage\model\Admin();
-
             $id = $admin_model->where(['admin_pid' => $user['id']])->column('id');
-
             $son_id = $admin_model->where('admin_pid', 'in', $id)->column('id');
-
             $id = array_merge($id, $son_id);
-
             $id[] = $user['id'];
-
             return $id;
         }
-
         return [];
     }
 
@@ -235,20 +221,15 @@ abstract class AdminRest extends BaseController
      */
     public function shareChangeData($input)
     {
-
         $arr = [
             '/admin/admin/config/clear', '/massage/admin/AdminOrder/noLookCount',
             '/massage/admin/AdminSetting/getSaasAuth'
         ];
-
         if (!empty($input['s']) && in_array($input['s'], $arr)) {
-
             return false;
         }
-
         return true;
     }
-
 
     /**
      * REST 调用
@@ -279,8 +260,6 @@ abstract class AdminRest extends BaseController
         }
     }
 
-
-
     /**
      *
      * 获取支付信息
@@ -288,22 +267,14 @@ abstract class AdminRest extends BaseController
     //@ioncube.dk myk("sha256", "cnjdbvjdnjd") -> "cff6bcac6bd92467e0cee72e5c879cdbf7044386eda8f464c817bd5c5c963d6f" RANDOM
     public function payConfig($is_app = 0)
     {
-
         $uniacid_id = !empty($uniacid) ? $uniacid : $this->_uniacid;
-
         $pay_model = new PayConfig();
-
         $config_model = new Config();
-
         $pay = $pay_model->dataInfo(['uniacid' => $uniacid_id]);
-
         $config = $config_model->dataInfo(['uniacid' => $uniacid_id]);
-
         if (empty($pay['mch_id']) || empty($pay['pay_key'])) {
-
             $this->errorMsg('未配置支付信息'.$uniacid_id);
         }
-
         $setting['payment'] = [
             'merchant_id' => $pay['mch_id'],
             'key' => $pay['pay_key'],
@@ -317,31 +288,18 @@ abstract class AdminRest extends BaseController
             'alipayRootCret' => $pay['alipayRootCret'],
             'alipay_type' => $pay['alipay_type'],
         ];
-
         $setting['company_pay'] = $config['company_pay'];
-
         if ($is_app == 0) {
-
             $setting['app_id'] = $config['appid'];
-
             $setting['secret'] = $config['appsecret'];
-
         } elseif ($is_app == 1) {
-
             $setting['app_id'] = $config['app_app_id'];
-
             $setting['secret'] = $config['app_app_secret'];
-
         } else {
-
             $setting['app_id'] = $config['web_app_id'];
-
             $setting['secret'] = $config['web_app_secret'];
-
         }
-
         $setting['is_app'] = $is_app;
-
         return $setting;
     }
 

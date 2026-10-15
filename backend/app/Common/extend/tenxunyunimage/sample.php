@@ -115,14 +115,12 @@ var_dump ($client->faceShape(array('file'=>'assets/face_05.jpg'),0));
 //单个图片Url,mode:1为检测最大的人脸 , 0为检测所有人脸
 var_dump ($client->faceShape(array('buffer'=>file_get_contents('assets/face_05.jpg')), 0));
 
-
 //创建一个Person，并将Person放置到group_ids指定的组当中, 使用图片url
 var_dump ($client->faceNewPerson('personId0', array('groupId0'), array('url'=>'http://open.youtu.qq.com./static/img/face_01.f0c4a0c.jpg'), 'personName0','personTag0'));
 //创建一个Person，并将Person放置到group_ids指定的组当中, 使用图片file
 var_dump ($client->faceNewPerson('personId1', array('groupId0'), array('file'=>'assets/face_02.jpg'), 'personName1', 'personTag1'));
 //创建一个Person，并将Person放置到group_ids指定的组当中, 使用图片内容
 var_dump ($client->faceNewPerson('personId2', array('groupId0'), array('buffer'=>file_get_contents('assets/icon_id_01.jpg')), 'personName2', 'personTag2'));
-
 
 //增加人脸,将单个或者多个Face的url加入到一个Person中.注意，一个Face只能被加入到一个Person中。 一个Person最多允许包含20个Face
 var_dump ($client->faceAddFace('person_one', array('urls'=>array('YOUR URL A','YOUR URL B'))));
@@ -172,7 +170,6 @@ var_dump ($client->faceCompare(array('file'=>'F:\pic\yang.jpg'), array('file'=>'
 //两个对比图片的文件内容
 var_dump ($client->faceCompare( array('buffer'=>file_get_contents('F:\pic\yang.jpg')), array('buffer'=>file_get_contents('F:\pic\yang3.jpg'))));
 
-
 //身份证识别对比
 //身份证url
 var_dump ($client->faceIdCardCompare('ID CARD NUM', 'NAME', array('url'=>'YOUR URL')));
@@ -180,7 +177,6 @@ var_dump ($client->faceIdCardCompare('ID CARD NUM', 'NAME', array('url'=>'YOUR U
 var_dump ($client->faceIdCardCompare('ID CARD NUM', 'NAME',  array('file'=>'F:\pic\idcard.jpg')));
 //身份证文件内容
 var_dump ($client->faceIdCardCompare('ID CARD NUM', 'NAME',  array('buffer'=>file_get_contents('F:\pic\idcard.jpg'))));
-
 
 //人脸核身
 //活体检测第一步：获取唇语（验证码）

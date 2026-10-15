@@ -11,7 +11,6 @@ class ShopType extends BaseModel
     protected $name = 'longbing_card_shop_type';
 //    protected $pk   = 'role_id';
     protected $schema = [
-
     ];
     protected $resultSetType = 'array';
 
@@ -87,7 +86,6 @@ class ShopType extends BaseModel
         return $data;
     }
 
-
     /**
      * 查询分类
      */
@@ -106,6 +104,5 @@ class ShopType extends BaseModel
         $data = Db::name($this->name)->where($dis)->select();
         return $this->getTree($data, 0);
     }
-
 
 }

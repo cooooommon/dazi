@@ -40,14 +40,12 @@ class Accept
     public function toString()
     {
         $key = \strtoupper($this->format);
-
         $list = [
             'JSON' => 'application/json',
             'XML'  => 'application/xml',
             'RAW'  => 'application/octet-stream',
             'FORM' => 'application/x-www-form-urlencoded'
         ];
-
         return isset($list[$key]) ? $list[$key] : $list['RAW'];
     }
 }

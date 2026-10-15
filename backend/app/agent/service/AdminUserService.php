@@ -15,7 +15,6 @@ declare(strict_types=1);
 
 namespace app\agent\service;
 
-
 use app\agent\model\AdminModel;
 use app\agent\model\AdminRoleModel;
 use app\agent\model\AppAdminModel;
@@ -33,7 +32,6 @@ class AdminUserService
      * @DataTime: 2019/12/31 18:46
      */
     public static function addAdminUser($uniacid , $input){
-
         /**
          * @var AdminModel $subAdmin
          */
@@ -41,7 +39,6 @@ class AdminUserService
         if (!$subAdmin->isEmpty()) {
             return false;
         }
-
         $offset = createOffset();
         $new = [
             'admin_id' => $input['uuid'],
@@ -58,8 +55,6 @@ class AdminUserService
             return false;
         }
         return true;
-
-
     }
 
     /**
@@ -70,12 +65,9 @@ class AdminUserService
      * @DataTime: 2019/12/31 18:46
      */
     public static function initDefaultRole(){
-
         $adminRole = new AdminRoleModel();
         $data = [] ;
         if(!$adminRole->where(['role_id'=> 'e1af223e997011e997cb77d35351cc48'])->count()){
-
-
             $data[] = [
                 'role_id' =>'e1af223e997011e997cb77d35351cc48',
                 'role_name' =>'admin',
@@ -85,9 +77,7 @@ class AdminUserService
                 'delete_time' =>null,
                 'deleted' =>'0',
                 'uniacid' =>'8888',
-
             ];
-
         }
         if(!$adminRole->where(['role_id'=> 'e7d81116997011e99b985595a87cbdcb'])->count()) {
             $data[] = [
@@ -99,14 +89,9 @@ class AdminUserService
                 'delete_time' => null,
                 'deleted' => '0',
                 'uniacid' => '8888',
-
             ];
         }
-
         $adminRole->saveAll($data);
-
-
-
     }
 
     /**
@@ -117,17 +102,12 @@ class AdminUserService
      * @DataTime: 2019/12/31 18:49
      */
     public static function bindAppAdmin($data){
-
         if(AppAdminModel::where(['id'=> $data['id']])->count()) {
             return false;
         }
-
         $appAdmin = new AppAdminModel();
-
         $appAdmin->save($data) ;
-
     }
-
 
     /**
      * @param $app_name
@@ -140,16 +120,11 @@ class AdminUserService
         $className      =  'Permission' . ucfirst($key);
         //类路径
         $permissionPath =  APP_PATH . $key . '/info/' . $className . '.php';
-
 //        dump(file_exists($permissionPath),$permissionPath);exit;
         $num = 0;
         if (file_exists($permissionPath) && require_once($permissionPath)) {
-
-
-
             //实例文件名
             $permissionClassName = 'app\\' . $key . '\\info\\'. $className;
-
             $permission = new $permissionClassName($uniacid);
             //获取授权数量
             $num = $permission->getAuthNumber();

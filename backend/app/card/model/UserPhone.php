@@ -3,8 +3,6 @@ namespace app\card\model;
 
 use app\BaseModel;
 
-
-
 class UserPhone extends BaseModel
 {
     //定义表名

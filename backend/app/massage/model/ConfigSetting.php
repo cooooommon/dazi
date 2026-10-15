@@ -10,7 +10,6 @@ class ConfigSetting extends BaseModel
     //定义表名
     protected $name = 'massage_config_setting';
 
-
     /**
      * @param $value
      * @param $data
@@ -26,7 +25,6 @@ class ConfigSetting extends BaseModel
         return $value;
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:06
@@ -36,7 +34,6 @@ class ConfigSetting extends BaseModel
     {
         return $this->where($dis)->order('status desc,id desc')->paginate($page)->toArray();
     }
-
 
     /**
      * @author chenniang
@@ -76,7 +73,6 @@ class ConfigSetting extends BaseModel
         return true;
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:43
@@ -100,7 +96,6 @@ class ConfigSetting extends BaseModel
         return $arr;
     }
 
-
     /**
      * @param $arr
      * @功能说明:
@@ -120,6 +115,5 @@ class ConfigSetting extends BaseModel
         }
         return true;
     }
-
 
 }

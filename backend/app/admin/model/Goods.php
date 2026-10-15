@@ -10,7 +10,6 @@ class Goods extends BaseModel
     //定义表名
     protected $name = 'longbing_card_goods';
 
-
     protected static function init()
     {
         //TODO:初始化内容
@@ -63,6 +62,5 @@ class Goods extends BaseModel
         $data = self::where($dis)->select();
         return !empty($data) ? $data->toArray() : $data;
     }
-
 
 }

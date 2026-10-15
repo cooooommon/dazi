@@ -15,27 +15,20 @@ declare(strict_types=1);
 
 namespace app\publics\service;
 
-
 use app\publics\model\TmplConfig;
 use longbingcore\wxcore\WxTmpl;
 
 class PublicsService
 {
 
-
     public static function getTmplByModelName($uniacid,$model_name){
-
         //获取每个模块下面的配置参数
         $dataPath = APP_PATH . $model_name.'/info/Info.php';
         //实列化模版订阅通知库类；
         $service_model = new WxTmpl($uniacid);
-
         $tmpl_data = array();
-
         if(file_exists($dataPath)){
-
             $model = new TmplConfig();
-
             //获取配置
             $info = include $dataPath;
             //模块名
@@ -65,8 +58,6 @@ class PublicsService
                 }
             }
         }
-
-
         return $tmpl_data;
     }
 

@@ -4,10 +4,8 @@ use think\facade\Route;
 
 //商城后端路由表
 Route::group('admin', function () {
-
     //角色列表
     Route::get('AdminUser/roleList', 'AdminUser/roleList');
-
     Route::get('AdminUser/roleSelect', 'AdminUser/roleSelect');
     //添加角色
     Route::post('AdminUser/roleAdd', 'AdminUser/roleAdd');
@@ -29,36 +27,5 @@ Route::group('admin', function () {
     Route::post('AdminUser/adminAdd', 'AdminUser/adminAdd');
     //编辑账号
     Route::post('AdminUser/adminUpdate', 'AdminUser/adminUpdate');
-
     Route::get('AdminUser/logList', 'AdminUser/logList');
-
-
-
-
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

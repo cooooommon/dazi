@@ -4,7 +4,6 @@ namespace OSS\Result;
 
 use OSS\Core\OssException;
 
-
 /**
  * Class initiateMultipartUploadResult
  * @package OSS\Result

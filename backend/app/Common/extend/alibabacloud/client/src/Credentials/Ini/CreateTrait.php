@@ -32,11 +32,9 @@ trait CreateTrait
         if (!isset($credential['enable']) || !$credential['enable']) {
             return false;
         }
-
         if (!isset($credential['type'])) {
             $this->missingRequired('type', $clientName);
         }
-
         return $this->createClientByType($clientName, $credential)->name($clientName);
     }
 
@@ -80,11 +78,9 @@ trait CreateTrait
         if (!isset($credential['access_key_id'])) {
             $this->missingRequired('access_key_id', $clientName);
         }
-
         if (!isset($credential['access_key_secret'])) {
             $this->missingRequired('access_key_secret', $clientName);
         }
-
         return new AccessKeyClient(
             $credential['access_key_id'],
             $credential['access_key_secret']
@@ -103,7 +99,6 @@ trait CreateTrait
         if (!isset($credential['role_name'])) {
             $this->missingRequired('role_name', $clientName);
         }
-
         return new EcsRamRoleClient($credential['role_name']);
     }
 
@@ -119,19 +114,15 @@ trait CreateTrait
         if (!isset($credential['access_key_id'])) {
             $this->missingRequired('access_key_id', $clientName);
         }
-
         if (!isset($credential['access_key_secret'])) {
             $this->missingRequired('access_key_secret', $clientName);
         }
-
         if (!isset($credential['role_arn'])) {
             $this->missingRequired('role_arn', $clientName);
         }
-
         if (!isset($credential['role_session_name'])) {
             $this->missingRequired('role_session_name', $clientName);
         }
-
         return new RamRoleArnClient(
             $credential['access_key_id'],
             $credential['access_key_secret'],
@@ -152,7 +143,6 @@ trait CreateTrait
         if (!isset($credential['bearer_token'])) {
             $this->missingRequired('bearer_token', $clientName);
         }
-
         return new BearerTokenClient($credential['bearer_token']);
     }
 
@@ -168,11 +158,9 @@ trait CreateTrait
         if (!isset($credential['public_key_id'])) {
             $this->missingRequired('public_key_id', $clientName);
         }
-
         if (!isset($credential['private_key_file'])) {
             $this->missingRequired('private_key_file', $clientName);
         }
-
         return new RsaKeyPairClient(
             $credential['public_key_id'],
             $credential['private_key_file']

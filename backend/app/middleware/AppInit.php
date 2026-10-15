@@ -9,7 +9,6 @@ class AppInit
     public function handle($request, \Closure $next)
     {
         //同步
-
         /*if(longbingIsWeiqin())
         {
             //获取uniacid

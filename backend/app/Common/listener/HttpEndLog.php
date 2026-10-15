@@ -15,7 +15,6 @@ declare(strict_types=1);
 
 namespace app\Common\listener;
 
-
 use app\Common\model\LongbingActionLog;
 use think\Exception;
 use think\facade\App;
@@ -41,57 +40,40 @@ class HttpEndLog
      */
     public function handle(Request $request , Response $response)
     {
-
         return true;
         if(App::getInstance()->isDebug()) {
-
             try {
-
-
                 //获取请求地址
                 $data['url'] = $request->url(true);
-
                 //获取请求参数
                 $data['param'] = json_encode($request->param());
-
                 //获取IP
                 $data['ip'] = $request->ip();
-
                 //获取返回值
                 $data['content'] = $response->getContent();
-
                 //消耗内存
                 $data['mem'] = getRangeMem(App::getInstance()->getBeginMem());
                 //耗时
                 $data['execution_time'] = getRangeTime(App::getInstance()->getBeginTime());
-
                 //平台ID
                 $uniacid = $request->param('uniacid');
                 $uniacid = empty($uniacid) ? $request->param('i') : $uniacid;
                 $data['uniacid'] = $uniacid ? $uniacid : 0;
-
                 //获取用户信息
                 //独立版管理后台
                 $token = $request->header('token');
                 $user = getUserForToken($token);
                 if (empty($data['uniacid']) && !empty($user)) {
-
                     $data['uniacid'] = $user['uniacid'];
                     $data['uid'] = $user['account'];
                     $data['username'] = $user['account'];
                 }
-
                 //微擎版本管理后台
                 //小程序前端接口
-
-
                 //保存到数据库   ims_longbing_action_log
-
                 $actionLogModel = new LongbingActionLog();
-
                 $actionLogModel->addActionLog($data);
             }catch (Exception $e){
-
             }
         }
     }

@@ -6,7 +6,6 @@
  * Time: 18:29
  */
 
-
 $tmp = sassAuth()==1?',{
 				"name": "PurchaseList",
 				"url": "/malls/purchase"
@@ -592,5 +591,3 @@ MALLS;
 //return json_decode($menu, true) ;
 
 return ["shop" => $malls];
-
-

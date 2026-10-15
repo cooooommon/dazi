@@ -16,7 +16,6 @@ class AttachmentGroup extends BaseModel
         $query->where('name', 'like', '%'.$value.'%');
     }
 
-
     //创建
     function createGroup($data)
     {

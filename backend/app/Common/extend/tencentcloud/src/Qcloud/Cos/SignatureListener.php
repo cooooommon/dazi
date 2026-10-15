@@ -34,7 +34,6 @@ class SignatureListener implements EventSubscriberInterface {
      * @param Event $event Event emitted
      */
     public function onRequestBeforeSend(Event $event) {
-
         $this->signature->signRequest($event['request']);
 /*
         if(!$this->credentials instanceof NullCredentials) {

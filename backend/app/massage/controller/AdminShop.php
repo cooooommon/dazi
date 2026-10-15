@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\massage\controller;
-
 
 use app\AdminRest;
 use app\massage\model\Commission;
@@ -16,17 +14,12 @@ use think\facade\Db;
 class AdminShop extends AdminRest
 {
 
-
-
     /**
      * 添加分类
      * @return \think\Response
      */
     public function addCarte()
     {
-
-
-
         $input = $this->request->only(['name', 'sort']);
         $rule = [
             'name' => 'require',
@@ -43,7 +36,6 @@ class AdminShop extends AdminRest
             ['uniacid', '=', $this->_uniacid]
         ];
         $info = ShopCarte::getInfo($where);
-
         if (!empty($info)) {
             return $this->error('此分类已存在，不可创建');
         }
@@ -52,7 +44,6 @@ class AdminShop extends AdminRest
         if ($res) {
             return $this->success('');
         }
-
         return $this->error('创建失败');
     }
 
@@ -106,41 +97,27 @@ class AdminShop extends AdminRest
      */
     public function carteList()
     {
-
         //company_ 03AD8E9932AABA4EB6DC56C3B21ADCC0
-
     //    $a = new Fdd($this->_uniacid);
-
       //  $com_uuid = 'f84451b1ac78438c960de1c6808532b7';
-
 //        $res = $a->registerAccount(707,2);
 //
 //        dump($res);exit;
-
        // $res = $a->getCompanyVerifyUrl('6FF4D10773B9653991BAC07C275B8637');
-
         //$res = $a->FindCompanyCertInfo('32e07ffd00524f5ea0777e56b6735ca8');
-
        // $res = $a->Uploaddocs('03AD8E9932AABA4EB6DC56C3B21ADCC0','测试','https://massage.cncnconnect.com/test.doc');
-
 //        $res = $a->Extsign('03AD8E9932AABA4EB6DC56C3B21ADCC01','03AD8E9932AABA4EB6DC56C3B21ADCC0','8047562ECE1898D33D67A1FAAAC0A8CF','测试');
 //
 //        dump($res);exit;
-
         //transactionNo 9fb3d7371c6f4741b41fba6e4c44f7e4
-
         //photoUuid fb3e21cb465642a4886c36906c4d8286
 //
       //  $res = $a->getPersonVerifyUrl('8047562ECE1898D33D67A1FAAAC0A8CF');
-
        // $res = $a->FindPersonCertInfo('9fb3d7371c6f4741b41fba6e4c44f7e4');
-
        // $res = $a->getFile('fb3e21cb465642a4886c36906c4d8286');
-
 //        $res = $a->ApplyCert('8047562ECE1898D33D67A1FAAAC0A8CF','9fb3d7371c6f4741b41fba6e4c44f7e4');
 //
 //        dump($res);exit;
-
 //        $comm = new Commission();
 //
 //        $cash = $comm->where(['top_id'=>39,'type'=>3,'status'=>2])->sum('cash');
@@ -156,18 +133,12 @@ class AdminShop extends AdminRest
 //
 //        dump($b);exit;
 //        dump($cash,$a,$cash-$a,$b);exit;
-
         $limit = $this->request->param('limit', 10);
-
         $where = [
-
             ['uniacid', '=', $this->_uniacid],
-
             ['status', '<>', '-1']
         ];
-
         $data = ShopCarte::getList($where, $limit);
-
         return $this->success($data);
     }
 

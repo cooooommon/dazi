@@ -9,7 +9,6 @@
  * ${THROWS_DOC}
  */
 
-
 $tabbar_shop = [
     "key"             => 20,
     "is_show"         => 1,
@@ -23,13 +22,9 @@ $tabbar_shop = [
 ];
 
 $page_shop = [
-
 ];
 
-
 return [
-
     'Malls_tabbar' => $tabbar_shop,
     'Malls_page'   => $page_shop
-
 ];

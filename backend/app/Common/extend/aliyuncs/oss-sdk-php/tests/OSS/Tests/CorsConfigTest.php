@@ -2,7 +2,6 @@
 
 namespace OSS\Tests;
 
-
 use OSS\Model\CorsConfig;
 use OSS\Model\CorsRule;
 use OSS\Core\OssException;
@@ -101,7 +100,6 @@ BBBB;
         $corsConfig = new CorsConfig();
         $rule = new CorsRule();
         $corsConfig->addRule($rule);
-
         try {
             $xml = $corsConfig->serializeToXml();
             $this->assertFalse(true);

@@ -56,12 +56,10 @@ class LongbingServiceNotice extends LongbingCurl
     //获取config信息
     public function getConfig($uniacid)
     {
-
         //config key
         $key    = 'longbing_card_app_config_' . $uniacid;
         //获取config
         $config = getCache($key, $uniacid);
-
         //判断缓存是否存在
         if(!empty($config)) return $config;
         //不存在时查询数据库
@@ -69,7 +67,6 @@ class LongbingServiceNotice extends LongbingCurl
         $config_model = new AppConfig();
         //获取数据
         $config = $config_model -> getConfigByUniacid($uniacid);
-
         //判断数据是否存在
         if(!empty($config)) setCache($key ,$config ,3600,$uniacid);
         //返回数据
@@ -93,14 +90,9 @@ class LongbingServiceNotice extends LongbingCurl
      */
     function lbSingleGetAccessToken ()
     {
-
         $setting = new WxSetting($this->uniacid);
-
         $token   = $setting->lbSingleGetAccessToken();
-
         return $token;
-
-
         //基础检查
         if(!$this->checkConfig()) return false;
         //appid
@@ -116,7 +108,6 @@ class LongbingServiceNotice extends LongbingCurl
         if(isset($access_data['access_token'])) $access_token = $access_data['access_token']; //access_token
         if(isset($access_data['access_token'])) $ac_time = $access_data['ac_time']; //access_token 有效期
         //判断缓存是否有效
-
         if ( empty($access_token) || empty($ac_time) || $ac_time < time())
         {
             $access_token = $this->lbSingleGetAccessTokenNew();
@@ -180,11 +171,7 @@ class LongbingServiceNotice extends LongbingCurl
         if(!empty($client_info) && isset($client_info[ 'is_mask' ]) && !empty($client_info['is_make'])) return false;
         //获取发送数据
         $send_body = $this->lbSingleGetSendBody($count , 0 ,$extra_data);
-
-
-
         if(empty($send_body)) return false;
-
 //        if ( $count[ 'sign' ] != 'order' && $count[ 'type' ] < 18 && !( $count[ 'sign' ] == 'praise' && $count[ 'type' ] == 8 ) )
 //        {
 //            $send_body = '第' . $count_num . '次' . $send_body;
@@ -194,9 +181,7 @@ class LongbingServiceNotice extends LongbingCurl
         //员工信息
         $staff = longbingGetUser($count['to_uid'] ,$this->uniacid);
         if(!empty($to_user)) $this->sendServiceNoticeToUser($count ,$count_num ,$send_body ,$user);
-
 //        dump($send_body,$user['nickName']);exit;
-
         switch($this->config['notice_switch'])
         {
             //发送公众号通知
@@ -231,38 +216,27 @@ class LongbingServiceNotice extends LongbingCurl
      * @功能说明:发送企业微信小程序通知
      */
     public function sendCompanyWxEnterpriseServiceNotice($to_uid,$nick_name,$send_body){
-
         $wx_msg = new WxMsg( $this->uniacid);
         //获取用户详情
         $user_info_model = new LongbingUserInfo();
-
         $user_info       = $user_info_model->getUser(['fans_id' => $to_uid]);
         //判断用户是否存在
         $touser = null;
         if(isset($user_info['ww_account'])) $touser = $user_info['ww_account'];
         //判断数据是否存在
         if(empty($touser)) return false;
-
         $content = [
-
             [
                 'key'   => '访问用户',
-
                 'value' => $nick_name
-
             ],
             [
                 'key'   => '内容',
-
                 'value' => $send_body
-
             ],
         ];
-
         $res = $wx_msg->WxMsg($touser,'访问通知','pages/admin/radar/radar',date('Y-m-d H:i:s',time()),$content);
-
         return $res;
-
     }
 
     /**
@@ -271,55 +245,37 @@ class LongbingServiceNotice extends LongbingCurl
      * @功能说明:发送企业微信小程序通知
      */
     public function sendCompanyWxEnterpriseServiceNoticeIm($to_uid,$nick_name,$send_body){
-
         $wx_msg = new WxMsg( $this->uniacid);
         //获取用户详情
         $user_info_model = new LongbingUserInfo();
-
         $user_info       = $user_info_model->getUser(['fans_id' => $to_uid]);
         //判断用户是否存在
         $touser = null;
-
         if(isset($user_info['ww_account'])) $touser = $user_info['ww_account'];
         //判断数据是否存在
         if(empty($touser)) return false;
-
         $content = [
-
             [
                 'key'   => '访问用户',
-
                 'value' => $nick_name
-
             ],
             [
                 'key'   => '内容',
-
                 'value' => $send_body
-
             ],
         ];
-
         $res = $wx_msg->WxMsg($touser,'聊天通知','pages/admin/chat/chat',date('Y-m-d H:i:s',time()),$content);
-
         return $res;
-
     }
-
 
     //发送微信服务通知
     public function sendImMessageServiceNoticeToStaff( $staff_id  ,$message, $name = '')
     {
-
         //判断是否为员工,是员工才发送
-
         if(LongbingUserInfoService::isStraffByUserId($staff_id)) {
-
-
             $openid = LongbingUserService::getUserOpenId($staff_id);
             $name = empty($name) ?  LongbingUserInfoService::getNameByUserId($staff_id) : $name;
             $time = LongbingTime::getChinaNowTime();
-
             switch ($this->config['notice_switch']) {
                 //发送公众号通知
                 case 1:
@@ -328,24 +284,18 @@ class LongbingServiceNotice extends LongbingCurl
                 //发送企业微信通知
                 case 2:
                     $count = [
-
                         'sign' => 'view',
-
                         'type' => 10000,
                     ];
-
                     $this->sendWxEnterpriseServiceNotice($staff_id, $name, $message, $count);
                     break;
                 case 4:
                 //企业微信小程序通知
                     $this->sendCompanyWxEnterpriseServiceNoticeIm($staff_id ,$name ,$message);
                     break;
-
             }
-
         }
     }
-
 
     //向用户发送服务通知
     public function sendServiceNoticeToUser($count ,$count_num ,$send_body ,$user)
@@ -403,8 +353,6 @@ class LongbingServiceNotice extends LongbingCurl
         return $this->sendWxService($openid ,$from_id ,$user['nickName'] ,$message['content'] ,$message[ 'create_time' ] ,$page);
     }
 
-
-
     /*
      * 发送微信服务通知
      * openid    微信openid
@@ -451,7 +399,6 @@ class LongbingServiceNotice extends LongbingCurl
      */
     public function addTmpl($data){
         $access_token = $this->lbSingleGetAccessToken();
-
         $url  =  "https://api.weixin.qq.com/wxaapi/newtmpl/addtemplate?access_token={$access_token}";
 //        $data = [
 //          'tid'      => '1754',
@@ -459,16 +406,9 @@ class LongbingServiceNotice extends LongbingCurl
 //          'sceneDesc'=>'test'
 //        ];
         $data =  json_encode( $data, JSON_UNESCAPED_UNICODE );
-
         $res  =  $this->curlPost( $url,$data );
         return $res;
-
     }
-
-
-
-
-
 
     //发送公众号通知 (WeChat Official Account)
     public function sendWxOAServiceNotice($openid ,$nickName ,$send_body ,$time = null)
@@ -490,7 +430,6 @@ class LongbingServiceNotice extends LongbingCurl
         if(empty($time) || !is_int($time)) $time = time();
         $date = date( 'Y-m-d H:i', $time);
         $page = "pages/admin/radar/radar";
-
         $data = [ 'touser'          => $openid,
                   'mp_template_msg' => [ 'appid'       => $wx_appid,
                   "url" => "http://weixin.qq.com/download",
@@ -523,61 +462,39 @@ class LongbingServiceNotice extends LongbingCurl
         if(empty($app_id) || empty($appsecret) || empty($agentid)) return false;
         //获取用户详情
         $user_info_model = new LongbingUserInfo();
-
         $user_info       = $user_info_model->getUser(['fans_id' => $to_uid]);
-
         //判断用户是否存在
         $touser = null;
-
-
         if(isset($user_info['ww_account'])) $touser = $user_info['ww_account'];
         //判断数据是否存在
         if(empty($touser)) return false;
         //封装数据
         $data = array( 'touser' => $touser, 'msgtype' => 'text', 'agentid' => $agentid,
                            'text'   => array( 'content' => $nick_name . ',' . $send_body, ), );
-
-
-
         //获取count
         if ( $count_info[ 'sign' ] == 'view' && $count_info[ 'type' ] )
         {
-
             if(in_array($count_info[ 'type' ],[662,663,664,665,666])){
-
                 $table_name = 'longbing_card_shortvideo';
-
             }elseif(in_array($count_info[ 'type' ],[1,19,21,22,23,24])){
-
                 $table_name = 'longbing_card_goods';
             }
-
             if(!empty($table_name)){
-
                 $info = $this->longbingGetRow( $table_name, [ 'id' => $count_info[ 'target' ] ] );
             }
-
             if(!empty($info['cover'])){
-
                 $info  = transImagesOne($info,['cover']);
-
                 $cover = $info['cover'];
             }
-
             $data = array(
                 'touser' => $touser,
-
                 'msgtype' => 'news',
-
                 'agentid' => $agentid,
-
                 'news'    => array(
                     'articles' => array(
                        array(
                            'title'       => $nick_name,
-
                            'description' => $send_body,
-
 //                           'url'         => $cover,
 //
 //                           'picurl'      => $cover,
@@ -585,21 +502,14 @@ class LongbingServiceNotice extends LongbingCurl
                     ),
                 ),
             );
-
         }
-
         if(!empty($cover)){
-
             $data['news']['articles'][0]['url']    = $cover;
-
             $data['news']['articles'][0]['picurl'] = $cover;
-
         }
 //        include_once APP_PATH . '/Common/extend/wxWork/work.weixin.class.php';
         $work = new work( $app_id, $appsecret );
         $result = $work->send( $data );
-
-
     }
 
     public function lbSingleAutoDelFromId()
@@ -644,7 +554,6 @@ class LongbingServiceNotice extends LongbingCurl
         return $common_model->getRows($table_name ,$filter);
     }
 
-
     /**
      * @Purpose: 给员工发送内容
      *
@@ -674,21 +583,13 @@ class LongbingServiceNotice extends LongbingCurl
         }
         //修改雷达文案
         $datas = lbHandelRadarMsg([$count_info]);
-
         $body = '';
-
         if(!empty($datas[0]['radar_arr'])){
-
             foreach ($datas[0]['radar_arr'] as $value){
-
                 $body.= $value['title'];
-
             }
-
         }
-
         return  $body;
-
         if ( $count_info[ 'sign' ] == 'praise' )
         {
             switch ( $count_info[ 'type' ] )
@@ -699,7 +600,6 @@ class LongbingServiceNotice extends LongbingCurl
                 case 4:
                     $body = '分享你的名片';
                     break;
-
                 case 5:
                     $body = '资讯你的房产';
                     if ( $count_info[ 'target' ] )
@@ -711,7 +611,6 @@ class LongbingServiceNotice extends LongbingCurl
                             $body .= $info[ 'title' ];
                         }
                     }
-
                     break;
                 case 6:
                     $body = '收藏你的房产';
@@ -754,7 +653,6 @@ class LongbingServiceNotice extends LongbingCurl
                     break;
             }
         }
-
         if ( $count_info[ 'sign' ] == 'view' )
         {
             switch ( $count_info[ 'type' ] )
@@ -856,7 +754,6 @@ class LongbingServiceNotice extends LongbingCurl
                     {
                         $order_info  = $this->longbingGetRow( 'longbing_card_shop_order', [ 'id' => $count_info[ 'target' ] ] );
                         $target_info = $this->longbingGetRow( 'longbing_card_shop_order_item', [ 'order_id' => $order_info[ 'id' ] ] );
-
                         if ( $order_info )
                         {
                             $body .= '，商品：' . $target_info[ 'name' ] . '-' . $target_info[ 'content' ] . '...';
@@ -869,7 +766,6 @@ class LongbingServiceNotice extends LongbingCurl
                     {
                         $order_info  = $this->longbingGetRow( 'longbing_card_shop_order', [ 'id' => $count_info[ 'target' ] ] );
                         $target_info = $this->longbingGetRow( 'longbing_card_shop_order_item', [ 'order_id' => $order_info[ 'id' ] ] );
-
                         if ( $order_info )
                         {
                             $body .= '，商品：' . $target_info[ 'name' ] . '-' . $target_info[ 'content' ] . '...';
@@ -882,7 +778,6 @@ class LongbingServiceNotice extends LongbingCurl
                     {
                         $order_info  = $this->longbingGetRow( 'longbing_card_shop_order', [ 'id' => $count_info[ 'target' ] ] );
                         $target_info = $this->longbingGetRow( 'longbing_card_shop_order_item', [ 'order_id' => $order_info[ 'id' ] ] );
-
                         if ( $order_info )
                         {
                             $body .= '，商品：' . $target_info[ 'name' ] . '-' . $target_info[ 'content' ] . '...';
@@ -895,7 +790,6 @@ class LongbingServiceNotice extends LongbingCurl
                     {
                         $order_info  = $this->longbingGetRow( 'longbing_card_shop_order', [ 'id' => $count_info[ 'target' ] ] );
                         $target_info = $this->longbingGetRow( 'longbing_card_shop_order_item', [ 'order_id' => $order_info[ 'id' ] ] );
-
                         if ( $order_info )
                         {
                             $body .= '，商品：' . $target_info[ 'name' ] . '-' . $target_info[ 'content' ] . '...';
@@ -908,7 +802,6 @@ class LongbingServiceNotice extends LongbingCurl
                     {
                         $order_info  = $this->longbingGetRow( 'longbing_card_shop_order', [ 'id' => $count_info[ 'target' ] ] );
                         $target_info = $this->longbingGetRow( 'longbing_card_shop_order_item', [ 'order_id' => $order_info[ 'id' ] ] );
-
                         if ( $order_info )
                         {
                             $body .= '，商品：' . $target_info[ 'name' ] . '-' . $target_info[ 'content' ] . '...';
@@ -921,7 +814,6 @@ class LongbingServiceNotice extends LongbingCurl
                     {
                         $order_info  = $this->longbingGetRow( 'longbing_card_shop_order', [ 'id' => $count_info[ 'target' ] ] );
                         $target_info = $this->longbingGetRow( 'longbing_card_shop_order_item', [ 'order_id' => $order_info[ 'id' ] ] );
-
                         if ( $order_info )
                         {
                             $body .= '，商品：' . $target_info[ 'name' ] . '-' . $target_info[ 'content' ] . '...';
@@ -936,7 +828,6 @@ class LongbingServiceNotice extends LongbingCurl
                     if ( $count_info[ 'target' ] )
                     {
                         $info = $this->longbingGetRow( 'lb_activity_classify', [ 'id' => $count_info[ 'target' ] ] );
-
                         if ( $info )
                         {
                             $body .= $info[ 'title' ] . '列表';
@@ -948,7 +839,6 @@ class LongbingServiceNotice extends LongbingCurl
                     if ( $count_info[ 'target' ] )
                     {
                         $info = $this->longbingGetRow( 'lb_activity_activity', [ 'id' => $count_info[ 'target' ] ] );
-
                         if ( $info )
                         {
                             $body .= $info[ 'title' ] . '详情';
@@ -960,18 +850,15 @@ class LongbingServiceNotice extends LongbingCurl
                     if ( $count_info[ 'target' ] )
                     {
                         $info = $this->longbingGetRow( 'lb_activity_activity', [ 'id' => $count_info[ 'target' ] ] );
-
                         if ( $info )
                         {
                             $body .= $info[ 'title' ];
                         }
                     }
                     break;
-
                 case 29:
                     $body = '查看房产首页';
                     break;
-
                 case 30:
                     $body = '查看房产';
                     if ( $count_info[ 'target' ] )
@@ -985,7 +872,6 @@ class LongbingServiceNotice extends LongbingCurl
                     break;
             }
         }
-
         if ( $count_info[ 'sign' ] == 'copy' )
         {
             switch ( $count_info[ 'type' ] )
@@ -1035,11 +921,9 @@ class LongbingServiceNotice extends LongbingCurl
                     {
                         $order_info  = $this->longbingGetRow( 'longbing_card_shop_order', [ 'id' => $count_info[ 'target' ] ] );
                         $target_info = $this->longbingGetRow( 'longbing_card_shop_order_item', [ 'order_id' => $order_info[ 'id' ] ] );
-
                         if ( $order_info )
                         {
                             //                    $body .= '，订单号：' . $order_info[ 'transaction_id' ];
-
                             $body .= '，商品：' . $target_info[ 'name' ] . '-' . $target_info[ 'content' ];
                         }
                     }
@@ -1050,11 +934,9 @@ class LongbingServiceNotice extends LongbingCurl
                     {
                         $order_info  = $this->longbingGetRow( 'longbing_card_shop_order', [ 'id' => $count_info[ 'target' ] ] );
                         $target_info = $this->longbingGetRow( 'longbing_card_shop_order_item', [ 'order_id' => $order_info[ 'id' ] ] );
-
                         if ( $order_info )
                         {
                             //                    $body .= '，订单号：' . $order_info[ 'transaction_id' ];
-
                             $body .= '，商品：' . $target_info[ 'name' ] . '-' . $target_info[ 'content' ];
                         }
                     }
@@ -1070,15 +952,11 @@ class LongbingServiceNotice extends LongbingCurl
                         {
                             $body .= ', 预约备注信息: ' . $order_info[ 'remark' ];
                         }
-
                         $body .= ', 预约项目: ' . $info[ 'title' ];
-
                     }
                     break;
             }
-
         }
-
         //  扫码支付
         if ( $count_info[ 'sign' ] == 'qr' )
         {
@@ -1086,7 +964,6 @@ class LongbingServiceNotice extends LongbingCurl
             {
                 $order_info = $this->longbingGetRow( 'lb_pay_qr_record', [ 'id' => $count_info[ 'target' ] ] );
                 $body       = '扫码支付: ￥' . $order_info[ 'money' ];
-
             }
         }
         if ( $body )
@@ -1095,6 +972,5 @@ class LongbingServiceNotice extends LongbingCurl
         }
         return false;
     }
-
 
 }

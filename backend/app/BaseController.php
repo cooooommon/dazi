@@ -62,7 +62,6 @@ abstract class BaseController
 		return true;
 	}
 
-
 	protected function errorMsg($msg = "", $code = 400)
 	{
 		$msg = Lang::get($msg);
@@ -78,7 +77,6 @@ abstract class BaseController
 
 	protected function initialize()
 	{
-
 	}
 
 	public function success($data, $code = 200)

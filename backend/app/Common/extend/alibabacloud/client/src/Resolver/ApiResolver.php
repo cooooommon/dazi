@@ -37,15 +37,12 @@ abstract class ApiResolver
     {
         $product_name = $this->getProductName();
         $class        = $this->getNamespace() . '\\' . \ucfirst($api);
-
         if (\class_exists($class)) {
             if (isset($arguments[0])) {
                 return $this->warpEndpoint(new $class($arguments[0]));
             }
-
             return $this->warpEndpoint(new $class());
         }
-
         throw new ClientException(
             "{$product_name} contains no $api",
             'SDK.ApiNotFound'
@@ -71,7 +68,6 @@ abstract class ApiResolver
                 $request->endpointRegional = $endpoints['endpoint_regional'];
             }
         }
-
         return $request;
     }
 
@@ -98,16 +94,13 @@ abstract class ApiResolver
     private function getNamespace()
     {
         $array = \explode('\\', \get_class($this));
-
         if (!isset($array[3])) {
             throw new ClientException(
                 'Get namespace error.',
                 'SDK.ParseError'
             );
         }
-
         unset($array[3]);
-
         return \implode('\\', $array);
     }
 }

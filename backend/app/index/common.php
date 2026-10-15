@@ -2,7 +2,6 @@
 // 这是系统自动生成的index应用公共文件
 //通过Token获取用户信息
 
-
 //删除用户登录信息
 function delUserForToken($token) {
     return delCache("Token_".$token);
@@ -27,6 +26,5 @@ function getAccountList($uniacid = 7777){
     //数据存在返回数据
     if(!empty($result)) return $result;
     //缓存数据不存在时，从数据库获取数据，同时写入缓存
-
     return $result;
 }

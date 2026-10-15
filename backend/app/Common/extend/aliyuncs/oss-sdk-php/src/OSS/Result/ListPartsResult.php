@@ -5,7 +5,6 @@ namespace OSS\Result;
 use OSS\Model\ListPartsInfo;
 use OSS\Model\PartInfo;
 
-
 /**
  * Class ListPartsResult
  * @package OSS\Result

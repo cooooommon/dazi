@@ -28,7 +28,6 @@ Common::println("bucket $bucket acl put");
 $acl = $ossClient->getBucketAcl($bucket);
 Common::println("bucket $bucket acl get: " . $acl);
 
-
 //******************************* 完整用法参考下面函数 ****************************************************
 
 createBucket($ossClient, $bucket);
@@ -121,7 +120,6 @@ function putBucketAcl($ossClient, $bucket)
     print(__FUNCTION__ . ": OK" . "\n");
 }
 
-
 /**
  * 获取bucket的acl配置
  *
@@ -141,7 +139,6 @@ function getBucketAcl($ossClient, $bucket)
     print(__FUNCTION__ . ": OK" . "\n");
     print('acl: ' . $res);
 }
-
 
 /**
  * 列出用户所有的Bucket

@@ -4,7 +4,6 @@ class LongbingCurl{
     protected $_errno;
     protected $_error;
     public function __construct(){
-
     }
     /**
      * 获取错误信息
@@ -21,7 +20,6 @@ class LongbingCurl{
         $this->_errno = NULL;
         $this->_error = NULL;
         $ch = curl_init($url);
-                                                                       
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         if($post != NULL)
             curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
@@ -29,7 +27,6 @@ class LongbingCurl{
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
         curl_setopt($ch, CURLOPT_AUTOREFERER,true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 120);
-        
         if($header)
             curl_setopt($ch, CURLOPT_HEADER, false);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(

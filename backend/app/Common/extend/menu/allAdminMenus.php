@@ -256,9 +256,6 @@ $businessCard = <<<BUSINESSCARD
     }
 BUSINESSCARD;
 
-
-
-
 $malls = <<<MALLS
 {
         "path": "/malls",
@@ -5084,7 +5081,6 @@ DECORATE;
 $diy = <<<DIY
 {"path":"/diy","component":"Layout","redirect":"/diy/list","meta":{"menuName":"diy","icon":"iconchaifenyemian","subNavName":[{"name":"diySub","url":[{"name":"diyList","url":"/diy/list"}]}]},"children":[{"path":"list","name":"diyList","component":"/diy/list","meta":{"keepAlive":true,"title":"diySub","auth":[],"isOnly":false,"pagePermission":[{"title":"diyList","index":0,"auth":["view","add","edit","del","outport"]}]}},{"path":"edit","name":"diySub","component":"/diy/edit","meta":{"keepAlive":true,"title":"diySub","auth":[],"isOnly":false,"pagePermission":[{"title":"diySub","index":0,"auth":["view","add","edit","del","outport"]}]}}]}
 DIY;
-
 
 return [
     'Survey' => $survey,

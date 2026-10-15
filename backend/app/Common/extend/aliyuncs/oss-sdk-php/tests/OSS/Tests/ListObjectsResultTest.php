@@ -2,7 +2,6 @@
 
 namespace OSS\Tests;
 
-
 use OSS\Result\ListObjectsResult;
 use OSS\Http\ResponseCore;
 

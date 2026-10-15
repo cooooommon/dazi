@@ -15,7 +15,6 @@ declare(strict_types=1);
 
 namespace app\Common\service;
 
-
 use app\Common\model\LongbingUser;
 
 class LongbingUserService
@@ -30,7 +29,6 @@ class LongbingUserService
     public static function getUserOpenId($userId){
         $user = new LongbingUser();
         $openid = $user->where(['id'=>$userId])->value('openid');
-
         return $openid;
     }
 
@@ -55,7 +53,6 @@ class LongbingUserService
     public static function isUser($uniacid ,$userId){
         $user = new LongbingUser();
         $info = $user->where(['uniacid' => $uniacid ])->find($userId);
-
         return  $info ? true : false ;
     }
 }

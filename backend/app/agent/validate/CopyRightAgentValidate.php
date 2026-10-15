@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\agent\validate;
-
 
 use think\Validate;
 
@@ -22,7 +20,6 @@ class CopyRightAgentValidate extends Validate
         'get'  =>  ['id'],
         'destroy' => ['id']
     ];
-
 
     public function sceneUpdate()
     {

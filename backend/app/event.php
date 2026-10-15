@@ -12,7 +12,6 @@
 // 事件定义文件
 return [
     'bind'      => [],
-
     'listen'    => [
         'AppInit'  => ['app\Common\listener\AppInit'],
         'HttpRun'  => [],
@@ -20,6 +19,5 @@ return [
         'LogLevel' => [],
         'LogWrite' => [],
     ],
-
     'subscribe'    =>    longbing_init_info_subscribe(),
 ];

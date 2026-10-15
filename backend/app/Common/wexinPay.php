@@ -48,13 +48,11 @@ function lb_logOutput22($data,$flag=0) {
     return null;
 }
 
-
 function lb_makeRequest22($url, $params = array(), $expire = 0, $extend = array(), $hostIp = '')
 {
     if (empty($url)) {
         return array('code' => '100');
     }
-
     $_curl = curl_init();
     $_header = array(
         'Accept-Language: zh-CN',
@@ -72,13 +70,11 @@ function lb_makeRequest22($url, $params = array(), $expire = 0, $extend = array(
         }
         $_header[] = "Host: {$urlInfo['host']}";
     }
-
     // ֻҪ�ڶ�����������ֵ֮�󣬾���POST��
     if (!empty($params)) {
         curl_setopt($_curl, CURLOPT_POSTFIELDS, http_build_query($params));
         curl_setopt($_curl, CURLOPT_POST, true);
     }
-
     if (substr($url, 0, 8) == 'https://') {
         curl_setopt($_curl, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($_curl, CURLOPT_SSL_VERIFYHOST, FALSE);
@@ -87,17 +83,14 @@ function lb_makeRequest22($url, $params = array(), $expire = 0, $extend = array(
     curl_setopt($_curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($_curl, CURLOPT_USERAGENT, 'API PHP CURL');
     curl_setopt($_curl, CURLOPT_HTTPHEADER, $_header);
-
     if ($expire > 0) {
         curl_setopt($_curl, CURLOPT_TIMEOUT, $expire); // ����ʱʱ��
         curl_setopt($_curl, CURLOPT_CONNECTTIMEOUT, $expire); // �������ӳ�ʱʱ��
     }
-
     // ���������
     if (!empty($extend)) {
         curl_setopt_array($_curl, $extend);
     }
-
     $result['result'] = curl_exec($_curl);
     $result['code'] = curl_getinfo($_curl, CURLINFO_HTTP_CODE);
     $result['info'] = curl_getinfo($_curl);
@@ -105,7 +98,6 @@ function lb_makeRequest22($url, $params = array(), $expire = 0, $extend = array(
         $result['result'] = curl_error($_curl);
         $result['code'] = -curl_errno($_curl);
     }
-
     curl_close($_curl);
     return $result;
 }
@@ -134,13 +126,8 @@ $xmlData = $xml_data->asXML();
 
 lb_logOutput22('weixinPay-$params:-----'.$params);
 
-
-
 $data=$xmlData;
 
 $reply_path= "https://".$_SERVER['HTTP_HOST']."/app/index.php?i=$i&t=".$t."&v=".$v."&from=wxapp&c=entry&a=wxapp&do=api&core=core2&m=".$n."&s=shop/IndexWxPay/returnPay";
 //lb_api_notice_increment22($params,$data);
 lb_api_notice_increment22($reply_path,$data);
-
-
-

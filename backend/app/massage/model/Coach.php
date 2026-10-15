@@ -640,6 +640,7 @@ class Coach extends BaseModel
                     'value' => $store_name . '向导，您有一笔订单正在申请退款',
                     'color' => '#93c47d',
                 ),
+                //预约项目
                 $arr[1] => array(
                     'value' => implode(',', array_column($order['order_goods'], 'goods_name')),
                     'color' => '#93c47d',
@@ -664,8 +665,7 @@ class Coach extends BaseModel
             'data' => $data,
         ];
         $rest = lbCurlPost($tmp['url'], $tmp['data']);
-        $rest = json_decode($rest, true);
-        return $rest;
+        return json_decode($rest, true);
     }
     /**
      * @param $order
@@ -851,7 +851,6 @@ class Coach extends BaseModel
 //        $user_model = new User();
 //
 //        $mobile = $user_model->where(['id' => $order['user_id']])->value('phone');
-
         $access_token = longbingGetAccessToken($uniacid);
         $virtual_config_model = new \app\virtual\model\Config();
         $mobile_auth = $virtual_config_model->getVirtualAuth($uniacid);
@@ -939,9 +938,7 @@ class Coach extends BaseModel
         $wx_setting = new WxSetting($uniacid);
         $access_token = $wx_setting->getGzhToken();
 //        $user_model = new User();
-
 //        $mobile = $user_model->where(['id' => $order['user_id']])->value('phone');
-
         $virtual_config_model = new \app\virtual\model\Config();
         $mobile_auth = $virtual_config_model->getVirtualAuth($uniacid);
         $url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={$access_token}";
@@ -1010,9 +1007,7 @@ class Coach extends BaseModel
         $dis[] = ['uniacid', '=', $uniacid];
         $dis[] = ['pay_type', 'in', [4, 5, 6]];
 //        $dis[] = ['start_time', '<=', time()];
-
 //        $dis[] = ['end_time', '>=', time()];
-
         $order = new Order();
         $data = $order->where($dis)->column('coach_id');
         return $data;
@@ -1222,7 +1217,7 @@ class Coach extends BaseModel
         $config_model = new SendMsgConfig();
         $config_model->initData($uniacid);
         $x_config = $config_model->dataInfo(['uniacid' => $uniacid]);
-        if (empty($x_config['gzh_appid']) || empty($x_config['coachupdate_tmp_id'])) {
+        if (empty($x_config['gzh_appid']) || empty($x_config['coach_update_tmp_id'])) {
             return false;
         }
         $config = longbingGetAppConfig($uniacid);
@@ -1232,6 +1227,11 @@ class Coach extends BaseModel
         $page = "pages/mine?type=2";
         //post地址
         $url = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send?access_token={$access_token}";
+        $key = explode('&', $x_config['coach_update_tmp_id']);
+        $arr = [];
+        for ($i = 1; $i < 3; $i++) {
+            $arr[$i] = !empty($key[$i]) ? $key[$i] : 'keyword' . $i;
+        }
         $data = [
             //用户小程序openid
             'touser' => $openid,
@@ -1240,7 +1240,7 @@ class Coach extends BaseModel
                 'appid' => $x_config['gzh_appid'],
                 "url" => "http://weixin.qq.com/download",
                 //公众号模版id
-                'template_id' => $x_config['coachupdate_tmp_id'],
+                'template_id' => $x_config['coach_update_tmp_id'],
                 'miniprogram' => [
                     //小程序appid
                     'appid' => $config['appid'],
@@ -1252,16 +1252,18 @@ class Coach extends BaseModel
                         'value' => '向导修改审核通知',
                         'color' => '#93c47d',
                     ),
-                    //服务名称
-                    'keyword1' => array(
+                    //平台
+                    $arr[1] => array(
                         'value' => '平台',
                         'color' => '#93c47d',
                     ),
-                    'keyword2' => array(
+                    //结果
+                    $arr[2] => array(
                         'value' => $type == 2 ? '通过 ' . $sh_text : '未通过 ' . $sh_text,
                         'color' => '#93c47d',
                     ),
-                    'keyword3' => array(
+                    //时间
+                    $arr[3] => array(
                         'value' => date('Y-m-d H:i', time()),
                         'color' => '#93c47d',
                     )
@@ -1284,21 +1286,24 @@ class Coach extends BaseModel
      */
     public function updateTmpWeb($cap_id, $uniacid, $type, $sh_text)
     {
-        $cap_model = new Coach();
         $config_model = new SendMsgConfig();
         $config_model->initData($uniacid);
         $x_config = $config_model->dataInfo(['uniacid' => $uniacid]);
-        if (empty($x_config['gzh_appid']) || empty($x_config['coachupdate_tmp_id'])) {
+        if (empty($x_config['gzh_appid']) || empty($x_config['coach_update_tmp_id'])) {
             return false;
         }
         //获取楼长openid
-        $openid = $cap_model->capOpenid($cap_id, 2);
+        $openid = $this->capOpenid($cap_id);
+        $cap = $this->dataInfo(['id'=>$cap_id]);
         $wx_setting = new WxSetting($uniacid);
         $access_token = $wx_setting->getGzhToken();
         $url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={$access_token}";
-        $key = explode('&', $x_config['coachupdate_tmp_id']);
+        $key = explode('&', $x_config['coach_update_tmp_id']);
         for ($i = 1; $i < 4; $i++) {
             $arr[$i] = !empty($key[$i]) ? $key[$i] : 'keyword' . $i;
+        }
+        if (empty($key[0])) {
+            return false;
         }
         $data = [
             //用户小程序openid
@@ -1314,17 +1319,19 @@ class Coach extends BaseModel
                     'value' => '向导修改审核通知',
                     'color' => '#93c47d',
                 ),
-                //服务名称
+                //向导名字
                 $arr[1] => array(
-                    'value' => '平台',
+                    'value' => $cap['coach_name'],
                     'color' => '#93c47d',
                 ),
+                //审核时间
                 $arr[2] => array(
-                    'value' => $type == 2 ? '通过 ' . $sh_text : '未通过 ' . $sh_text,
+                    'value' => date('Y-m-d H:i', time()),
                     'color' => '#93c47d',
                 ),
+                //审核结果
                 $arr[3] => array(
-                    'value' => date('Y-m-d H:i', time()),
+                    'value' => $type == 2 ? '通过' : '驳回',
                     'color' => '#93c47d',
                 )
             )
@@ -1335,8 +1342,7 @@ class Coach extends BaseModel
             'data' => $data,
         ];
         $rest = lbCurlPost($tmp['url'], $tmp['data']);
-        $rest = json_decode($rest, true);
-        return $rest;
+        return json_decode($rest, true);
     }
     /**
      * @author chenniang
@@ -1821,14 +1827,11 @@ class Coach extends BaseModel
         $openid = User::where('id', $data['user_id'])->value('web_openid');
         $coach_name = self::where('id', $data['coach_id'])->value('coach_name');
         $key = explode('&', $x_config['apply_tmp_id']);
-        $arr = [
-            1 => 'thing2',
-            2 => 'time3'
-        ];
+        if (empty($key[0])) {
+            return false;
+        }
         for ($i = 1; $i < 3; $i++) {
-            if (!empty($key[$i])) {
-                $arr[$i] = $key[$i];
-            }
+            $arr[$i] = !empty($key[$i]) ? $key[$i] : 'keyword' . $i;
         }
         $arr = [
             //用户小程序openid

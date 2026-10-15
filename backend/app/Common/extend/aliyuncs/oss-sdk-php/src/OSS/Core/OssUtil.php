@@ -153,7 +153,6 @@ class OssUtil
         return true;
     }
 
-
     /**
      * 判断字符串$str是不是以$findMe开始
      *
@@ -230,7 +229,6 @@ class OssUtil
         $characters = <<<BBB
 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 BBB;
-
         $charactersLength = strlen($characters);
         if ($fp) {
             while ($size > 0) {
@@ -272,18 +270,15 @@ BBB;
         if ($from_pos >= $filesize || $to_pos >= $filesize || $from_pos < 0 || $to_pos < 0) {
             return $content_md5;
         }
-
         $total_length = $to_pos - $from_pos + 1;
         $buffer = 8192;
         $left_length = $total_length;
         if (!file_exists($filename)) {
             return $content_md5;
         }
-
         if (false === $fh = fopen($filename, 'rb')) {
             return $content_md5;
         }
-
         fseek($fh, $from_pos);
         $data = '';
         while (!feof($fh)) {
@@ -396,7 +391,6 @@ BBB;
         $base_path = $dir;
         $exclude_array = explode("|", $exclude);
         $exclude_array = array_unique(array_merge($exclude_array, array('.', '..')));
-
         if ($recursive) {
             foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir)) as $new_file) {
                 if ($new_file->isDir()) continue;
@@ -438,7 +432,6 @@ BBB;
         if ($encoding == "") {
             return $key;
         }
-
         if ($encoding == "url") {
             return rawurldecode($key);
         } else {

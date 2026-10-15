@@ -18,10 +18,8 @@ use think\App;
 use app\shop\model\Order as Model;
 use think\facade\Db;
 
-
 class AdminIndex extends AdminRest
 {
-
 
     protected $model;
 
@@ -33,17 +31,11 @@ class AdminIndex extends AdminRest
 
     public function __construct(App $app)
     {
-
         parent::__construct($app);
-
         $this->model = new Order();
-
         $this->refund_order_model = new \app\massage\model\RefundOrder();
-
         $this->comment_model = new Comment();
-
     }
-
 
     /**
      * @author chenniang
@@ -52,96 +44,56 @@ class AdminIndex extends AdminRest
      */
     public function orderData()
     {
-
         $input = $this->_param;
-
         $dis[] = ['uniacid', '=', $this->_uniacid];
-
         $dis[] = ['pay_time', '>', 0];
-
         $dis[] = ['coach_refund_time', '=', 0];
         //全年
         if ($input['day'] == 4) {
-
             $start = strtotime(date('Y-01'));
-
             $i = 0;
-
             while ($i < 12) {
-
                 $arr[$i]['month'] = $i + 1;
-
                 $arr[$i]['time'] = $start;
-
                 $time_text = date('Y-m', $start);
-
                 $arr[$i]['time_text'] = $time_text;
                 //商城收益
                 $shop_price = $this->model->where($dis)->whereMonth('create_time',
                     $time_text)->sum('true_service_price');
                 //录入订单
                 $arr[$i]['shop_price'] = round($shop_price, 2);
-
                 $i++;
-
                 $start = strtotime("$time_text +1 month");
             }
-
         } else {
             //自定义
             if ($input['day'] == 5) {
-
                 $start = $input['start_time'];
-
                 $end = $input['end_time'];
-
             } else {
-
                 if ($input['day'] == 1) {
-
                     $time = 1;
-
                 } elseif ($input['day'] == 2) {
-
                     $time = 7;
-
                 } else {
-
                     $time = 30;
-
                 }
-
                 $end = strtotime(date('Y-m-d', time()));
-
                 $start = $end - ($time - 1) * 86400;
-
             }
-
             $i = 0;
-
             while ($start <= $end) {
-
                 $arr[$i]['time'] = $start;
-
                 $time_text = date('Y-m-d', $start);
-
                 $arr[$i]['time_text'] = $time_text;
-
                 $shop_price = $this->model->where($dis)->whereDay('create_time', $time_text)->sum('true_service_price');
-
                 $arr[$i]['shop_price'] = round($shop_price, 2);
-
                 $start += 86400;
-
                 $i++;
             }
-
         }
-
         return $this->success($arr);
-
     }
-
 
     /**
      * @author chenniang
@@ -151,87 +103,54 @@ class AdminIndex extends AdminRest
      */
     public function agentOrderData()
     {
-
         $input = $this->_param;
-
         $admin_model = new \app\massage\model\Admin();
-
         $dis = [
-
             'uniacid' => $this->_uniacid,
-
             'status' => 1,
-
             'is_admin' => 0,
-
             'city_type' => 1
         ];
-
         $list = $admin_model->where($dis)->limit(20)->select()->toArray();
-
         if (!empty($list)) {
-
             foreach ($list as &$value) {
-
                 $dis = [];
-
                 $admin_id = $admin_model->getAdminAndSon($value['id']);
-
                 $dis[] = ['admin_id', 'in', $admin_id];
-
                 $dis[] = ['coach_refund_time', '=', 0];
-
                 if ($input['day'] == 4) {
                     //全年
                     $price = $this->model->where($dis)->where('pay_time', '>', 0)->whereTime('create_time',
                         'year')->sum("true_service_price");
-
                 } else {
                     //自定义时间
                     if ($input['day'] == 5) {
-
                         $start = $input['start_time'];
-
                         $end = $input['end_time'];
-
                         $price = $this->model->where($dis)->where('pay_time', '>', 0)->where('create_time', 'between',
                             "$start,$end")->sum('true_service_price');
-
                     } else {
                         //今日
                         if ($input['day'] == 1) {
-
                             $price = $this->model->where($dis)->where('pay_time', '>', 0)->whereTime('create_time',
                                 'today')->sum('true_service_price');
-
                         } elseif ($input['day'] == 2) {
                             //近7日
                             $price = $this->model->where($dis)->where('pay_time', '>', 0)->whereTime('create_time',
                                 '-7 days')->sum('true_service_price');
-
                         } else {
                             //近30日
                             $price = $this->model->where($dis)->where('pay_time', '>', 0)->whereTime('create_time',
                                 '-30 days')->sum('true_service_price');
-
                         }
-
                     }
-
                 }
-
                 $value['sale_price'] = round($price, 2);
-
             }
-
         }
-
         $list = arraySort($list, 'sale_price', 'desc');
-
         return $this->success($list);
-
     }
-
 
     /**
      * @author chenniang
@@ -308,7 +227,6 @@ class AdminIndex extends AdminRest
         return $this->success($data);
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2022-10-21 14:48
@@ -316,22 +234,14 @@ class AdminIndex extends AdminRest
      */
     public function coachSaleData()
     {
-
         $input = $this->_param;
-
         $dis[] = ['a.uniacid', '=', $this->_uniacid];
-
         $dis[] = ['a.status', '=', 2];
-
         $dis[] = ['b.coach_refund_time', '=', 0];
-
         if (!empty($input['start_time'])) {
-
             $dis[] = ['b.create_time', 'between', "{$input['start_time']},{$input['end_time']}"];
         }
-
         $coach_model = new Coach();
-
         $data = $coach_model->alias('a')
             ->join('massage_service_order_list b', 'a.id = b.coach_id', 'left')
             ->where($dis)
@@ -341,28 +251,19 @@ class AdminIndex extends AdminRest
             ->order('total_coach_cash desc,a.id desc')
             ->paginate($input['limit'])
             ->toArray();
-
         if (!empty($data['data'])) {
-
             foreach ($data['data'] as &$v) {
-
                 $v['coach_level'] = $coach_model->getCoachLevel($v['id'], $this->_uniacid);
             }
         }
-
         $list['yesterday_count'] = $this->model->where([
             'uniacid' => $this->_uniacid, 'coach_refund_time' => 0
         ])->where('pay_time', '>', 0)->whereTime('create_time', 'yesterday')->count();
-
         $price = $this->model->where(['uniacid' => $this->_uniacid, 'coach_refund_time' => 0])->where('pay_time', '>',
             0)->whereTime('create_time', 'yesterday')->sum('true_service_price');
-
         $list['yesterday_price'] = round($price, 2);
-
         $list['list'] = $data;
-
         return $this->success($list);
     }
-
 
 }

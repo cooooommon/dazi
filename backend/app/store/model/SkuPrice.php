@@ -30,12 +30,9 @@ class SkuPrice extends BaseModel
     {
         Db::startTrans();
         try {
-
             $insert = [];
             if (!empty($price)) {
-
                 foreach ($price as $item) {
-
                     $insert[] = [
                         'uniacid' => $uniacid,
                         'name' => $item['name'],
@@ -47,23 +44,19 @@ class SkuPrice extends BaseModel
                     ];
                 }
             }
-
             if (!empty($insert)) {
                 $res = self::insertAll($insert);
                 if (!$res) {
-
                     throw new \Exception('规格价格添加失败');
                 }
             }
             Db::commit();
         } catch (\Exception $exception) {
-
             Db::rollback();
             return ['code' => 1, 'msg' => $exception->getMessage()];
         }
         return true;
     }
-
 
     /**
      * @Desc: 获取列表

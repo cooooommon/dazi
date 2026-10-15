@@ -4,7 +4,6 @@ namespace OSS\Model;
 
 use OSS\Core\OssException;
 
-
 /**
  * Class BucketLifecycleConfig
  * @package OSS\Model
@@ -46,7 +45,6 @@ class LifecycleConfig implements XmlConfig
         return;
     }
 
-
     /**
      * 生成xml字符串
      *
@@ -54,7 +52,6 @@ class LifecycleConfig implements XmlConfig
      */
     public function serializeToXml()
     {
-
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><LifecycleConfiguration></LifecycleConfiguration>');
         foreach ($this->rules as $rule) {
             $xmlRule = $xml->addChild('Rule');
@@ -103,5 +100,3 @@ class LifecycleConfig implements XmlConfig
      */
     private $rules;
 }
-
-

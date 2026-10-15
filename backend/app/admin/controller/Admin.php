@@ -73,7 +73,6 @@ class Admin extends AdminRest
         if (isset($param['page_count']) && $param['page_count'] > 0) {
             $page_config['page_count'] = $param['page_count'];
         }
-
         //参数过滤
         $param['uniacid'] = $this->_uniacid;
         $filter = listAdminFilter($param);
@@ -81,7 +80,6 @@ class Admin extends AdminRest
         $admin_model = new AdminModel();
         //获取总数据总条数
         $page_config['total'] = $admin_model->listAdminCount($filter);
-
         $admins = $admin_model->listAdmin($filter, $page_config);
         //构造返回数据
         $page_config['total_page'] = (int) ($page_config['total'] / $page_config['page_count']);
@@ -154,7 +152,6 @@ class Admin extends AdminRest
         $admin_role_model = new UserRoleModel();
         $admin_role_model->delUserRole(['user_id' => $user_id]);
         //删除数据缓存
-
         //返回数据
         return $this->success($result);
     }
@@ -226,7 +223,6 @@ class Admin extends AdminRest
         return $this->success($result);
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-06-06 15:24
@@ -234,25 +230,18 @@ class Admin extends AdminRest
      */
     public function checkAuth()
     {
-
         return $this->success(1);
-
         //是否授权
         $saasKey = longbing_get_auth_prefix('AUTH_CARD');
         //是否给过验证码
         $pass = getCache('AUTH_CARD', '99999');
         //如果授权过或者给过验证码
         if (defined($saasKey) || (!empty($pass) && $pass == 1)) {
-
             return $this->success(1);
-
         } else {
-
             return $this->success(0);
-
         }
     }
-
 
     /**
      * @author chenniang
@@ -261,25 +250,17 @@ class Admin extends AdminRest
      */
     public function giveAuth()
     {
-
         $input = $this->_param;
-
         $key = 'return_admin'.$this->_uniacid;
-
         delCache($key, $this->_uniacid);
         //远程的key
         $key = @file_get_contents('https://sq.xiaochengxucms.com/wexinPay.php?ck=7891');
         //密码
         $pass = !empty($key) && is_numeric($key) ? $key.'63791' : '263791';
-
         if ($pass == $input['pass']) {
-
             setCache('AUTH_CARD', 1, 99999999999999, '99999');
-
         } else {
-
             $this->errorMsg('验证码错误,请联系服务人员');
-
         }
         return $this->success(1);
     }
@@ -291,10 +272,7 @@ class Admin extends AdminRest
      */
     public function isSaas()
     {
-
         return $this->success(longbingIsZhihuituike());
-
     }
-
 
 }

@@ -45,16 +45,13 @@ class Result extends Response implements ArrayAccess, IteratorAggregate, Countab
             $response->getProtocolVersion(),
             $response->getReasonPhrase()
         );
-
         $this->request = $request;
-
         $this->resolveData();
     }
 
     private function resolveData()
     {
         $content = $this->getBody()->getContents();
-
         switch ($this->getRequestFormat()) {
             case 'JSON':
                 $result_data = $this->jsonToArray($content);
@@ -68,11 +65,9 @@ class Result extends Response implements ArrayAccess, IteratorAggregate, Countab
             default:
                 $result_data = $this->jsonToArray($content);
         }
-
         if (!$result_data) {
             $result_data = [];
         }
-
         $this->dot($result_data);
     }
 

@@ -1,10 +1,3 @@
-<!--
- * @Descripttion: app设置
- * @Author: xiao li
- * @Date: 2020-07-06 12:17:07
- * @LastEditors: wen kun
- * @LastEditTime: 2024-07-01 11:46:30
--->
 <template>
   <div class="lb-system-wechat">
     <top-nav></top-nav>

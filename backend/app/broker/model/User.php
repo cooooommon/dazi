@@ -17,18 +17,12 @@ class User extends BaseModel
 
     public function getPhoneAttr($value, $data)
     {
-
         if (!empty($value) && isset($data['uniacid'])) {
-
             if (numberEncryption($data['uniacid']) == 1) {
-
                 return substr_replace($value, "****", 2, 4);
             }
-
         }
-
         return $value;
-
     }
 
     /**
@@ -43,7 +37,6 @@ class User extends BaseModel
      */
     public static function getList($dis, $page, $mapor = [])
     {
-
         return self::where($dis)->where(function ($query) use ($mapor) {
             $query->whereOr($mapor);
         })->order('id desc')

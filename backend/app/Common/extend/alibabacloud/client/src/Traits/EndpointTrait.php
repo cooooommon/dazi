@@ -39,17 +39,14 @@ trait EndpointTrait
     {
         ApiFilter::product($product);
         ClientFilter::regionId($regionId);
-
         if (isset(self::$hosts[$product][$regionId])) {
             return self::$hosts[$product][$regionId];
         }
-
         $domain = Config::get("endpoints.{$product}.{$regionId}");
         if (!$domain) {
             $regionId = LocationService::GLOBAL_REGION;
             $domain   = Config::get("endpoints.{$product}.{$regionId}", '');
         }
-
         return $domain;
     }
 
@@ -66,13 +63,9 @@ trait EndpointTrait
     public static function addHost($product, $host, $regionId = LocationService::GLOBAL_REGION)
     {
         ApiFilter::product($product);
-
         HttpFilter::host($host);
-
         ClientFilter::regionId($regionId);
-
         self::$hosts[$product][$regionId] = $host;
-
         LocationService::addHost($product, $host, $regionId);
     }
 
@@ -90,15 +83,12 @@ trait EndpointTrait
         if ($network === 'public') {
             $network = '';
         }
-
         if ($request->endpointRegional === 'regional') {
             return "{$request->product}{$suffix}{$network}.{$regionId}.aliyuncs.com";
         }
-
         if ($request->endpointRegional === 'central') {
             return "{$request->product}{$suffix}{$network}.aliyuncs.com";
         }
-
         throw new InvalidArgumentException('endpointRegional is invalid.');
     }
 }

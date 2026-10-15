@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\agent\model;
-
 
 use app\BaseModel;
 
@@ -10,12 +8,10 @@ class AdminModel extends BaseModel
 {
     protected  $name = 'longbing_admin';
 
-    
     public function appAdmin()
     {
         return $this->hasOne(AppAdminModel::class, 'admin_id', 'admin_id');
     }
-
 
     public function role()
     {

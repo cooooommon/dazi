@@ -23,6 +23,5 @@ class UploadPartResult extends Result
             return $header["etag"];
         }
         throw new OssException("cannot get ETag");
-
     }
 }

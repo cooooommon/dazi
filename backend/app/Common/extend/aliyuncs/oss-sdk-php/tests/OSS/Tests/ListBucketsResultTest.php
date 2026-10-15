@@ -69,7 +69,6 @@ BBBB;
         $errorHeader = array(
             'x-oss-request-id' => '1a2b-3c4d'
         );
-
         $errorBody = <<< BBBB
 <?xml version="1.0" encoding="UTF-8"?>
 <Error>

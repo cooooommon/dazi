@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\agent\validate;
-
 
 use think\Validate;
 
@@ -35,7 +33,6 @@ class Cardauth2ConfigValidate extends Validate
             'house_switch'],
         'delete' => ['id']
     ];
-
 
     public function sceneUpdate()
     {

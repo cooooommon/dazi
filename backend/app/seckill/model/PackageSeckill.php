@@ -30,7 +30,6 @@ class PackageSeckill extends BaseModel
     public static function add($data)
     {
         $data['create_time'] = $data['update_time'] = time();
-
         return self::insert($data);
     }
 
@@ -84,7 +83,6 @@ class PackageSeckill extends BaseModel
      */
     public static function edit($where, $update)
     {
-
         return self::where($where)->update($update);
     }
 
@@ -100,7 +98,6 @@ class PackageSeckill extends BaseModel
      */
     public static function getInfo($where)
     {
-
         return self::alias('a')
             ->field('a.*,b.name,b.cover,b.price as package_price,c.name as store_name,b.true_sale')
             ->where($where)
@@ -143,33 +140,20 @@ class PackageSeckill extends BaseModel
     public static function getIndexInfo($id)
     {
         $seckill = self::where('id', $id)->field('id,package_id,price,start_time,end_time,is_ad,create_time,stock,use_stock,limit')->find();
-
         if (empty($seckill)) {
-
             return [];
         }
-
         $data = StorePackage::where('id', $seckill['package_id'])->find();
-
         $sku = PackageSku::getList(['package_id' => $seckill['package_id']]);
-
         $price = SkuPrice::getList(['package_id' => $seckill['package_id']]);
-
         $data['store'] = StoreApply::where('id', $data['store_id'])->field('id,name,trade_week,start_time,end_time,store_balance,share_balance,mobile')->find();
-
         $arr = [];
-
         foreach ($sku as $key => $item) {
-
             $arr[$key] = [
-
                 'name' => $item['name']
             ];
-
             foreach ($price as $value) {
-
                 if ($item['id'] == $value['sku_id']) {
-
                     $arr[$key]['price'][] = [
                         'name' => $value['name'],
                         'num' => $value['num'],
@@ -178,27 +162,16 @@ class PackageSeckill extends BaseModel
                 }
             }
         }
-
         $data['sku'] = $arr;
-
         $data['stock_rate'] = (round($seckill['use_stock'] / $seckill['stock'] * 100, 2)) . '%';
-
         $data['end_time'] = $seckill['end_time'];
-
         $data['seckill_price'] = $seckill['price'];
-
         $data['seckill_id'] = $seckill['id'];
-
         $data['use_stock'] = $seckill['use_stock'];
-
         $data['stock'] = $seckill['stock'];
-
         $data['limit'] = $seckill['limit'];
-
         $data['seckill_start_time'] = $seckill['start_time'];
-
         $data['seckill_end_time'] = $seckill['end_time'];
-
         return $data;
     }
 
@@ -215,34 +188,22 @@ class PackageSeckill extends BaseModel
     public static function checkStatusAndStock($package_id)
     {
         $seckill = PackageSeckill::where([['package_id', '=', $package_id], ['status', '=', 1], ['start_time', '<=', time()], ['end_time', '>', time()]])->find();
-
         if (empty($seckill)) {
-
             return ['code' => 1, 'msg' => '该秒杀已下架'];
         }
-
         if ($seckill['use_stock'] >= $seckill['stock']) {
-
             return ['code' => 1, 'msg' => '该秒杀已售罄'];
         }
-
         $data = PackageSeckill::getIndexInfo($seckill['id']);
-
         if (empty($data)) {
-
             return ['code' => 1, 'msg' => '该秒杀已下架'];
         }
-
         if (!empty($data) && $data['start_time'] > time()) {
-
             return ['code' => 1, 'msg' => '该秒杀未开始'];
         }
-
         if (!empty($data) && $data['end_time'] < time()) {
-
             return ['code' => 1, 'msg' => '该秒杀已结束'];
         }
-
         return $data->toArray();
     }
 
@@ -258,22 +219,15 @@ class PackageSeckill extends BaseModel
      */
     public static function getPayInfo($data)
     {
-
         $over_time = Config::where('uniacid', $data['uniacid'])->value('over_time');
-
         if ($data['term_type'] == 1) {
-
             $data['start_time'] = $data['term_start_time'];
-
             $data['end_time'] = $data['term_end_time'];
         } else {
             $data['start_time'] = time();
-
             $data['end_time'] = strtotime('+ ' . $data['days'] . 'days');
         }
-
         $data['over_time'] = time() + $over_time * 60;
-
         return $data;
     }
 
@@ -289,10 +243,8 @@ class PackageSeckill extends BaseModel
     public static function updateSale($id, $num, $type = 1)
     {
         if ($type == 1) {
-
             self::where('id', $id)->inc('use_stock', $num)->update();
         } else {
-
             self::where('id', $id)->dec('use_stock', $num)->update();
         }
         return true;

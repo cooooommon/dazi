@@ -42,20 +42,16 @@ class ExceptionListener implements EventSubscriberInterface {
 
     public function fromResponse(RequestInterface $request, Response $response) {
         $parts = $this->parser->parse($request, $response);
-
         $className = 'Qcloud\\Cos\\Exception\\' . $parts['code'];
         if (substr($className, -9) !== 'Exception') {
             $className .= 'Exception';
         }
-
         $className = class_exists($className) ? $className : $this->defaultException;
-
         return $this->createException($className, $request, $response, $parts);
     }
 
     protected function createException($className, RequestInterface $request, Response $response, array $parts) {
         $class = new $className($parts['message']);
-
         if ($class instanceof ServiceResponseException) {
             $class->setExceptionCode($parts['code']);
             $class->setExceptionType($parts['type']);
@@ -63,7 +59,6 @@ class ExceptionListener implements EventSubscriberInterface {
             $class->setRequest($request);
             $class->setRequestId($parts['request_id']);
         }
-
         return $class;
     }
 }

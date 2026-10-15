@@ -4,7 +4,6 @@ namespace OSS\Result;
 
 use OSS\Model\LoggingConfig;
 
-
 /**
  * Class GetLoggingResult
  * @package OSS\Result

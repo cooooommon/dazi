@@ -37,21 +37,17 @@ class UpdateService
     {
         //打算进入首页时,自动初始化和安装系统,不在外面进行安装
         //可以根据当前的版本号创建锁定文件,不用每次都执行
-
-
         //执行SQL
         /*$updateSqlData = longbing_init_info_data('UpdateSql');
 
         foreach ($updateSqlData as $sql ){
             Db::query($sql) ;
         }*/
-
         //更加配置模块,自动载入php
         $myModelList = config('app.AdminModelList');
         $myModelList = $myModelList['saas_auth_admin_model_list'];
         //dump($myModelList);exit;
         //$myModelList = AdminMenu::getAuthList($_uniacid);
-
         //1.筛选权限模块
         //2.加载权限执行脚本
         //3.判断升级脚本是否存在
@@ -215,7 +211,6 @@ class UpdateService
                 }*/
                 longbingGetCompanyConfig($uniacid);
             }
-
         }
     }
 

@@ -20,7 +20,6 @@ class City extends BaseModel
         return $this->insert($data);
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:05
@@ -30,7 +29,6 @@ class City extends BaseModel
     {
         return $this->where($dis)->update($data);
     }
-
 
     /**
      * @author chenniang
@@ -42,7 +40,6 @@ class City extends BaseModel
         return $this->where($dis)->order('id desc')->paginate($page)->toArray();
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:43
@@ -53,7 +50,6 @@ class City extends BaseModel
         $data = $this->where($dis)->find();
         return !empty($data) ? $data->toArray() : [];
     }
-
 
     /**
      * @author chenniang
@@ -80,7 +76,6 @@ class City extends BaseModel
 //        }
         return true;
     }
-
 
     /**
      * @author chenniang
@@ -130,7 +125,6 @@ class City extends BaseModel
         decCache($key, 1, $uniacid);
         return true;
     }
-
 
     /**
      * @author chenniang

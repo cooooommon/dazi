@@ -20,7 +20,6 @@ class Release
         $arguments = $event->getArguments();
         if (count($arguments) <= 1) {
             echo 'Missing ChangeLog';
-
             return;
         }
         self::updateChangelogFile($arguments[0], $arguments[1]);
@@ -42,7 +41,6 @@ class Release
             . self::log($changeLog),
             self::getChangeLogContent()
         );
-
         file_put_contents(self::getChangeLogFile(), $content);
     }
 
@@ -60,7 +58,6 @@ class Release
                 $string .= "- $log." . "\n";
             }
         }
-
         return $string;
     }
 
@@ -90,7 +87,6 @@ class Release
             "const VERSION = '" . $version . "';",
             self::getCodeContent()
         );
-
         file_put_contents(self::getCodeFile(), $content);
     }
 

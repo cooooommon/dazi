@@ -12,7 +12,6 @@ $bucket = getenv('QINIU_TEST_BUCKET');
 $auth = new Auth($accessKey, $secretKey);
 $bucketManager = new BucketManager($auth);
 
-
 // 要列取文件的公共前缀
 $prefix = '';
 

@@ -26,14 +26,12 @@ class ApiFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($serviceCode === '') {
             throw new ClientException(
                 'Service Code cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $serviceCode;
     }
 
@@ -51,14 +49,12 @@ class ApiFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($endpointType === '') {
             throw new ClientException(
                 'Endpoint Type cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $endpointType;
     }
 
@@ -76,14 +72,12 @@ class ApiFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($action === '') {
             throw new ClientException(
                 'Action cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $action;
     }
 
@@ -103,14 +97,12 @@ class ApiFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($endpointSuffix === '') {
             throw new ClientException(
                 'Endpoint Suffix cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $endpointSuffix;
     }
 
@@ -130,14 +122,12 @@ class ApiFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($network === '') {
             throw new ClientException(
                 'Network Suffix cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $network;
     }
 
@@ -155,14 +145,12 @@ class ApiFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($version === '') {
             throw new ClientException(
                 'Version cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $version;
     }
 
@@ -180,14 +168,12 @@ class ApiFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($format === '') {
             throw new ClientException(
                 'Format cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return \strtoupper($format);
     }
 
@@ -206,14 +192,12 @@ class ApiFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($product === '') {
             throw new ClientException(
                 'Product cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $product;
     }
 
@@ -232,14 +216,12 @@ class ApiFilter
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if ($pattern === '') {
             throw new ClientException(
                 'Pattern cannot be empty',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return $pattern;
     }
 }

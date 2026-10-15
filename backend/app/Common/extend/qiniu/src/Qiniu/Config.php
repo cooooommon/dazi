@@ -41,12 +41,10 @@ final class Config
         } else {
             $scheme = "http://";
         }
-
         $host = $zone->srcUpHosts[0];
         if ($this->useCdnDomains === true) {
             $host = $zone->cdnUpHosts[0];
         }
-
         return $scheme . $host;
     }
 
@@ -58,71 +56,60 @@ final class Config
         } else {
             $scheme = "http://";
         }
-
         $host = $zone->cdnUpHosts[0];
         if ($this->useCdnDomains === true) {
             $host = $zone->srcUpHosts[0];
         }
-
         return $scheme . $host;
     }
 
     public function getRsHost($accessKey, $bucket)
     {
         $zone = $this->getZone($accessKey, $bucket);
-
         if ($this->useHTTPS === true) {
             $scheme = "https://";
         } else {
             $scheme = "http://";
         }
-
         return $scheme . $zone->rsHost;
     }
 
     public function getRsfHost($accessKey, $bucket)
     {
         $zone = $this->getZone($accessKey, $bucket);
-
         if ($this->useHTTPS === true) {
             $scheme = "https://";
         } else {
             $scheme = "http://";
         }
-
         return $scheme . $zone->rsfHost;
     }
 
     public function getIovipHost($accessKey, $bucket)
     {
         $zone = $this->getZone($accessKey, $bucket);
-
         if ($this->useHTTPS === true) {
             $scheme = "https://";
         } else {
             $scheme = "http://";
         }
-
         return $scheme . $zone->iovipHost;
     }
 
     public function getApiHost($accessKey, $bucket)
     {
         $zone = $this->getZone($accessKey, $bucket);
-
         if ($this->useHTTPS === true) {
             $scheme = "https://";
         } else {
             $scheme = "http://";
         }
-
         return $scheme . $zone->apiHost;
     }
 
     private function getZone($accessKey, $bucket)
     {
         $cacheId = "$accessKey:$bucket";
-
         if (isset($this->zoneCache[$cacheId])) {
             $zone = $this->zoneCache[$cacheId];
         } elseif (isset($this->zone)) {

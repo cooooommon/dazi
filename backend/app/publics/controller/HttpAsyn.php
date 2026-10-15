@@ -13,15 +13,10 @@ use think\facade\Request;
 class HttpAsyn extends BaseController
 {
 
-
     public function message()
     {
-
-
         $param = Request::param();
-
         $data = json_decode($param['message'], true);
-
         //try{
         switch ($action = $data['action']) {
             //老代码  作注释处理
@@ -59,26 +54,18 @@ class HttpAsyn extends BaseController
             case 'longbingCreateHeaderQr':
                 UserService::createHeaderQr($data['uniacid'], ['staff_id' => $data['user_id']]);
                 break;*/
-
-
             case 'police_notice'://求救通知
                 $model = new Police();
-
                 $model->sendPoliceNotice($data['uniacid'], $data['coach_id'], $data['address']);
                 break;
-
             case 'orderServiceNotice'://订单服务通知
                 $model = new SendMsgConfig();
-
                 $model->orderServiceNotice($data['uniacid']);
-
                 break;
-
         }
         //}catch(Exception $e)
         //{}
         echo 'message ok ';
-
     }
 
 }

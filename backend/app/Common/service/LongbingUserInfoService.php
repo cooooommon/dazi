@@ -29,7 +29,6 @@ class LongbingUserInfoService
     public static function getNameByUserId($userId){
         $userInfo = new LongbingUserInfo();
         $name = $userInfo->where(['fans_id'=>$userId])->value('name');
-
         return $name;
     }
 
@@ -40,11 +39,9 @@ class LongbingUserInfoService
      * @DataTime: 2020/1/14 14:54
      */
     public static function isStraffByUserId($userId){
-
         $userInfo = new LongbingUserInfo();
         $is_staff = $userInfo->where(['fans_id'=>$userId])->value('is_staff');
         return $is_staff ? true : false ;
     }
-
 
 }

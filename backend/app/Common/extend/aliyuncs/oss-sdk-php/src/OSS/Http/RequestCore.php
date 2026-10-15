@@ -1,7 +1,6 @@
 <?php
 namespace OSS\Http;
 
-
 /**
  * Handles all HTTP requests using cURL and manages the responses.
  *
@@ -211,7 +210,6 @@ class RequestCore
      */
     const HTTP_HEAD = 'HEAD';
 
-
     /*%******************************************************************************************%*/
     // CONSTRUCTOR/DESTRUCTOR
 
@@ -230,21 +228,17 @@ class RequestCore
         $this->method = self::HTTP_GET;
         $this->request_headers = array();
         $this->request_body = '';
-
         // Set a new Request class if one was set.
         if (isset($helpers['request']) && !empty($helpers['request'])) {
             $this->request_class = $helpers['request'];
         }
-
         // Set a new Request class if one was set.
         if (isset($helpers['response']) && !empty($helpers['response'])) {
             $this->response_class = $helpers['response'];
         }
-
         if ($proxy) {
             $this->set_proxy($proxy);
         }
-
         return $this;
     }
 
@@ -258,14 +252,11 @@ class RequestCore
         if (isset($this->read_file) && isset($this->read_stream)) {
             fclose($this->read_stream);
         }
-
         if (isset($this->write_file) && isset($this->write_stream)) {
             fclose($this->write_stream);
         }
-
         return $this;
     }
-
 
     /*%******************************************************************************************%*/
     // REQUEST METHODS
@@ -381,7 +372,6 @@ class RequestCore
     public function set_read_stream_size($size)
     {
         $this->read_stream_size = $size;
-
         return $this;
     }
 
@@ -398,18 +388,14 @@ class RequestCore
     {
         if (!isset($size) || $size < 0) {
             $stats = fstat($resource);
-
             if ($stats && $stats['size'] >= 0) {
                 $position = ftell($resource);
-
                 if ($position !== false && $position >= 0) {
                     $size = $stats['size'] - $position;
                 }
             }
         }
-
         $this->read_stream = $resource;
-
         return $this->set_read_stream_size($size);
     }
 
@@ -423,7 +409,6 @@ class RequestCore
     {
         $this->read_file = $location;
         $read_file_handle = fopen($location, 'r');
-
         return $this->set_read_stream($read_file_handle);
     }
 
@@ -436,7 +421,6 @@ class RequestCore
     public function set_write_stream($resource)
     {
         $this->write_stream = $resource;
-
         return $this;
     }
 
@@ -476,7 +460,6 @@ class RequestCore
     public function set_seek_position($position)
     {
         $this->seek_position = isset($position) ? (integer)$position : null;
-
         return $this;
     }
 
@@ -490,18 +473,15 @@ class RequestCore
    public function streaming_header_callback($curl_handle, $header_content)
    {
         $code = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
-
         if (isset($this->write_file) && intval($code) / 100 == 2 && !isset($this->write_file_handle))
         {
             $this->write_file_handle = fopen($this->write_file, 'w');
             $this->set_write_stream($this->write_file_handle);
         }
-
         $this->response_raw_headers .= $header_content;
         return strlen($header_content); 
     }
         
-
     /**
      * Register a callback function to execute whenever a data stream is read from using
      * <CFRequest::streaming_read_callback()>.
@@ -523,7 +503,6 @@ class RequestCore
     public function register_streaming_read_callback($callback)
     {
         $this->registered_streaming_read_callback = $callback;
-
         return $this;
     }
 
@@ -547,10 +526,8 @@ class RequestCore
     public function register_streaming_write_callback($callback)
     {
         $this->registered_streaming_write_callback = $callback;
-
         return $this;
     }
-
 
     /*%******************************************************************************************%*/
     // PREPARE, SEND, AND PROCESS REQUEST
@@ -570,24 +547,19 @@ class RequestCore
             // Send EOF
             return '';
         }
-
         // If we're at the beginning of an upload and need to seek...
         if ($this->read_stream_read == 0 && isset($this->seek_position) && $this->seek_position !== ftell($this->read_stream)) {
             if (fseek($this->read_stream, $this->seek_position) !== 0) {
                 throw new RequestCore_Exception('The stream does not support seeking and is either not at the requested position or the position is unknown.');
             }
         }
-
         $read = fread($this->read_stream, min($this->read_stream_size - $this->read_stream_read, $length)); // Remaining upload data or cURL's requested chunk size
         $this->read_stream_read += strlen($read);
-
         $out = $read === false ? '' : $read;
-
         // Execute callback function
         if ($this->registered_streaming_read_callback) {
             call_user_func($this->registered_streaming_read_callback, $curl_handle, $file_handle, $out);
         }
-
         return $out;
     }
 
@@ -601,32 +573,25 @@ class RequestCore
     public function streaming_write_callback($curl_handle, $data)
     {
         $code = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
-        
         if (intval($code) / 100 != 2)
         {
             $this->response_error_body .= $data;
             return strlen($data);
         }
-
         $length = strlen($data);
         $written_total = 0;
         $written_last = 0;
-        
         while ($written_total < $length) {
             $written_last = fwrite($this->write_stream, substr($data, $written_total));
-
             if ($written_last === false) {
                 return $written_total;
             }
-
             $written_total += $written_last;
         }
-
         // Execute callback function
         if ($this->registered_streaming_write_callback) {
             call_user_func($this->registered_streaming_write_callback, $curl_handle, $written_total);
         }
-
         return $written_total;
     }
 
@@ -640,7 +605,6 @@ class RequestCore
     public function prep_request()
     {
         $curl_handle = curl_init();
-
         // Set default options.
         curl_setopt($curl_handle, CURLOPT_URL, $this->request_url);
         curl_setopt($curl_handle, CURLOPT_FILETIME, true);
@@ -656,7 +620,6 @@ class RequestCore
         curl_setopt($curl_handle, CURLOPT_USERAGENT, $this->useragent);
         curl_setopt($curl_handle, CURLOPT_HEADERFUNCTION, array($this, 'streaming_header_callback'));
         curl_setopt($curl_handle, CURLOPT_READFUNCTION, array($this, 'streaming_read_callback'));
-
         // Verification of the SSL cert
         if ($this->ssl_verification) {
             curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, true);
@@ -665,59 +628,47 @@ class RequestCore
             curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($curl_handle, CURLOPT_SSL_VERIFYHOST, false);
         }
-
         // chmod the file as 0755
         if ($this->cacert_location === true) {
             curl_setopt($curl_handle, CURLOPT_CAINFO, dirname(__FILE__) . '/cacert.pem');
         } elseif (is_string($this->cacert_location)) {
             curl_setopt($curl_handle, CURLOPT_CAINFO, $this->cacert_location);
         }
-
         // Debug mode
         if ($this->debug_mode) {
             curl_setopt($curl_handle, CURLOPT_VERBOSE, true);
         }
-
         // Handle open_basedir & safe mode
         if (!ini_get('safe_mode') && !ini_get('open_basedir')) {
             curl_setopt($curl_handle, CURLOPT_FOLLOWLOCATION, true);
         }
-
         // Enable a proxy connection if requested.
         if ($this->proxy) {
             curl_setopt($curl_handle, CURLOPT_HTTPPROXYTUNNEL, true);
-
             $host = $this->proxy['host'];
             $host .= ($this->proxy['port']) ? ':' . $this->proxy['port'] : '';
             curl_setopt($curl_handle, CURLOPT_PROXY, $host);
-
             if (isset($this->proxy['user']) && isset($this->proxy['pass'])) {
                 curl_setopt($curl_handle, CURLOPT_PROXYUSERPWD, $this->proxy['user'] . ':' . $this->proxy['pass']);
             }
         }
-
         // Set credentials for HTTP Basic/Digest Authentication.
         if ($this->username && $this->password) {
             curl_setopt($curl_handle, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
             curl_setopt($curl_handle, CURLOPT_USERPWD, $this->username . ':' . $this->password);
         }
-
         // Handle the encoding if we can.
         if (extension_loaded('zlib')) {
             curl_setopt($curl_handle, CURLOPT_ENCODING, '');
         }
-
         // Process custom headers
         if (isset($this->request_headers) && count($this->request_headers)) {
             $temp_headers = array();
-
             foreach ($this->request_headers as $k => $v) {
                 $temp_headers[] = $k . ': ' . $v;
             }
-
             curl_setopt($curl_handle, CURLOPT_HTTPHEADER, $temp_headers);
         }
-
         switch ($this->method) {
             case self::HTTP_PUT:
                 //unset($this->read_stream);
@@ -732,7 +683,6 @@ class RequestCore
                     curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $this->request_body);
                 }
                 break;
-
             case self::HTTP_POST:
                 curl_setopt($curl_handle, CURLOPT_CUSTOMREQUEST, 'POST');
                 if (isset($this->read_stream)) {
@@ -745,12 +695,10 @@ class RequestCore
                     curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $this->request_body);
                 }
                 break;
-
             case self::HTTP_HEAD:
                 curl_setopt($curl_handle, CURLOPT_CUSTOMREQUEST, self::HTTP_HEAD);
                 curl_setopt($curl_handle, CURLOPT_NOBODY, 1);
                 break;
-
             default: // Assumed GET
                 curl_setopt($curl_handle, CURLOPT_CUSTOMREQUEST, $this->method);
                 if (isset($this->write_stream) || isset($this->write_file)) {
@@ -761,14 +709,12 @@ class RequestCore
                 }
                 break;
         }
-
         // Merge in the CURLOPTs
         if (isset($this->curlopts) && sizeof($this->curlopts) > 0) {
             foreach ($this->curlopts as $k => $v) {
                 curl_setopt($curl_handle, $k, $v);
             }
         }
-
         return $curl_handle;
     }
 
@@ -787,7 +733,6 @@ class RequestCore
         if ($curl_handle && $response) {
             $this->response = $response;
         }
-
         // As long as this came back as a valid resource...
         if (is_resource($curl_handle)) {
             // Determine what's what.
@@ -796,36 +741,30 @@ class RequestCore
             $this->response_body = substr($this->response, $header_size);
             $this->response_code = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
             $this->response_info = curl_getinfo($curl_handle);
-            
             if (intval($this->response_code) / 100 != 2 && isset($this->write_file))
             {
                 $this->response_headers = $this->response_raw_headers;
                 $this->response_body = $this->response_error_body;
             }
-
             // Parse out the headers
             $this->response_headers = explode("\r\n\r\n", trim($this->response_headers));
             $this->response_headers = array_pop($this->response_headers);
             $this->response_headers = explode("\r\n", $this->response_headers);
             array_shift($this->response_headers);
-
             // Loop through and split up the headers.
             $header_assoc = array();
             foreach ($this->response_headers as $header) {
                 $kv = explode(': ', $header);
                 $header_assoc[strtolower($kv[0])] = isset($kv[1]) ? $kv[1] : '';
             }
-
             // Reset the headers to the appropriate property.
             $this->response_headers = $header_assoc;
             $this->response_headers['info'] = $this->response_info;
             $this->response_headers['info']['method'] = $this->method;
-            
             if ($curl_handle && $response) {
                 return new ResponseCore($this->response_headers, $this->response_body, $this->response_code);
             }
         }
-
         // Return false
         return false;
     }
@@ -839,22 +778,16 @@ class RequestCore
     public function send_request($parse = false)
     {
         set_time_limit(0);
-
         $curl_handle = $this->prep_request();
         $this->response = curl_exec($curl_handle);
-
         if ($this->response === false) {
             throw new RequestCore_Exception('cURL resource: ' . (string)$curl_handle . '; cURL error: ' . curl_error($curl_handle) . ' (' . curl_errno($curl_handle) . ')');
         }
-
         $parsed_response = $this->process_response($curl_handle, $this->response);
-
         curl_close($curl_handle);
-
         if ($parse) {
             return $parsed_response;
         }
-
         return $this->response;
     }
 

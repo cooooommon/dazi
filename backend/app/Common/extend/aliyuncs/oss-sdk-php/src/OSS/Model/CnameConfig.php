@@ -2,7 +2,6 @@
 
 namespace OSS\Model;
 
-
 use OSS\Core\OssException;
 
 /**
@@ -47,7 +46,6 @@ class CnameConfig implements XmlConfig
     {
         return $this->cnameList;
     }
-
 
     public function addCname($cname)
     {

@@ -6,12 +6,10 @@ use app\BaseModel;
 use app\dynamic\model\CardShareGroup;
 use think\Model;
 
-
 class CardValue extends BaseModel
 {
     //定义表名
     protected $name = 'longbing_card_value';
-
 
     protected static function init ()
     {
@@ -47,7 +45,6 @@ class CardValue extends BaseModel
             $count            = $list1 + $list2+ $list3;
             $value[ 'charm' ] = $count;
             $card_message = new CardMessage();
-
             //  客户互动值
             $list1                  = $card_message->getCount([ 'user_id' => $id ]);
             $list2                  = $card_message->getCount([ 'target_id' => $id ]);
@@ -58,24 +55,20 @@ class CardValue extends BaseModel
             $mark = new UserMark();
             $forward = new CardForward();
             $group = new CardShareGroup();
-
             //  产品推广值
             $list1              =  $extension->getCount([ 'user_id' => $id, 'uniacid' => $uniacid ]);
             $list2              = $mark->getCount([ 'staff_id' => $id, 'uniacid' => $uniacid, 'mark' => 2 ]);
             $list3              = $forward->forwardCount([ 'staff_id' => $id, 'uniacid' => $uniacid, 'type' => 2 ]);
-
             $where=[['user_id','=',$id],['uniacid','=',$uniacid], ['view_goods','<>',''] ];
             $list4              = $group->getCount($where);
             $count              = $list1 + $list2 + $list3 + $list4;
             $value[ 'product' ] = $count;
-
             //  官网推广度
             $list1              =  $card_count->getCount([ 'sign' => 'view', 'type' => 6, 'to_uid' => $id ]);
             $list2              = $forward->forwardCount([ 'staff_id' => $id, 'uniacid' => $uniacid, 'type' => 4 ]);
             $count              = $list1 + $list2;
             $value[ 'website' ] = $count;
             $follow = new UserFollow();
-
             //  销售主动性值
             $list1             = $card_message->getCount([ 'user_id' => $id ]);
             $list2             = $card_message->getCount([ 'target_id' => $id ]);
@@ -83,7 +76,6 @@ class CardValue extends BaseModel
             $list4             = $mark->getCount([ 'staff_id' => $id ]);
             $count             = $list1 + $list2 + $list3+ $list4;
             $value[ 'active' ] = $count;
-
             $insertData                  = $value;
             $insertData[ 'staff_id' ]    = $id;
             $time                        = time();
@@ -106,16 +98,12 @@ class CardValue extends BaseModel
                 'active'      => $check[ 'active' ],        //  销售主动性值
             ];
         }
-
         $max=array_sum(array($value[ 'active' ],$value[ 'charm' ],$value[ 'client' ],$value[ 'interaction' ],$value[ 'product' ],$value[ 'website' ]));
-
         $web_name = tabbarName(4,$uniacid);
-
         $data = [
             [
                 'name'=>'销售主动性值',
                 'number'=>$value[ 'active' ],
-
             ],
             [
                 'name'=>!empty($web_name)?$web_name.'推广度':'官网推广度',
@@ -125,25 +113,20 @@ class CardValue extends BaseModel
             [
                 'name'=>'产品推广值',
                 'number'=>$value[ 'product' ],
-
             ],
             [
                 'name'=>'客户互动值',
                 'number'=>$value[ 'interaction' ],
-
             ],
             [
                 'name'=>'获客能力值',
                 'number'=>$value[ 'client' ],
-
             ],
             [
                 'name'=>'个人魅力值',
                 'number'=>$value[ 'charm' ],
-
             ],
         ];
-
         return  ['max'=>$max,'data'=>$data];
     }
     function bossAi ($user_list, $uniacid )
@@ -161,12 +144,10 @@ class CardValue extends BaseModel
             ->where('id','in',$user_list)
             ->select()
             ->toArray();
-
         foreach ( $staff_list as $k => $v )
         {
             $total = 0;
             $value = $this->bossGetAiValue( $v[ 'id' ], $uniacid );
-
             foreach ( $value['data'] as $k2 => $v2 )
             {
                 if ( $v2[ 'number' ] > $max[ $k2 ] )
@@ -175,20 +156,15 @@ class CardValue extends BaseModel
                 }
                 $total += $v2[ 'number' ];
             }
-
             $staff_list[ $k ][ 'number' ] = $value['data'];
             //$staff_list[ $k ][ 'total' ] = $total;
 //            $staff_list[ $k ][ 'info' ]  = $info;
         }
-
 //        //  二维数组排序
 //        array_multisort( array_column( $staff_list, 'total' ), SORT_DESC, $staff_list );
 //
 //        $staff_list = array_splice( $staff_list, 0, 3 );
-
-
         $data = ['max_data' => $max,'max_number'=>max($max) ];
-
         return $data;
     }
 

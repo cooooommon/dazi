@@ -7,13 +7,11 @@ use think\facade\Db;
 use app\admin\model\ShopOrderGoods;
 use app\admin\model\ShopOrder;
 
-
 class ShopOrderRefund extends BaseModel
 {
     //定义表名
     protected $name = 'card_shop_order_refund';
     protected $orer_goods_model;
-
 
     protected static function init()
     {
@@ -50,7 +48,6 @@ class ShopOrderRefund extends BaseModel
         $dis['id'] = $data['order_id'];
 //        $field      = ''
         return $orer_model->orderInfo($dis);
-
     }
 
     /**
@@ -98,6 +95,5 @@ class ShopOrderRefund extends BaseModel
         }
         return $data;
     }
-
 
 }

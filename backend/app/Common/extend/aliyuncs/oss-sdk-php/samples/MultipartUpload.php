@@ -19,15 +19,12 @@ if (is_null($ossClient)) exit(1);
 $ossClient->multiuploadFile($bucket, "file.php", __FILE__, array());
 Common::println("local file " . __FILE__ . " is uploaded to the bucket $bucket, file.php");
 
-
 // 上传本地目录到bucket内的targetdir子目录中
 $ossClient->uploadDir($bucket, "targetdir", __DIR__);
 Common::println("local dir " . __DIR__ . " is uploaded to the bucket $bucket, targetdir/");
 
-
 // 列出当前未完成的分片上传
 $listMultipartUploadInfo = $ossClient->listMultipartUploads($bucket, array());
-
 
 //******************************* 完整用法参考下面函数 ****************************************************
 
@@ -48,7 +45,6 @@ function multiuploadFile($ossClient, $bucket)
     $object = "test/multipart-test.txt";
     $file = __FILE__;
     $options = array();
-
     try {
         $ossClient->multiuploadFile($bucket, $object, $file, $options);
     } catch (OssException $e) {

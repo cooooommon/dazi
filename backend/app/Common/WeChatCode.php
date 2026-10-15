@@ -56,8 +56,6 @@ class WeChatCode {
 	public function getUnlimitedCode($scene ,$path = '',$width = 430 ,$auto_color = false ,$line_color = '{"r":0,"g":0,"b":0}' ,$is_hyaline	= true)
 	{
 		$access_token = $this->access_token;
-
-
 //		$access_token = '123';
 		$url = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token={$access_token}";
 		$post_data = ['scene' => $scene ];

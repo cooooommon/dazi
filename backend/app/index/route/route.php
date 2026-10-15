@@ -29,5 +29,3 @@ Route::get('getWebConfig', 'login/getWebConfig');
 Route::get('getConfig', 'login/getConfig');
 
 Route::get('incCoachOrderNum', 'login/incCoachOrderNum');
-
-

@@ -48,14 +48,11 @@ abstract class Rest extends BaseController
     public function __construct ( App $app )
     {
         dump(1);exit;
-
         parent::__construct( $app );
         if ( defined( 'IS_WEIQIN' ) ) {
             global $_GPC, $_W;
             $this->_uniacid = $_W[ 'uniacid' ];
         }
-
-
         //获取app名称
         $this->_app = $this->request->app();
         //获取controller
@@ -75,7 +72,6 @@ abstract class Rest extends BaseController
         //			$this->_header['Content-Type'] = 'application/json';
         //			$this->app->request->withHeader($this->_header);
         //		}
-
         //获取token
         if ( isset( $this->_header[ 'token' ] ) ) $this->_token = $this->_header[ 'token' ];
         //语言
@@ -86,7 +82,6 @@ abstract class Rest extends BaseController
         $this->_ip = $_SERVER[ 'REMOTE_ADDR' ];
         // 控制器初始化
         $this->initialize();
-
         //获取用户信息
         if ( !empty( $this->_token ) ) $this->_user = getUserForToken( $this->_token );
         //获取角色名称

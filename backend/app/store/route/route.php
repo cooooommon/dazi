@@ -4,24 +4,15 @@ use think\facade\Route;
 
 //商城后端路由表
 Route::group('admin', function () {
-
     Route::group('AdminStore', function () {
         //分类
         Route::get('storeList', 'AdminStore/storeList');
-
         Route::get('storeSelect', 'AdminStore/storeSelect');
-
         Route::get('storeInfo', 'AdminStore/storeInfo');
-
         Route::post('storeAdd', 'AdminStore/storeAdd');
-
         Route::post('storeUpdate', 'AdminStore/storeUpdate');
-
     });
-
-
     /*****************1.8版本******************/
-
     //套餐
     Route::group('package', function () {
         //添加
@@ -37,7 +28,6 @@ Route::group('admin', function () {
         //列表不分页
         Route::get('getListByStoreId', 'AdminPackage/getListByStoreId');
     });
-
     //套餐
     Route::group('PackageOrder', function () {
         //列表
@@ -57,34 +47,21 @@ Route::group('admin', function () {
         //退款审核
         Route::post('refundCheck', 'AdminOrder/refundCheck');
     });
-
 });
-
 
 //商城后端路由表
 Route::group('app', function () {
-
     Route::group('IndexStore', function () {
         //分类
         Route::get('storeList', 'IndexStore/storeList');
-
         Route::get('storeSelect', 'IndexStore/storeSelect');
-
         Route::get('storeInfo', 'IndexStore/storeInfo');
-
         Route::get('storeServiceList', 'IndexStore/storeServiceList');
-
         Route::get('commentList', 'IndexStore/commentList');
-
         Route::post('storeAdd', 'IndexStore/storeAdd');
-
         Route::post('storeUpdate', 'IndexStore/storeUpdate');
-
     });
-
-
     /*****************1.8版本******************/
-
     Route::group('IndexPackage', function () {
         //套餐列表
         Route::get('storePackList', 'IndexPackage/storePackList');
@@ -97,7 +74,6 @@ Route::group('app', function () {
         //收藏列表
         Route::get('collectList', 'IndexPackage/collectList');
     });
-
     //用户套餐订单
     Route::group('IndexOrder', function () {
         //下单
@@ -127,7 +103,6 @@ Route::group('app', function () {
         //虚拟手机号
         Route::post('getVirtualPhone', 'IndexOrder/getVirtualPhone');
     });
-
     //门店套餐订单
     Route::group('StoreOrder', function () {
         //订单详情
@@ -155,7 +130,6 @@ Route::group('app', function () {
         //虚拟手机号
         Route::post('getVirtualPhone', 'StoreOrder/getVirtualPhone');
     });
-
     //门店套餐管理
     Route::group('StorePackage', function () {
         //添加
@@ -177,29 +151,4 @@ Route::group('app', function () {
         //秒杀修改
         Route::get('seckillEdit', 'StorePackageHandle/seckillEdit');
     });
-
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

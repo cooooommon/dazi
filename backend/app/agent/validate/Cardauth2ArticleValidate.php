@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\agent\validate;
-
 
 use think\Validate;
 
@@ -16,6 +14,5 @@ class Cardauth2ArticleValidate extends Validate
     protected $scene = [
         'create' => ['number', 'modular_id'],
     ];
-
 
 }

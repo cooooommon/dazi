@@ -3,12 +3,10 @@ namespace app\card\model;
 
 use app\BaseModel;
 
-
 class Job extends BaseModel
 {
     //定义表名
     protected $name = 'longbing_card_job';
-
 
     protected static function init ()
     {

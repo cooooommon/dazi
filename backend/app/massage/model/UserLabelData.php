@@ -20,7 +20,6 @@ class UserLabelData extends BaseModel
         return $this->insert($data);
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:05
@@ -30,7 +29,6 @@ class UserLabelData extends BaseModel
     {
         return $this->where($dis)->update($data);
     }
-
 
     /**
      * @author chenniang
@@ -42,7 +40,6 @@ class UserLabelData extends BaseModel
         return $this->where($dis)->order('id desc')->paginate($page)->toArray();
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:43
@@ -53,7 +50,6 @@ class UserLabelData extends BaseModel
         $data = $this->where($dis)->find();
         return !empty($data) ? $data->toArray() : [];
     }
-
 
     /**
      * @author chenniang
@@ -71,14 +67,10 @@ class UserLabelData extends BaseModel
             ->group('label_id')
             ->select()
             ->toArray();
-
         $max_ids = array_column($max_rows, 'max_id');
-
         if (empty($max_ids)) {
-
             return [];
         }
-
         $dis = [
             'a.user_id' => $user_id,
             'b.status' => 1,

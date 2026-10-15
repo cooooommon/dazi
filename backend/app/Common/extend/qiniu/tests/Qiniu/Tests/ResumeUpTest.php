@@ -15,7 +15,6 @@ class ResumeUpTest extends \PHPUnit_Framework_TestCase
     {
         global $bucketName;
         $this->bucketName = $bucketName;
-
         global $testAuth;
         $this->auth = $testAuth;
     }

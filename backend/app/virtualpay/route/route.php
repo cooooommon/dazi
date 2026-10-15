@@ -11,9 +11,6 @@ Route::post('Index/checkPending', 'Index/checkPending');
 
 //管理端
 Route::group('admin', function () {
-
     Route::post('AdminSetting/configInfo', 'AdminSetting/configInfo');
-
     Route::post('AdminSetting/configUpdate', 'AdminSetting/configUpdate');
-
 });

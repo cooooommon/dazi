@@ -17,10 +17,7 @@ class Wx extends ApiRest
     {
         $tabbars = longbingGetAppTabbar($this->_uniacid);
         $tabbars = longbingGetWxAppTabbarResponse($tabbars);
-
-
         $pluginAuth = longbingGetPluginAuth($this->_uniacid);
-
         $plugin_map = [
             "activity" => 'activity',
             'appointment' => 'appoint',
@@ -32,14 +29,11 @@ class Wx extends ApiRest
             'dynamic' => 'Dynamic',
             'website' => 'Website',
         ];
-
-
         foreach ($tabbars['data'] as $k => $item) {
             if (in_array($k, array_keys($plugin_map)) && ($pluginAuth['plugin'][$plugin_map[$k]] == 0)) {
                 unset($tabbars['data'][$k]);
                 continue;
             }
-
             if (in_array($k, array_keys($meta_map)) && ($pluginAuth['web_manage_meta_config'][$meta_map[$k]] == 0)) {
                 unset($tabbars['data'][$k]);
                 continue;

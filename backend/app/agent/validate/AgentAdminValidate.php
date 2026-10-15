@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\agent\validate;
-
 
 use think\Validate;
 
@@ -21,7 +19,5 @@ class AgentAdminValidate extends Validate
         'updateSubAdmin' => ['passwd'],
         'delSubAdmin' => ['admin_id']
     ];
-
-
 
 }

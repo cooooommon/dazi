@@ -10,12 +10,10 @@ use app\radar\model\RadarCount;
 use think\facade\Db;
 use think\Model;
 
-
 class Collection extends BaseModel
 {
     //定义表名
     protected $name = 'longbing_card_collection';
-
 
     protected static function init ()
     {
@@ -32,9 +30,7 @@ class Collection extends BaseModel
     public function bindCardList ( $userId, $userInfo, $page = 1, $uniacid = 0 )
     {
         $page = intval( $page );
-
         $page = $page ? $page : 1;
-
         $data = self::alias( 'a' )
                     ->join( 'longbing_card_user_info b', 'a.to_uid = b.fans_id' )
                     ->join( 'longbing_card_job c', 'b.job_id = c.id', 'LEFT' )
@@ -47,8 +43,6 @@ class Collection extends BaseModel
                     ->paginate( [ 'list_rows' => 10, 'page' => $page ]
                     )
                     ->toArray();
-
-
         //  自己如果是员工则把自己返回在第一页第一个
 //      if ( $userInfo[ 'is_staff' ] == 1 && $page == 1 )
 //      {
@@ -68,7 +62,6 @@ class Collection extends BaseModel
 //              $data[ 'data' ] = array_merge([$card], $data[ 'data' ]);
 //          }
 //      }
-
         foreach ($data[ 'data' ] as $index => $item)
         {
             if ($item['job_name'] === null)
@@ -76,9 +69,7 @@ class Collection extends BaseModel
                 $data[ 'data' ][$index]['job_name'] = '未设置职位';
             }
         }
-
         $data[ 'data' ] = transImages( $data[ 'data' ], [ 'avatar' ] );
-
         return $data;
     }
 
@@ -92,9 +83,7 @@ class Collection extends BaseModel
     public function defaultCardList ($page = 1, $uniacid = 0 ,$staff_id = null)
     {
         $page = intval( $page );
-
         $page = $page ? $page : 1;
-
         $modelUserInfo = new UserInfo();
         //Update by jingshuixian    'a.fans_id', 'a.fans_id as to_uid',  修复无法访问的bug
         $where = [ [ 'a.uniacid', '=', $uniacid ], [ 'a.is_default', '=', 1 ], [ 'a.is_staff', '=', 1 ]];
@@ -108,7 +97,6 @@ class Collection extends BaseModel
                               ->paginate( [ 'list_rows' => 10, 'page' => $page ]
                               )
                               ->toArray();
-
         foreach ($data[ 'data' ] as $index => $item)
         {
             if ($item['job_name'] === null)
@@ -116,9 +104,7 @@ class Collection extends BaseModel
                 $data[ 'data' ][$index]['job_name'] = '未设置职位';
             }
         }
-
         $data[ 'data' ] = transImages( $data[ 'data' ], [ 'avatar' ] );
-        
         return $data;
     }
     //收藏名片
@@ -464,10 +450,8 @@ class Collection extends BaseModel
             $collect = new Collection();
             $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y'));
             $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
-
             $beginYesterday=mktime(0,0,0,date('m'),date('d')-1,date('Y'));
             $endYesterday=mktime(0,0,0,date('m'),date('d'),date('Y'))-1;
-
             $beginbeforeYesterday=mktime(0,0,0,date('m'),date('d')-2,date('Y'));
             $endbeforeYesterday=mktime(0,0,0,date('m'),date('d')-1,date('Y'))-1;
             $user_id = $data['fans_id'];
@@ -478,17 +462,14 @@ class Collection extends BaseModel
 //                ['uniacid','=',$this->_uniacid],
 //                ['table','=','customer']
 //            ];
-
             //查询关联公司的员工
 //            $user_info   = new UserInfo();
             //一个公司的员工
 //            $other_staff = $user_info->getIsStaff($user_id,$data['uniacid']);
-
             //日增长线索
             $whes[] = [
                 ['intention','=',0],
                 ['a.uid','<>',$user_id],['a.to_uid','=',$user_id],['a.uniacid','=',$data['uniacid']]
-
             ];
             $cumulative_clues = $collect->todayUid($whes);
             $todayKh = $collect->today($whes);
@@ -501,10 +482,8 @@ class Collection extends BaseModel
             $beforXs = $collect->todayUid($whes);
             //昨天对比前天新增数
             $contrastKh =$yesterdaytodayKh-$beforXs;
-
             //线索池
             $whes1[] =[
-
                 ['a.uid','<>',$user_id],['a.to_uid','=',$user_id],['a.uniacid','=',$data['uniacid']]
             ];
             $xs = $collect->todayUid($whes1);
@@ -525,10 +504,8 @@ class Collection extends BaseModel
                 ['a.to_uid','=',$user_id],
                 ['a.uniacid','=',$data['uniacid']]
             ];
-
 //        //累计客户数量
            $customer = $collect->todayUid($whez);
-
             //日增长客户
             $today = $collect->today($whez);
             //日线索增长
@@ -542,13 +519,11 @@ class Collection extends BaseModel
             $beforkh = $collect->todayUid($whez);
             //昨天对比前天新增数
             $contrastkh =$yesterdaykh-$beforkh;
-
             //累计访问量
             $card_count = new CardCount();
 //            $visit_number = $stat->getCustomerCount([['user_id','=',$user_id],
 //                ['sign','=','praise'],
 //                ['type','=',2],['uniacid','=',$this->_uniacid]]);
-
             //今天的访问量
             $wheres[] = [
                 ['to_uid','=',$user_id],
@@ -571,7 +546,6 @@ class Collection extends BaseModel
             $beforVisit = $card_count->getCount($wheres);
             //昨天对比前天新增数
             $contrastVisit =$yesterdayVisit-$beforVisit;
-
             //咨询
             //消息
             $whereMsg[] = [
@@ -613,7 +587,6 @@ class Collection extends BaseModel
             $zxbefore = $zxbefore+$before_message;
             //昨天对比前天新增数
             $contrastzx =$zxYesterday-$zxbefore;
-
             //跟进客户次数
             $user_mark = new UserFollow();
             $where3[] = [
@@ -835,7 +808,6 @@ class Collection extends BaseModel
                 $arr['count'][0][$key]['rate'] = abs($value['rate']);
             }
             foreach ($arr['count'][1] as $k=>$val){
-
                 if($val['rate']>0){
                     $arr['count'][1][$k]['text'] = $title1;
                     $arr['count'][1][$k]['up'] =1;
@@ -861,7 +833,6 @@ class Collection extends BaseModel
             {
                 $follow_info['data'][ $index ][ 'create_time' ] = date( 'Y-m-d H:i', $item[ 'create_time' ] );
             }
-
             $ardar = new CardCount();
             $radar_count = $ardar->radarList([ [ 'a.to_uid', '=', $user_id ],[ 'a.user_id', '<>', $user_id ] ], 1,4);
             $radar_count['data'] = lbHandelRadarDate( $radar_count['data'], 'create_time' );
@@ -876,7 +847,6 @@ class Collection extends BaseModel
             $behavior =  $card_count->getsss($user_id,$data['uniacid'],1);
             //能力雷达
             $card_value = new CardValue();
-
             $ability = $card_value->bossGetAiValue($user_id,$data['uniacid']);
            //兴趣占比
             $Interest = $ardar->doPageBossInterest(['to_uid','=',$user_id],$data['uniacid']);
@@ -897,7 +867,6 @@ class Collection extends BaseModel
        return $data;
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-03-30 15:06
@@ -909,10 +878,8 @@ class Collection extends BaseModel
                ->join('longbing_card_user b', 'a.to_uid = b.id AND b.is_staff = 1')
                ->where(['uid'=>$uid])
                ->value('to_uid');
-
         //如果没有就给一个推荐的
         if(empty($data)){
-
             $data = Db::name('longbing_card_user_info')->where(['uniacid'=>$uniacid,'is_default'=>1])->value('fans_id');
         }
         //修改

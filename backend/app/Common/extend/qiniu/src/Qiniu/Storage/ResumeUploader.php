@@ -46,7 +46,6 @@ final class ResumeUploader
         $mime,
         $config
     ) {
-
         $this->upToken = $upToken;
         $this->key = $key;
         $this->inputStream = $inputStream;
@@ -55,12 +54,10 @@ final class ResumeUploader
         $this->mime = $mime;
         $this->contexts = array();
         $this->config = $config;
-
         list($accessKey, $bucket, $err) = \Qiniu\explodeUpToken($upToken);
         if ($err != null) {
             return array(null, $err);
         }
-
         $upHost = $config->getUpHost($accessKey, $bucket);
         if ($err != null) {
             throw new \Exception($err->message(), 1);
@@ -91,7 +88,6 @@ final class ResumeUploader
                 if ($err != null) {
                     return array(null, $err);
                 }
-
                 $upHostBackup = $this->config->getUpBackupHost($accessKey, $bucket);
                 $this->host = $upHostBackup;
             }
@@ -99,7 +95,6 @@ final class ResumeUploader
                 $response = $this->makeBlock($data, $blockSize);
                 $ret = $response->json();
             }
-
             if (!$response->ok() || !isset($ret['crc32']) || $crc != $ret['crc32']) {
                 return array(null, new Error($this->currentUrl, $response));
             }

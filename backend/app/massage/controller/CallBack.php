@@ -9,7 +9,6 @@ use think\App;
 use think\facade\Db;
 use WxPayApi;
 
-
 class CallBack  extends ApiRest
 {
 
@@ -20,20 +19,15 @@ class CallBack  extends ApiRest
         $this->app = $app;
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2022-12-08 15:33
      * @功能说明:发大大实名认证回调
      */
     public function fddCallBack(){
-
         $inputs = $_GET;
-
         $model = new FddRealnameCallback();
-
         $insert = [
-
             'uniacid' => 666,
             'personName' => $inputs['personName'],
             'transactionNo' => $inputs['transactionNo'],
@@ -41,15 +35,9 @@ class CallBack  extends ApiRest
             'status' => $inputs['status'],
             'sign' => $inputs['sign'],
         ];
-
         $model->dataAdd($insert);
-
         $res = ['code'=>0,'msg'=>'成功'];
-
         echo json_encode($res);exit;
-
     }
-
-
 
 }

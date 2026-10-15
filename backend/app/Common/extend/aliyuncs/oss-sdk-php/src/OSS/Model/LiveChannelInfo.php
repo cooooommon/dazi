@@ -61,25 +61,20 @@ class LiveChannelInfo implements XmlConfig
         if (isset($xml->Name)) {
             $this->name = strval($xml->Name);
         }
-
         if (isset($xml->Description)) {
             $this->description = strval($xml->Description);
         }
-
         if (isset($xml->Status)) {
             $this->status = strval($xml->Status);
         }
-
         if (isset($xml->LastModified)) {
             $this->lastModified = strval($xml->LastModified);
         }
-
         if (isset($xml->PublishUrls)) {
             foreach ($xml->PublishUrls as $url) {
                 $this->publishUrls[] = strval($url->Url);
             }
         }
-
         if (isset($xml->PlayUrls)) {
             foreach ($xml->PlayUrls as $url) {
                 $this->playUrls[] = strval($url->Url);

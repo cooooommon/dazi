@@ -19,7 +19,6 @@ final class Operation
         $this->token_expire = $token_expire;
     }
 
-
     /**
      * 对资源文件进行处理
      *
@@ -49,12 +48,10 @@ final class Operation
         if (is_array($fops)) {
             $fops = implode('|', $fops);
         }
-
         $url = $protocol . "://$this->domain/$key?$fops";
         if ($this->auth !== null) {
             $url = $this->auth->privateDownloadUrl($url, $this->token_expire);
         }
-
         return $url;
     }
 }

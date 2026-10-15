@@ -27,7 +27,6 @@ $refererConfig = new RefererConfig();
 $ossClient->putBucketReferer($bucket, $refererConfig);
 Common::println("bucket $bucket refererConfig deleted");
 
-
 //******************************* 完整用法参考下面函数 ****************************************************
 
 putBucketReferer($ossClient, $bucket);

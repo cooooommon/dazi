@@ -39,7 +39,6 @@ final class ArgusManager
     public function pulpVideo($body, $vid)
     {
         $path = '/v1/video/' . $vid;
-        
         return $this->arPost($path, $body);
     }
 

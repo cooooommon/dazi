@@ -53,10 +53,10 @@
         </el-form-item>
         <el-form-item
           :label="`${$t('action.attendantName')}信息编辑通知模板ID`"
-          prop="coachupdate_tmp_id"
+          prop="coach_update_tmp_id"
         >
           <el-input
-            v-model="publicForm.coachupdate_tmp_id"
+            v-model="publicForm.coach_update_tmp_id"
             :placeholder="`请输入${$t(
               'action.attendantName'
             )}信息编辑通知模板ID`"
@@ -359,7 +359,7 @@ export default {
         gzh_appid: '',
         order_tmp_id: '',
         cancel_tmp_id: '',
-        coachupdate_tmp_id: '',
+        coach_update_tmp_id: '',
         help_tmpl_id: '',
         order_service_tmpl_id: '',
         apply_tmp_id: '',
@@ -391,7 +391,7 @@ export default {
           type: 'string',
           trigger: 'blur'
         },
-        coachupdate_tmp_id: {
+        coach_update_tmp_id: {
           required: true,
           message: `请输入${this.$t('action.attendantName')}信息编辑通知模板ID`,
           type: 'string',

@@ -15,7 +15,6 @@ class FormUpTest extends \PHPUnit_Framework_TestCase
     {
         global $bucketName;
         $this->bucketName = $bucketName;
-
         global $testAuth;
         $this->auth = $testAuth;
         $this->cfg = new Config();

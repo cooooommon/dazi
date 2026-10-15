@@ -7,21 +7,17 @@ use OSS\Model\WebsiteConfig;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'TestOssClientBase.php';
 
-
 class OssClientBucketWebsiteTest extends TestOssClientBase
 {
     public function testBucket()
     {
-
         $websiteConfig = new WebsiteConfig("index.html", "error.html");
-
         try {
             $this->ossClient->putBucketWebsite($this->bucket, $websiteConfig);
         } catch (OssException $e) {
             var_dump($e->getMessage());
             $this->assertTrue(false);
         }
-
         try {
             Common::waitMetaSync();
             $websiteConfig2 = $this->ossClient->getBucketWebsite($this->bucket);

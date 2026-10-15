@@ -8,7 +8,6 @@
 
 //底部菜单自定义
 return [
-
     [
         //底部菜单编号
         'key'      => 1 ,
@@ -27,13 +26,10 @@ return [
         'url_out' => '',
         'is_delete' => false ,
         'bind_compoents'=>[
-
             'cardCompoent',
-
             'operate'
         ],
         'bind_links' => [],
         'page'=> []
     ],
-
 ];

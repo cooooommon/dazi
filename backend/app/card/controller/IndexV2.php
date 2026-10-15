@@ -59,7 +59,6 @@ class IndexV2 extends ApiRest
         //$this->_user_id        = '2';
     }
 
-
     /**
      * @Purpose: 小程序配置接口
      *
@@ -71,17 +70,11 @@ class IndexV2 extends ApiRest
      */
     public function config ()
     {
-
         $data = longbingGetAppConfig($this->_uniacid);
-
         unset( $data[ 'auth_code' ] );
-
         $exist = Db::query( 'show tables like "%longbing_card_config%"' );
-
         $auth_info = false;
-
         $cardauth2_config_exist = Db::query('show tables like "%longbing_cardauth2_config%"');
-
         if (!empty($exist) && !empty($cardauth2_config_exist)) {
             $auth_info = Db::name('longbing_cardauth2_config')
                 ->where([['modular_id', '=', $this->_uniacid]])
@@ -100,17 +93,13 @@ class IndexV2 extends ApiRest
         $data['tabBar1'] = [];
         //tabbar用新的方式返回
         $data['tabBar1'] =  Tabbar::all($this->_uniacid, $this->_user_id);
-
         $pluginAuth = longbingGetPluginAuth($this->_uniacid, $this->_user_id, $auth_info);
-
         $data = array_merge($data, $pluginAuth);
-
         $data = LongbingArr::delBykey($data , ['web_manage_meta_config','wx_appid','wx_tplid'
             ,'update_time','create_time','app_secret','appid',
             'aliyun_sms_access_key_id','aliyun_sms_access_key_secret'
             ,'coupon_pass','corpsecret',
             'coupon_pass','order_pwd','mini_template_id']) ;
-
         $config_model   = new DefaultSetting();
         //默认配置
         $DefaultSetting = $config_model->settingInfo(['uniacid'=>$this->_uniacid],'primaryColor,subColor,share_more');
@@ -118,13 +107,9 @@ class IndexV2 extends ApiRest
         $data['primaryColor'] = !empty($DefaultSetting['primaryColor'])?$DefaultSetting['primaryColor']:'#19c865';
         //辅色
         $data['subColor']     = !empty($DefaultSetting['subColor'])?$DefaultSetting['subColor']:'#f86c53';
-
         $data['share_more']   = $DefaultSetting['share_more'];
-
         return $this->success($data);
-
     }
-
 
     /**
      * @author chenniang
@@ -132,17 +117,11 @@ class IndexV2 extends ApiRest
      * @功能说明:
      */
     public function configV2(){
-
         $data = longbingGetAppConfig($this->_uniacid);
-
         unset( $data[ 'auth_code' ] );
-
         $exist = Db::query( 'show tables like "%longbing_card_config%"' );
-
         $auth_info = false;
-
         $cardauth2_config_exist = Db::query('show tables like "%longbing_cardauth2_config%"');
-
         if (!empty($exist) && !empty($cardauth2_config_exist)) {
             $auth_info = Db::name('longbing_cardauth2_config')
                 ->where([['modular_id', '=', $this->_uniacid]])
@@ -168,12 +147,8 @@ class IndexV2 extends ApiRest
         $data['primaryColor'] = !empty($DefaultSetting['primaryColor'])?$DefaultSetting['primaryColor']:'#19c865';
         //辅色
         $data['subColor']     = !empty($DefaultSetting['subColor'])?$DefaultSetting['subColor']:'#f86c53';
-
         $data['share_more']   = $DefaultSetting['share_more'];
-
         return $this->success($data);
-
     }
-
 
 }

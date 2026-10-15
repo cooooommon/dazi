@@ -1339,7 +1339,7 @@ CREATE TABLE `ims_massage_send_msg_config` (
   `gzh_appid` varchar(64) DEFAULT '',
   `order_tmp_id` varchar(225) DEFAULT '',
   `cancel_tmp_id` varchar(225) DEFAULT '',
-  `coachupdate_tmp_id` varchar(225) DEFAULT '',
+  `coach_update_tmp_id` varchar(225) DEFAULT '',
   `apply_tmp_id` varchar(255) DEFAULT '' COMMENT '报名通知',
   `apply_ok_tmp_id` varchar(255) DEFAULT '' COMMENT '报名通过通知',
   `apply_no_tmp_id` varchar(255) DEFAULT '' COMMENT '报名拒绝通知',

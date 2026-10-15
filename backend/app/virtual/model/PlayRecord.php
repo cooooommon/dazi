@@ -11,21 +11,15 @@ class PlayRecord extends BaseModel
     //定义表名
     protected $name = 'massage_aliyun_play_record';
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:04
      * @功能说明:添加
      */
     public function dataAdd($data){
-
         $res = $this->insert($data);
-
         return $res;
-
     }
-
-
 
     /**
      * @author chenniang
@@ -33,13 +27,9 @@ class PlayRecord extends BaseModel
      * @功能说明:编辑
      */
     public function dataUpdate($dis,$data){
-
         $res = $this->where($dis)->update($data);
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -47,13 +37,9 @@ class PlayRecord extends BaseModel
      * @功能说明:列表
      */
     public function dataList($dis,$page){
-
         $data = $this->where($dis)->order('id desc')->paginate($page)->toArray();
-
         return $data;
-
     }
-
 
     /**
      * @author chenniang
@@ -61,21 +47,13 @@ class PlayRecord extends BaseModel
      * @功能说明:
      */
     public function dataInfo($dis){
-
         $data = $this->where($dis)->find();
-
         if(empty($data)){
-
             $this->dataAdd($dis);
-
             $data = $this->where($dis)->find();
-
         }
-
         return !empty($data)?$data->toArray():[];
-
     }
-
 
     /**
      * @author chenniang
@@ -83,35 +61,18 @@ class PlayRecord extends BaseModel
      * @功能说明:查找记录
      */
     public function findRecord($phone,$pool_key){
-
         $dis = [
-
             'status'  => 1,
-
             'pool_key'=> $pool_key
-
         ];
-
         $where = [
-
             'phone_a' => $phone,
-
             'phone_b' => $phone,
-
         ];
-
         $data = $this->where($dis)->where(function ($query) use ($where){
             $query->whereOr($where);
         })->find();
-
         return !empty($data)?$data->toArray():[];
-
     }
-
-
-
-
-
-
 
 }

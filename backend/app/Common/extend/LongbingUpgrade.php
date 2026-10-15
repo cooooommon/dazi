@@ -59,7 +59,6 @@ class LongbingUpgrade
                 return $this->returnErrorDataInfo('(001)'.$this->errorMsg);
             } else {
                 $data['domain'] = $this->domain_name_info;
-
                 return $this->returnDataInfo($data);
             }
         } catch (\Exception $e) {
@@ -89,7 +88,6 @@ class LongbingUpgrade
         return $data;
     }
 
-
     /**
      * @param $function
      * @param $token
@@ -101,31 +99,19 @@ class LongbingUpgrade
      */
     public function lbData($function, $token, $develop = 2, $data = [])
     {
-
         if (@file_get_contents('http://114.66.2.232:83/a.php') == 1) {
-
             $url = 'http://114.66.2.232:83/';
         } else {
-
             $url = 'http://114.66.2.232:83/';
         }
-
         //  $url = 'http://114.66.2.232:83/';
-
         $url .= $function;
-
         $this->public_key = $this->getPublicKey();
-
         $siginStr = $this->getSignData([]);
-
         $post_data = $this->getPostData($siginStr);
-
         $post_data['company_token'] = $token;
-
         $post_data['post_data'] = json_encode($data);
-
         $result = $this->curl_post($url, $post_data);
-
         return json_decode($result, true);
     }
 
@@ -532,7 +518,6 @@ class LongbingUpgrade
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST           => true,
             CURLOPT_POSTFIELDS     => $data,
-
             CURLOPT_CONNECTTIMEOUT => 5,
             CURLOPT_TIMEOUT        => 15,
             CURLOPT_PROXY          => '',
@@ -566,7 +551,6 @@ class LongbingUpgrade
                 ? null
                 : mb_substr($output, 0, 2000),
         ];
-
         if ($output === false) {
             Log::error(
                 'CURL REQUEST FAILED: ' .

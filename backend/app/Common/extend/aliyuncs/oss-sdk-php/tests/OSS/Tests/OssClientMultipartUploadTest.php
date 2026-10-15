@@ -8,7 +8,6 @@ use OSS\Core\OssUtil;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'TestOssClientBase.php';
 
-
 class OssClientMultipartUploadTest extends TestOssClientBase
 {
     public function testInvalidDir()
@@ -19,7 +18,6 @@ class OssClientMultipartUploadTest extends TestOssClientBase
         } catch (OssException $e) {
             $this->assertEquals("parameter error: abc/ds/s/s/notexitst is not a directory, please check it", $e->getMessage());
         }
-
     }
 
     public function testMultipartUploadBigFile()
@@ -86,14 +84,12 @@ class OssClientMultipartUploadTest extends TestOssClientBase
             'PartNumber' => $copyId,
             'ETag' => $eTag,
         );
-
         try {
             $listPartsInfo = $this->ossClient->listParts($this->bucket, $object, $upload_id);
             $this->assertNotNull($listPartsInfo);
         } catch (OssException $e) {
             $this->assertTrue(false);
         }
-
         /**
          * step 3.
          */
@@ -103,7 +99,6 @@ class OssClientMultipartUploadTest extends TestOssClientBase
             var_dump($e->getMessage());
             $this->assertTrue(false);
         }
-
         $this->assertEquals($this->ossClient->getObject($this->bucket, $object), file_get_contents(__FILE__));
         $this->assertEquals($this->ossClient->getObject($this->bucket, $copiedObject), file_get_contents(__FILE__));
     }
@@ -157,7 +152,6 @@ class OssClientMultipartUploadTest extends TestOssClientBase
                 'ETag' => $eTag,
             );
         }
-
         try {
             $listPartsInfo = $this->ossClient->listParts($this->bucket, $object, $upload_id);
             $this->assertNotNull($listPartsInfo);
@@ -165,7 +159,6 @@ class OssClientMultipartUploadTest extends TestOssClientBase
             $this->assertTrue(false);
         }
         $this->assertEquals(1, count($listPartsInfo->getListPart()));
-
         $numOfMultipartUpload1 = 0;
         $options = null;
         try {
@@ -175,13 +168,11 @@ class OssClientMultipartUploadTest extends TestOssClientBase
         } catch (OssException $e) {
             $this->assertFalse(true);
         }
-
         try {
             $this->ossClient->abortMultipartUpload($this->bucket, $object, $upload_id);
         } catch (OssException $e) {
             $this->assertTrue(false);
         }
-
         $numOfMultipartUpload2 = 0;
         try {
             $listMultipartUploadInfo = $listMultipartUploadInfo = $this->ossClient->listMultipartUploads($this->bucket, $options);
@@ -242,14 +233,12 @@ class OssClientMultipartUploadTest extends TestOssClientBase
                 'ETag' => $eTag,
             );
         }
-
         try {
             $listPartsInfo = $this->ossClient->listParts($this->bucket, $object, $upload_id);
             $this->assertNotNull($listPartsInfo);
         } catch (OssException $e) {
             $this->assertTrue(false);
         }
-
         /**
          * step 3.
          */
@@ -269,7 +258,6 @@ class OssClientMultipartUploadTest extends TestOssClientBase
         } catch (OssException $e) {
             var_dump($e->getMessage());
             $this->assertFalse(true);
-
         }
         $this->assertTrue($this->ossClient->doesObjectExist($this->bucket, 'samples/codes/' . "OssClientMultipartUploadTest.php"));
     }
@@ -279,7 +267,6 @@ class OssClientMultipartUploadTest extends TestOssClientBase
         $object = "mpu/multipart-test.txt";
         $file = __FILE__;
         $options = array();
-
         try {
             $this->ossClient->multiuploadFile($this->bucket, $object, $file, $options);
         } catch (OssException $e) {
@@ -292,7 +279,6 @@ class OssClientMultipartUploadTest extends TestOssClientBase
     	$object = "mpu/multipart-test.txt";
     	$file = __FILE__;
     	$options = array(OssClient::OSS_CHECK_MD5 => true);
-    
     	try {
     		$this->ossClient->multiuploadFile($this->bucket, $object, $file, $options);
     	} catch (OssException $e) {

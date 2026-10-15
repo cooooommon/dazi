@@ -33,7 +33,6 @@ Route::group('admin' ,function(){
     Route::get('staffs', 'admin/staffs');
     //用户列表
     Route::get('cardExcel', 'admin/cardExcel');
-
     Route::get('users', 'admin/users');
     //取消员工 名片 / boss / 推荐
     Route::post('cancelStaff', 'admin/cancelStaff');
@@ -67,13 +66,11 @@ Route::group('admin' ,function(){
     Route::post('returnJson', 'admin/returnJson');
     //名片设置
     Route::post('getCardSetting', 'admin/cardSetting');
-
     Route::post('websitebind', 'admin/websitebind');
     Route::get('getPluginAuth', 'admin/getPluginAuth');
     //获取展示模块
     Route::get('getPermission', 'admin/getPermissionV2');
     Route::get('getPermissionV2', 'admin/getPermissionV2');
-
     Route::get('returnAdmin', 'admin/admin');
 });
 Route::get('getPermission', 'admin/getPermissionV2');
@@ -93,7 +90,6 @@ Route::group('app' ,function(){
     Route::post('uncollection', 'index/unCollectionCard');
     //小程序配置
     Route::get('config', 'IndexV2/config');
-
     Route::get('configV2', 'IndexV2/configV2');
     //小程序允许使用的名片样式
     Route::get('cardTypes', 'index/cardType');
@@ -107,7 +103,6 @@ Route::group('app' ,function(){
     Route::get('cardInfo', 'index/cardInfo');
     //名片信息
     Route::get('cardInfoV2', 'index/cardInfoV2');
-
     Route::get('cardInfoDiy', 'index/cardInfoV3');
     //名片信息（统计）
     Route::get('cardCount', 'index/getCardCount');
@@ -149,9 +144,7 @@ Route::group('app' ,function(){
     Route::get('cardInfoDiy' , 'Index/cardInfoV3');
 });
 
-
 //=====================================兼容老的小程序接口=====================================
-
 
 //将线上图片转为本地图片用于前端cavans画图
 Route::get('getImage', 'GetImage/getImage');
@@ -212,4 +205,3 @@ Route::group('' ,function(){
     //删除名片录音功能接口
     Route::get('clearCardInfoVoice', 'Index/clearCardInfoVoice');
 });
-

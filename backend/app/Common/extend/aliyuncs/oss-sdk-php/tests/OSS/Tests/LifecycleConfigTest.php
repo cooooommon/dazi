@@ -102,7 +102,6 @@ BBBB;
         $lifecycleRule->setPrefix("prefix");
         $lifecycleRule->setStatus("Enabled");
         $lifecycleRule->setActions(array());
-
         $this->assertEquals('id', $lifecycleRule->getId());
         $this->assertEquals('prefix', $lifecycleRule->getPrefix());
         $this->assertEquals('Enabled', $lifecycleRule->getStatus());

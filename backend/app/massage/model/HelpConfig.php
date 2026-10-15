@@ -11,7 +11,6 @@ class HelpConfig extends BaseModel
     //定义表名
     protected $name = 'massage_help_notice_config';
 
-
     /**
      * @param $value
      * @param $data
@@ -20,9 +19,7 @@ class HelpConfig extends BaseModel
      * @DataTime: 2023-09-28 14:42
      */
     public function getHelpPhoneAttr($value,$data){
-
         return !empty($value)?explode(',',$value):[];
-
     }
 
     /**
@@ -33,9 +30,7 @@ class HelpConfig extends BaseModel
      * @DataTime: 2023-09-28 14:42
      */
     public function getOrderTmplTextAttr($value,$data){
-
         return !empty($value)?@explode(',',$value):[];
-
     }
 
     /**
@@ -46,11 +41,8 @@ class HelpConfig extends BaseModel
      * @DataTime: 2023-09-28 14:42
      */
     public function getReminderNoticePhoneAttr($value,$data){
-
         return !empty($value)?explode(',',$value):[];
-
     }
-
 
     /**
      * @param $value
@@ -60,9 +52,7 @@ class HelpConfig extends BaseModel
      * @DataTime: 2023-09-28 14:42
      */
     public function getHelpUserIdAttr($value,$data){
-
         return !empty($value)?explode(',',$value):[];
-
     }
 
     /**
@@ -71,14 +61,9 @@ class HelpConfig extends BaseModel
      * @功能说明:添加
      */
     public function dataAdd($data){
-
         $res = $this->insert($data);
-
         return $res;
-
     }
-
-
 
     /**
      * @author chenniang
@@ -86,13 +71,9 @@ class HelpConfig extends BaseModel
      * @功能说明:编辑
      */
     public function dataUpdate($dis,$data){
-
         $res = $this->where($dis)->update($data);
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -100,13 +81,9 @@ class HelpConfig extends BaseModel
      * @功能说明:列表
      */
     public function dataList($dis,$page){
-
         $data = $this->where($dis)->order('id desc')->paginate($page)->toArray();
-
         return $data;
-
     }
-
 
     /**
      * @author chenniang
@@ -114,23 +91,12 @@ class HelpConfig extends BaseModel
      * @功能说明:
      */
     public function dataInfo($dis){
-
         $data = $this->where($dis)->find();
-
         if(empty($data)){
-
             $this->dataAdd($dis);
-
             $data = $this->where($dis)->find();
-
         }
-
         return !empty($data)?$data->toArray():[];
-
     }
-
-
-
-
 
 }

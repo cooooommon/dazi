@@ -24,18 +24,11 @@ class AdminController extends AgentRest
     public function list()
     {
         $param = $this->_param;
-
-
         $dis = [];
-
-
         if(!empty($param['name'])){
-
             $dis[] = ['a.account','like',"%".$param['name'].'%'];
-
             $dis[] = ['d.mini_app_name','like',"%".$param['name'].'%'];
         }
-
         $list = AdminModel::alias('a')
             ->field(['a.admin_id', 'a.level','a.account', 'a.role_id', 'a.create_time', 'r.description','d.mini_app_name as mini_name','c.modular_id'])
             ->leftJoin('longbing_role r', 'a.role_id = r.role_id')
@@ -48,8 +41,6 @@ class AdminController extends AgentRest
             ->order('a.create_time desc')
             ->paginate(['list_rows' => $param['page_count'] ? $param['page_count'] : 10, 'page' => $param['page'] ? $param['page'] : 1])
             ->toArray();
-
-
 //        $admin_ids = array_column($list['data'], 'admin_id');
 //        $app_admins = [];
 //        $app_admins_tmp = AppAdminModel::alias('aa')
@@ -60,23 +51,15 @@ class AdminController extends AgentRest
 //        foreach ($app_admins_tmp as $k => $v) {
 //            $app_admins[$v['admin_id']] = $v;
 //        }
-
         foreach ($list['data'] as $k => $v) {
-
             $list['data'][$k]['is_bind'] = !empty($v['mini_name']);
-
-
             if($v['description']!='超级管理员'){
-
                 $list['data'][$k]['description'] = $v['level']==0?'管理员':'员工';
             }
-
 //            $list['data'][$k]['mini_name'] = $app_admins[$v['admin_id']]['mini_name'] ?? null;
 //            $list['data'][$k]['modular_id'] = $app_admins[$v['admin_id']]['modular_id'] ?? null;
         }
-
         $list['zhihuituike'] = longbingIsZhihuituike();
-
         return $this->success($list);
     }
 
@@ -84,12 +67,10 @@ class AdminController extends AgentRest
     public function addSubAdmin()
     {
         $input = $this->_input;
-
         $validate = new AgentAdminValidate();
         if (false == $validate->scene('addSubAdmin')->check($input)) {
             return $this->error($validate->getError());
         };
-
         /**
          * @var AdminModel $subAdmin
          */
@@ -97,7 +78,6 @@ class AdminController extends AgentRest
         if (!$subAdmin->isEmpty()) {
             return $this->error('该账号已存在');
         }
-
         $offset = createOffset();
         $new = [
             'admin_id' => uuid(),
@@ -108,7 +88,6 @@ class AdminController extends AgentRest
             'role_id' => 'e7d81116997011e99b985595a87cbdcb',
             'creator_id' => $this->_user['admin_id'],
             'status' => 1,
-
             'level'  => $input['level']
         ];
         $rst = $subAdmin->save($new);
@@ -130,7 +109,6 @@ class AdminController extends AgentRest
         if (false == $validate->scene('addSubAdmin')->check($input)) {
             return $this->error($validate->getError());
         };
-        
         /**
          * @var AdminModel $subAdmin
          */
@@ -144,47 +122,37 @@ class AdminController extends AgentRest
             'passwd' => $input['passwd'],
             'level' => $input['level'],
         ]);
-        
         return $this->success($result);
     }
-
 
     public function delSubAdmin()
     {
         $input = $this->_input;
-
         $validate = new AgentAdminValidate();
         if (false == $validate->scene('delSubAdmin')->check($input)) {
             return $this->error($validate->getError());
         };
-
         /**
          * @var AdminModel $subAdmin
          */
         $subAdmin = AdminModel::where([['admin_id', '=', $input['admin_id']], ['uniacid', '=', $this->_uniacid]])->findOrEmpty();
-
         if ($subAdmin->isEmpty()) {
             return $this->error('用户不存在');
         }
-
         if ($subAdmin->admin_id == $this->_user['admin_id']) {
             return $this->error("不可以删除自己");
         }
-
         $rst = $subAdmin->save([
             'status' => 0,
         ]);
-
         return $this->success($rst);
     }
-
 
     public function bindApp()
     {
         $input = $this->_input;
         $admin_id = $input['admin_id'];
         $modular_id = $input['modular_id'];
-
         if ($admin_id == $this->_user['admin_id']) {
             return $this->error("超级管理员不能绑定小程序， 您可以创建子账号绑定");
         }
@@ -192,7 +160,6 @@ class AdminController extends AgentRest
         if ($admin_bind_count > 0) {
             return $this->error('该用户已经绑定了一个小程序');
         }
-
         $appAdmin = new AppAdminModel();
         $rst = $appAdmin->save([
             'id' => md5($modular_id . $admin_id),
@@ -200,8 +167,6 @@ class AdminController extends AgentRest
             'uniacid' => $this->_uniacid,
             'admin_id' => $admin_id
         ]);
-
         return $this->success($rst);
-
     }
 }

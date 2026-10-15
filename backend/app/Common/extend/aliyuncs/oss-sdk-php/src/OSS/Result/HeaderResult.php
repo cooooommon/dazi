@@ -2,7 +2,6 @@
 
 namespace OSS\Result;
 
-
 /**
  * Class HeaderResult
  * @package OSS\Result

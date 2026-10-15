@@ -42,7 +42,6 @@ trait ClientTrait
     public static function set($clientName, Client $client)
     {
         ClientFilter::clientName($clientName);
-
         return self::$clients[\strtolower($clientName)] = $client;
     }
 
@@ -66,7 +65,6 @@ trait ClientTrait
     public static function del($clientName)
     {
         ClientFilter::clientName($clientName);
-
         unset(self::$clients[\strtolower($clientName)]);
     }
 
@@ -113,11 +111,9 @@ trait ClientTrait
     public static function get($clientName)
     {
         ClientFilter::clientName($clientName);
-
         if (self::has($clientName)) {
             return self::$clients[\strtolower($clientName)];
         }
-
         throw new ClientException(
             "Client '$clientName' not found",
             SDK::CLIENT_NOT_FOUND
@@ -135,7 +131,6 @@ trait ClientTrait
     public static function has($clientName)
     {
         ClientFilter::clientName($clientName);
-
         return isset(self::$clients[\strtolower($clientName)]);
     }
 
@@ -154,7 +149,6 @@ trait ClientTrait
         foreach (\func_get_args() as $filename) {
             $list[$filename] = (new IniCredential($filename))->load();
         }
-
         return $list;
     }
 
@@ -188,14 +182,12 @@ trait ClientTrait
                 SDK::INVALID_ARGUMENT
             );
         }
-
         if (strpos($accessKeySecret, ' ') !== false) {
             throw new ClientException(
                 'AccessKey Secret format is invalid',
                 SDK::INVALID_ARGUMENT
             );
         }
-
         return new AccessKeyClient($accessKeyId, $accessKeySecret);
     }
 

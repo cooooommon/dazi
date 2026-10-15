@@ -57,7 +57,6 @@ final class CdnManager
         if (!empty($dirs)) {
             $req['dirs'] = $dirs;
         }
-
         $url = $this->server . '/v2/tune/refresh';
         $body = json_encode($req);
         return $this->post($url, $body);
@@ -75,7 +74,6 @@ final class CdnManager
         $req = array(
             'urls' => $urls,
         );
-
         $url = $this->server . '/v2/tune/prefetch';
         $body = json_encode($req);
         return $this->post($url, $body);
@@ -98,7 +96,6 @@ final class CdnManager
         $req['startDate'] = $startDate;
         $req['endDate'] = $endDate;
         $req['granularity'] = $granularity;
-
         $url = $this->server . '/v2/tune/bandwidth';
         $body = json_encode($req);
         return $this->post($url, $body);
@@ -121,7 +118,6 @@ final class CdnManager
         $req['startDate'] = $startDate;
         $req['endDate'] = $endDate;
         $req['granularity'] = $granularity;
-
         $url = $this->server . '/v2/tune/flux';
         $body = json_encode($req);
         return $this->post($url, $body);
@@ -140,7 +136,6 @@ final class CdnManager
         $req = array();
         $req['domains'] = implode(';', $domains);
         $req['day'] = $logDate;
-
         $url = $this->server . '/v2/tune/log/list';
         $body = json_encode($req);
         return $this->post($url, $body);
@@ -169,23 +164,18 @@ final class CdnManager
      */
     public static function createTimestampAntiLeechUrl($rawUrl, $encryptKey, $durationInSeconds)
     {
-
         $parsedUrl = parse_url($rawUrl);
-
         $deadline = time() + $durationInSeconds;
         $expireHex = dechex($deadline);
         $path = isset($parsedUrl['path']) ? $parsedUrl['path'] : '';
         $path = implode('/', array_map('rawurlencode', explode('/', $path)));
-
         $strToSign = $encryptKey . $path . $expireHex;
         $signStr = md5($strToSign);
-
         if (isset($parsedUrl['query'])) {
             $signedUrl = $rawUrl . '&sign=' . $signStr . '&t=' . $expireHex;
         } else {
             $signedUrl = $rawUrl . '?sign=' . $signStr . '&t=' . $expireHex;
         }
-
         return $signedUrl;
     }
 }

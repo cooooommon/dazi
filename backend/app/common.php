@@ -442,7 +442,6 @@ function send_email($address, $subject, $content)
     // 设置邮件正文
     $phpmailer->Body = $content;
     // 发送邮件。
-
     if (!$phpmailer->Send()) {
         $phpmailererror = $phpmailer->ErrorInfo;
         return error($phpmailererror, '1102');
@@ -1090,7 +1089,6 @@ function longbingGetOssConfig($uniacid = '7777', $is_update = false)
     //获取数据
     $config = $oss_config_model->getConfig(['uniacid' => $uniacid]);
 //    }
-
     $result = [];
     if (!empty($config)) {
         $filter = [];
@@ -1345,7 +1343,6 @@ if (!function_exists('lb_friendly_date')) {
         $cTime = time();
         $dTime = $cTime - $sTime;
         //$dDay       =   intval(date("z",$    cTime)) - intval(date("z",$sTime));
-
         $dDay = intval($dTime / 3600 / 24);
         $dYear = intval(date("Y", $cTime)) - intval(date("Y", $sTime));
         //normal：n秒前，n分钟前，n小时前，日期
@@ -1544,7 +1541,6 @@ function longbing_get_cache_key($key, $uniacid)
 function longbing_auto_cahe()
 {
     //自动获取模块/查件名称、类名称、方法名称、来组合缓存key
-
 }
 /**
  * By.jingshuixian
@@ -1864,7 +1860,6 @@ if (!function_exists('longbing_auth_status')) {
         if (!longbingIsWeiqin()) {
             $info = Db::name('longbing_cardauth2_config')->where('modular_id', '=', $uniacid)
                 ->field('end_time,mini_name')->find(); #获取过期时间
-
             $end_time = $info['end_time'];
             if ($end_time <= time()) { //已过期
                 list($resData['name'], $resData['time'], $resData['status']) = array(
@@ -1872,7 +1867,6 @@ if (!function_exists('longbing_auth_status')) {
                 );
             } else {
                 if ($end_time < time() + 30 * 86400 && $end_time > time()) { #即将过期/30天
-
                     list($resData['name'], $resData['time'], $resData['status']) = array(
                         $info['mini_name'], date('Y-m-d', $end_time), 1
                     );
@@ -2022,7 +2016,6 @@ if (!function_exists('getDistances')) {
 //    if($unit==2){
 //        $distance = $distance / 1000;
 //    }
-
         return $distance;
     }
 }
@@ -2445,7 +2438,6 @@ function longbingCreateWxCode($uniacid, $data, $page = '', $type = 3)
     }
     $data = file_put_contents(FILE_UPLOAD_PATH.$path, $result);
     //设置文件权限
-
     //上传到云端
 //  $file = new UploadedFile($path ,$file_name);
 //  $file_upload_model = new Upload($uniacid);

@@ -6,12 +6,10 @@ use app\BaseModel;
 use app\dynamic\model\CardStatistics;
 use think\Model;
 
-
 class CardCount extends BaseModel
 {
     //定义表名
     protected $name = 'longbing_card_count';
-
 
     protected static function init ()
     {
@@ -91,7 +89,6 @@ class CardCount extends BaseModel
             ->paginate( [ 'list_rows' => $list_rows, 'page' => $page ]
             )
             ->toArray();
-
         //  查询手机号
 //        $tmpArr = [];
 //        foreach ( $data[ 'data' ] as $index => $item )
@@ -121,15 +118,12 @@ class CardCount extends BaseModel
 //                }
 //            }
 //        }
-
         if (!empty($data[ 'data' ]))
         {
             //  处理雷达展示日期
             //$data[ 'data' ] = lbHandelRadarDate( $data[ 'data' ] );
-
             //  处理用户来源
             //$data[ 'data' ] = lbHandelRadarSource( $data[ 'data' ] );
-
             //  处理雷达激励提醒文案
             $data[ 'data' ] = lbHandelRadarMsg( $data[ 'data' ] );
         }
@@ -138,7 +132,6 @@ class CardCount extends BaseModel
     //兴趣占比
     public function doPageBossInterest ($where,$uniacid)
     {
-
         $filter = [
             ['sign','=','copy'] , ['uniacid','=',$uniacid],$where,[ 'type', 'in', [ 6, 7 ,11] ]
         ];
@@ -159,10 +152,8 @@ class CardCount extends BaseModel
         $where31 = [
             ['sign','=','order'] ,['uniacid','=',$uniacid],$where
         ];
-
         //  对产品感兴趣
         $goods =  $this->where([$filter2])->whereor([$where3])->whereor([$where21])->whereor([$where31])->count();
-
         //  对员工感兴趣
         $where4 = [
             ['sign','=','copy'],['uniacid','=',$uniacid],$where, [ 'type', 'in', [ 1, 2, 3, 4, 5, 9, 10 ] ]
@@ -171,7 +162,6 @@ class CardCount extends BaseModel
             ['sign','=','praise'],['uniacid','=',$uniacid],$where,[ 'type', 'in', [ 1, 2, 3, 4 ] ]
         ];
         $staff = $this->where([$where4])->whereor([array_filter($where5)])->count();
-
         $total = $compony + $goods + $staff;
         $data  = [
              [
@@ -274,42 +264,29 @@ class CardCount extends BaseModel
            // $last = 30;
         }
         $data = [];
-
-
         $lastday = date( 'Y/m/d' );
-
         $number = self::where( [  [ 'to_uid',$str, $staff_id ], [ 'create_time', 'between',
                 [ strtotime( $lastday . ' 00:00:00' ), strtotime( $lastday . ' 23:59:59' ) ] ] ]
         )
             ->count();
         $data[] = [ 'date' => date( 'm/d' ), 'number' => $number ];
-
         $max = $number;
-
         for ( $i = 1; $i < 15; $i++ )
         {
-
             $start_time = strtotime( "$lastday -$i days" );
-
             $md  = date( 'm/d', $start_time );
             $ymd = date( 'Y/m/d', $start_time );
-
             $end_time = strtotime( $ymd . ' 23:59:59' );
-
             $number = self::where( [  [ 'to_uid',$str, $staff_id ],
                     [ 'create_time', 'between', [ $start_time, $end_time ] ] ]
             )
                 ->count();
-
             if ( $number > $max )
             {
                 $max = $number;
             }
-
-
             $data[] = [ 'date' => $md, 'number' => $number ];
         }
-
         return [ 'data'=>$data, 'max'=>$max ];
     }
     public function getsss($staff_id,$uniacid,$type=0){
@@ -319,88 +296,69 @@ class CardCount extends BaseModel
             $str = 'in';
         }
         $data = [ 'max_number' => 0, 'total' => 0, 'data' => [] ];
-
         //咨询产品
         $count = self::where( [ [ 'sign', '=', 'copy' ], [ 'to_uid',$str, $staff_id ],
                 [ 'type', '=', 8 ],[ 'uniacid', '=', $uniacid ] ]
         )
             ->count();
-
         $data[ 'max_number' ] = $count;
         $data[ 'total' ]      += $count;
         $data[ 'data' ][]     = [ 'name' => '咨询产品', 'number' => $count ];
-
         //  保存电话
         $count = self::where( [ [ 'sign', '=', 'copy' ], [ 'to_uid', $str, $staff_id ],
                 [ 'type', '=', 1 ] ,[ 'uniacid', '=', $uniacid ]]
         )
             ->count();
-
         if ( $count > $data[ 'max_number' ] )
         {
             $data[ 'max_number' ] = $count;
         }
         $data[ 'total' ]  += $count;
         $data[ 'data' ][] = [ 'name' => '保存电话', 'number' => $count ];
-
         //  拨打电话
         $count = self::where( [ [ 'sign', '=', 'copy' ], [ 'to_uid', $str, $staff_id ],[ 'uniacid', '=', $uniacid ],
                 [ 'type', 'in', [ 2, 3, 11 ] ] ]
         )
             ->count();
-
         $count += self::where( [ [ 'sign', '=', 'praise' ],  [ 'to_uid', $str, $staff_id ],[ 'uniacid', '=', $uniacid ],
                 [ 'type', '=', 7 ] ]
         )
             ->count();
-
         if ( $count > $data[ 'max_number' ] )
         {
             $data[ 'max_number' ] = $count;
         }
         $data[ 'total' ]  += $count;
         $data[ 'data' ][] = [ 'name' => '拨打电话', 'number' => $count ];
-
-
-
         $view_base_filter = [
             ['to_uid', $str, $staff_id],
             ['sign', '=', 'view'],[ 'uniacid', '=', $uniacid ]
         ];
-
         //浏览商城
         $view_shop_filter = $view_base_filter;
         $view_shop_filter[] = ['type' , '=' , 1];
         $view_shop_number = self::where($view_shop_filter)->count();
         $data['total'] += $view_shop_number;
         $data['data'][] = ['name' => '浏览商城', 'number' => $view_shop_number];
-
-
         //浏览商品
         $view_goods_filter = $view_base_filter;
         $view_goods_filter[] = ['type' , '=' , 2];
         $view_goods_number = self::where($view_goods_filter)->count();
         $data['total'] += $view_goods_number;
         $data['data'][] = ['name' => '浏览商品', 'number' => $view_goods_number];
-
         //查看官网
         $view_official_web_filter = $view_base_filter;
         $view_official_web_filter[] = ['type' , '=' , 6];
         $view_official_web_number = self::where($view_official_web_filter)->count();
         $data['total'] += $view_official_web_number;
         $name = tabbarName(4,$uniacid);
-
         $data['data'][] = ['name' =>!empty($name)?'查看'.$name: '查看官网', 'number' => $view_official_web_number];
-
-
         //浏览动态
         $view_timeline_filter = $view_base_filter;
         $view_timeline_filter[] = ['type' , '=' , 3];
         $view_timeline_number = self::where($view_timeline_filter)->count();
         $data['total'] += $view_timeline_number;
         $data['data'][] = ['name' => '浏览动态', 'number' => $view_timeline_number];
-
-
         //点赞
         $praise_filter = [
             ['to_uid', $str, $staff_id],[ 'uniacid', '=', $uniacid ],
@@ -410,9 +368,6 @@ class CardCount extends BaseModel
         $praise_number = self::where($praise_filter)->count();
         $data['total'] += $praise_number;
         $data['data'][] = ['name' => '点赞', 'number' => $praise_number];
-
-
-
         //分享名片
         $share_filter = [
             ['to_uid', $str, $staff_id],[ 'uniacid', '=', $uniacid ],
@@ -422,19 +377,13 @@ class CardCount extends BaseModel
         $share_number = self::where($share_filter)->count();
         $data['total'] += $share_number;
         $data['data'][] = ['name' => '分享', 'number' => $share_number];
-
-
-
-
         //按number倒序
         $sort_arr = [];
         foreach ($data['data'] as $k => $v) {
             $sort_arr[] = $v['number'];
         }
-
         array_multisort($sort_arr, SORT_DESC, $data['data']);
         $data['max_number'] = $data['data'][0]['number'] ?? 0;
-
         //计算rate
         foreach ($data['data'] as $index => $item) {
             if ($data['max_number'] == 0) {
@@ -445,7 +394,6 @@ class CardCount extends BaseModel
             $rate = sprintf("%.0f", $rate);
             $data['data'][$index]['rate'] = $rate;
         }
-
         return $data;
     }
     public function getCountUser($where,$time){

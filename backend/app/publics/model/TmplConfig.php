@@ -9,7 +9,6 @@ class TmplConfig extends BaseModel
     //定义表名
     protected $name = 'longbing_card_tmpl_config';
 
-
     /**
      * User: chenniang
      * Date: 2019-12-25 10:49
@@ -49,7 +48,6 @@ class TmplConfig extends BaseModel
         $data['create_time'] = time();
         $data['update_time'] = time();
         $res = self::insert($data);
-
         return $res;
     }
 
@@ -69,7 +67,6 @@ class TmplConfig extends BaseModel
         return !empty($data)?$data->toArray():$data;
     }
 
-
     /**
      * @param $dis
      * @功能说明: 获取模版id 列表
@@ -80,7 +77,5 @@ class TmplConfig extends BaseModel
         $data = $this->where($dis)->column('tmpl_id');
         return array_values($data);
     }
-
-
 
 }

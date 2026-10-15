@@ -40,11 +40,9 @@ trait ActionResolverTrait
         if (!(new ReflectionClass(AlibabaCloud::class))->hasMethod('appendUserAgent')) {
             return;
         }
-
         if (!class_exists('AlibabaCloud\Release')) {
             return;
         }
-
         AlibabaCloud::appendUserAgent('SDK', \AlibabaCloud\Release::VERSION);
     }
 }

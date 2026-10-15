@@ -10,7 +10,6 @@ class Diy extends BaseModel
     //定义表名
     protected $name = 'massage_action_diy';
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:04
@@ -18,13 +17,9 @@ class Diy extends BaseModel
      */
     public function dataAdd($data)
     {
-
         $res = $this->insert($data);
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -33,13 +28,9 @@ class Diy extends BaseModel
      */
     public function dataUpdate($dis, $data)
     {
-
         $res = $this->where($dis)->update($data);
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -48,13 +39,9 @@ class Diy extends BaseModel
      */
     public function dataList($dis, $page)
     {
-
         $data = $this->where($dis)->order('status desc,id desc')->paginate($page)->toArray();
-
         return $data;
-
     }
-
 
     /**
      * @author chenniang
@@ -63,15 +50,10 @@ class Diy extends BaseModel
      */
     public function dataInfo($dis)
     {
-
         $data = $this->where($dis)->find();
-
         if (empty($data)) {
-
             $input = $dis;
-
             $input['page'] = [
-
                 1 => [
                     [
                         "id" => "service-search-1",
@@ -153,9 +135,7 @@ class Diy extends BaseModel
                         ]
                     ]
                 ],
-
                 2 => [],
-
                 8 =>
                     [
                         [
@@ -200,13 +180,10 @@ class Diy extends BaseModel
                                 "title" => "门店列表"
                             ]
                         ]
-
                     ],
                 5 => [],
             ];
-
             $input['page'] = json_encode($input['page']);
-
             $input['tabbar'] = [
                 [
                     'id' => 1,
@@ -232,20 +209,13 @@ class Diy extends BaseModel
                     'default_img' => 'iconwode-2',
                     'selected_img' => 'iconwode-1',
                 ]
-
             ];
             $input['tabbar'] = json_encode($input['tabbar']);
-
             $this->dataAdd($input);
-
             $data = $this->where($dis)->find();
-
         }
-
         return !empty($data) ? $data->toArray() : [];
-
     }
-
 
     /**
      * @author chenniang
@@ -254,11 +224,8 @@ class Diy extends BaseModel
      */
     public function updateOne($id)
     {
-
         $user_id = $this->where(['id' => $id])->value('user_id');
-
         $res = $this->where(['user_id' => $user_id])->where('id', '<>', $id)->update(['status' => 0]);
-
         return $res;
     }
 
@@ -271,61 +238,35 @@ class Diy extends BaseModel
     public function chancelBanner($uniacid)
     {
         $ids = StoreApply::where([['status', '<>', 2], ['uniacid', '=', $uniacid]])->column('id');
-
         $diy = $this->dataInfo(['uniacid' => $uniacid]);
-
-
         $page = json_decode($diy['page'], true);
-
         foreach ($page as $key => $value) {
-
             foreach ($value as $ky => $item) {
-
                 if (isset($item['type']) && $item['type'] == 'banner') {
-
                     $banner = isset($item['data']['bannerList']) ? $item['data']['bannerList'] : [];
-
                     if (!empty($banner)) {
-
                         foreach ($banner as &$valu) {
-
                             if ($valu['linkType'] == 4) {
-
                                 $url = $valu['link'][0]['url'];
-
                                 $parsedUrl = parse_url($url);
-
                                 $route = $parsedUrl['path'];
-
                                 if (isset($parsedUrl['query'])) {
                                     $queryString = $parsedUrl['query'];
-
                                     parse_str($queryString, $params);
-
                                     if ($route == '/business/pages/store/detail' && isset($params['id']) && in_array($params['id'], $ids)) {
-
                                         $valu['linkType'] = 5;
-
                                     }
                                 }
                             }
                         }
-
                         $item['data']['bannerList'] = $banner;
-
                         $value[$ky] = $item;
-
                     }
-
-
                 }
-
             }
             $page[$key] = $value;
         }
-
         $this->where(['uniacid' => $uniacid])->update(['page' => json_encode($page)]);
-
     }
 
 }

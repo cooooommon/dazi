@@ -9,7 +9,6 @@ use OSS\OssClient;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'TestOssClientBase.php';
 
-
 class OssClientBucketCorsTest extends TestOssClientBase
 {
     public function testBucket()
@@ -38,13 +37,11 @@ class OssClientBucketCorsTest extends TestOssClientBase
         $rule->addExposeHeader("x-oss-test1");
         $rule->setMaxAgeSeconds(110);
         $corsConfig->addRule($rule);
-
         try {
             $this->ossClient->putBucketCors($this->bucket, $corsConfig);
         } catch (OssException $e) {
             $this->assertFalse(True);
         }
-
         try {
             Common::waitMetaSync();
             $object = "cors/test.txt";
@@ -54,7 +51,6 @@ class OssClientBucketCorsTest extends TestOssClientBase
         } catch (OssException $e) {
             var_dump($e->getMessage());
         }
-
         try {
             Common::waitMetaSync();
             $corsConfig2 = $this->ossClient->getBucketCors($this->bucket);
@@ -63,14 +59,12 @@ class OssClientBucketCorsTest extends TestOssClientBase
         } catch (OssException $e) {
             $this->assertFalse(True);
         }
-
         try {
             Common::waitMetaSync();
             $this->ossClient->deleteBucketCors($this->bucket);
         } catch (OssException $e) {
             $this->assertFalse(True);
         }
-
         try {
             Common::waitMetaSync();
             $corsConfig3 = $this->ossClient->getBucketCors($this->bucket);
@@ -79,6 +73,5 @@ class OssClientBucketCorsTest extends TestOssClientBase
         } catch (OssException $e) {
             $this->assertFalse(True);
         }
-
     }
 }

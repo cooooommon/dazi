@@ -2,11 +2,9 @@
 
 namespace OSS\Tests;
 
-
 use OSS\Result\GetLoggingResult;
 use OSS\Http\ResponseCore;
 use OSS\Core\OssException;
-
 
 class GetLoggingResultTest extends \PHPUnit_Framework_TestCase
 {
@@ -45,7 +43,6 @@ BBBB;
             new GetLoggingResult($response);
             $this->assertTrue(false);
         } catch (OssException $e) {
-
         }
     }
 }

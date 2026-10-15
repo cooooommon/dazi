@@ -18,9 +18,7 @@ class CopyRightAgentController extends AgentRest
     }
     public function list()
     {
-
         $param= $this->_param;
-
         $list = Cardauth2CopyrightModel::where([['status', '=', 1],['uniacid','in',$this->_uniacid_arr]])
             ->paginate(['list_rows' => $param['page_count'] ? $param['page_count'] : 10, 'page' => $param['page'] ? $param['page'] : 1])
             ->toArray();
@@ -34,7 +32,6 @@ class CopyRightAgentController extends AgentRest
         return $this->success($list);
     }
 
-
     public function create()
     {
         $data = $this->_input;
@@ -43,9 +40,7 @@ class CopyRightAgentController extends AgentRest
         if ($check == false) {
             return $this->error($validate->getError());
         }
-
         $data['uniacid'] = $this->_uniacid;
-
         $m = new Cardauth2CopyrightModel();
         $m->data($data, true, ['name', 'image', 'text', 'phone', 'uniacid']);
         if ($m->save()) {
@@ -55,7 +50,6 @@ class CopyRightAgentController extends AgentRest
         return $this->error('fail');
     }
 
-
     public function update()
     {
         $data = $this->_input;
@@ -64,18 +58,15 @@ class CopyRightAgentController extends AgentRest
         if ($check == false) {
             return $this->error($validate->getError());
         }
-
         $copyRight = Cardauth2CopyrightModel::find($data['id']);
         if (!$copyRight) {
             return $this->error('系统错误');
         }
-
         if ($copyRight->allowField(['name', 'image', 'text', 'phone'])->save($data)) {
             return $this->success('success');
         };
         return $this->error('fail');
     }
-
 
     public function get()
     {
@@ -91,18 +82,14 @@ class CopyRightAgentController extends AgentRest
             return $this->error($validate->getError());
         }
         $m_config = new Cardauth2ConfigModel();
-
         $auth_config = $m_config->where(['copyright_id'=>$this->_input['id']])->find();
         if(!empty($auth_config)){
             return $this->error('This copyright is in use and cannot be deleted');
         }
-
         $rst = Cardauth2CopyrightModel::destroy(function ($query) {
             $query->where('id', '=', $this->_input['id'] ?? 0);
         });
-
         return $this->success($rst);
     }
-
 
 }

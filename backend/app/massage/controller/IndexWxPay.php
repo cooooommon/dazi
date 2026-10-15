@@ -9,7 +9,6 @@ use think\App;
 use think\facade\Db;
 use WxPayApi;
 
-
 class IndexWxPay extends ApiRest
 {
 
@@ -18,7 +17,6 @@ class IndexWxPay extends ApiRest
     {
         $this->app = $app;
     }
-
 
     /**
      * @param $paymentApp
@@ -47,27 +45,21 @@ class IndexWxPay extends ApiRest
         define('WX_CURL_PROXY_HOST', '0.0.0.0');
         define('WX_CURL_PROXY_PORT', 0);
         define('WX_REPORT_LEVENL', 0);
-
-
         require_once PAY_PATH . "/weixinpay/lib/WxPay.Api.php";
         require_once PAY_PATH . "/weixinpay/example/WxPay.JsApiPay.php";
-
         $tools = new \JsApiPay();
         $input = new \WxPayUnifiedOrder();
-
         $input->SetBody($body);
         $input->SetAttach(json_encode($attach));
         $input->SetOut_trade_no($attach['out_trade_no']);
         $input->SetTotal_fee($totalprice *100);
         $input->SetTime_start(date("YmdHis"));
-
         $param_arr=[
             'i' => $uniacid,
             't' => $_GPC['t'],
             'v' => $_GPC['v'],
             'is_app' => $paymentApp['is_app'],
             'n' => APP_MODEL_NAME,
-
         ];
         $reply_path=json_encode($param_arr);
         //需要判断 是否是微擎的版本
@@ -85,48 +77,30 @@ class IndexWxPay extends ApiRest
             if($a != 1){
                 $this->errorMsg('发起支付失败');
             }
-
         }
         $this ->lb_logOutput('BaseApiPath:-----'.$path);
-
         $input->SetNotify_url($path);
-
         if($paymentApp['is_app']!=1){
-
             $input->SetTrade_type("JSAPI");
-
             $input->SetOpenid($openid);
-
         }else{
-
             $input->SetTrade_type("APP");
-
         }
-
         $order = \WxPayApi::unifiedOrder($input);
-
         if(!empty($order['return_code'])&&$order['return_code'] == 'FAIL'){
-
             $this->errorMsg($order['return_msg']);
         }
         $order['mini_mid'] = $setting['mini_mid'];
-
         if($paymentApp['is_app']!=1){
-
             $jsApiParameters = $tools->GetJsApiParameters($order);
-
             $jsApiParameters = json_decode($jsApiParameters, true) ;
-
         } else{
-
             $jsApiParameters = $this->getOrder($order);
         }
         if (!empty($jsApiParameters['return_code']))
             $this->errorMsg( '发起支付失败');
-
         return $jsApiParameters;
     }
-
 
     public function getOrder($order)
     {
@@ -139,9 +113,7 @@ class IndexWxPay extends ApiRest
             'prepayid'  => $order['prepay_id'],//预支付回话标志
             //'sign_type'=>'MD5'//加密方式
         );
-
         $data['paySign'] = $this->makeSign($data);
-
         return $data;
     }
     /**
@@ -157,7 +129,6 @@ class IndexWxPay extends ApiRest
         $string_a = http_build_query($data);
         $string_a = urldecode($string_a);
         //签名步骤二：在string后加入KEY
-
         $string_sign_temp = $string_a . "&key=" . WX_KEY;
         //签名步骤三：MD5加密
         $sign = md5($string_sign_temp);
@@ -191,46 +162,33 @@ class IndexWxPay extends ApiRest
      */
 
     public function returnPay(){
-
-
         $this->lb_logOutput("in--mingpianNotify");
         $xmlData = file_get_contents('php://input');
         if(empty($xmlData)){
             $xmlData = 'empty   xmlData';
         }
         $this->lb_logOutput('xmlData in mingpian:-----'.$xmlData);
-
         $this->lb_logOutput("in-mingpian2");
         global $_GPC;
         $xmlData = file_get_contents('php://input');
         $this->lb_logOutput('in-mingpian-$xmlData:-----'.$xmlData);
         //获取配置
-
         if(defined( 'IS_WEIQIN' )){
-
             $uniacid=$_GPC['i'];
-
             $is_app=$_GPC['is_app'];
-
-
         }else{
-
             $is_app  = $_GET['is_app'];
-
             $uniacid = $_GET['i'];
         }
-
         $paymentApp = $this->payConfig($uniacid,$is_app);
         // dump($paymentApp);exit;
         $this->lb_logOutput('in-mingpian-uniacid:-----'.$uniacid);
-
         $setting['mini_appid']         = $paymentApp['app_id'];
         $setting['mini_appsecrept']    = $paymentApp['secret'];
         $setting['mini_mid']           = $paymentApp['payment']['merchant_id'];
         $setting['mini_apicode']       = $paymentApp['payment']['key'];
         $setting['apiclient_cert']     = $paymentApp['payment']['cert_path'];
         $setting['apiclient_cert_key'] = $paymentApp['payment']['key_path'];
-
         define('WX_APPID', $setting['mini_appid']);
         define('WX_MCHID', $setting['mini_mid']);
         define('WX_KEY', $setting['mini_apicode']);
@@ -245,58 +203,35 @@ class IndexWxPay extends ApiRest
         $WxPay->Handle(false);
     }
 
-
-
-
     /**
      * @author chenniang
      * @DataTime: 2022-08-19 11:26
      * @功能说明:阿里回调
      */
     public function aliNotify(){
-
         $data = $_POST;
-
         if(empty($data)){
-
             $data = $_GET;
         }
-
         $pay_config = $this->payConfig();
-
         require_once  EXTEND_PATH.'alipay/aop/AopClient.php';
-
         $aop = new \AopClient;
-
         $aop->alipayrsaPublicKey = $pay_config[ 'payment' ][ 'ali_publickey' ];
-
         $flag = $aop->rsaCheckV1($data, NULL, "RSA2");
-
         if(!$flag){
-
             return false;
         }
-
         $data['flag'] = $flag;
-
         if(!empty($data)&&$data['trade_status']=='TRADE_SUCCESS')     //支付状态
         {
-
 //            $notify_model = new PayNotify();
 //
 //            $notify_model->aliNotify($data);
-
             $order_model = new Order();
-
             $order_model->orderResult($data['out_trade_no'],$data['trade_no']);
-
-
         }
-
         return true;
-
     }
-
 
     /**
      * @author chenniang
@@ -304,44 +239,25 @@ class IndexWxPay extends ApiRest
      * @功能说明:阿里回调
      */
     public function aliNotifyBalance(){
-
         $data = $_POST;
-
         if(empty($data)){
-
             $data = $_GET;
         }
-
         $pay_config = $this->payConfig();
-
         require_once  EXTEND_PATH.'alipay/aop/AopClient.php';
-
         $aop = new \AopClient;
-
         $aop->alipayrsaPublicKey = $pay_config[ 'payment' ][ 'ali_publickey' ];
-
         $flag = $aop->rsaCheckV1($data, NULL, "RSA2");
-
         if(!$flag){
-
             return false;
         }
-
         $data['flag'] = $flag;
-
         if(!empty($data)&&$data['trade_status']=='TRADE_SUCCESS')     //支付状态
         {
-
-
             $order_model = new BalanceOrder();
-
             $order_model->orderResult($data['out_trade_no'],$data['trade_no']);
-
-
         }
-
         return true;
-
     }
 
 }

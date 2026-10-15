@@ -33,7 +33,6 @@ class HttpTest extends \PHPUnit_Framework_TestCase
             $httpResponse = $httpCore->send_request();
             $this->assertTrue(false);
         } catch (RequestCore_Exception $e) {
-
         }
     }
 
@@ -73,5 +72,3 @@ class HttpTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($exception);
     }
 }
-
-

@@ -38,7 +38,6 @@ class LocationServiceRequest extends RpcRequest
         if (isset($request->options['timeout'])) {
             $this->timeout($request->options['timeout']);
         }
-
         if (isset($request->options['connect_timeout'])) {
             $this->connectTimeout($request->options['connect_timeout']);
         }

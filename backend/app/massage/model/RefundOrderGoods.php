@@ -9,12 +9,9 @@ class RefundOrderGoods extends BaseModel
     //定义表名
     protected $name = 'massage_service_refund_order_goods';
 
-
     protected $append = [
-
         'time_long'
     ];
-
 
     /**
      * @param $value
@@ -24,16 +21,10 @@ class RefundOrderGoods extends BaseModel
      * @DataTime: 2022-12-27 21:10
      */
     public function getTimeLongAttr($value,$data){
-
         if(!empty($data['order_goods_id'])){
-
             $order_model = new OrderGoods();
-
             return $order_model->where(['id'=>$data['order_goods_id']])->value('time_long');
-
         }
-
-
     }
     /**
      * @author chenniang
@@ -41,14 +32,9 @@ class RefundOrderGoods extends BaseModel
      * @功能说明:添加
      */
     public function dataAdd($data){
-
         $res = $this->insert($data);
-
         return $res;
-
     }
-
-
 
     /**
      * @author chenniang
@@ -56,13 +42,9 @@ class RefundOrderGoods extends BaseModel
      * @功能说明:编辑
      */
     public function dataUpdate($dis,$data){
-
         $res = $this->where($dis)->update($data);
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -70,11 +52,8 @@ class RefundOrderGoods extends BaseModel
      * @功能说明:列表
      */
     public function dataList($dis,$page){
-
         $data = $this->where($dis)->order('id desc')->paginate($page)->toArray();
-
         return $data;
-
     }
 
     /**
@@ -83,13 +62,9 @@ class RefundOrderGoods extends BaseModel
      * @功能说明:列表
      */
     public function dataSelect($dis){
-
         $data = $this->where($dis)->order('id desc')->select()->toArray();
-
         return $data;
-
     }
-
 
     /**
      * @author chenniang
@@ -97,17 +72,8 @@ class RefundOrderGoods extends BaseModel
      * @功能说明:
      */
     public function dataInfo($dis){
-
         $data = $this->where($dis)->find();
-
         return !empty($data)?$data->toArray():[];
-
     }
-
-
-
-
-
-
 
 }

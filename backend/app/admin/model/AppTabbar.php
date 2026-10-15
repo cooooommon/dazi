@@ -5,7 +5,6 @@ namespace app\admin\model;
 use app\BaseModel;
 use think\Model;
 
-
 //底部菜单
 class AppTabbar extends BaseModel
 {

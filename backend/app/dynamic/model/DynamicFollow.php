@@ -11,13 +11,9 @@ class DynamicFollow extends BaseModel
     //定义表名
     protected $name = 'massage_dynamic_follow';
 
-
     protected $append = [
-
-
         'friend_time'
     ];
-
 
     /**
      * @author chenniang
@@ -25,12 +21,9 @@ class DynamicFollow extends BaseModel
      * @功能说明:处理友好时间
      */
     public function getFriendTimeAttr($value,$data){
-
         if(isset($data['create_time'])){
-
             return lbGetDates($data['create_time']);
         }
-
     }
 
     /**
@@ -39,16 +32,10 @@ class DynamicFollow extends BaseModel
      * @功能说明:添加
      */
     public function dataAdd($data){
-
         $data['create_time'] = time();
-
         $res = $this->insert($data);
-
         return $res;
-
     }
-
-
 
     /**
      * @author chenniang
@@ -56,13 +43,9 @@ class DynamicFollow extends BaseModel
      * @功能说明:编辑
      */
     public function dataUpdate($dis,$data){
-
         $res = $this->where($dis)->update($data);
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -70,13 +53,9 @@ class DynamicFollow extends BaseModel
      * @功能说明:列表
      */
     public function dataList($dis,$page){
-
         $data = $this->where($dis)->order('status desc,id desc')->paginate($page)->toArray();
-
         return $data;
-
     }
-
 
     /**
      * @author chenniang
@@ -84,15 +63,9 @@ class DynamicFollow extends BaseModel
      * @功能说明:
      */
     public function dataInfo($dis){
-
         $data = $this->where($dis)->find();
-
         return !empty($data)?$data->toArray():[];
-
     }
-
-
-
 
     /**
      * @author chenniang
@@ -100,7 +73,6 @@ class DynamicFollow extends BaseModel
      * @功能说明:评论列表
      */
     public function getFollowList($dis,$page=10){
-
         $data = $this->alias('a')
             ->join('massage_service_user_list b','a.user_id = b.id','left')
             ->where($dis)
@@ -109,10 +81,8 @@ class DynamicFollow extends BaseModel
             ->order('a.id desc')
             ->paginate($page)
             ->toArray();
-
         return $data;
     }
-
 
     /**
      * @author chenniang
@@ -120,7 +90,6 @@ class DynamicFollow extends BaseModel
      * @功能说明:关注的向导列表
      */
     public function followCoachList($dis,$alh,$page=10){
-
         $data = $this->alias('a')
             ->join('massage_service_coach_list b','a.coach_id = b.id')
             ->where($dis)
@@ -129,11 +98,8 @@ class DynamicFollow extends BaseModel
             ->order('distance,a.id desc')
             ->paginate($page)
             ->toArray();
-
         return $data;
     }
-
-
 
     /**
      * @param $user_id
@@ -142,33 +108,22 @@ class DynamicFollow extends BaseModel
      * @DataTime: 2023-02-08 17:56
      */
     public function followCoachNum($user_id){
-
         $dis = [
-
             'a.user_id' => $user_id,
-
             'a.status'  => 1,
-
             'b.status'  => 2,
-
         ];
-
         $shield_model = new ShieldList();
         //除开屏蔽向导的
         $coach_id = $shield_model->where(['user_id'=>$user_id])->where('type','in',[2,3])->column('coach_id');
-
         $data = $this->alias('a')
             ->join('massage_service_coach_list b','a.coach_id = b.id')
             ->where($dis)
             ->where('a.coach_id','not in',$coach_id)
             ->group('a.coach_id')
             ->count();
-
         return $data;
     }
-
-
-
 
     /**
      * @param $user_id
@@ -177,20 +132,15 @@ class DynamicFollow extends BaseModel
      * @DataTime: 2023-02-08 17:56
      */
     public function followUserNum($coach_id){
-
         $dis = [
-
             'a.coach_id' => $coach_id,
-
             'a.status'  => 1,
         ];
-
         $data = $this->alias('a')
             ->join('massage_service_coach_list b','a.coach_id = b.id')
             ->where($dis)
             ->group('a.id')
             ->count();
-
         return $data;
     }
 
@@ -200,26 +150,19 @@ class DynamicFollow extends BaseModel
      * @功能说明:获取向导最新动态条数
      */
     public function getFollowDynamicNum($user_id){
-
         $shield_model = new ShieldList();
         //除开屏蔽向导的
         $coach_id = $shield_model->where(['user_id'=>$user_id])->column('coach_id');
-
         $dis = [
-
             'a.user_id' => $user_id,
-
             'b.status'  => 2
         ];
-
         $total_num = $this->alias('a')
                      ->join('massage_dynamic_list b','a.coach_id = b.coach_id AND a.create_time < b.create_time')
                      ->where($dis)
                      ->where('a.coach_id','not in',$coach_id)
                      ->group('b.id')
                      ->count();
-
-
         $have_num = $this->alias('a')
                     ->join('massage_dynamic_list b','a.coach_id = b.coach_id AND a.create_time < b.create_time')
                     ->join('massage_dynamic_watch_record c','b.id = c.dynamic_id')
@@ -227,9 +170,7 @@ class DynamicFollow extends BaseModel
                     ->where('a.coach_id','not in',$coach_id)
                     ->group('b.id')
                     ->count();
-
         return ($total_num - $have_num)>=0?$total_num - $have_num:0;
-
     }
 
     /**
@@ -238,18 +179,12 @@ class DynamicFollow extends BaseModel
      * @功能说明:获取向导最新动态条数
      */
     public function getFollowDynamicData($user_id){
-
         $dis = [
-
             'a.user_id' => $user_id,
-
             'b.status'  => 2
         ];
-
         $record_model = new DynamicWatchRecord();
-
         $id_arr = $record_model->where(['user_id'=>$user_id])->column('dynamic_id');
-
         $data = $this->alias('a')
             ->join('massage_dynamic_list b','a.coach_id = b.coach_id AND a.create_time < b.create_time')
             ->where($dis)
@@ -258,13 +193,7 @@ class DynamicFollow extends BaseModel
             ->group('b.id')
             ->select()
             ->toArray();
-
         return $data;
-
     }
-
-
-
-
 
 }

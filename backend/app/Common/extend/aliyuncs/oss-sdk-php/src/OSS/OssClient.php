@@ -82,7 +82,6 @@ class OssClient
         $accessKeyId = trim($accessKeyId);
         $accessKeySecret = trim($accessKeySecret);
         $endpoint = trim(trim($endpoint), "/");
-
         if (empty($accessKeyId)) {
             throw new OssException("access key id is empty");
         }
@@ -303,7 +302,6 @@ class OssClient
         $options[self::OSS_OBJECT] = '/';
         $options[self::OSS_SUB_RESOURCE] = 'logging';
         $options[self::OSS_CONTENT_TYPE] = 'application/xml';
-
         $loggingConfig = new LoggingConfig($targetBucket, $targetPrefix);
         $options[self::OSS_CONTENT] = $loggingConfig->serializeToXml();
         $response = $this->auth($options);
@@ -478,7 +476,6 @@ class OssClient
         $cnameConfig->addCname($cname);
         $options[self::OSS_CONTENT] = $cnameConfig->serializeToXml();
         $options[self::OSS_COMP] = 'add';
-
         $response = $this->auth($options);
         $result = new PutSetDeleteResult($response);
         return $result->getData();
@@ -525,7 +522,6 @@ class OssClient
         $cnameConfig->addCname($cname);
         $options[self::OSS_CONTENT] = $cnameConfig->serializeToXml();
         $options[self::OSS_COMP] = 'delete';
-
         $response = $this->auth($options);
         $result = new PutSetDeleteResult($response);
         return $result->getData();
@@ -550,13 +546,11 @@ class OssClient
         $options[self::OSS_SUB_RESOURCE] = 'live';
         $options[self::OSS_CONTENT_TYPE] = 'application/xml';
         $options[self::OSS_CONTENT] = $channelConfig->serializeToXml();
-
         $response = $this->auth($options);
         $result = new PutLiveChannelResult($response);
         $info = $result->getData();
         $info->setName($channelName);
         $info->setDescription($channelConfig->getDescription());
-        
         return $info;
     }
 
@@ -578,7 +572,6 @@ class OssClient
         $options[self::OSS_OBJECT] = $channelName;
         $options[self::OSS_SUB_RESOURCE] = 'live';
         $options[self::OSS_LIVE_CHANNEL_STATUS] = $channelStatus;
-
         $response = $this->auth($options);
         $result = new PutSetDeleteResult($response);
         return $result->getData();
@@ -600,7 +593,6 @@ class OssClient
         $options[self::OSS_METHOD] = self::OSS_HTTP_GET;
         $options[self::OSS_OBJECT] = $channelName;
         $options[self::OSS_SUB_RESOURCE] = 'live';
-
         $response = $this->auth($options);
         $result = new GetLiveChannelInfoResult($response);
         return $result->getData();
@@ -623,7 +615,6 @@ class OssClient
         $options[self::OSS_OBJECT] = $channelName;
         $options[self::OSS_SUB_RESOURCE] = 'live';
         $options[self::OSS_COMP] = 'stat';
-      
         $response = $this->auth($options);
         $result = new GetLiveChannelStatusResult($response);
         return $result->getData();
@@ -646,7 +637,6 @@ class OssClient
         $options[self::OSS_OBJECT] = $channelName;
         $options[self::OSS_SUB_RESOURCE] = 'live';
         $options[self::OSS_COMP] = 'history';
-
         $response = $this->auth($options);
         $result = new GetLiveChannelHistoryResult($response);
         return $result->getData();
@@ -676,7 +666,6 @@ class OssClient
         $result = new ListLiveChannelResult($response);
         $list = $result->getData();
         $list->setBucketName($bucket);
-
         return $list;
     }
 
@@ -699,7 +688,6 @@ class OssClient
         $options[self::OSS_SUB_RESOURCE] = 'vod';
         $options[self::OSS_LIVE_CHANNEL_END_TIME] = $setTime['EndTime'];
         $options[self::OSS_LIVE_CHANNEL_START_TIME] = $setTime['StartTime'];
-       
         $response = $this->auth($options);
         $result = new PutSetDeleteResult($response);
         return $result->getData();
@@ -721,7 +709,6 @@ class OssClient
         $options[self::OSS_METHOD] = self::OSS_HTTP_DELETE;
         $options[self::OSS_OBJECT] = $channelName;
         $options[self::OSS_SUB_RESOURCE] = 'live';
-
         $response = $this->auth($options);
         $result = new PutSetDeleteResult($response);
         return $result->getData();
@@ -752,14 +739,11 @@ class OssClient
             $query_items[] = rawurlencode($key) . '=' . rawurlencode($value);
         }
         $resource = '/' . $bucket . '/' . $channelName;
-
         $string_to_sign = $expires . "\n" . $cano_params . $resource;
         $signature = base64_encode(hash_hmac('sha1', $string_to_sign, $this->accessKeySecret, true));
-
         $query_items[] = 'OSSAccessKeyId=' . rawurlencode($this->accessKeyId);
         $query_items[] = 'Expires=' . rawurlencode($expires);
         $query_items[] = 'Signature=' . rawurlencode($signature);
-
         return $proto . $hostname . '/live/' . $channelName . '?' . implode('&', $query_items);
     }
 
@@ -936,7 +920,6 @@ class OssClient
             $query,
             array(self::OSS_ENCODING_TYPE => self::OSS_ENCODING_TYPE_URL)
         );
-
         $response = $this->auth($options);
         $result = new ListObjectsResult($response);
         return $result->getData();
@@ -976,36 +959,30 @@ class OssClient
     public function putObject($bucket, $object, $content, $options = NULL)
     {
         $this->precheckCommon($bucket, $object, $options);
-
         OssUtil::validateContent($content);
         $options[self::OSS_CONTENT] = $content;
         $options[self::OSS_BUCKET] = $bucket;
         $options[self::OSS_METHOD] = self::OSS_HTTP_PUT;
         $options[self::OSS_OBJECT] = $object;
-
         if (!isset($options[self::OSS_LENGTH])) {
             $options[self::OSS_CONTENT_LENGTH] = strlen($options[self::OSS_CONTENT]);
         } else {
             $options[self::OSS_CONTENT_LENGTH] = $options[self::OSS_LENGTH];
         }
-
         $is_check_md5 = $this->isCheckMD5($options);
         if ($is_check_md5) {
         	$content_md5 = base64_encode(md5($content, true));
         	$options[self::OSS_CONTENT_MD5] = $content_md5;
         }
-        
         if (!isset($options[self::OSS_CONTENT_TYPE])) {
             $options[self::OSS_CONTENT_TYPE] = $this->getMimeType($object);
         }
         $response = $this->auth($options);
-        
         if (isset($options[self::OSS_CALLBACK]) && !empty($options[self::OSS_CALLBACK])) {
             $result = new CallbackResult($response);
         } else {
             $result = new PutSetDeleteResult($response);
         }
-            
         return $result->getData();
     }
 
@@ -1059,7 +1036,6 @@ class OssClient
     public function appendObject($bucket, $object, $content, $position, $options = NULL)
     {
         $this->precheckCommon($bucket, $object, $options);
-
         OssUtil::validateContent($content);
         $options[self::OSS_CONTENT] = $content;
         $options[self::OSS_BUCKET] = $bucket;
@@ -1067,19 +1043,16 @@ class OssClient
         $options[self::OSS_OBJECT] = $object;
         $options[self::OSS_SUB_RESOURCE] = 'append';
         $options[self::OSS_POSITION] = strval($position);
-
         if (!isset($options[self::OSS_LENGTH])) {
             $options[self::OSS_CONTENT_LENGTH] = strlen($options[self::OSS_CONTENT]);
         } else {
             $options[self::OSS_CONTENT_LENGTH] = $options[self::OSS_LENGTH];
         }
-        
         $is_check_md5 = $this->isCheckMD5($options);
         if ($is_check_md5) {
         	$content_md5 = base64_encode(md5($content, true));
         	$options[self::OSS_CONTENT_MD5] = $content_md5;
         }
-
         if (!isset($options[self::OSS_CONTENT_TYPE])) {
             $options[self::OSS_CONTENT_TYPE] = $this->getMimeType($object);
         }
@@ -1101,7 +1074,6 @@ class OssClient
     public function appendFile($bucket, $object, $file, $position, $options = NULL)
     {
         $this->precheckCommon($bucket, $object, $options);
-
         OssUtil::throwOssExceptionWithMessageIfEmpty($file, "file path is invalid");
         $file = OssUtil::encodePath($file);
         if (!file_exists($file)) {
@@ -1117,14 +1089,12 @@ class OssClient
         if (!isset($options[self::OSS_CONTENT_TYPE])) {
             $options[self::OSS_CONTENT_TYPE] = $this->getMimeType($object, $file);
         }
-
         $options[self::OSS_METHOD] = self::OSS_HTTP_POST;
         $options[self::OSS_BUCKET] = $bucket;
         $options[self::OSS_OBJECT] = $object;
         $options[self::OSS_CONTENT_LENGTH] = $file_size;
         $options[self::OSS_SUB_RESOURCE] = 'append';
         $options[self::OSS_POSITION] = strval($position);
-
         $response = $this->auth($options);
         $result = new AppendResult($response);
         return $result->getData();
@@ -1342,7 +1312,6 @@ class OssClient
         $options[self::OSS_OBJECT] = $object;
         $options[self::OSS_SUB_RESOURCE] = 'uploads';
         $options[self::OSS_CONTENT] = '';
-
         if (!isset($options[self::OSS_CONTENT_TYPE])) {
             $options[self::OSS_CONTENT_TYPE] = $this->getMimeType($object);
         }
@@ -1369,12 +1338,10 @@ class OssClient
         $this->precheckCommon($bucket, $object, $options);
         $this->precheckParam($options, self::OSS_FILE_UPLOAD, __FUNCTION__);
         $this->precheckParam($options, self::OSS_PART_NUM, __FUNCTION__);
-
         $options[self::OSS_METHOD] = self::OSS_HTTP_PUT;
         $options[self::OSS_BUCKET] = $bucket;
         $options[self::OSS_OBJECT] = $object;
         $options[self::OSS_UPLOAD_ID] = $uploadId;
-
         if (isset($options[self::OSS_LENGTH])) {
             $options[self::OSS_CONTENT_LENGTH] = $options[self::OSS_LENGTH];
         }
@@ -1482,7 +1449,6 @@ class OssClient
         $options[self::OSS_BUCKET] = $bucket;
         $options[self::OSS_OBJECT] = '/';
         $options[self::OSS_SUB_RESOURCE] = 'uploads';
-
         foreach (array('delimiter', 'key-marker', 'max-uploads', 'prefix', 'upload-id-marker') as $param) {
             if (isset($options[$param])) {
                 $options[self::OSS_QUERY_STRING][$param] = $options[$param];
@@ -1494,7 +1460,6 @@ class OssClient
             $query,
             array(self::OSS_ENCODING_TYPE => self::OSS_ENCODING_TYPE_URL)
         );
-
         $response = $this->auth($options);
         $result = new ListMultipartUploadResult($response);
         return $result->getData();
@@ -1517,7 +1482,6 @@ class OssClient
     {
         $this->precheckCommon($fromBucket, $fromObject, $options);
         $this->precheckCommon($toBucket, $toObject, $options);
-
         //如果没有设置$options['isFullCopy']，则需要强制判断copy的起止位置
         $start_range = "0";
         if (isset($options['start'])) {
@@ -1532,11 +1496,9 @@ class OssClient
         $options[self::OSS_OBJECT] = $toObject;
         $options[self::OSS_PART_NUM] = $partNumber;
         $options[self::OSS_UPLOAD_ID] = $uploadId;
-
         if (!isset($options[self::OSS_HEADERS])) {
             $options[self::OSS_HEADERS] = array();
         }
-
         $options[self::OSS_HEADERS][self::OSS_OBJECT_COPY_SOURCE] = '/' . $fromBucket . '/' . $fromObject;
         $options[self::OSS_HEADERS][self::OSS_OBJECT_COPY_SOURCE_RANGE] = "bytes=" . $start_range . "-" . $end_range;
         $response = $this->auth($options);
@@ -1568,9 +1530,7 @@ class OssClient
         if (!isset($options[self::OSS_CONTENT_TYPE])) {
             $options[self::OSS_CONTENT_TYPE] = $this->getMimeType($object, $uploadFile);
         }
-
         $upload_position = isset($options[self::OSS_SEEK_TO]) ? (integer)$options[self::OSS_SEEK_TO] : 0;
-
         if (isset($options[self::OSS_CONTENT_LENGTH])) {
             $upload_file_size = (integer)$options[self::OSS_CONTENT_LENGTH];
         } else {
@@ -1579,7 +1539,6 @@ class OssClient
                 $upload_file_size -= $upload_position;
             }
         }
-
         if ($upload_position === false || !isset($upload_file_size) || $upload_file_size === false || $upload_file_size < 0) {
             throw new OssException('The size of `fileUpload` cannot be determined in ' . __FUNCTION__ . '().');
         }
@@ -1589,13 +1548,11 @@ class OssClient
         } else {
             $options[self::OSS_PART_SIZE] = self::OSS_MID_PART_SIZE;
         }
-
         $is_check_md5 = $this->isCheckMD5($options);
         // 如果上传的文件小于partSize,则直接使用普通方式上传
         if ($upload_file_size < $options[self::OSS_PART_SIZE] && !isset($options[self::OSS_UPLOAD_ID])) {
             return $this->uploadFile($bucket, $object, $uploadFile, $options);
         }
-
         // 初始化multipart
         if (isset($options[self::OSS_UPLOAD_ID])) {
             $uploadId = $options[self::OSS_UPLOAD_ID];
@@ -1603,7 +1560,6 @@ class OssClient
             // 初始化
             $uploadId = $this->initiateMultipartUpload($bucket, $object, $options);
         }
-
         // 获取的分片
         $pieces = $this->generateMultiuploadParts($upload_file_size, (integer)$options[self::OSS_PART_SIZE]);
         $response_upload_part = array();
@@ -1623,7 +1579,6 @@ class OssClient
             }
             $response_upload_part[] = $this->uploadPart($bucket, $object, $uploadId, $up_options);
         }
-
         $uploadParts = array();
         foreach ($response_upload_part as $i => $etag) {
             $uploadParts[] = array(
@@ -1672,7 +1627,6 @@ class OssClient
                 self::OSS_CHECK_MD5 => $checkMd5,
             );
             $realObject = (!empty($prefix) ? $prefix . '/' : '') . $item['file'];
-
             try {
                 $this->multiuploadFile($bucket, $realObject, $item['path'], $options);
                 $retArray["succeededList"][] = $realObject;
@@ -1840,12 +1794,10 @@ class OssClient
                 return $type;
             }
         }
-
         $type = MimeTypes::getMimetype($object);
         if (!is_null($type)) {
             return $type;
         }
-
         return self::DEFAULT_CONTENT_TYPE;
     }
 
@@ -1893,7 +1845,6 @@ class OssClient
             $conjunction = '&';
         }
         $this->requestUrl = $scheme . $hostname . $resource_uri . $signable_query_string . $non_signable_resource;
-
         //创建请求
         $request = new RequestCore($this->requestUrl);
         $request->set_useragent($this->generateUserAgent());
@@ -1901,7 +1852,6 @@ class OssClient
         if (isset($options[self::OSS_FILE_UPLOAD])) {
             if (is_resource($options[self::OSS_FILE_UPLOAD])) {
                 $length = null;
-
                 if (isset($options[self::OSS_CONTENT_LENGTH])) {
                     $length = $options[self::OSS_CONTENT_LENGTH];
                 } elseif (isset($options[self::OSS_SEEK_TO])) {
@@ -1932,41 +1882,33 @@ class OssClient
                 $request->set_write_file($options[self::OSS_FILE_DOWNLOAD]);
             }
         }
-
         if (isset($options[self::OSS_METHOD])) {
             $request->set_method($options[self::OSS_METHOD]);
             $string_to_sign .= $options[self::OSS_METHOD] . "\n";
         }
-
         if (isset($options[self::OSS_CONTENT])) {
             $request->set_body($options[self::OSS_CONTENT]);
             if ($headers[self::OSS_CONTENT_TYPE] === 'application/x-www-form-urlencoded') {
                 $headers[self::OSS_CONTENT_TYPE] = 'application/octet-stream';
             }
-
             $headers[self::OSS_CONTENT_LENGTH] = strlen($options[self::OSS_CONTENT]);
             $headers[self::OSS_CONTENT_MD5] = base64_encode(md5($options[self::OSS_CONTENT], true));
         }
-
         if (isset($options[self::OSS_CALLBACK])) {
             $headers[self::OSS_CALLBACK] = base64_encode($options[self::OSS_CALLBACK]);
         }
         if (isset($options[self::OSS_CALLBACK_VAR])) {
             $headers[self::OSS_CALLBACK_VAR] = base64_encode($options[self::OSS_CALLBACK_VAR]);
         }
-
         if (!isset($headers[self::OSS_ACCEPT_ENCODING])) {
             $headers[self::OSS_ACCEPT_ENCODING] = '';
         }
-
         uksort($headers, 'strnatcasecmp');
-
         foreach ($headers as $header_key => $header_value) {
             $header_value = str_replace(array("\r", "\n"), '', $header_value);
             if ($header_value !== '' || $header_key === self::OSS_ACCEPT_ENCODING) {
                 $request->add_header($header_key, $header_value);
             }
-
             if (
                 strtolower($header_key) === 'content-md5' ||
                 strtolower($header_key) === 'content-type' ||
@@ -1981,27 +1923,22 @@ class OssClient
         // 生成 signable_resource
         $signable_resource = $this->generateSignableResource($options);
         $string_to_sign .= rawurldecode($signable_resource) . urldecode($signable_query_string);
-
         //对?后面的要签名的string字母序排序
         $string_to_sign_ordered = $this->stringToSignSorted($string_to_sign);
-
         $signature = base64_encode(hash_hmac('sha1', $string_to_sign_ordered, $this->accessKeySecret, true));
         $request->add_header('Authorization', 'OSS ' . $this->accessKeyId . ':' . $signature);
-
         if (isset($options[self::OSS_PREAUTH]) && (integer)$options[self::OSS_PREAUTH] > 0) {
             $signed_url = $this->requestUrl . $conjunction . self::OSS_URL_ACCESS_KEY_ID . '=' . rawurlencode($this->accessKeyId) . '&' . self::OSS_URL_EXPIRES . '=' . $options[self::OSS_PREAUTH] . '&' . self::OSS_URL_SIGNATURE . '=' . rawurlencode($signature);
             return $signed_url;
         } elseif (isset($options[self::OSS_PREAUTH])) {
             return $this->requestUrl;
         }
-
         if ($this->timeout !== 0) {
             $request->timeout = $this->timeout;
         }
         if ($this->connectTimeout !== 0) {
             $request->connect_timeout = $this->connectTimeout;
         }
-
         try {
             $request->send_request();
         } catch (RequestCore_Exception $e) {
@@ -2012,7 +1949,6 @@ class OssClient
         $response_header['oss-redirects'] = $this->redirects;
         $response_header['oss-stringtosign'] = $string_to_sign;
         $response_header['oss-requestheaders'] = $request->request_headers;
-
         $data = new ResponseCore($response_header, $request->get_response_body(), $request->get_response_code());
         //retry if OSS Internal Error
         if ((integer)$request->get_response_code() === 500) {
@@ -2024,7 +1960,6 @@ class OssClient
                 $data = $this->auth($options);
             }
         }
-        
         $this->redirects = 0;
         return $data;
     }
@@ -2101,7 +2036,6 @@ class OssClient
         if (isset($options[self::OSS_OBJECT]) && $options[self::OSS_OBJECT] === '/') {
             return;
         }
-
         if (isset($options[self::OSS_OBJECT]) && !OssUtil::validateObject($options[self::OSS_OBJECT])) {
             throw new OssException('"' . $options[self::OSS_OBJECT] . '"' . ' object name is invalid');
         }
@@ -2174,19 +2108,16 @@ class OssClient
     private function generateResourceUri($options)
     {
         $resource_uri = "";
-
         // resource_uri + bucket
         if (isset($options[self::OSS_BUCKET]) && '' !== $options[self::OSS_BUCKET]) {
             if ($this->hostType === self::OSS_HOST_TYPE_IP) {
                 $resource_uri = '/' . $options[self::OSS_BUCKET];
             }
         }
-
         // resource_uri + object
         if (isset($options[self::OSS_OBJECT]) && '/' !== $options[self::OSS_OBJECT]) {
             $resource_uri .= '/' . str_replace(array('%2F', '%25'), array('/', '%'), rawurlencode($options[self::OSS_OBJECT]));
         }
-
         // resource_uri + sub_resource
         $conjunction = '?';
         if (isset($options[self::OSS_SUB_RESOURCE])) {
@@ -2220,17 +2151,14 @@ class OssClient
             self::OSS_PROCESS,
             self::OSS_POSITION
         );
-
         foreach ($signableList as $item) {
             if (isset($options[$item])) {
                 $signableQueryStringParams[$item] = $options[$item];
             }
         }
-
         if ($this->enableStsInUrl && (!is_null($this->securityToken))) {
             $signableQueryStringParams["security-token"] = $this->securityToken;
         }
-
         return $signableQueryStringParams;
     }
 
@@ -2286,17 +2214,13 @@ class OssClient
         $index = count($explodeResult);
         if ($index === 1)
             return $string_to_sign;
-
         $queryStringParams = explode('&', $explodeResult[$index - 1]);
         sort($queryStringParams);
-
         foreach($queryStringParams as $params)
         {
              $queryStringSorted .= $params . '&';    
         }
-
         $queryStringSorted = substr($queryStringSorted, 0, -1);
-
         return $explodeResult[0] . '?' . $queryStringSorted;
     }
 
@@ -2318,7 +2242,6 @@ class OssClient
         if (isset($options[self::OSS_CONTENT_MD5])) {
             $headers[self::OSS_CONTENT_MD5] = $options[self::OSS_CONTENT_MD5];
         }
-
         //添加stsSecurityToken
         if ((!is_null($this->securityToken)) && (!$this->enableStsInUrl)) {
             $headers[self::OSS_SECURITY_TOKEN] = $this->securityToken;
@@ -2360,7 +2283,6 @@ class OssClient
         } else {
             $ret_endpoint = $endpoint;
         }
-
         if ($isCName) {
             $this->hostType = self::OSS_HOST_TYPE_CNAME;
         } elseif (OssUtil::isIPFormat($ret_endpoint)) {

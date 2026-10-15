@@ -5,12 +5,10 @@ namespace app\card\model;
 use app\BaseModel;
 use think\Model;
 
-
 class CardTags extends BaseModel
 {
     //定义表名
     protected $name = 'longbing_card_tags';
-
 
     protected static function init ()
     {
@@ -29,7 +27,6 @@ class CardTags extends BaseModel
         $data = self::where( [ [ 'user_id', '=', $staff_id ], [ 'uniacid', '=', $uniacid ], [ 'status', '=', 1 ] ] )
                     ->select()
                     ->toArray();
-
         foreach ( $data as $index => $item )
         {
             $data[ $index ][ 'thumbed' ] = 0;
@@ -38,13 +35,11 @@ class CardTags extends BaseModel
                                                                     [ 'status', '=', 1 ] ]
             )
                                                        ->count();
-
             if ($check)
             {
                 $data[ $index ][ 'thumbed' ] = 1;
             }
         }
-
         return $data;
     }
 	

@@ -35,17 +35,12 @@ class PermissionContrller extends AgentRest
     public function getAgentPermission()
     {
        $is_super_admin = ($this->_role == 'admin') ? true : false;
-
         if (!$is_super_admin) {
             return $this->error('非法请求， 请联系超级管理员');
         }
-
         $is_we7 = defined('IS_WEIQIN');
-
         $permissionArticle   = new PermissionArticle(0);
-
         $permissionBoss      = new PermissionBoss(0);
-
         $permissionBaidu     = new PermissionBaidu(0);
         //截流
         $permissionClosure   = new PermissionClosure(0);
@@ -67,21 +62,13 @@ class PermissionContrller extends AgentRest
         $permissionOverlord = new PermissionOverlord(0);
         //付费课程
         $permissionPayclass = new PermissionPayclass(0);
-
         $permissionBargain = new PermissionBargain(0);
-
         $permissionQuestion = new PermissionQuestion(0);
-
         $has_article   = $permissionArticle->sAuth();
-
         $has_boss      = $permissionBoss->sAuth();
-
         if($has_boss==true){
-
             $has_boss = $permissionBoss->getSaasValue()>0?true:false;
-
         }
-
         $has_baidu     = $permissionBaidu->sAuth();
         //截流
         $has_closure   = $permissionClosure->sAuth();
@@ -105,43 +92,26 @@ class PermissionContrller extends AgentRest
         $has_payclass    =  $permissionPayclass->sAuth();
         //临时写法====  By.jingshuixian
         $permissionHouse  = new PermissionHouse(0);
-
         $has_house        = $permissionHouse->sAuth();
-
         $permissionActivity = new PermissionActivity(0);
-
         $has_activity       = $permissionActivity->sAuth();
-
         $has_bargain       = $permissionBargain->sAuth();
-
         $has_question      = $permissionQuestion->sAuth();
-
-
         if(APP_MODEL_NAME=='longbing_restaurant'){
-
             $has_restaurant = false;
         }
-
         if(APP_MODEL_NAME=='longbing_shortvideo'){
-
             $has_shortvideo = false;
         }
-
         if(APP_MODEL_NAME=='longbing_member'){
-
             $has_member    = false;
         }
-
         if(APP_MODEL_NAME=='longbing_house'){
-
             $has_house    = false;
         }
-
         if(APP_MODEL_NAME=='longbing_liveshop'){
-
             $has_livevideo    = false;
         }
-
 $all_meta_json = <<<AGENT
 
 [
@@ -915,13 +885,9 @@ $all_meta_json = <<<AGENT
 ]
 
 AGENT;
-
-
         $all_meta = json_decode($all_meta_json, true);
-
         foreach ($all_meta as $k => $v) {
             $name = $v['name'];
-
             switch ($name) {
                 case  'Article' :
                     if (!$has_article)  unset($all_meta[$k]);
@@ -982,10 +948,7 @@ AGENT;
                     break;
             }
         }
-
-
         return $this->success(array_values($all_meta));
     }
-
 
 }

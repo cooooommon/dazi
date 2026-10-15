@@ -47,21 +47,16 @@ class LongbingCardUserMark extends BaseModel
         return $result;
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2020-08-07 10:18
      * @功能说明:获取跟进的用户
      */
     public function getMarkUser($dis){
-
-
         $data = $this->alias('a')
                 ->join('longbing_card_user b','a.user_id = b.id')
                 ->where($dis)
                 ->column('a.id');
-
         return $data;
-
     }
 }

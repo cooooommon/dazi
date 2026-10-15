@@ -23,7 +23,6 @@ class StorePackage extends BaseModel
 
     public function getIntroduceTextAttr($value)
     {
-
         return empty($value) ? '' : json_decode($value, true);
     }
 
@@ -37,36 +36,24 @@ class StorePackage extends BaseModel
     public static function add($data)
     {
         if (!empty($data['sku'])) {
-
             $sku = $data['sku'];
-
             unset($data['sku']);
         }
-
         $data['create_time'] = $data['update_time'] = time();
-
         $uniacid = $data['uniacid'];
-
         Db::startTrans();
         try {
-
             $id = self::insertGetId($data);
-
             $res = PackageSku::updateSku($sku, $id, $uniacid);
-
             if (isset($res['code'])) {
-
                 throw new \Exception($res['msg']);
             }
-
             Db::commit();
         } catch (\Exception $exception) {
-
             Db::rollback();
             return ['code' => 1, 'msg' => $exception->getMessage()];
         }
         return true;
-
     }
 
     /**
@@ -79,34 +66,22 @@ class StorePackage extends BaseModel
     public static function edit($data)
     {
         if (!empty($data['sku'])) {
-
             $sku = $data['sku'];
-
             unset($data['sku']);
         }
-
         $uniacid = $data['uniacid'];
-
         Db::startTrans();
         try {
-
             $res = self::update($data, ['id' => $data['id']]);
-
             if ($res === false) {
-
                 throw new \Exception('编辑失败');
             }
-
             $res = PackageSku::updateSku($sku, $data['id'], $uniacid);
-
             if (isset($res['code'])) {
-
                 throw new \Exception($res['msg']);
             }
-
             Db::commit();
         } catch (\Exception $exception) {
-
             Db::rollback();
             return ['code' => 1, 'msg' => $exception->getMessage()];
         }
@@ -126,23 +101,16 @@ class StorePackage extends BaseModel
     public static function getInfo($id)
     {
         $data = self::where('id', $id)->find();
-
         $sku = PackageSku::getList(['package_id' => $id]);
-
         $price = SkuPrice::getList(['package_id' => $id]);
-
         $data['store'] = StoreApply::where('id', $data['store_id'])->field('id,name,trade_week,start_time,end_time,store_balance,share_balance,mobile')->find();
-
         $arr = [];
         foreach ($sku as $key => $item) {
-
             $arr[$key] = [
                 'name' => $item['name']
             ];
             foreach ($price as $value) {
-
                 if ($item['id'] == $value['sku_id']) {
-
                     $arr[$key]['price'][] = [
                         'name' => $value['name'],
                         'num' => $value['num'],
@@ -151,9 +119,7 @@ class StorePackage extends BaseModel
                 }
             }
         }
-
         $data['sku'] = $arr;
-
         return $data;
     }
 
@@ -174,9 +140,7 @@ class StorePackage extends BaseModel
             ->order('a.id desc')
             ->paginate($limit)
             ->each(function ($item) {
-
                 $seckill_id = PackageSeckill::where([['package_id', '=', $item['id']], ['end_time', '>', time()], ['status', '=', 1]])->value('id');
-
                 $item['seckill_id'] = empty($seckill_id) ? 0 : $seckill_id;
             })
             ->toArray();
@@ -200,33 +164,21 @@ class StorePackage extends BaseModel
             ->paginate($limit)
             ->toArray();
         if (!empty($data['data'])) {
-
             foreach ($data['data'] as &$item) {
-
                 $item['sale'] = $item['total_sale'] > 10 ? (int)($item['total_sale'] / 10) * 10 : $item['total_sale'];
-
                 $seckill = PackageSeckill::where([['package_id', '=', $item['id']], ['status', '=', 1], ['end_time', '>', time()], ['start_time', '<=', time()]])->find();
-
                 $is_seckill = !empty($seckill) && $auth ? 1 : 0;
-
                 if ($is_seckill) {
-
                     $item['init_price'] = $item['price'] + 0;
-
                     $item['price'] = $seckill['price'] + 0;
                 }
-
                 $item['seckill_id'] = $is_seckill == 1 ? $seckill['id'] : 0;
-
                 $item['discount'] = 0;
-
                 if ($item['price'] < $item['init_price']) {
-
                     $item['discount'] = round(($item['price'] / $item['init_price']) * 10, 1);
                 }
             }
         }
-
         return $data;
     }
 
@@ -239,20 +191,13 @@ class StorePackage extends BaseModel
      */
     public static function cancel($uniacid)
     {
-
         $key = 'package_cancel_' . $uniacid;
-
         incCache($key, 1, $uniacid);
-
         $value = getCache($key, $uniacid);
-
         if ($value != 1) {
-
             decCache($key, 1, $uniacid);
-
             return false;
         }
-
         $where = [
             ['uniacid', '=', $uniacid],
             ['term_type', '=', 1],
@@ -260,9 +205,7 @@ class StorePackage extends BaseModel
             ['status', '=', 1]
         ];
         self::where($where)->update(['status' => 0]);
-
         decCache($key, 1, $uniacid);
-
         return true;
     }
 
@@ -280,17 +223,13 @@ class StorePackage extends BaseModel
     public static function checkStatus($id, $is_down = 0)
     {
         $info = self::find($id);
-
         if (!$info || ($info['term_type'] == 1 && $info['term_end_time'] < time())) {
-
             return false;
         }
         //验证下架也返回false
         if ($is_down == 1 && $info['status'] != 1) {
-
             return false;
         }
-
         return true;
     }
 
@@ -307,66 +246,42 @@ class StorePackage extends BaseModel
     public static function payInfo($data)
     {
         $goods = self::getInfo($data['package_id']);
-
         if (!empty($goods)) {
-
             $goods = $goods->toArray();
         }
-
         $over_time = Config::where('uniacid', $data['uniacid'])->value('over_time');
-
         if ($goods['term_type'] == 1) {
-
             $data['start_time'] = $goods['term_start_time'];
-
             $data['end_time'] = $goods['term_end_time'];
         } else {
             $data['start_time'] = time();
-
             $data['end_time'] = strtotime('+ ' . $goods['days'] . 'days');
         }
-
         $data['over_time'] = time() + $over_time * 60;
-
         $data = array_merge($data, $goods);
-
         $p = new PermissionIntegral((int)$data['uniacid']);
-
         $auth = $p->pAuth();
-
         //积分抵扣
         if ($goods['is_integral'] == 1 && $auth) {
-
             $integral = User::where('id', $data['user_id'])->value('integral');
             $in_num = 0;
             for ($i = 1; $i < $data['num'] + 1; $i++) {
-
                 if ($integral < $goods['integral'] * $i) {
-
                     $in_num = $i - 1;
                     break;
                 } else {
                     $in_num = $i;
                 }
             }
-
             $data['integral'] = $goods['integral'] * $in_num;
-
             $data['integral_to_money'] = $goods['integral_to_money'] * $in_num;
-
             $data['is_integral'] = $in_num > 0 ? 1 : 0;
-
             $data['goods_integral'] = $data['is_integral'] == 1 ? $goods['integral'] : 0;
-
             $data['goods_integral_to_money'] = $data['is_integral'] == 1 ? $goods['integral_to_money'] : 0;
-
             $data['goods_integral_num'] = $in_num;
         } else {
-
             unset($data['is_integral'], $data['integral_to_money'], $data['integral']);
         }
-
-
         return $data;
     }
 
@@ -384,37 +299,23 @@ class StorePackage extends BaseModel
      */
     public static function updateSale($package_id, $num, $type = 1)
     {
-
         $package = self::where('id', $package_id)->find();
-
         if ($type == 1) {
-
             $update = [
-
                 'true_sale' => $package['true_sale'] + $num,
-
                 'total_sale' => $package['total_sale'] + $num,
-
                 'lock' => $package['lock'] + 1,
-
             ];
         } else {
-
             $update = [
                 'true_sale' => ($package['true_sale'] - $num) < 0 ? 0 : $package['true_sale'] - $num,
-
                 'total_sale' => ($package['total_sale'] - $num) < 0 ? 0 : $package['total_sale'] - $num,
-
                 'lock' => $package['lock'] + 1,
-
             ];
         }
-
         //修改
         $res = self::where(['id' => $package_id, 'lock' => $package['lock']])->update($update);
-
         if ($res != 1) {
-
             return ['code' => 1, 'msg' => '提交失败'];
         }
         return ['code' => 0];

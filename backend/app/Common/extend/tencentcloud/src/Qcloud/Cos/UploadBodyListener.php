@@ -60,12 +60,10 @@ class UploadBodyListener implements EventSubscriberInterface {
             // Get the interesting parameters
             $source = $command->get($this->sourceParameter);
             $body = $command->get($this->bodyParameter);
-
             // If a file path is passed in then get the file handle
             if (is_string($source) && file_exists($source)) {
                 $body = fopen($source, 'rb');
             }
-
             // Prepare the body parameter and remove the source file parameter
             if (null !== $body) {
                 $command->remove($this->sourceParameter);

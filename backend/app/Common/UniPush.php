@@ -4,7 +4,6 @@ use think\facade\Config;
 require_once(APP_PATH .'extend/uniPush/igetui.php');
 require_once(APP_PATH .'extend/uniPush/igetui/template/notify/IGt.Notify.php');
 
-
 class UniPush
 {
     private $cid;
@@ -13,7 +12,6 @@ class UniPush
     private $payload = '';
     private $package = '';//包名
     function __construct(){
-        
     }
     
     // 返回错误信息
@@ -23,6 +21,4 @@ class UniPush
         echo PHP_EOL;
     }    
     
-
-
 }

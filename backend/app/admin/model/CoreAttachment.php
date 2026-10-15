@@ -58,14 +58,11 @@ class CoreAttachment extends BaseModel
         return $result;
     }
 
-
     //创建
     public function addAttach($data)
     {
         $data['module_upload_dir'] = 0;
-
         $result = $this->insert($data);
-
         return $result;
     }
 

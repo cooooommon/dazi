@@ -28,7 +28,6 @@ trait RequestTrait
     {
         Filter::name($name);
         Filter::value($value);
-
         UserAgent::append($name, $value);
     }
 

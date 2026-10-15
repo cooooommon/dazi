@@ -63,7 +63,6 @@ $options = array(
 $ossClient->getObject($bucketName, $object, $options);
 printImage("imageInfo", $download_file);
 
-
 /**
  *  生成一个带签名的可用于浏览器直接打开的url, URL的有效期是3600秒
  */

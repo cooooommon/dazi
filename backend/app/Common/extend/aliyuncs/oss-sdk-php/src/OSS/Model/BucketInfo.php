@@ -2,7 +2,6 @@
 
 namespace OSS\Model;
 
-
 /**
  * Bucket信息，ListBuckets接口返回数据
  *

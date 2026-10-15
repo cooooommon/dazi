@@ -117,7 +117,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
     public function testPutBucketAclPrivate()
     {
         try {
-
             $this->cosClient->createBucket(array('Bucket' => $this->bucket));
             $this->cosClient->PutBucketAcl(
                 array(
@@ -136,7 +135,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
     public function testPutBucketAclPublicRead()
     {
         try {
-
             $this->cosClient->createBucket(array('Bucket' => $this->bucket));
             $this->cosClient->PutBucketAcl(
                 array(
@@ -443,7 +441,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-
     /*
      * put bucket cors，cors规则包含多条
      * 200
@@ -487,7 +484,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
             $this->assertFalse(true, $e);
         }
     }
-
 
     /*
      * 正常get bucket cors
@@ -690,7 +686,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
                 )));
         } catch (ServiceResponseException $e) {
             $this->assertTrue($e->getExceptionCode() === 'NoSuchBucket' && $e->getStatusCode() === 404);
-
         }
     }
 
@@ -792,12 +787,10 @@ class BucketTest extends \PHPUnit_Framework_TestCase
             $rt = $this->cosClient->headObject(array('Bucket' => $this->$bucket,
                 'Key' => 'test10G'));
             assertTrue(true, $rt['ContentLength'] == 10485760000);
-
         } catch (ServiceResponseException $e) {
             $this->assertFalse(true, $e);
         }
     }
-
 
     /*
      * 上传文件Bucket不存在
@@ -813,7 +806,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
             $this->assertTrue($e->getStatusCode() === 404);
         }
     }
-
 
     /*
      * 上传小文件
@@ -971,7 +963,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-
     /*
      * get object，请求头部带if-match，参数值为false
      * PreconditionFailed
@@ -1009,7 +1000,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-
     /*
      * get object，请求头部带if-none-match，参数值为false
      * PreconditionFailed
@@ -1023,7 +1013,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
                 'Bucket' => $this->bucket,
                 'Key' => '你好.txt',
                 'IfNoneMatch' => '""'));
-
         } catch (ServiceResponseException $e) {
             $this->assertFalse(true, $e);
         }
@@ -1071,9 +1060,7 @@ class BucketTest extends \PHPUnit_Framework_TestCase
         } catch (ServiceResponseException $e) {
             $this->assertFalse(true, $e);
         }
-
     }
-
 
     /*
      * 获取objectacl
@@ -1102,7 +1089,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
                     'DisplayName' => 'qcs::cam::uin/2779643970:uin/2779643970',
                     'ID' => 'qcs::cam::uin/2779643970:uin/2779643970',
                 )));
-
         } catch (ServiceResponseException $e) {
             $this->assertFalse(true, $e);
         }
@@ -1115,7 +1101,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
     public function testPutObjectAclPrivate()
     {
         try {
-
             $this->cosClient->createBucket(array('Bucket' => $this->bucket));
             $this->cosClient->putObject(array('Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123'));
             $this->cosClient->PutObjectAcl(
@@ -1136,7 +1121,6 @@ class BucketTest extends \PHPUnit_Framework_TestCase
     public function testPutObjectAclPublicRead()
     {
         try {
-
             $this->cosClient->createBucket(array('Bucket' => $this->bucket));
             $this->cosClient->putObject(array('Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123'));
             $this->cosClient->PutObjectAcl(

@@ -37,7 +37,6 @@ if ($err != null) {
     var_dump($err);
 } else {
     echo "PersistentFop Id: $id\n";
-
     $res = "http://api.qiniu.com/status/get/prefop?id=$id";
     echo "Processing result: $res";
 }

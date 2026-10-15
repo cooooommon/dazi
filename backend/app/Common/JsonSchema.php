@@ -33,7 +33,6 @@ class JsonSchema {
 		$this -> errors = array();
 		$this -> complexTypes = array();
 		$this -> json = json_decode($json);
-
 	}
 
 	/**
@@ -154,7 +153,6 @@ class JsonSchema {
 				$this -> addError('100', 'schema parse error. (PHP 5 >= 5.3.0) see json_last_error(void).');
 				break;
 			}
-
 			$isVali = $this -> checkByType($this -> json, $key = null, $schema);
 		} while (false);
 		return $isVali;
@@ -188,10 +186,8 @@ class JsonSchema {
 					break;
 				}
 			}
-
 			if (isset($schema['format'])) {
 				switch ($schema['format']) {
-
 					case 'date-time' :
 						/**
 						 * date-time This SHOULD be a date in ISO 8601 format of YYYY-MM-
@@ -228,7 +224,6 @@ class JsonSchema {
 						 */
 						if (isset($schema['pattern'])) {
 							$pattern = $schema['pattern'];
-
 							if (preg_match($pattern, $value)) {
 								$isVali = true;
 							} else {
@@ -237,7 +232,6 @@ class JsonSchema {
 						} else {
 							$this -> addError('101', 'format-regex: pattern is undefined.', $key);
 						}
-
 						break;
 					case 'color' :
 						/**
@@ -291,7 +285,6 @@ class JsonSchema {
 						} else {
 							$this -> addError('101', $key . ': ' . json_encode($value) . ' is not a ipv4 address.', $key);
 						}
-
 						break;
 					case 'ipv6' :
 						/**
@@ -308,14 +301,12 @@ class JsonSchema {
 						 * host-name This SHOULD be a host-name.
 						 */
 						break;
-
 					default :
 						$this -> addError('101', $schema['format'] . ' is undefined.', $key);
 						break;
 				}
 				break;
 			}
-
 			$isVali = true;
 		} while (false);
 		return $isVali;
@@ -332,7 +323,6 @@ class JsonSchema {
 		// number
 		$isVali = false;
 		do {
-
 			if (!is_numeric($value)) {
 				$this -> addError($value . ' is not a number.');
 				break;
@@ -363,7 +353,6 @@ class JsonSchema {
 			}
 			$isVali = true;
 		} while (false);
-
 		return $isVali;
 	}
 
@@ -409,7 +398,6 @@ class JsonSchema {
 	private function checkObject($value, $key = null, $schema = null) {
 		// object
 		$isVali = false;
-
 		do {
 			if (!is_object($value)) {
 				$this -> addError('101', $key . ': ' . json_encode($value) . ' is not an object.', $key);
@@ -430,9 +418,7 @@ class JsonSchema {
 				if (!empty($diffKeys)) {
 					foreach ($diffKeys as $key) {
 						// property not defined / not optional
-
 						if (!isset($schemaProp[$key]) || !isset($schemaProp[$key]['optional']) || !$schemaProp[$key]['optional']) {
-
 							$this -> addError('101', $key . ': ' . json_encode($value) . ' is not exist,And its not a optional property.', $key);
 							break 2;
 						}
@@ -458,12 +444,10 @@ class JsonSchema {
 						}
 					}
 				}
-
 				foreach ($schemaProp as $key => $sch) {
 					if (!isset($valueProp[$key])) {
 						continue;
 					}
-
 					if (!$this -> checkByType($valueProp[$key], $key, $sch)) {
 						break 2;
 					}
@@ -488,7 +472,6 @@ class JsonSchema {
 				$this -> addError('101', $key . ' : ' . json_encode($value) . ' is not an array.', $key);
 				break;
 			}
-
 			if (!isset($schema['items'])) {
 				$this -> addError('101', $this -> error('schema: items schema is undefined.'), $key);
 				break;
@@ -506,13 +489,11 @@ class JsonSchema {
 					break;
 				}
 			}
-
 			foreach ($value as $val) {
 				if (!$this -> checkByType($val, '', $schema['items'])) {
 					break 2;
 				}
 			}
-
 			$isVali = true;
 		} while (false);
 		return $isVali;
@@ -526,24 +507,20 @@ class JsonSchema {
 	 * @return boolean
 	 */
 	private function checkByType($value, $key = null, $schema) {
-
 		$isVali = false;
 		if ($schema && isset($schema['type'])) {
 			// union types 联合类型
 			if (is_array($schema['type'])) {
 				$types = $schema['type'];
 				foreach ($types as $type) {
-
 					$schema['type'] = $type;
 					$isVali = $this -> checkByType($value, $key, $schema);
-
 					if ($isVali) {
 						break;
 					}
 				}
 			} else {
 				$type = $schema['type'];
-
 				switch ($type) {
 					case 'boolean' :
 						$isVali = $this -> checkBoolean($value, $key, $schema);
@@ -565,7 +542,6 @@ class JsonSchema {
 						break;
 					case 'object' :
 						$isVali = $this -> checkObject($value, $key, $schema);
-
 						break;
 					case 'enum' :
 						$isVali = is_null($value);
@@ -594,7 +570,6 @@ class JsonSchema {
 	 * @return array errors
 	 */
 	public function getErrors() {
-
 		return json_encode(['error' => $this -> errors], true);
 	}
 	/**

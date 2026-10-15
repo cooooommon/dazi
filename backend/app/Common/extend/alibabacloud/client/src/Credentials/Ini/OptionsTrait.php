@@ -25,7 +25,6 @@ trait OptionsTrait
         if (self::isNotEmpty($configures, 'region_id')) {
             $client->regionId($configures['region_id']);
         }
-
         if (isset($configures['debug'])) {
             $client->options(
                 [
@@ -33,7 +32,6 @@ trait OptionsTrait
                 ]
             );
         }
-
         if (self::isNotEmpty($configures, 'timeout')) {
             $client->options(
                 [
@@ -41,7 +39,6 @@ trait OptionsTrait
                 ]
             );
         }
-
         if (self::isNotEmpty($configures, 'connect_timeout')) {
             $client->options(
                 [
@@ -96,7 +93,6 @@ trait OptionsTrait
                 ]
             );
         }
-
         if (self::isNotEmpty($configures, 'cert_file') && self::isNotEmpty($configures, 'cert_password')) {
             $client->options(
                 [

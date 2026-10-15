@@ -8,7 +8,6 @@ use app\massage\model\ActionLog;
 use app\massage\model\Config;
 use think\App;
 
-
 use think\facade\Db;
 use think\facade\Lang;
 use think\Response;
@@ -16,46 +15,32 @@ use think\Response;
 class Admin extends BaseController
 {
 
-
     protected $model;
 
     protected $config_model;
 
-
     public function __construct(App $app)
     {
-
         parent::__construct($app);
-
         $this->model = new \app\massage\model\Admin();
-
-
     }
-
 
     public function getW7TmpV2()
     {
         $copyright = getConfigSetting(666, 'copyright');
-
         if (!empty($copyright)) {
-
             $arr['w7tmp']['footerleft'] = "<div> $copyright </div>";
         } else {
-
             $arr['w7tmp'] = 1;
         }
-
         return $this->success($arr);
-
     }
-
 
     /**
      * @author chenniang
      * @DataTime: 2021-03-11 13:53
      * @功能说明:登陆
      */
-
 
     public function login()
     {
@@ -100,7 +85,6 @@ class Admin extends BaseController
         return $this->success($result);
     }
 
-
     /**
      * @param $user_id
      * @功能说明:
@@ -109,38 +93,22 @@ class Admin extends BaseController
      */
     public function addActionLog($user_id)
     {
-
         $insert = [
-
             'uniacid' => 666,
-
             'user_id' => $user_id,
-
             'obj_id' => 0,
-
             'ip' => getIP(),
-
             'model' => 'Admin',
-
             'method' => 'POST',
-
             'table' => 'shequshop_school_admin',
-
             'code_action' => 'login',
-
             'action_type' => '',
-
             'action' => 'login',
-
         ];
-
         $log_model = new ActionLog();
-
         $log_model->dataAdd($insert);
-
         return true;
     }
-
 
     public function success($data, $code = 200)
     {
@@ -151,7 +119,6 @@ class Admin extends BaseController
         if (!empty($this->_token)) {
             $result['sign'] = createSimpleSign($this->_token, is_string($data) ? $data : json_encode($data));
         }
-
         return $this->response($result, 'json', $code);
     }
 
@@ -176,7 +143,6 @@ class Admin extends BaseController
         return Response::create($data, $type)->code($code);
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2022-08-11 11:33
@@ -184,18 +150,11 @@ class Admin extends BaseController
      */
     public function getConfig()
     {
-
         $config_model = new Config();
-
         $config = $config_model->dataInfo(['uniacid' => 666]);
-
         $data['record_type'] = $config['record_type'];
-
         $data['record_no'] = $config['record_no'];
-
         return $this->success($data);
-
     }
-
 
 }

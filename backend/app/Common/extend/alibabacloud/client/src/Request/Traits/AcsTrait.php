@@ -74,7 +74,6 @@ trait AcsTrait
     public function action($action)
     {
         $this->action = ApiFilter::action($action);
-
         return $this;
     }
 
@@ -89,7 +88,6 @@ trait AcsTrait
     public function endpointSuffix($endpointSuffix)
     {
         $this->endpointSuffix = ApiFilter::endpointSuffix($endpointSuffix);
-
         return $this;
     }
 
@@ -99,7 +97,6 @@ trait AcsTrait
     public function network($network)
     {
         $this->network = ApiFilter::network($network);
-
         return $this;
     }
 
@@ -112,7 +109,6 @@ trait AcsTrait
     public function version($version)
     {
         $this->version = ApiFilter::version($version);
-
         return $this;
     }
 
@@ -125,7 +121,6 @@ trait AcsTrait
     public function product($product)
     {
         $this->product = ApiFilter::product($product);
-
         return $this;
     }
 
@@ -138,7 +133,6 @@ trait AcsTrait
     public function endpointType($endpointType)
     {
         $this->endpointType = ApiFilter::endpointType($endpointType);
-
         return $this;
     }
 
@@ -151,7 +145,6 @@ trait AcsTrait
     public function serviceCode($serviceCode)
     {
         $this->serviceCode = ApiFilter::serviceCode($serviceCode);
-
         return $this;
     }
 
@@ -167,12 +160,9 @@ trait AcsTrait
         if ($this->uri->getHost() !== 'localhost') {
             return;
         }
-
         $region_id = $this->realRegionId();
         $host      = '';
-
         $this->resolveHostWays($host, $region_id);
-
         if (!$host) {
             throw new ClientException(
                 "No host found for {$this->product} in the {$region_id}, you can specify host by host() method. " .
@@ -180,7 +170,6 @@ trait AcsTrait
                 SDK::HOST_NOT_FOUND
             );
         }
-
         $this->uri = $this->uri->withHost($host);
     }
 
@@ -197,17 +186,14 @@ trait AcsTrait
         if ($this->network === 'public' && isset($this->endpointMap[$region_id])) {
             $host = $this->endpointMap[$region_id];
         }
-
         // 2. Find host by rules.
         if (!$host && $this->endpointRegional !== null) {
             $host = AlibabaCloud::resolveHostByRule($this);
         }
-
         // 3. Find in the local array file.
         if (!$host) {
             $host = AlibabaCloud::resolveHost($this->product, $region_id);
         }
-
         // 4. Find in the Location service.
         if (!$host && $this->serviceCode) {
             $host = LocationService::resolveHost($this);
@@ -223,15 +209,12 @@ trait AcsTrait
         if ($this->regionId !== null) {
             return $this->regionId;
         }
-
         if ($this->httpClient()->regionId !== null) {
             return $this->httpClient()->regionId;
         }
-
         if (AlibabaCloud::getDefaultRegionId() !== null) {
             return AlibabaCloud::getDefaultRegionId();
         }
-
         throw new ClientException("Missing required 'RegionId' for Request", SDK::INVALID_REGION_ID);
     }
 }

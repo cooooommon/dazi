@@ -14,7 +14,6 @@ class AppClient
     public function __construct(Auth $auth)
     {
         $this->auth = $auth;
-
         $this->baseURL = sprintf("%s/%s/apps", Config::RTCAPI_HOST, Config::RTCAPI_VERSION);
     }
 

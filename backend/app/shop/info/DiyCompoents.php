@@ -6,7 +6,6 @@
  * Time: 18:29
  */
 
-
 $goods = <<<GOODS
 {
     "title":"商品列表",
@@ -34,18 +33,12 @@ SEARCH;
 
 //模块组件 后台DIY页面的左侧
 return [
-
     [
         "title" => "业务组件",
-
         'type' => 'shopCompoent',
-
         'data' =>[
-
             json_decode($search, true),
-
             json_decode($goods, true),
-
         ]
     ],
 ];

@@ -2,7 +2,6 @@
 
 namespace OSS\Tests;
 
-
 use OSS\Http\ResponseCore;
 use OSS\Core\OssException;
 use OSS\Model\LifecycleConfig;
@@ -52,7 +51,6 @@ BBBB;
             new GetLifecycleResult($response);
             $this->assertTrue(false);
         } catch (OssException $e) {
-
         }
     }
 

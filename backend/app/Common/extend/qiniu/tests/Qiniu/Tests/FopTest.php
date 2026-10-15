@@ -29,7 +29,6 @@ class FopTest extends \PHPUnit_Framework_TestCase
         $fop = new Operation('testres.qiniudn.com');
         $url = $fop->buildUrl('gogopher.jpg', $fops);
         $this->assertEquals($url, 'http://testres.qiniudn.com/gogopher.jpg?imageView2/2/h/200');
-
         $fops = array('imageView2/2/h/200', 'imageInfo');
         $url = $fop->buildUrl('gogopher.jpg', $fops);
         $this->assertEquals($url, 'http://testres.qiniudn.com/gogopher.jpg?imageView2/2/h/200|imageInfo');

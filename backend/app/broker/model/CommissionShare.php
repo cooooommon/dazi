@@ -31,26 +31,16 @@ class CommissionShare extends BaseModel
     public static function add($uniacid, $id, $balance, $cash, $type, $share_id, $order_id, $comm_type)
     {
         $insert = [
-
             'uniacid' => $uniacid,
-
             'comm_id' => $id,
-
             'share_balance' => $balance,
-
             'share_cash' => $cash,
-
             'type' => $type,
-
             'share_id' => $share_id,
-
             'order_id' => $order_id,
-
             'comm_type' => $comm_type
         ];
-
         $res = self::insert($insert);
-
         return $res;
     }
 }

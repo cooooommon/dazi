@@ -16,7 +16,6 @@ class LongbingCardRate extends BaseModel
         return !empty($result);
     }
     
-    
     //获取单条数据
     public function getRate($filter)
     {

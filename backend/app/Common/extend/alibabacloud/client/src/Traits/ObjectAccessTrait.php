@@ -19,7 +19,6 @@ trait ObjectAccessTrait
         if (!isset($this->data[$name])) {
             return null;
         }
-
         return \json_decode(\json_encode($this->data))->$name;
     }
 

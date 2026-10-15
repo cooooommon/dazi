@@ -9,38 +9,24 @@ class RoleList extends BaseModel
     //定义表名
     protected $name = 'massage_role_list';
 
-
-
     /**
      * @author chenniang
      * @DataTime: 2020-09-29 11:04
      * @功能说明:添加
      */
     public function dataAdd($data){
-
         $data['create_time'] = time();
-
         if(isset($data['node'])){
-
             $node = $data['node'];
-
             unset($data['node']);
         }
-
         $res = $this->insert($data);
-
         $id  = $this->getLastInsID();
-
         if(isset($node)){
-
             $this->updateSome($node,$id,$data['uniacid']);
         }
-
         return $id;
-
     }
-
-
 
     /**
      * @author chenniang
@@ -48,31 +34,18 @@ class RoleList extends BaseModel
      * @功能说明:添加权限节点
      */
     public function updateSome($data,$id,$uniacid){
-
         $node_model = new RoleNode();
-
         $node_model->where(['role_id'=>$id])->delete();
-
         if(!empty($data)){
-
             foreach ($data as $k=>$v){
-
                 $data[$k]['uniacid'] = $uniacid;
-
                 $data[$k]['role_id'] = $id;
-
                 $data[$k]['auth']    = !empty($v['auth'])?implode(',',$v['auth']):'';
-
             }
-
             $node_model->saveAll($data);
-
         }
-
         return true;
     }
-
-
 
     /**
      * @author chenniang
@@ -80,26 +53,16 @@ class RoleList extends BaseModel
      * @功能说明:编辑
      */
     public function dataUpdate($dis,$data){
-
         if(isset($data['node'])){
-
             $node = $data['node'];
-
             unset($data['node']);
         }
-
         $res = $this->where($dis)->update($data);
-
         if(isset($node)){
-
             $this->updateSome($node,$dis['id'],$data['uniacid']);
-
         }
-
         return $res;
-
     }
-
 
     /**
      * @author chenniang
@@ -107,13 +70,9 @@ class RoleList extends BaseModel
      * @功能说明:列表
      */
     public function dataList($dis,$page){
-
         $data = $this->where($dis)->order('status desc,id desc')->paginate($page)->toArray();
-
         return $data;
-
     }
-
 
     /**
      * @author chenniang
@@ -121,13 +80,9 @@ class RoleList extends BaseModel
      * @功能说明:
      */
     public function dataInfo($dis){
-
         $data = $this->where($dis)->find();
-
         return !empty($data)?$data->toArray():[];
-
     }
-
 
     /**
      * @author chenniang
@@ -135,19 +90,9 @@ class RoleList extends BaseModel
      * @功能说明:开启默认
      */
     public function updateOne($id){
-
         $user_id = $this->where(['id'=>$id])->value('user_id');
-
         $res = $this->where(['user_id'=>$user_id])->where('id','<>',$id)->update(['status'=>0]);
-
         return $res;
     }
-
-
-
-
-
-
-
 
 }

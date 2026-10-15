@@ -2,7 +2,6 @@
 
 namespace OSS\Tests;
 
-
 use OSS\Result\ExistResult;
 use OSS\Http\ResponseCore;
 use OSS\Core\OssException;
@@ -32,7 +31,6 @@ class ExistResultTest extends \PHPUnit_Framework_TestCase
             new ExistResult($response);
             $this->assertTrue(false);
         } catch (OssException $e) {
-
         }
     }
 }

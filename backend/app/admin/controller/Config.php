@@ -85,7 +85,6 @@ class Config extends AdminRest
         return $this->success($config);
     }
 
-
     //小程序设置
     public function getAppConfig()
     {
@@ -136,7 +135,6 @@ class Config extends AdminRest
         return $this->success($result);
     }
 
-
     //自动同步服务通知模板
     public function autoServiceNoticeTemplate()
     {
@@ -170,7 +168,6 @@ class Config extends AdminRest
             $result = json_decode($result, true);
         }
         //判断
-
         if (isset($result['errcode']) && !empty($result['errcode'])) {
             return $this->error(lang('auto get template error'));
         }
@@ -290,7 +287,6 @@ class Config extends AdminRest
                 $all_tabbar_count = $all_tabbar_count + $v;
             }
         }
-
 //      $max_tabbar_count = env('MAX_TABBAR_COUNT', 5);
 //      $all_tabbar_count = $menu_now['menu1_is_hide']
 //                        + $menu_now['menu2_is_hide']
@@ -299,7 +295,6 @@ class Config extends AdminRest
 //                        + $menu_now['menu_appoint_is_hide']
 //                        + $menu_now['menu_activity_is_show']
 //                        + $menu_now['menu_house_is_show'];
-
         if ($all_tabbar_count > $max_tabbar_count) {
             return $this->error('显示的菜单栏不能大于 '.$max_tabbar_count);
         }
@@ -330,7 +325,6 @@ class Config extends AdminRest
         $a->setH5Info();
         return $this->success($result);
     }
-
 
     /**
      * @author chenniang

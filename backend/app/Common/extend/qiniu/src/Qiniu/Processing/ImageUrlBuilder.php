@@ -57,37 +57,30 @@ final class ImageUrlBuilder
         $quality = null,
         $ignoreError = 1
     ) {
-
         // url合法效验
         if (!$this->isUrl($url)) {
             return $url;
         }
-
         // 参数合法性效验
         if (!in_array(intval($mode), $this->modeArr, true)) {
             return $url;
         }
-
         if (!$width || !$height) {
             return $url;
         }
-
         $thumbStr = 'imageView2/' . $mode . '/w/' . $width . '/h/' . $height . '/';
-
         // 拼接输出格式
         if (!is_null($format)
             && in_array($format, $this->formatArr)
         ) {
             $thumbStr .= 'format/' . $format . '/';
         }
-
         // 拼接渐进显示
         if (!is_null($interlace)
             && in_array(intval($interlace), array(0, 1), true)
         ) {
             $thumbStr .= 'interlace/' . $interlace . '/';
         }
-
         // 拼接图片质量
         if (!is_null($quality)
             && intval($quality) >= 0
@@ -95,9 +88,7 @@ final class ImageUrlBuilder
         ) {
             $thumbStr .= 'q/' . $quality . '/';
         }
-
         $thumbStr .= 'ignore-error/' . $ignoreError . '/';
-
         // 如果有query_string用|线分割实现多参数
         return $url . ($this->hasQuery($url) ? '|' : '?') . $thumbStr;
     }
@@ -129,35 +120,29 @@ final class ImageUrlBuilder
         if (!$this->isUrl($url)) {
             return $url;
         }
-
         $waterStr = 'watermark/1/image/' . \Qiniu\base64_urlSafeEncode($image) . '/';
-
         // 拼接水印透明度
         if (is_numeric($dissolve)
             && $dissolve <= 100
         ) {
             $waterStr .= 'dissolve/' . $dissolve . '/';
         }
-
         // 拼接水印位置
         if (in_array($gravity, $this->gravityArr, true)) {
             $waterStr .= 'gravity/' . $gravity . '/';
         }
-
         // 拼接横轴边距
         if (!is_null($dx)
             && is_numeric($dx)
         ) {
             $waterStr .= 'dx/' . $dx . '/';
         }
-
         // 拼接纵轴边距
         if (!is_null($dy)
             && is_numeric($dy)
         ) {
             $waterStr .= 'dy/' . $dy . '/';
         }
-
         // 拼接自适应原图的短边比例
         if (!is_null($watermarkScale)
             && is_numeric($watermarkScale)
@@ -166,7 +151,6 @@ final class ImageUrlBuilder
         ) {
             $waterStr .= 'ws/' . $watermarkScale . '/';
         }
-
         // 如果有query_string用|线分割实现多参数
         return $url . ($this->hasQuery($url) ? '|' : '?') . $waterStr;
     }
@@ -202,49 +186,41 @@ final class ImageUrlBuilder
         if (!$this->isUrl($url)) {
             return $url;
         }
-
         $waterStr = 'watermark/2/text/'
             . \Qiniu\base64_urlSafeEncode($text) . '/font/'
             . \Qiniu\base64_urlSafeEncode($font) . '/';
-
         // 拼接文字大小
         if (is_int($fontSize)) {
             $waterStr .= 'fontsize/' . $fontSize . '/';
         }
-
         // 拼接文字颜色
         if (!is_null($fontColor)
             && $fontColor
         ) {
             $waterStr .= 'fill/' . \Qiniu\base64_urlSafeEncode($fontColor) . '/';
         }
-
         // 拼接水印透明度
         if (is_numeric($dissolve)
             && $dissolve <= 100
         ) {
             $waterStr .= 'dissolve/' . $dissolve . '/';
         }
-
         // 拼接水印位置
         if (in_array($gravity, $this->gravityArr, true)) {
             $waterStr .= 'gravity/' . $gravity . '/';
         }
-
         // 拼接横轴边距
         if (!is_null($dx)
             && is_numeric($dx)
         ) {
             $waterStr .= 'dx/' . $dx . '/';
         }
-
         // 拼接纵轴边距
         if (!is_null($dy)
             && is_numeric($dy)
         ) {
             $waterStr .= 'dy/' . $dy . '/';
         }
-
         // 如果有query_string用|线分割实现多参数
         return $url . ($this->hasQuery($url) ? '|' : '?') . $waterStr;
     }
@@ -259,7 +235,6 @@ final class ImageUrlBuilder
     protected function isUrl($url)
     {
         $urlArr = parse_url($url);
-
         return $urlArr['scheme']
         && in_array($urlArr['scheme'], array('http', 'https'))
         && $urlArr['host']
@@ -276,7 +251,6 @@ final class ImageUrlBuilder
     protected function hasQuery($url)
     {
         $urlArr = parse_url($url);
-
         return !empty($urlArr['query']);
     }
 }

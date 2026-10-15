@@ -36,12 +36,9 @@ class LongbingUser extends BaseModel
 //      }
         //判断是否查询电话号码授权
         if(isset($filter['is_phone']) && !empty($filter['is_phone'])) $where[] = ['phone.phone' ,'<>' ,'null'];
-
         //判断是否授权头像/登陆信息
         if(isset($filter['avatarUrl']) && !empty($filter['avatarUrl'])) $where[] = ['user.avatarUrl' ,'<>' ,''];
-
         //设置转换参数
-
         $mark_arr = array(
             0 => array(
                 'id' => 3,
@@ -56,7 +53,6 @@ class LongbingUser extends BaseModel
                 'value' => '已成交'
             ),
         );
-
         $deal_arr = array(
             0 => array(
                 'id' => 1,
@@ -84,9 +80,7 @@ class LongbingUser extends BaseModel
                     //$list_mark = pdo_getall('longbing_card_user_mark', ['uniacid' => $uniacid]);
                     //获取已经跟进的客户数据
                     $mark_model = new MarkModel();
-
                     $list_mark = $mark_model->listMarkData(['uniacid' => $uniacid ,'status' => 1] ,['user_id']);
-
                     $tmp_arr = array();
                     foreach ($list_mark as $k => $v)
                     {
@@ -155,13 +149,11 @@ class LongbingUser extends BaseModel
                     }
                     else
                     {
-
                         $tmp_arr = array();
                         foreach ($list_mark as $k => $v)
                         {
                             array_push($tmp_arr, $v['user_id']);
                         }
-
                         if (count($tmp_arr) > 1)
                         {
                             $tmp_arr = '(' . implode(',', $tmp_arr) . ')';
@@ -177,7 +169,6 @@ class LongbingUser extends BaseModel
                             $list_mark = $this->where([['uniacid' , '=' ,$uniacid] , ['is_staff' ,'=' , 0]])->field(['id'])->select();;
                         }
                         if(empty($list_mark)) $list_mark = [];
-
                         foreach ($list_mark as $k => $v)
                         {
                             array_push($user_ids, $v['id']);
@@ -204,7 +195,6 @@ class LongbingUser extends BaseModel
                         {
                             if(in_array($v, $user_ids) && !in_array($v, $tmp2)) $tmp2[] = $v;
                         }
-
                         $user_ids = $tmp2;
                     }
                     else
@@ -216,7 +206,6 @@ class LongbingUser extends BaseModel
                     }
                 }
             }
-
             if (isset($filter['nickName']))
             {
 //              $keyword = $filter['search'];
@@ -226,7 +215,6 @@ class LongbingUser extends BaseModel
                 $users1 = $client_model->listClientData([['uniacid' ,'=' ,$uniacid] ,['name' ,'like' ,$search]] ,['user_id']);
 //              $users2 = pdo_getall('longbing_card_user', ['uniacid' => $uniacid, 'nickName like' => $search]);
                 $users2 = $this->where([['uniacid' ,'=' ,$uniacid] ,['nickName' ,'like' ,$search]])->field(['id'])->select();
-
                 $tmp = array();
                 foreach ($users1 as $k => $v)
                 {
@@ -243,7 +231,6 @@ class LongbingUser extends BaseModel
                     }
                 }
                 $tmp = array_unique($tmp);
-
                 if (isset($filter['mark']) || isset($filter['deal']))
                 {
                     $tmp1 = array();
@@ -267,13 +254,11 @@ class LongbingUser extends BaseModel
             }
 //          var_dump($user_ids);die;
             $where[] = ['user.id' ,'in' , $user_ids];
-
             //获取用户数据
 //          $users = pdo_getslice('longbing_card_user', $where, $limit, $count, [], '');
             $result = $this->alias('user')
                 ->leftJoin('longbing_card_user_phone phone' ,'user.id = phone.user_id')
                 ->where($where);
-
             $count  = $result->count();
             $users  = $result->page($page_config['page'] ,$page_config['page_count'])
                 ->field('user.* ,phone.phone')
@@ -285,21 +270,15 @@ class LongbingUser extends BaseModel
             $result = $this->alias('user')
                 ->leftJoin('longbing_card_user_phone phone' ,'user.id = phone.user_id')
                 ->where($where);
-
             $count  = $result->count();
             $users  = $result->page($page_config['page'] ,$page_config['page_count'])
                 ->field('user.* ,phone.phone')
                 ->order('user.id desc')
                 ->select()->toArray();
         }
-
-
-
 //      var_dump(json_encode($users));die;
         foreach ($users as $k => $v)
         {
-
-
             $users[$k]['user_name'] =  '';
 //          $client_info = pdo_get('longbing_card_client_info', ['user_id' => $v['id']]);
             $client_model = new ClientModel();
@@ -308,31 +287,22 @@ class LongbingUser extends BaseModel
             {
                 $users[$k]['user_name'] =  $client_info['name'];
             }
-
             $users[$k]['deal_time'] =  '';
             //获取客户跟进数据
             $collection_model = new CollectionModel();
             $collections = $collection_model->listCollection(['uniacid' => $uniacid ,'uid' =>$v['id'] ,'status' => 1]);
             //获取数据
-
-
             $users[$k]['mark'] =  0;
             if(isset($filter['mark']) && in_array($filter['mark'], [1,2,'1','2'])) $users[$k]['mark'] = $filter['mark'];
             if(isset($filter['deal']) && in_array($filter['deal'] ,[2,'2'])) $users[$k]['mark'] = 2;
             $mark_staff = '';
-
             $mark_model = new MarkModel();
             $list_mark = $mark_model->where(['uniacid' => $uniacid ,'status' => 1 ,'user_id'=>$v['id'],'staff_id'=>$v['last_staff_id']])->value('mark');
-
             $users[$k]['mark'] = !empty($list_mark)?$list_mark:0;
-
             foreach($collections as $collection)
             {
-
                 //获取跟进员工数据
                 $staff = longbingGetUserInfo($collection['to_uid'] ,$uniacid);
-
-
                 //判断是否是员工
                 if(!empty($staff) && isset($staff['is_staff']) && !empty($staff['is_staff']))
                 {
@@ -341,8 +311,6 @@ class LongbingUser extends BaseModel
                     //获取跟进数据
                     $mark_model = new MarkModel();
                     $mark       = $mark_model->getMarkData(['user_id' => $v['id'] ,'staff_id' => $collection['to_uid'] ,'status' => 1] ,['id' ,'mark']);
-
-
                     if(!empty($mark))
                     {
                         if(in_array($mark['mark'], [2,'2']))
@@ -358,11 +326,9 @@ class LongbingUser extends BaseModel
                 }
             }
             $users[$k]['mark_staff'] = $mark_staff;
-
             //  用户成交率
 //          $users[$k]['rate'] = rate($v['id'], $uniacid);
             $users[$k]['rate'] = 0;
-
             if ($v['import'] == 1)
             {
                 // $users[$k]['avatarUrl'] = transImagesOne($v ,['avatarUrl'] ,$uniacid);
@@ -376,7 +342,6 @@ class LongbingUser extends BaseModel
         return $result;
     }
 
-
     /**
      * @param $filter
      * @param $page_config
@@ -386,82 +351,52 @@ class LongbingUser extends BaseModel
      */
     public function listCustomerDataV2($filter)
     {
-
         $mark_model       = new MarkModel();
-
         $client_model     = new ClientModel();
-
         $collection_model = new CollectionModel();
-
         $uniacid = $filter['uniacid'];
         //设置查询条件
         $where = [
-
             ['user.uniacid'  ,'=' , $uniacid],
-
             ['user.is_staff' ,'=' , 0]
         ];
-
         if (!empty($filter['mark']))
         {
-
             $dis = [
-
                 'uniacid' => $uniacid,
-
                 'status'  => 1,
-
             ];
-
             if($filter['mark'] != 3){
-
                 $dis['mark'] = $filter['mark'];
-
             }
             //已经跟进
             $user_ids = $mark_model->where($dis)->column('user_id');
             //未跟进
             if ($filter['mark'] == 3)
             {
-
                 $user_ids = $this->where([['uniacid' , '=' ,$uniacid] , ['id' ,'not in' , $user_ids] , ['is_staff' ,'=' , 0]])->field(['id'])->column('id');
-
             }
-
             $where[] = ['user.id' ,'in' , $user_ids];
-
         }
         //昵称搜索
         if (isset($filter['nickName']))
         {
-
             $where[] = ['user.nickName' ,'like' ,'%'.$filter['nickName'].'%'];
-
         }
         //判断是否查询电话号码授权
         if(!empty($filter['empower'])&&$filter['empower']==1){
-
             $where[] = ['phone.phone' ,'<>' ,'null'];
         }
-
         //判断是否授权头像/登陆信息
         if(!empty($filter['empower'])&&$filter['empower']==2){
-
             $where[] = ['user.avatarUrl' ,'<>' ,''];
-
         }
-
         //判断是否授权头像/登陆信息
         if(!empty($filter['start_time'])&&!empty($filter['end_time'])){
-
             $start_time = $filter['start_time'];
-
             $end_time = $filter['end_time'];
-
             $where[] = ['user.create_time' ,'between' ,"$start_time,$end_time"];
-
         }
-
         $usersdata = $this->alias('user')
                 ->leftJoin('longbing_card_user_phone phone' ,'user.id = phone.user_id')
                 ->where($where)
@@ -469,36 +404,22 @@ class LongbingUser extends BaseModel
                 ->order('user.id desc')
                 ->paginate($filter['limit'])
                 ->toArray();
-
         $users = $usersdata['data'];
-
         if(!empty($users)){
-
             foreach ($users as $k => $v)
             {
-
                 $users[$k]['user_name'] = $client_model->where([['uniacid' ,'=' ,$uniacid] ,['user_id' ,'=' ,$v['id']]] ,['name'])->value('name');
-
                 $users[$k]['mark']      = !empty($filter['mark'])?$filter['mark']:0;
-
                 $users[$k]['deal_time'] =  '';
                 //获取数据
                 $mark_staff = '';
-
                 $list_mark = $mark_model->where(['uniacid' => $uniacid ,'status' => 1 ,'user_id'=>$v['id'],'staff_id'=>$v['last_staff_id']])->value('mark');
-
                 $users[$k]['mark'] = !empty($list_mark)?$list_mark:0;
-
                 $users[$k]['update_time'] = $mark_model->where(['uniacid' => $uniacid ,'status' => 1 ,'user_id'=>$v['id'],'mark'=>2])->value('update_time');
-
                 $users[$k]['update_time'] = !empty($users[$k]['update_time'])?$users[$k]['update_time']:'-';
-
                 $collections = $collection_model->listCollection(['uniacid' => $uniacid ,'uid' =>$v['id'] ,'status' => 1]);
-
                 $rate_text = '';
-
                 $remark_name = '';
-
                 foreach($collections as $collection)
                 {
                     //获取跟进员工数据
@@ -507,16 +428,11 @@ class LongbingUser extends BaseModel
                     if(!empty($staff) && isset($staff['is_staff']) && !empty($staff['is_staff']))
                     {
                         if(!empty($mark_staff)) $mark_staff = $mark_staff . ',' ;
-
                         if(empty($staff['name'])){
-
                             $staff['name'] = $this->where(['id'=>$collection['to_uid']])->value('nickName');
                         }
-
                         $mark_staff = $mark_staff . $staff['name'];
-
                         $mark       = $mark_model->getMarkData(['user_id' => $v['id'] ,'staff_id' => $collection['to_uid'] ,'status' => 1] ,['id' ,'mark']);
-
                         if(!empty($mark))
                         {
                             if(in_array($mark['mark'], [2,'2']))
@@ -527,50 +443,29 @@ class LongbingUser extends BaseModel
                             }
                             if($mark['mark'] > $users[$k]['mark']) $users[$k]['mark'] = $mark['mark'];
                         }else{
-
                             $mark_staff = $mark_staff . '(' . lang('not follow up') . ')';
                         }
-
                         $rate_text .= $staff['name'].'('.$collection['rate'].'%)';
-
                     }
-
                     $dis = [
-
                         'user_id'  =>  $v['id'],
-
                         'staff_id' =>  $collection['to_uid'],
                     ];
-
 //                    dump($dis);exit;
-
                     $staff_name = Db::name('longbing_card_client_info')->where($dis)->value('name');
-
                     if(!empty($staff_name)||!empty($staff['name'])){
-
                         $remark_name .= $staff['name'].'('.$staff_name.')';
                     }
-
                 }
                 $users[$k]['mark_staff']  = $mark_staff;
-
                 $users[$k]['rate']        = 0;
-
                 $users[$k]['rate_text']   = $rate_text;
-
                 $users[$k]['remark_name'] = $remark_name;
-
             }
         }
-
         $usersdata['data'] = $users ;
-
         return $usersdata;
     }
-
-
-
-
 
     //获取客户列表
     public function listCustomer($filter ,$page_config)
@@ -722,9 +617,7 @@ class LongbingUser extends BaseModel
 //          $collection_model = new CollectionModel();
 //          //获取mark信息
 //          $mark_model = new MarkModel();
-            
         }
-        
         return $result;
     }
     //修改客户信息

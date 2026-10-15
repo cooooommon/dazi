@@ -74,7 +74,6 @@ class LocationService
         self::addHost($product, $domain, $regionId);
     }
 
-
     /**
      * @param Request $request
      * @param string  $domain
@@ -88,11 +87,9 @@ class LocationService
         $locationService = new static($request);
         $product         = $locationService->request->product;
         $regionId        = $locationService->request->realRegionId();
-
         if (!isset(self::$hosts[$product][$regionId])) {
             self::$hosts[$product][$regionId] = self::getResult($locationService, $domain);
         }
-
         return self::$hosts[$product][$regionId];
     }
 
@@ -107,16 +104,13 @@ class LocationService
     private static function getResult($locationService, $domain)
     {
         $locationRequest = new LocationServiceRequest($locationService->request, $domain);
-
         $result = $locationRequest->request();
-
         if (!isset($result['Endpoints']['Endpoint'][0]['Endpoint'])) {
             throw new ClientException(
                 'Not found Region ID in ' . $domain,
                 SDK::INVALID_REGION_ID
             );
         }
-
         return $result['Endpoints']['Endpoint'][0]['Endpoint'];
     }
 
@@ -130,11 +124,8 @@ class LocationService
     public static function addHost($product, $host, $regionId = self::GLOBAL_REGION)
     {
         ApiFilter::product($product);
-
         HttpFilter::host($host);
-
         ClientFilter::regionId($regionId);
-
         self::$hosts[$product][$regionId] = $host;
     }
 
@@ -149,7 +140,6 @@ class LocationService
         $ossUrl = 'https://openapi-endpoints.oss-cn-hangzhou.aliyuncs.com/endpoints.json';
         $json   = \file_get_contents($ossUrl);
         $list   = \json_decode($json, true);
-
         foreach ($list['endpoints'] as $endpoint) {
             Config::set(
                 "endpoints.{$endpoint['service']}.{$endpoint['regionid']}",

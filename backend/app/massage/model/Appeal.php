@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\massage\model;
-
 
 use app\BaseModel;
 

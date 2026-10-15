@@ -10,7 +10,6 @@ use app\node\model\RoleNode;
 use app\node\model\RoleAdmin;
 use app\massage\model\ActionLog;
 
-
 class AdminUser extends AdminRest
 {
 
@@ -18,7 +17,6 @@ class AdminUser extends AdminRest
     {
         parent::__construct($app);
     }
-
 
     /**
      * @author chenniang
@@ -37,7 +35,6 @@ class AdminUser extends AdminRest
         $data = $role_model->dataList($dis, $input['limit']);
         return $this->success($data);
     }
-
 
     /**
      * @author chenniang
@@ -70,7 +67,6 @@ class AdminUser extends AdminRest
         $data = $role_model->dataAdd($input);
         return $this->success($data);
     }
-
 
     /**
      * @author chenniang
@@ -125,7 +121,6 @@ class AdminUser extends AdminRest
         return $this->success($data);
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2022-01-04 14:18
@@ -149,7 +144,6 @@ class AdminUser extends AdminRest
         return $this->success(true);
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2022-01-04 14:24
@@ -169,7 +163,6 @@ class AdminUser extends AdminRest
             'b.status' => 1,
             'a.admin_id' => $input['id']
         ];
-
         $data['role'] = $adminRole_model->alias('a')
             ->join('massage_role_list b', 'a.role_id = b.id')
             ->where($dis)
@@ -179,7 +172,6 @@ class AdminUser extends AdminRest
             ->toArray();
         return $this->success($data);
     }
-
 
     /**
      * @author chenniang
@@ -195,7 +187,6 @@ class AdminUser extends AdminRest
             'b.status' => 1,
             'a.admin_id' => $this->_user['id']
         ];
-
         $data['node'] = $adminRole_model->alias('a')
             ->join('massage_role_list b', 'a.role_id = b.id')
             ->join('massage_role_node c', 'c.role_id = b.id')
@@ -204,7 +195,6 @@ class AdminUser extends AdminRest
             ->group('c.id')
             ->select()
             ->toArray();
-
         if (!empty($data['node'])) {
             foreach ($data['node'] as $k => $v) {
                 $data['node'][$k]['auth'] = !empty($v['auth']) ? explode(',', $v['auth']) : [];
@@ -213,7 +203,6 @@ class AdminUser extends AdminRest
         $data['attendant_name'] = getConfigSetting($this->_uniacid, 'attendant_name');
         return $this->success($data);
     }
-
 
     /**
      * @author chenniang
@@ -230,7 +219,6 @@ class AdminUser extends AdminRest
         if (!empty($input['title'])) {
             $dis[] = ['username', 'like', '%'.$input['title'].'%'];
         }
-
         $data = $admin_model->dataList($dis, $input['limit']);
         if (!empty($data['data'])) {
             $adminRole_model = new RoleAdmin();
@@ -252,7 +240,6 @@ class AdminUser extends AdminRest
         return $this->success($data);
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2022-01-04 14:47
@@ -266,7 +253,6 @@ class AdminUser extends AdminRest
             'uniacid' => $this->_uniacid,
             'username' => $input['username'],
         ];
-
         $find = $admin_model->where($dis)->where('status', '>', -1)->find();
         if (!empty($find)) {
             if ($find->is_admin == 2) {
@@ -277,7 +263,6 @@ class AdminUser extends AdminRest
                 $this->errorMsg('该账号名为代理商账号');
             }
         }
-
         $insert = [
             'uniacid' => $this->_uniacid,
             'username' => $input['username'],
@@ -285,7 +270,6 @@ class AdminUser extends AdminRest
             'passwd' => checkPass($input['passwd']),
             'is_admin' => 2,
         ];
-
         $admin_model->dataAdd($insert);
         $admin_id = $admin_model->getLastInsID();
         $adminRole_model = new RoleAdmin();
@@ -302,7 +286,6 @@ class AdminUser extends AdminRest
         }
         return $this->success(true);
     }
-
 
     /**
      * @author chenniang
@@ -329,7 +312,6 @@ class AdminUser extends AdminRest
                 }
             }
         }
-
         if (!empty($input['passwd'])) {
             $input['passwd_text'] = $input['passwd'];
             $input['passwd'] = checkPass($input['passwd']);
@@ -341,7 +323,6 @@ class AdminUser extends AdminRest
                 clearCache(7777, $_SERVER['HTTP_HOST'].$input['id']);
             }
         }
-
         $dis = [
             'id' => $input['id']
         ];
@@ -349,7 +330,6 @@ class AdminUser extends AdminRest
             $role = $input['role'];
             unset($input['role']);
         }
-
         $admin_model->dataUpdate($dis, $input);
         $adminRole_model = new RoleAdmin();
         $adminRole_model->where(['admin_id' => $input['id']])->delete();
@@ -367,7 +347,6 @@ class AdminUser extends AdminRest
         return $this->success(true);
     }
 
-
     /**
      * @author chenniang
      * @DataTime: 2023-03-20 19:05
@@ -380,11 +359,9 @@ class AdminUser extends AdminRest
         if ($this->_user['is_admin'] != 1) {
             $dis[] = ['a.user_id', '=', $this->_user['id']];
         }
-
         if (!empty($input['user_name'])) {
             $dis[] = ['b.username', 'like', "%".$input['user_name'].'%'];
         }
-
         if (!empty($input['start_time']) && !empty($input['end_time'])) {
             $dis[] = ['a.create_time', 'between', "{$input['start_time']},{$input['end_time']}"];
         }
@@ -392,6 +369,5 @@ class AdminUser extends AdminRest
         $data = $log_model->logList($dis, $input['limit']);
         return $this->success($data);
     }
-
 
 }

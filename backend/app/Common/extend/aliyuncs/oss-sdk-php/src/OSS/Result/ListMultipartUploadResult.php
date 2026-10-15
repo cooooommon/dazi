@@ -6,7 +6,6 @@ use OSS\Core\OssUtil;
 use OSS\Model\ListMultipartUploadInfo;
 use OSS\Model\UploadInfo;
 
-
 /**
  * Class ListMultipartUploadResult
  * @package OSS\Result
@@ -22,7 +21,6 @@ class ListMultipartUploadResult extends Result
     {
         $content = $this->rawResponse->body;
         $xml = simplexml_load_string($content);
-
         $encodingType = isset($xml->EncodingType) ? strval($xml->EncodingType) : "";
         $bucket = isset($xml->Bucket) ? strval($xml->Bucket) : "";
         $keyMarker = isset($xml->KeyMarker) ? strval($xml->KeyMarker) : "";
@@ -38,7 +36,6 @@ class ListMultipartUploadResult extends Result
         $maxUploads = isset($xml->MaxUploads) ? intval($xml->MaxUploads) : 0;
         $isTruncated = isset($xml->IsTruncated) ? strval($xml->IsTruncated) : "";
         $listUpload = array();
-
         if (isset($xml->Upload)) {
             foreach ($xml->Upload as $upload) {
                 $key = isset($upload->Key) ? strval($upload->Key) : "";

@@ -40,7 +40,6 @@ class StsCredential implements CredentialsInterface
     public function __construct($accessKeyId, $accessKeySecret, $securityToken = '')
     {
         CredentialFilter::AccessKey($accessKeyId, $accessKeySecret);
-
         $this->accessKeyId     = $accessKeyId;
         $this->accessKeySecret = $accessKeySecret;
         $this->securityToken   = $securityToken;

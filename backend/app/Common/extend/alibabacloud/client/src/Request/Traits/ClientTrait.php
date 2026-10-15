@@ -50,15 +50,12 @@ trait ClientTrait
         if ($this instanceof AssumeRole || $this instanceof GenerateSessionAccessKey) {
             return $this->httpClient()->getCredential();
         }
-
         $timeout = isset($this->options['timeout'])
             ? $this->options['timeout']
             : Request::TIMEOUT;
-
         $connectTimeout = isset($this->options['connect_timeout'])
             ? $this->options['connect_timeout']
             : Request::CONNECT_TIMEOUT;
-
         return $this->httpClient()->getSessionCredential($timeout, $connectTimeout);
     }
 
@@ -77,7 +74,6 @@ trait ClientTrait
                 CredentialsProvider::defaultProvider($this->client);
             }
         }
-
         return AlibabaCloud::get($this->client);
     }
 

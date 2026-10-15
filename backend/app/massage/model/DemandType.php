@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\massage\model;
-
 
 use app\BaseModel;
 use app\member\model\MemberConfig;
@@ -57,24 +55,16 @@ class DemandType extends BaseModel
     public static function getPrice($data, $user_id, $uniacid)
     {
         $id = array_column($data, 'ser_id');
-
         $ser = self::whereIn('id', $id)->select()->toArray();
-
         foreach ($data as &$datum) {
-
             foreach ($ser as $item) {
-
                 if ($datum['ser_id'] == $item['id']) {
-
                     $datum['price'] = $item['price'];
                 }
             }
-
             $datum = self::getSerPrice($user_id, $uniacid, $datum);
-
             $datum['total_price'] = $datum['price'] * $datum['num'];
         }
-
         return $data;
     }
 
@@ -93,26 +83,16 @@ class DemandType extends BaseModel
     public static function getSerPrice($user_id, $uniacid, $data)
     {
         $data['member_discount'] = $data['member_status'] = $data['member_balance'] = 0;
-
         $status = MemberOrder::getStatus($user_id, $uniacid);
-
         if (!$status) {
-
             return $data;
         }
-
         $config = MemberConfig::getInfo(['uniacid' => $uniacid]);
-
         $member_price = round($data['price'] * $config['discount'] / 10, 2);
-
         $data['member_discount'] = $data['price'] - $member_price;
-
         $data['member_balance'] = $config['discount'];
-
         $data['member_status'] = 1;
-
         $data['price'] = $member_price;
-
         return $data;
     }
 }
