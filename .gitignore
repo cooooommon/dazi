@@ -48,3 +48,4 @@ desktop.ini
 /backend/config/backup.php
 /backend/public/MP_verify_*.txt
 /backend/public/logs/
+backend/dazi_*.sql
