@@ -890,24 +890,31 @@ export default {
 	// 获取定位
 	async getUtilLocation(updateLoca = true) {
 		let locaParams = $util.deepCopy($store.state.user.location)
-		// #ifdef H5
-		if ($jweixin.isWechat()) {
-			let wxReady = await $jweixin.wxReady2();
-			let {
-				latitude: lat = 0,
-				longitude: lng = 0
-			} = wxReady ? await $jweixin.getWxLocation() : {
-				latitude: 0,
-				longitude: 0
-			}
-			let location = this.toChangeUpdateUtilLoca(updateLoca, locaParams, {
-				lat,
-				lng,
-				is_util_loca: 1
-			})
-			return location
+	// #ifdef H5
+	if ($jweixin.isWechat()) {
+		let wxReady = await $jweixin.wxReady2();
+		let {
+			latitude: lat = 0,
+			longitude: lng = 0
+		} = wxReady ? await $jweixin.getWxLocation() : {
+			latitude: 0,
+			longitude: 0
 		}
-		// #endif
+		return this.toChangeUpdateUtilLoca(updateLoca, locaParams, {
+			lat,
+			lng,
+			is_util_loca: 1
+		})
+	} else {
+		//非微信浏览器：jweixin.ready 回调不会触发，等待微信定位会导致首页初始化永久挂起，
+		//直接以无定位模式返回（列表按全部服务展示，需要定位的功能由用户手动选择城市/地址）
+		return this.toChangeUpdateUtilLoca(updateLoca, locaParams, {
+			lat: 0,
+			lng: 0,
+			is_util_loca: 1
+		})
+	}
+	// #endif
 		// #ifndef H5
 		let {
 			lat,

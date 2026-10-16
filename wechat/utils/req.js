@@ -383,38 +383,50 @@ fly.interceptors.response.use(
 
 			//token过期验证
 			if (response.data.code != 401) return response;
+			// #ifdef H5
+			//非微信浏览器：没有公众号授权登录环境，走游客模式——确保解锁后原样返回401，
+			//公开接口（首页/服务列表等）以游客身份继续加载，需要登录的操作由页面级登录引导承接
+			if (!/micromessenger/i.test(window.navigator.userAgent.toLowerCase())) {
+				fly.unlock();
+				$util.hideAll();
+				return response;
+			}
+			// #endif
 			fly.lock()
+			try {
+				//#ifdef  MP-WEIXIN
+				await wxLogin()
+				//#endif
 
-			//#ifdef  MP-WEIXIN
-			await wxLogin()
-			//#endif
-
-			//#ifdef H5
-			if ($store.state.user.autograph) {
-				let storeArr = ['userInfo', 'mineInfo', 'coachInfo', 'userPageType']
-				storeArr.map(key => {
-					$store.commit('updateUserItem', {
-						key,
-						val: key == 'coachInfo' ? {
-							id: -1,
-						} : key == 'userPageType' ? 1 : ''
+				//#ifdef H5
+				if ($store.state.user.autograph) {
+					let storeArr = ['userInfo', 'mineInfo', 'coachInfo', 'userPageType']
+					storeArr.map(key => {
+						$store.commit('updateUserItem', {
+							key,
+							val: key === 'coachInfo' ? {
+								id: -1,
+							} : key === 'userPageType' ? 1 : ''
+						})
 					})
-				})
-				H5LoginNum++
-			}
-			await gzhLogin()
-			//#endif
+					H5LoginNum++
+				}
+				await gzhLogin()
+				//#endif
 
-			//#ifdef  APP-PLUS 
-			if (!$store.state.user.autograph) {
-				appLoginNum++
-			}
-			await appLogin()
-			//#endif
+				//#ifdef  APP-PLUS
+				if (!$store.state.user.autograph) {
+					appLoginNum++
+				}
+				await appLogin()
+				//#endif
 
-			response.request.headers["autograph"] = $store.state.user.autograph || ''
-			fly.unlock();
-			return fly.request(response.request);
+				response.request.headers["autograph"] = $store.state.user.autograph || ''
+				return fly.request(response.request);
+			} finally {
+				//任何登录失败路径都必须解锁，否则后续所有请求会被永久挂起
+				fly.unlock();
+			}
 		},
 		async (err) => {
 			let {
