@@ -4,14 +4,16 @@ import $store from "@/store/index.js"
 var jweixin = require('jweixin-module');
 
 export default {
-	//判断是否在微信中    
-	async isWechat() {
+	//判断是否在微信中（同步函数：函数体为纯UA判断无异步操作，
+	//不能声明为async——调用方大量存在"if (isWechat())"不await的写法，
+	//async会让条件恒为真值(Promise对象)，导致非微信浏览器走错分支甚至挂起）
+	isWechat() {
 		var ua = window.navigator.userAgent.toLowerCase();
 		if (ua.match(/micromessenger/i) == 'micromessenger') {
-			//console.log('是微信客户端')  
+			//console.log('是微信客户端')
 			return true;
 		} else {
-			//console.log('不是微信客户端')  
+			//console.log('不是微信客户端')
 			return false;
 		}
 	},

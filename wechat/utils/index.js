@@ -891,7 +891,9 @@ export default {
 	async getUtilLocation(updateLoca = true) {
 		let locaParams = $util.deepCopy($store.state.user.location)
 	// #ifdef H5
-	if ($jweixin.isWechat()) {
+	//注意：isWechat是async函数，调用返回的是Promise（恒为真值），必须await取真实布尔值，
+	//否则非微信浏览器也会进入微信定位分支，await wxReady2永久挂起导致首页卡在加载中
+	if (await $jweixin.isWechat()) {
 		let wxReady = await $jweixin.wxReady2();
 		let {
 			latitude: lat = 0,

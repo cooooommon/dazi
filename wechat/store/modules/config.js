@@ -71,6 +71,8 @@ export default {
 			let {
 				countdown_voice
 			} = val
+			//提示音未配置时直接跳过：空src会让音频组件请求当前页面路径产生404报错
+			if (!countdown_voice) return
 			if (state.isHaveAudio) {
 				state.audioBg.src = countdown_voice
 				return
