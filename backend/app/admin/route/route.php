@@ -66,9 +66,6 @@ Route::group('admin', function () {
         //移动分组(file_id 一维数组可批量传，group_id:分组id)
         Route::post('moveGroup', 'File/moveGroup');
     });
-    Route::get('checkAuthDelFile', 'index/checkAuthDelFile');
-    Route::get('createData', 'index/createData');
-    Route::get('unlinkData', 'index/unlinkData');
     //更新后台模块数据信息
     Route::get('updateModel', 'Update/update');
     Route::get('checkAuth', 'Admin/checkAuth');

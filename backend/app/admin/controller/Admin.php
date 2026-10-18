@@ -230,7 +230,10 @@ class Admin extends AdminRest
      */
     public function checkAuth()
     {
-        return $this->success(1);
+        //如需临时跳过授权检查，请在 .env 显式配置 LICENSE_BYPASS=true
+        if (\think\facade\Env::get('LICENSE_BYPASS', false)) {
+            return $this->success(1);
+        }
         //是否授权
         $saasKey = longbing_get_auth_prefix('AUTH_CARD');
         //是否给过验证码
@@ -238,9 +241,8 @@ class Admin extends AdminRest
         //如果授权过或者给过验证码
         if (defined($saasKey) || (!empty($pass) && $pass == 1)) {
             return $this->success(1);
-        } else {
-            return $this->success(0);
         }
+        return $this->success(0);
     }
 
     /**
@@ -251,17 +253,12 @@ class Admin extends AdminRest
     public function giveAuth()
     {
         $input = $this->_param;
-        $key = 'return_admin'.$this->_uniacid;
-        delCache($key, $this->_uniacid);
-        //远程的key
-        $key = @file_get_contents('https://sq.xiaochengxucms.com/wexinPay.php?ck=7891');
-        //密码
-        $pass = !empty($key) && is_numeric($key) ? $key.'63791' : '263791';
-        if ($pass == $input['pass']) {
-            setCache('AUTH_CARD', 1, 99999999999999, '99999');
-        } else {
+        //解锁码只从 .env 读取，禁止硬编码；未配置时该接口不可用
+        $pass = (string) \think\facade\Env::get('AUTH_UNLOCK_PASS', '');
+        if ($pass === '' || !isset($input['pass']) || !hash_equals($pass, (string) $input['pass'])) {
             $this->errorMsg('验证码错误,请联系服务人员');
         }
+        setCache('AUTH_CARD', 1, 99999999999999, '99999');
         return $this->success(1);
     }
 

@@ -47,7 +47,6 @@ abstract class Rest extends BaseController
 
     public function __construct ( App $app )
     {
-        dump(1);exit;
         parent::__construct( $app );
         if ( defined( 'IS_WEIQIN' ) ) {
             global $_GPC, $_W;
@@ -75,7 +74,7 @@ abstract class Rest extends BaseController
         //获取token
         if ( isset( $this->_header[ 'token' ] ) ) $this->_token = $this->_header[ 'token' ];
         //语言
-        if ( isset( $this->_header[ 'lang' ] ) ) $this->_token = $this->_header[ 'lang' ];
+        if ( isset( $this->_header[ 'lang' ] ) ) $this->_lang = $this->_header[ 'lang' ];
         //获取请求host
         $this->_host = $this->_header[ 'host' ];
         //获取访问ip
@@ -84,6 +83,12 @@ abstract class Rest extends BaseController
         $this->initialize();
         //获取用户信息
         if ( !empty( $this->_token ) ) $this->_user = getUserForToken( $this->_token );
+        //统一鉴权：Rest 子类均为后台接口，必须携带有效 token
+        if ( empty( $this->_user ) ) {
+            http_response_code( 401 );
+            echo json_encode( [ 'code' => 401, 'error' => '请重新登录!' ] );
+            exit;
+        }
         //获取角色名称
         if ( !empty( $this->_user ) && isset( $this->_user[ 'role_name' ] ) ) $this->_role = $this->_user[ 'role_name' ];
         //数据检查

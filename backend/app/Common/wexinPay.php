@@ -11,8 +11,9 @@ $data = simplexml_load_string($xml);
 $uniacid = (string)$data->uniacid;
 unset($data->uniacid);
 $xml = $data->asXML();*/
-if(!empty($_GET['ck'])&&$_GET['ck']==789){
-    echo 1;exit;
+if(isset($_GET['health'])&&$_GET['health']==='1'){
+    header('Content-Type: text/plain; charset=utf-8');
+    echo 'ok';exit;
 }
 
 function lb_api_notice_increment22($url, $data){
@@ -42,7 +43,8 @@ function lb_logOutput22($data,$flag=0) {
     if (is_array($data)) {
         $data = json_encode($data);
     }
-    $filename = "./".date("Y-m-d").".log";
+    $dir = function_exists('runtime_path') ? runtime_path() : sys_get_temp_dir() . DIRECTORY_SEPARATOR;
+    $filename = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR . 'weixin_pay_' . date("Y-m-d") . '.log';
     $str = date("Y-m-d H:i:s")."   $data"."\r\n";
     file_put_contents($filename, $str, FILE_APPEND|LOCK_EX);
     return null;

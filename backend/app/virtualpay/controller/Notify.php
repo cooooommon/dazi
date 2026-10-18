@@ -35,19 +35,28 @@ class Notify extends BaseController
         if (empty($outTradeNo)) {
             return $this->xmlReply(-1, 'empty OutTradeNo');
         }
-        if ($event == 'xpay_goods_deliver_notify') {
-            //道具发货推送：以平台单号幂等，失败返回非 0 让平台重试
-            $res = VirtualPayService::deliver($outTradeNo, $wxOrderId, $quantity, 'notify');
-            return $this->xmlReply($res ? 0 : -1, $res ? 'success' : 'deliver failed');
-        }
-        if ($event == 'xpay_coin_pay_notify') {
-            //代币充值到账推送：代币由平台自动入账，这里同步给用户账户余额入账
-            $res = VirtualPayService::deliver($outTradeNo, $wxOrderId, $quantity, 'coin_notify');
-            return $this->xmlReply($res ? 0 : -1, $res ? 'success' : 'deliver failed');
+        if ($event == 'xpay_goods_deliver_notify' || $event == 'xpay_coin_pay_notify') {
+            $order = Db::name('virtualpay_order')->where(['out_trade_no' => $outTradeNo])->find();
+            if (empty($order)) {
+                return $this->xmlReply(-1, 'order not found');
+            }
+            //不信任推送内容：主动调用微信 query_order 核实已支付后再发货
+            $res = VirtualPayService::queryAndDeliver($order['uniacid'], $order);
+            return $this->xmlReply($res ? 0 : -1, $res ? 'success' : 'verify failed');
         }
         if ($event == 'xpay_refund_notify') {
+            $order = Db::name('virtualpay_order')->where(['out_trade_no' => $outTradeNo])->find();
+            if (empty($order) || intval($order['status']) !== 1) {
+                return $this->xmlReply(0, 'ignore');
+            }
+            //已记录平台单号时必须与推送一致，避免伪造退款
+            if (!empty($order['wx_order_id'])) {
+                if (empty($wxOrderId) || !hash_equals((string)$order['wx_order_id'], (string)$wxOrderId)) {
+                    return $this->xmlReply(-1, 'order mismatch');
+                }
+            }
             //退款推送：仅标记虚拟支付单状态，业务侧权益回退需人工处理
-            Db::name('virtualpay_order')->where(['out_trade_no' => $outTradeNo])
+            Db::name('virtualpay_order')->where(['out_trade_no' => $outTradeNo, 'status' => 1])
                 ->update(['status' => 2, 'update_time' => time()]);
             VirtualPayService::log(0, 'refund_notify', $outTradeNo, (string)$wxOrderId);
             return $this->xmlReply(0, 'success');

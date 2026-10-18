@@ -15,8 +15,20 @@ class HttpAsyn extends BaseController
 
     public function message()
     {
-        $param = Request::param();
-        $data = json_decode($param['message'], true);
+        //异步消息入口必须携带 .env 中配置的 ASYNC_MESSAGE_KEY，未配置时默认关闭
+        $secret = (string) \think\facade\Env::get('ASYNC_MESSAGE_KEY', '');
+        $key = (string) ($this->request->header('x-async-key') ?: Request::param('async_key', ''));
+        if ($secret === '' || !hash_equals($secret, $key)) {
+            http_response_code(401);
+            echo 'no auth';
+            return;
+        }
+        $message = Request::param('message', '');
+        $data = json_decode((string) $message, true);
+        if (!is_array($data) || empty($data['action'])) {
+            echo 'invalid message';
+            return;
+        }
         //try{
         switch ($action = $data['action']) {
             //老代码  作注释处理

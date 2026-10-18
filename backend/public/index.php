@@ -19,14 +19,9 @@ header( 'Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS,PATCH' );
 // 执行HTTP应用并响应
 
 
-//require_once("keygen.php");
-
 $http = ( new App() )->http;
 
 $response = $http->run();
-
-
-//require_once("keys_from_generators.php");
 
 $response->send();
 

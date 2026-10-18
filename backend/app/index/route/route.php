@@ -14,9 +14,6 @@ Route::post('appLogin', 'login/appLogin');
 
 Route::post('iosLogin', 'login/iosLogin');
 Route::any('getCode', 'login/getCode');
-Route::any('test', 'login/test');
-Route::any('test1', 'login/test1');
-Route::any('test2', 'login/test2');
 
 Route::any('checkToken', 'login/checkToken');
 
@@ -27,5 +24,3 @@ Route::post('getLoginProtocol', 'login/getLoginProtocol');
 Route::get('getWebConfig', 'login/getWebConfig');
 
 Route::get('getConfig', 'login/getConfig');
-
-Route::get('incCoachOrderNum', 'login/incCoachOrderNum');

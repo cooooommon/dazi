@@ -272,21 +272,6 @@ class Login
         exit;
     }
 
-    public function test()
-    {
-    }
-
-    public function test1()
-    {
-        $data = [
-            'from' => '预约订单消费',
-            'change' => -100,
-            'time' => date('Y年m月d日 H:i', time())
-        ];
-        $a = UserIntegral::integralSendMsgWeb(666, 'oYk3q6TtYnYYEBS5BvxvAlrjsEjI', $data);
-        dd($a);
-    }
-
     /**
      * @author chenniang
      * @DataTime: 2022-02-24 10:28
@@ -506,28 +491,6 @@ class Login
      * @DataTime: 2022-11-24 18:19
      * @功能说明:
      */
-    public function incCoachOrderNum()
-    {
-        $time = rand(1, 3);
-        \think\facade\Db::name('massage_service_coach_list')->where(['uniacid' => 666])->update(['order_num' => Db::raw("order_num+$time")]);
-        $arr = [
-            1 => rand(5, 10),
-            2 => rand(10, 20),
-            3 => rand(20, 30),
-            4 => rand(20, 30),
-            5 => rand(10, 20),
-            6 => rand(1, 5),
-            7 => rand(1, 3),
-            8 => rand(1, 3),
-        ];
-        foreach ($arr as $key => $value) {
-            Db::name('massage_service_service_list')->where(['id' => $key])->update([
-                'sale' => Db::raw("sale+$value"), 'total_sale' => Db::raw("total_sale+$value")
-            ]);
-        }
-        return $this->success(true);
-    }
-
     /**
      * @author chenniang
      * @DataTime: 2021-03-17 10:06

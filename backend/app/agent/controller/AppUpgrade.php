@@ -39,23 +39,7 @@ class AppUpgrade extends \app\AdminRest
 
     public function upgrade()
     {
-        if ($this->getIsUpgrade()) {
-            $goods_name = config("app.AdminModelList")["app_model_name"];
-            $auth_uniacid = config("app.AdminModelList")["auth_uniacid"];
-            $version_no = config("app.AdminModelList")["version_no"];
-            $upgrade = new \LongbingUpgrade($auth_uniacid, $goods_name,
-                \think\facade\Env::get("j2hACuPrlohF9BvFsgatvaNFQxCBCc", false));
-            $file_temp_path = ROOT_PATH."runtime/";
-            $toFilePath = ROOT_PATH;
-            $data = $upgrade->update($toFilePath, $file_temp_path);
-            $uniacid = $this->_uniacid;
-            clearCache($uniacid);
-            \app\admin\service\UpdateService::installSql($uniacid, 0);
-            $a = new \longbingcore\wxcore\WxSetting($this->_uniacid);
-            $a->setH5Info();
-            return $this->success(true);
-        } else {
-            return $this->success([]);
-        }
+        //远程升级包没有可靠的签名校验，且会解压覆盖站点代码，禁止在线升级
+        $this->errorMsg('出于安全考虑，已禁用在线升级，请手动部署更新包');
     }
 }

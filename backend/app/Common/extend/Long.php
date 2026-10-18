@@ -6,7 +6,6 @@ class Long{
     }
     //@ioncube.dk mygen("sha256","ripemd128","3","1") -> "8549e8f5a" BASIC
     public function isAuthPa(){
-        dump(1);exit;
         return 1;
     }
     /**

@@ -22,6 +22,10 @@ class PublicsService
 {
 
     public static function getTmplByModelName($uniacid,$model_name){
+        //只允许合法模块名，防止路径穿越
+        if (!preg_match('/^[a-z0-9_]+$/i', (string) $model_name)) {
+            return [];
+        }
         //获取每个模块下面的配置参数
         $dataPath = APP_PATH . $model_name.'/info/Info.php';
         //实列化模版订阅通知库类；

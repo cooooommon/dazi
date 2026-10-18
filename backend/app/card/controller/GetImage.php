@@ -13,29 +13,45 @@ class GetImage extends BaseController
     public function getImage ()
     {
         $param = $this->request->param();
-        $path = $param['path'] ?? null ;
-        if (!$path ) {
+        $path = isset($param['path']) ? trim((string) $param['path']) : '';
+        if ($path === '') {
             return $this->error('请传入参数');
         }
-//
-//        $path     = $_SERVER[ 'QUERY_STRING' ];
-//        $position = strpos($path, 'getImage&path=');
-//        $sub_str  = substr($path, $position + 14);
-//        $path     = urldecode($sub_str);
+        //只允许 http/https，禁止内网/保留地址，避免 SSRF
+        $parts = parse_url($path);
+        if (empty($parts['scheme']) || empty($parts['host']) ||
+            !in_array(strtolower($parts['scheme']), ['http', 'https'], true)) {
+            return $this->error('非法图片地址');
+        }
+        $ip = gethostbyname($parts['host']);
+        if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            return $this->error('非法图片地址');
+        }
         //把https 替换为  http
-        $path = str_replace("https://"  , "http://" , $path) ;
+        $path = str_replace("https://", "http://", $path);
         //判断类型
-        $type_img = getimagesize($path);
+        $type_img = @getimagesize($path);
+        if (empty($type_img['mime'])) {
+            return $this->error('图片不存在');
+        }
         ob_start();
-        if ( strpos($type_img[ 'mime' ], 'jpeg') ) {
+        $resourch = null;
+        if (strpos($type_img['mime'], 'jpeg') !== false) {
             $resourch = imagecreatefromjpeg($path);
-            imagejpeg($resourch);
-        } elseif ( strpos($type_img[ 'mime' ], 'png') ) {
+        } elseif (strpos($type_img['mime'], 'png') !== false) {
             $resourch = imagecreatefrompng($path);
+        }
+        if (empty($resourch)) {
+            ob_end_clean();
+            return $this->error('不支持的图片格式');
+        }
+        if (strpos($type_img['mime'], 'jpeg') !== false) {
+            imagejpeg($resourch);
+        } else {
             imagepng($resourch);
         }
         $content = ob_get_clean();
         imagedestroy($resourch);
-        return response($content, 200, [ 'Content-Length' => strlen($content) ])->contentType('image/png');
+        return response($content, 200, ['Content-Length' => strlen($content)])->contentType('image/png');
     }
 }

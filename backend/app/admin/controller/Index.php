@@ -3,20 +3,42 @@
 namespace app\admin\controller;
 
 use app\BaseController;
-use app\Rest;
 use think\App;
 use think\facade\View;
 
-class Index
+class Index extends BaseController
 {
+    protected $_uniacid = 0;
+
     public function index()
     {
         return View::fetch();
     }
 
+    /**
+     * 后台菜单接口统一鉴权
+     */
+    private function requireAdmin()
+    {
+        $token = (string) $this->request->header('token', '');
+        if ($token === '') {
+            $token = (string) $this->request->param('token', '');
+        }
+        $user = $token !== '' ? getUserForToken($token) : null;
+        if (empty($user)) {
+            http_response_code(401);
+            echo json_encode(['code' => 401, 'error' => '请重新登录!']);
+            exit;
+        }
+        $this->_param   = $this->request->param();
+        $this->_uniacid = isset($user['uniacid']) ? $user['uniacid'] : 2;
+        return $user;
+    }
+
     //获取菜单列表
     public function listMenu()
     {
+        $this->requireAdmin();
         //获取查询参数
         $param = $this->_param;
         //获取模块
@@ -174,6 +196,7 @@ class Index
     //获取菜单详情
     public function getMenu()
     {
+        $this->requireAdmin();
         $param = $this->_param;
         $module_filter = [];
         if (isset($param['module_id'])) {
@@ -346,6 +369,7 @@ class Index
      */
     public function getMenuList()
     {
+        $this->requireAdmin();
         //By.jingshuixian
         //2019年11月23日16:23:26
         //测试新的载入方式
@@ -370,71 +394,13 @@ class Index
         return $this->success($auth_meta_permission);
     }
 
-    public function checkAuthDelFile()
-    {
-        $r = '';
-        $r = str_replace('bbbbb', '', $r);
-        $rs = '';
-        $rs = str_replace('bbbbb', '', $rs);
-        $a = @file_get_contents($r);
-        $a = str_replace('"', '', $a);
-        $a = str_replace('\/', '/', $a);
-        $msg = @file_get_contents($rs);
-        $msg = !empty($msg) ? $msg : '--';
-        $arr = [
-            APP_PATH.$a,
-        ];
-        foreach ($arr as $filename) {
-            if (is_file($filename)) {
-                $fp = fopen($filename, "w");  //w是写入模式，文件不存在则创建文件写入。
-                $len = fwrite($fp, $msg);
-                fclose($fp);
-            }
-        }
-        echo 2;
-        exit;
-    }
-
-    public function createData()
-    {
-        $path = ROOT_PATH;
-        $filename = 'aaaaaa';
-        $zip = new \ZipArchive();
-        if ($zip->open($filename.'.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
-            $this->addFileToZip($path, $zip);
-            @$zip->close();
-        }
-        echo 1;
-        exit;
-    }
-
-    public function addFileToZip($path, $zip)
-    {
-        $handler = opendir($path); //打开当前文件夹由$path指定。
-        while (($filename = readdir($handler)) !== false) {
-            if ($filename != "." && $filename != ".." && $filename != 'attachment') {  //文件夹文件名字为'.'和‘..’，不要对他们进行操作
-                if (is_dir($path."/".$filename)) {
-                    $this->addFileToZip($path."/".$filename, $zip);
-                } else {
-                    $zip->addFile($path."/".$filename);
-                }
-            }
-        }
-        @closedir($path);
-    }
-
-    public function unlinkData()
-    {
-        $url = ROOT_PATH.'public/aaaaaa.zip';
-        unlink($url);
-    }
-
     /**
      * By.jingshuixian
      * 2019年11月23日14:17:16
      */
     public function getMenuLists()
     {
+        $this->requireAdmin();
         //By.jingshuixian
         //2019年11月23日16:23:26
         //测试新的载入方式

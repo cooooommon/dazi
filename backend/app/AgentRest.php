@@ -79,8 +79,6 @@ abstract class AgentRest extends BaseController
 
     public $_is_weiqin = false;
 
-    protected $check_url = "https://longyiyi.migugu.com/wexinPay.php?ck=7899";
-
     /**
      * 无需登录的方法,同时也就不需要鉴权了
      * @var array

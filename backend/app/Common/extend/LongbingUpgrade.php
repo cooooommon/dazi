@@ -99,13 +99,12 @@ class LongbingUpgrade
      */
     public function lbData($function, $token, $develop = 2, $data = [])
     {
-        if (@file_get_contents('http://114.66.2.232:83/a.php') == 1) {
-            $url = 'http://114.66.2.232:83/';
-        } else {
-            $url = 'http://114.66.2.232:83/';
+        //只允许通过 .env 显式配置的 HTTPS 地址，移除硬编码外网 IP
+        $baseUrl = (string) \think\facade\Env::get('LONGBING_RPC_URL', '');
+        if ($baseUrl === '' || stripos($baseUrl, 'https://') !== 0) {
+            return [];
         }
-        //  $url = 'http://114.66.2.232:83/';
-        $url .= $function;
+        $url = rtrim($baseUrl, '/') . '/' . ltrim((string) $function, '/');
         $this->public_key = $this->getPublicKey();
         $siginStr = $this->getSignData([]);
         $post_data = $this->getPostData($siginStr);
@@ -521,8 +520,8 @@ class LongbingUpgrade
             CURLOPT_CONNECTTIMEOUT => 5,
             CURLOPT_TIMEOUT        => 15,
             CURLOPT_PROXY          => '',
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_HEADER => false,
         ]);
         $output = curl_exec($ch);

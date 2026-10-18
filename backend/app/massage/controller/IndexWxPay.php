@@ -65,16 +65,16 @@ class IndexWxPay extends ApiRest
         //需要判断 是否是微擎的版本
         if(defined('IS_WEIQIN')){
             $path  = "https://" . $_SERVER['HTTP_HOST'] ."/addons/".APP_MODEL_NAME."/core2/app/Common/wexinPay.php?params=".$reply_path;
-            $paths = "https://" . $_SERVER['HTTP_HOST'] ."/addons/".APP_MODEL_NAME."/core2/app/Common/wexinPay.php?ck=789";
+            $paths = "https://" . $_SERVER['HTTP_HOST'] ."/addons/".APP_MODEL_NAME."/core2/app/Common/wexinPay.php?health=1";
             $a     = file_get_contents($paths);
-            if($a != 1){
+            if(trim((string)$a) !== 'ok'){
                 $this->errorMsg('发起支付失败');
             }
         }else{
             $path  = "https://" . $_SERVER['HTTP_HOST'] ."/wexinPay.php?params=".$reply_path;
-            $paths = "https://" . $_SERVER['HTTP_HOST'] ."/wexinPay.php?ck=789";
+            $paths = "https://" . $_SERVER['HTTP_HOST'] ."/wexinPay.php?health=1";
             $a     = file_get_contents($paths);
-            if($a != 1){
+            if(trim((string)$a) !== 'ok'){
                 $this->errorMsg('发起支付失败');
             }
         }
@@ -151,7 +151,8 @@ class IndexWxPay extends ApiRest
         if (is_array($data)) {
             $data = json_encode($data);
         }
-        $filename = "./".date("Y-m-d").".log";
+        $dir = function_exists('runtime_path') ? runtime_path() : sys_get_temp_dir() . DIRECTORY_SEPARATOR;
+        $filename = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR . 'weixin_pay_' . date("Y-m-d") . '.log';
         $str = date("Y-m-d H:i:s")."   $data"."\r\n";
         file_put_contents($filename, $str, FILE_APPEND|LOCK_EX);
         return null;
