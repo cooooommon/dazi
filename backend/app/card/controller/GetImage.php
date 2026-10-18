@@ -29,6 +29,8 @@ class GetImage extends BaseController
         }
         //把https 替换为  http
         $path = str_replace("https://", "http://", $path);
+        //禁止远程重定向，避免通过 302 绕过内网地址校验
+        stream_context_set_default(['http' => ['follow_location' => 0, 'max_redirects' => 0]]);
         //判断类型
         $type_img = @getimagesize($path);
         if (empty($type_img['mime'])) {

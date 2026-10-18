@@ -13,7 +13,7 @@
 </template>
 
 <script>
-	import assetUrl from '@/utils/assets.js'
+import assetUrl from '@/utils/assets.js'
 import LoadEvent from '@/utils/Event.js'
 import Debounce from '@/utils/Debounce.js'
 import Bus from '@/Bus'
@@ -21,6 +21,10 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'VueUeditorWrap',
   data () {
+    // UEditor 资源根路径：生产环境由后端模板注入，开发环境使用本地静态目录
+    const ueditorHome = process.env.NODE_ENV === 'production'
+      ? window.lbConfig.jsPath + 'static/Ueditor/'
+      : '/static/Ueditor/'
     return {
       showDialog: false,
       fileType: 'image',
@@ -29,7 +33,7 @@ export default {
       initValue: '',
       defaultConfig: {
         // VUE CLI 3 会添加 process.env.BASE_URL 的环境变量，而 VUE CLI 2 没有，所以借此设置 UEDITOR_HOME_URL，能涵盖大部分 Vue 开发者的使用场景
-        UEDITOR_HOME_URL: process.env.NODE_ENV === 'production' ? window.lbConfig.jsPath + 'static/Ueditor/' : '/static/Ueditor/',
+        UEDITOR_HOME_URL: ueditorHome,
         enableAutoSave: false,
         // 编辑器不自动被内容撑高
         autoHeightEnabled: false,
@@ -39,8 +43,8 @@ export default {
         initialFrameWidth: 'auto',
         // 最大字数
         maximumWords: 20000,
-        // 上传文件接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
-        serverUrl: 'http://35.201.165.105:8000/controller.php',
+        // 服务器统一请求接口：使用本地后端 UEditor（仅用于拉取 config，上传走 lb-upload）
+        serverUrl: ueditorHome + 'php/controller.php',
         // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况，如果需要特殊配置，参考下方的常见问题2
         // UEDITOR_HOME_URL: '/static/Ueditor/',
         zIndex: 5,

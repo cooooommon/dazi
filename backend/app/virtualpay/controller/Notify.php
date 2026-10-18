@@ -45,6 +45,9 @@ class Notify extends BaseController
             return $this->xmlReply($res ? 0 : -1, $res ? 'success' : 'verify failed');
         }
         if ($event == 'xpay_refund_notify') {
+            if (empty($wxOrderId)) {
+                return $this->xmlReply(-1, 'empty order id');
+            }
             $order = Db::name('virtualpay_order')->where(['out_trade_no' => $outTradeNo])->find();
             if (empty($order) || intval($order['status']) !== 1) {
                 return $this->xmlReply(0, 'ignore');

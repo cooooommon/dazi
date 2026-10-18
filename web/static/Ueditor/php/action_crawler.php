@@ -1,4 +1,8 @@
 <?php
+if (!defined('UEDITOR_CONTROLLER')) {
+    http_response_code(403);
+    exit;
+}
 /**
  * 抓取远程图片
  * User: Jinqn

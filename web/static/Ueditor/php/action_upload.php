@@ -1,4 +1,8 @@
 <?php
+if (!defined('UEDITOR_CONTROLLER')) {
+    http_response_code(403);
+    exit;
+}
 /**
  * 上传附件和上传视频
  * User: Jinqn

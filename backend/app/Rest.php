@@ -42,8 +42,8 @@ abstract class Rest extends BaseController
     public $_user = null;
     //唯一app标示
     public $_uniacid = '7777';
-    //定义检查中间件
-    protected $middleware = [ 'app\middleware\CheckInput' ];
+    //定义检查中间件（app\middleware\CheckInput 已不存在，移除避免启动 500）
+    protected $middleware = [];
 
     public function __construct ( App $app )
     {
@@ -73,6 +73,7 @@ abstract class Rest extends BaseController
         //		}
         //获取token
         if ( isset( $this->_header[ 'token' ] ) ) $this->_token = $this->_header[ 'token' ];
+        if ( empty( $this->_token ) && !empty( $this->_param[ 'token' ] ) ) $this->_token = $this->_param[ 'token' ];
         //语言
         if ( isset( $this->_header[ 'lang' ] ) ) $this->_lang = $this->_header[ 'lang' ];
         //获取请求host

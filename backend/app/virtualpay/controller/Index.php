@@ -1,5 +1,5 @@
 <?php
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\virtualpay\controller;
 
@@ -16,16 +16,16 @@ class Index extends ApiRest
     /**
      * 前端支付后轮询订单状态；未支付时顺带做一次查单兜底
      */
-    public function orderStatus ()
+    public function orderStatus()
     {
-        //必须登录，且只能查询自己的订单
-        $user_id = $this->getUserId();
+        //必须登录，且只能查询自己的订单（历史订单 user_id 可能为 0，用 openid 校验归属）
+        $user = $this->getUserInfo();
         $out_trade_no = $this->request->param('out_trade_no', '');
         if (empty($out_trade_no)) {
             $this->errorMsg('缺少订单号');
         }
-        $order = Db::name('virtualpay_order')->where(['out_trade_no' => $out_trade_no, 'user_id' => $user_id])->find();
-        if (empty($order)) {
+        $order = Db::name('virtualpay_order')->where(['out_trade_no' => $out_trade_no])->find();
+        if (empty($order) || empty($order['openid']) || !hash_equals((string) $order['openid'], (string) $user['openid'])) {
             $this->errorMsg('订单不存在');
         }
         if ($order['status'] == 0 && $order['create_time'] > time() - 86400) {
@@ -33,17 +33,17 @@ class Index extends ApiRest
             $order = Db::name('virtualpay_order')->where(['out_trade_no' => $out_trade_no])->find();
         }
         return $this->success([
-            'status'     => intval($order['status']),
+            'status' => intval($order['status']),
             'order_code' => $order['order_code'],
-            'type'       => $order['type'],
-            'pay_time'   => $order['pay_time'],
+            'type' => $order['type'],
+            'pay_time' => $order['pay_time'],
         ]);
     }
 
     /**
      * 批量兜底查单：补发推送丢失的订单（可挂定时任务调用）
      */
-    public function checkPending ()
+    public function checkPending()
     {
         //定时任务接口：只允许携带 .env 中配置的 VIRTUALPAY_CRON_KEY
         $secret = (string) \think\facade\Env::get('VIRTUALPAY_CRON_KEY', '');

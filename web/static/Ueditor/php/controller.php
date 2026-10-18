@@ -5,8 +5,17 @@ date_default_timezone_set("Asia/chongqing");
 error_reporting(E_ERROR);
 header("Content-Type: text/html; charset=utf-8");
 
+define('UEDITOR_CONTROLLER', true);
+
 $CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents("config.json")), true);
-$action = $_GET['action'];
+$action = isset($_GET['action']) && is_string($_GET['action']) ? $_GET['action'] : '';
+
+//上传/列文件/抓取入口未接入后台鉴权，默认只开放前端初始化所需的 config
+if ($action !== 'config') {
+    http_response_code(403);
+    echo json_encode(array('state' => 'upload disabled'));
+    exit;
+}
 
 switch ($action) {
     case 'config':

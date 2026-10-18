@@ -2,11 +2,14 @@
 
 use think\facade\Route;
 
-Route::group('HttpAsyn', function () {
+Route::group('HttpAsync', function () {
     //发送异步消息
-    Route::post('sendMessage', 'HttpAsyn/message');
-    Route::post('message', 'HttpAsyn/message');
+    Route::post('sendMessage', 'HttpAsync/message');
+    Route::post('message', 'HttpAsync/message');
 });
+//兼容旧路径
+Route::post('HttpAsyn/sendMessage', 'HttpAsync/message');
+Route::post('HttpAsyn/message', 'HttpAsync/message');
 
 Route::group('tmpl', function () {
     //前端获取模版消息

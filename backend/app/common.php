@@ -375,7 +375,7 @@ function consumer()
 function publisher($messages, $delayTime = null)
 {
     $param = Request::param();
-    $param['s'] = "publics/HttpAsyn/message";
+    $param['s'] = "publics/HttpAsync/message";
     $url = Request::baseFile(true);
     $url = $url.'?'.http_build_query($param);
 //    return longbing_do_request($url, ['message' => $messages]);

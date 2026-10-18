@@ -10,7 +10,7 @@ use think\facade\Db;
 use think\facade\Log;
 use think\facade\Request;
 
-class HttpAsyn extends BaseController
+class HttpAsync extends BaseController
 {
 
     public function message()

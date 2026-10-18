@@ -26,6 +26,8 @@ const proxyTable = {}
 API_APPS.forEach(app => {
   proxyTable['/' + app] = { target: API_TARGET, changeOrigin: true, secure: false }
 })
+// 开发环境让 UEditor 的 config 请求走后端 PHP（本地静态目录不会被 dev server 执行）
+proxyTable['/static/Ueditor/php'] = { target: API_TARGET, changeOrigin: true, secure: false }
 
 module.exports = {
   dev: {

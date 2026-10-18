@@ -1,4 +1,8 @@
 <?php
+if (!defined('UEDITOR_CONTROLLER')) {
+    http_response_code(403);
+    exit;
+}
 /**
  * 获取已上传的文件列表
  * User: Jinqn
