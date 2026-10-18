@@ -273,8 +273,8 @@ class AdminSetting extends AdminRest
         $input = $this->_param;
         $dis[] = ['uniacid', '=', $this->_uniacid];
         $dis[] = ['status', '>', -1];
-        $lable_model = new Label();
-        $data = $lable_model->dataList($dis, $input['limit']);
+        $label_model = new Label();
+        $data = $label_model->dataList($dis, $input['limit']);
         return $this->success($data);
     }
 
@@ -289,8 +289,8 @@ class AdminSetting extends AdminRest
         $dis = [
             'id' => $input['id']
         ];
-        $lable_model = new Label();
-        $data = $lable_model->dataInfo($dis);
+        $label_model = new Label();
+        $data = $label_model->dataInfo($dis);
         return $this->success($data);
     }
 
@@ -303,8 +303,8 @@ class AdminSetting extends AdminRest
     {
         $input = $this->_input;
         $input['uniacid'] = $this->_uniacid;
-        $lable_model = new Label();
-        $data = $lable_model->dataAdd($input);
+        $label_model = new Label();
+        $data = $label_model->dataAdd($input);
         return $this->success($data);
     }
 
@@ -319,8 +319,8 @@ class AdminSetting extends AdminRest
         $dis = [
             'id' => $input['id']
         ];
-        $lable_model = new Label();
-        $data = $lable_model->dataUpdate($dis, $input);
+        $label_model = new Label();
+        $data = $label_model->dataUpdate($dis, $input);
         return $this->success($data);
     }
 

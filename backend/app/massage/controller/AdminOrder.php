@@ -380,8 +380,8 @@ class AdminOrder extends AdminRest
     {
         $input = $this->_input;
         $input['uniacid'] = $this->_uniacid;
-        $lable_model = new Label();
-        $res = $lable_model->dataAdd($input);
+        $label_model = new Label();
+        $res = $label_model->dataAdd($input);
         return $this->success($res);
     }
 
@@ -396,8 +396,8 @@ class AdminOrder extends AdminRest
         $dis = [
             'id' => $input['id']
         ];
-        $lable_model = new Label();
-        $res = $lable_model->dataUpdate($dis, $input);
+        $label_model = new Label();
+        $res = $label_model->dataUpdate($dis, $input);
         return $this->success($res);
     }
 
@@ -412,8 +412,8 @@ class AdminOrder extends AdminRest
         $dis = [
             'id' => $input['id']
         ];
-        $lable_model = new Label();
-        $res = $lable_model->dataInfo($dis);
+        $label_model = new Label();
+        $res = $label_model->dataInfo($dis);
         return $this->success($res);
     }
 
@@ -723,7 +723,7 @@ class AdminOrder extends AdminRest
         Db::startTrans();
         $comment_model = new Comment();
         $comment_lable_model = new CommentLable();
-        $lable_model = new Label();
+        $label_model = new Label();
         $res = $comment_model->dataAdd($insert);
         if ($res == 0) {
             Db::rollback();
@@ -732,7 +732,7 @@ class AdminOrder extends AdminRest
         $comment_id = $comment_model->getLastInsID();
         if (!empty($input['lable'])) {
             foreach ($input['lable'] as $value) {
-                $title = $lable_model->where(['id' => $value])->value('title');
+                $title = $label_model->where(['id' => $value])->value('title');
                 $insert = [
                     'uniacid' => $this->_uniacid,
                     'comment_id' => $comment_id,
@@ -758,8 +758,8 @@ class AdminOrder extends AdminRest
             'uniacid' => $this->_uniacid,
             'status' => 1
         ];
-        $lable_model = new Label();
-        $res = $lable_model->where($dis)->order('top desc,id desc')->select()->toArray();
+        $label_model = new Label();
+        $res = $label_model->where($dis)->order('top desc,id desc')->select()->toArray();
         return $this->success($res);
     }
 

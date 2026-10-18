@@ -51,12 +51,12 @@ class Comment extends BaseModel
      */
     public function getLableTextAttr($vaule,$data){
         if(!empty($data['id'])){
-            $lable_model = new Label();
+            $label_model = new Label();
             $dis = [
                 'b.comment_id' => $data['id'],
                 'a.status'     => 1
             ];
-            $list = $lable_model->alias('a')
+            $list = $label_model->alias('a')
                     ->join('massage_service_comment_lable b','a.id = b.lable_id')
                     ->where($dis)
                     ->column('a.title');
