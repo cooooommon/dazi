@@ -47,11 +47,11 @@ class Admin extends BaseController
         initLogin();
         $input = json_decode($this->request->getInput(), true);
         $codeText = cookie('codeText');
-        if ($codeText != $input['codeText']) {
-//            return $this->error('验证码错误');
+        if (empty($codeText) || empty($input['codeText']) || (string) $codeText !== (string) $input['codeText']) {
+            return $this->error('验证码错误');
         }
         $ip = getIP();
-        $key = $ip.'errss_nums';
+        $key = $ip.'error_nums';
         $err_num = getCache($key, 66661);
         $err_num = !empty($err_num) ? $err_num : 0;
         if ($err_num >= 5) {
