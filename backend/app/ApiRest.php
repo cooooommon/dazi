@@ -66,9 +66,9 @@ abstract class ApiRest extends BaseController
 
     protected $defaultImage = array(
         //  默认用户头像
-        'avatar' => 'https://lbqnyv2.migugu.com/defaultAvatar.png',
+        'avatar' => '/assets/defaultAvatar.png',
         //  默认内容图片
-        'image' => 'https://lbqnyv2.migugu.com/lbCardDefaultImage.png',
+        'image' => '/assets/lbCardDefaultImage.png',
     );
 
     protected $check_url = "";
@@ -79,10 +79,15 @@ abstract class ApiRest extends BaseController
      */
     protected $noNeedLogin = [];
 
-    //@ioncube.dk myk("sha256", "cnjdbvjdnjd") -> "cff6bcac6bd92467e0cee72e5c879cdbf7044386eda8f464c817bd5c5c963d6f" RANDOM
     public function __construct(App $app)
     {
         parent::__construct($app);
+        //默认图使用本地 assets，避免依赖外部域名
+        $assetDomain = $this->request->domain();
+        $this->defaultImage = [
+            'avatar' => $assetDomain . '/assets/defaultAvatar.png',
+            'image' => $assetDomain . '/assets/lbCardDefaultImage.png',
+        ];
         if (in_array($this->_method, ['options', 'Options', 'OPTIONS'])) {
             echo true;
             exit;
@@ -111,7 +116,7 @@ abstract class ApiRest extends BaseController
         if (isset($this->_header['lang'])) {
             $this->_token = $this->_header['lang'];
         }
-        if (isset($this->autograph) && !empty($this->autograph)) {
+        if (!empty($this->autograph)) {
             $this->_user_id = $this->getUserId();
             $this->_user = $this->getUserInfo();
             setCache($this->autograph, $this->_user, 86400 * 3, 999999999999);

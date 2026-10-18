@@ -898,7 +898,7 @@ class Admin extends AdminRest
         foreach($data[ 'data' ] as $key => $val)
         {
             if(!empty($val['avatar'])&&$val['avatar']) $data[ 'data' ][$key]['avatarUrl'] = $val['avatar'];
-            if(empty($data[ 'data' ][$key]['avatarUrl'])) $data[ 'data' ][$key]['avatarUrl'] = "https://retail.xiaochengxucms.com/defaultAvatar.png";
+            if(empty($data[ 'data' ][$key]['avatarUrl'])) $data[ 'data' ][$key]['avatarUrl'] = $this->request->domain() . '/assets/defaultAvatar.png';
         }
         $data[ 'data' ] = transImagesOne( $data[ 'data' ], [ 'avatar', 'avatarUrl', 'qr_path' ] );
         $data[ 'data' ] = handleImagesWe7Local( $data[ 'data' ], [ 'avatar' ] );

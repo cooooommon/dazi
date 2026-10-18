@@ -72,9 +72,9 @@ abstract class AgentRest extends BaseController
 
     protected $defaultImage = array(
         //  默认用户头像
-        'avatar' => 'https://lbqnyv2.migugu.com/defaultAvatar.png',
+        'avatar' => '/assets/defaultAvatar.png',
         //  默认内容图片
-        'image' => 'https://lbqnyv2.migugu.com/lbCardDefaultImage.png',
+        'image' => '/assets/lbCardDefaultImage.png',
     );
 
     public $_is_weiqin = false;
@@ -88,6 +88,12 @@ abstract class AgentRest extends BaseController
     public function __construct(App $app)
     {
         parent::__construct($app);
+        //默认图使用本地 assets，避免依赖外部域名
+        $assetDomain = $this->request->domain();
+        $this->defaultImage = [
+            'avatar' => $assetDomain . '/assets/defaultAvatar.png',
+            'image' => $assetDomain . '/assets/lbCardDefaultImage.png',
+        ];
         if (in_array($this->_method, ['options', 'Options', 'OPTIONS'])) {
             echo true;
             exit;

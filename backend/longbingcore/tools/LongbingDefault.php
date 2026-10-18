@@ -18,8 +18,8 @@ namespace longbingcore\tools;
 
 class LongbingDefault
 {
-    public static $avatarImgUrl = 'https://retail.xiaochengxucms.com/defaultAvatar.png' ;
-    public static $notImgUrl = 'https://retail.xiaochengxucms.com/lbCardDefaultImage.png' ;
+    public static $avatarImgUrl = '/assets/defaultAvatar.png' ;
+    public static $notImgUrl = '/assets/lbCardDefaultImage.png' ;
 
 
     /**

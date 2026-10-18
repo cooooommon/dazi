@@ -130,7 +130,8 @@ class Index extends ApiRest
                 if (isset($params['province']) && !empty($params['avataprovincerUrl'])) {
                     $user['province'] = $params['province'];
                 }
-                if (!in_array($user['avatarUrl'], [$this->defaultImage['avatar']]) && !empty($user['avatarUrl'])) {
+                //只要头像地址不是默认头像（兼容新旧域名/路径），就认为用户已上传头像
+                if (!empty($user['avatarUrl']) && stripos($user['avatarUrl'], 'defaultAvatar') === false) {
                     $user['need_auth'] = 0;
                 }
                 longbingSetUser($userId, $this->_uniacid, $user);
