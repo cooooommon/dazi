@@ -24,7 +24,10 @@ class IndexStore extends ApiRest
      */
     public function apply()
     {
-        $data = $this->request->only(['name', 'cover', 'banner', 'mobile', 'license', 'lng', 'lat', 'address', 'info', 'tag', 'status', 'intro', 'type_id', 'trade_week', 'start_time', 'end_time', 'contact_type', 'qywx_kid']);
+        $data = $this->request->only([
+            'name', 'cover', 'banner', 'mobile', 'license', 'lng', 'lat', 'address', 'info', 'tag', 'status', 'intro',
+            'type_id', 'trade_week', 'start_time', 'end_time', 'contact_type', 'qywx_kid'
+        ]);
         $uid = $this->getUserId();
         $info = StoreApply::getInfo([['user_id', '=', $uid], ['status', '>', -1]]);
         if (!empty($info) && in_array($info['status'], [1, 2, 3])) {
@@ -57,12 +60,14 @@ class IndexStore extends ApiRest
             $timestamp = time();
             $start = strtotime(date('Y-m-d', strtotime("this week Monday", $timestamp)));
             $end = strtotime(date('Y-m-d', strtotime("this week Sunday", $timestamp))) + 24 * 3600 - 1;
-        } else if ($type == 2) {
-            $start = mktime(0, 0, 0, date('m'), 1, date('Y'));
-            $end = mktime(23, 59, 59, date('m'), date('t'), date('Y'));
+        } else {
+            if ($type == 2) {
+                $start = mktime(0, 0, 0, date('m'), 1, date('Y'));
+                $end = mktime(23, 59, 59, date('m'), date('t'), date('Y'));
+            }
         }
         $data = PackageOrder::getShopData($data, $start, $end);
-        if (!empty($data)){
+        if (!empty($data)) {
             $data['qywx_company_id'] = getConfigSetting($this->_uniacid, 'qywx_company_id');
         }
         return $this->success($data);
@@ -74,7 +79,10 @@ class IndexStore extends ApiRest
      */
     public function edit()
     {
-        $data = $this->request->only(['store_id', 'name', 'cover', 'banner', 'mobile', 'license', 'lng', 'lat', 'address', 'info', 'tag', 'status', 'intro', 'type_id', 'trade_week', 'start_time', 'end_time', 'contact_type', 'qywx_kid']);
+        $data = $this->request->only([
+            'store_id', 'name', 'cover', 'banner', 'mobile', 'license', 'lng', 'lat', 'address', 'info', 'tag',
+            'status', 'intro', 'type_id', 'trade_week', 'start_time', 'end_time', 'contact_type', 'qywx_kid'
+        ]);
         $store = StoreApply::getInfo([['user_id', '=', $this->getUserId()], ['status', '>', -1]]);
         if (empty($store) || $store['status'] == -1) {
             return $this->error('门店不存在或已删除');
@@ -101,12 +109,12 @@ class IndexStore extends ApiRest
             ['status', '=', 2]
         ];
         if (!empty($input['name'])) {
-            $where[] = ['name', 'like', '%' . $input['name'] . '%'];
+            $where[] = ['name', 'like', '%'.$input['name'].'%'];
         }
         if (!empty($input['type_id'])) {
             $where[] = ['', 'exp', Db::raw("find_in_set({$input['type_id']},type_id)")];
         }
-        $alh = 'ACOS(SIN((' . $input['lat'] . ' * 3.1415) / 180 ) *SIN((lat * 3.1415) / 180 ) +COS((' . $input['lat'] . ' * 3.1415) / 180 ) * COS((lat * 3.1415) / 180 ) *COS((' . $input['lng'] . ' * 3.1415) / 180 - (lng * 3.1415) / 180 ) ) * 6378.137*1000 as distance';
+        $alh = 'ACOS(SIN(('.$input['lat'].' * 3.1415) / 180 ) *SIN((lat * 3.1415) / 180 ) +COS(('.$input['lat'].' * 3.1415) / 180 ) * COS((lat * 3.1415) / 180 ) *COS(('.$input['lng'].' * 3.1415) / 180 - (lng * 3.1415) / 180 ) ) * 6378.137*1000 as distance';
         $data = StoreApply::getIndexList($where, $alh, $input['limit']);
         return $this->success($data);
     }

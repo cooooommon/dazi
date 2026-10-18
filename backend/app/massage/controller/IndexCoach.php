@@ -176,8 +176,8 @@ class IndexCoach extends ApiRest
         $dis[] = ['a.coach_id', '=', $this->cap_info['id']];
         $where = [];
         if (!empty($input['name'])) {
-            $where[] = ['b.goods_name', 'like', '%' . $input['name'] . '%'];
-            $where[] = ['a.order_code', 'like', '%' . $input['name'] . '%'];
+            $where[] = ['b.goods_name', 'like', '%'.$input['name'].'%'];
+            $where[] = ['a.order_code', 'like', '%'.$input['name'].'%'];
         }
         if ($input['pay_type'] == 5) {
             $dis[] = ['a.pay_type', 'in', [3, 4, 5]];
@@ -190,15 +190,23 @@ class IndexCoach extends ApiRest
             $shield_model = new ShieldList();
             foreach ($data['data'] as &$v) {
                 //是否还能屏蔽用户
-                $can_shield = $shield_model->dataInfo(['user_id' => $v['user_id'], 'coach_id' => $v['coach_id'], 'type' => 3]);
+                $can_shield = $shield_model->dataInfo([
+                    'user_id' => $v['user_id'], 'coach_id' => $v['coach_id'], 'type' => 3
+                ]);
                 $v['can_shield'] = empty($can_shield) ? 1 : 0;
                 $v['end_service_time'] = !empty($v['start_service_time']) && $v['pay_type'] == 6 ? $v['start_service_time'] + $v['time_long'] * 60 : 0;
             }
         }
         //待接单数量
-        $data['agent_order_count'] = $order_model->where(['coach_id' => $this->cap_info['id'], 'pay_type' => 2])->count();
-        $data['wait_order_count'] = $order_model->where([['coach_id', '=', $this->cap_info['id']], ['pay_type', 'in', [3, 4, 5]]])->count();
-        $data['service_order_count'] = $order_model->where(['coach_id' => $this->cap_info['id'], 'pay_type' => 6])->count();
+        $data['agent_order_count'] = $order_model->where([
+            'coach_id' => $this->cap_info['id'], 'pay_type' => 2
+        ])->count();
+        $data['wait_order_count'] = $order_model->where([
+            ['coach_id', '=', $this->cap_info['id']], ['pay_type', 'in', [3, 4, 5]]
+        ])->count();
+        $data['service_order_count'] = $order_model->where([
+            'coach_id' => $this->cap_info['id'], 'pay_type' => 6
+        ])->count();
         return $this->success($data);
     }
 
@@ -224,7 +232,7 @@ class IndexCoach extends ApiRest
         //获取税点
         $tax_point = getConfigSetting($this->_uniacid, 'tax_point');
         $balance = 100 - $tax_point;
-        $key = 'cap_wallet' . $this->getUserId();
+        $key = 'cap_wallet'.$this->getUserId();
         $value = getCache($key, $this->_uniacid);
         if (!empty($value)) {
             $this->errorMsg('网络错误，请刷新重试');
@@ -234,9 +242,11 @@ class IndexCoach extends ApiRest
         Db::startTrans();
         if ($input['type'] == 1) {
             //减佣金
-            $res = $this->model->dataUpdate(['id' => $this->cap_info['id']], ['service_price' => $this->cap_info['service_price'] - $input['apply_price']]);
+            $res = $this->model->dataUpdate(['id' => $this->cap_info['id']],
+                ['service_price' => $this->cap_info['service_price'] - $input['apply_price']]);
         } else {
-            $res = $this->model->dataUpdate(['id' => $this->cap_info['id']], ['car_price' => $this->cap_info['car_price'] - $input['apply_price']]);
+            $res = $this->model->dataUpdate(['id' => $this->cap_info['id']],
+                ['car_price' => $this->cap_info['car_price'] - $input['apply_price']]);
         }
         if ($res != 1) {
             Db::rollback();
@@ -311,7 +321,7 @@ class IndexCoach extends ApiRest
     public function capCashInfo()
     {
         $this->order_model->coachBalanceArr($this->_uniacid);
-        $key = 'cap_wallet' . $this->getUserId();
+        $key = 'cap_wallet'.$this->getUserId();
         //减掉
         delCache($key, $this->_uniacid);
         $wallet_model = new Wallet();
@@ -341,7 +351,7 @@ class IndexCoach extends ApiRest
      */
     public function capCashInfoCar()
     {
-        $key = 'cap_wallet' . $this->getUserId();
+        $key = 'cap_wallet'.$this->getUserId();
         //减掉
         delCache($key, $this->_uniacid);
         $wallet_model = new Wallet();
@@ -409,7 +419,10 @@ class IndexCoach extends ApiRest
         ];
         $police_model = new Police();
         $res = $police_model->dataAdd($insert);
-        publisher(json_encode(['coach_id' => $insert['coach_id'], 'uniacid' => $this->_uniacid, 'address' => $insert['address'], 'action' => 'police_notice'], true));
+        publisher(json_encode([
+            'coach_id' => $insert['coach_id'], 'uniacid' => $this->_uniacid, 'address' => $insert['address'],
+            'action' => 'police_notice'
+        ], true));
 //        $config_model = new ShortCodeConfig();
         //发送短信通知
 //        $config_model->sendHelpCode($insert['uniacid'], $insert['coach_id'], $insert['address']);
@@ -503,7 +516,8 @@ class IndexCoach extends ApiRest
             'uniacid' => $this->_uniacid,
         ], $update);
         $log_model = new OrderLog();
-        $log_model->addLog($input['order_id'], $this->_uniacid, $input['type'], $order['pay_type'], 2, $this->_user['id']);
+        $log_model->addLog($input['order_id'], $this->_uniacid, $input['type'], $order['pay_type'], 2,
+            $this->_user['id']);
         Db::commit();
         return $this->success(true);
     }
@@ -610,7 +624,7 @@ class IndexCoach extends ApiRest
         $dis[] = ['uniacid', '=', $this->_uniacid];
         $dis[] = ['coach_id', '=', $this->cap_info['id']];
         if (!empty($input['name'])) {
-            $dis[] = ['order_code', 'like', '%' . $input['name'] . '%'];
+            $dis[] = ['order_code', 'like', '%'.$input['name'].'%'];
         }
         if (!empty($input['start_time'])) {
             $dis[] = ['serout_time', '>=', $input['start_time']];;
@@ -631,9 +645,16 @@ class IndexCoach extends ApiRest
     public function getOrderNum()
     {
         $data = [
-            'wait' => $this->order_model->getOrderNum([['uniacid', '=', $this->_uniacid], ['coach_id', '=', $this->cap_info['id']], ['pay_type', '=', 2]]),
-            'start' => $this->order_model->getOrderNum([['uniacid', '=', $this->_uniacid], ['coach_id', '=', $this->cap_info['id']], ['pay_type', 'in', [3, 4, 5]]]),
-            'progress' => $this->order_model->getOrderNum([['uniacid', '=', $this->_uniacid], ['coach_id', '=', $this->cap_info['id']], ['pay_type', '=', 6]]),
+            'wait' => $this->order_model->getOrderNum([
+                ['uniacid', '=', $this->_uniacid], ['coach_id', '=', $this->cap_info['id']], ['pay_type', '=', 2]
+            ]),
+            'start' => $this->order_model->getOrderNum([
+                ['uniacid', '=', $this->_uniacid], ['coach_id', '=', $this->cap_info['id']],
+                ['pay_type', 'in', [3, 4, 5]]
+            ]),
+            'progress' => $this->order_model->getOrderNum([
+                ['uniacid', '=', $this->_uniacid], ['coach_id', '=', $this->cap_info['id']], ['pay_type', '=', 6]
+            ]),
         ];
         return $this->success($data);
     }
@@ -661,7 +682,7 @@ class IndexCoach extends ApiRest
         $input = $this->request->param();
         $where = [];
         if (!empty($input['name'])) {
-            $where[] = ['name', 'like', '%' . $input['name'] . '%'];
+            $where[] = ['name', 'like', '%'.$input['name'].'%'];
         }
         if (!empty($input['carte'])) {
             $where[] = ['', 'exp', Db::raw("find_in_set({$input['carte']},carte)")];
@@ -731,7 +752,9 @@ class IndexCoach extends ApiRest
         $where[] = ['a.coach_id', '=', $this->cap_info['id']];
         $where[] = ['a.uniacid', '=', $this->_uniacid];
         $data = Feedback::getList($where);
-        $data['wait'] = Feedback::where(['coach_id' => $this->cap_info['id'], 'uniacid' => $this->_uniacid, 'status' => 1])->count();
+        $data['wait'] = Feedback::where([
+            'coach_id' => $this->cap_info['id'], 'uniacid' => $this->_uniacid, 'status' => 1
+        ])->count();
         return $this->success($data);
     }
 
@@ -758,8 +781,8 @@ class IndexCoach extends ApiRest
         $name = $this->request->param('name', '');
         $dis = [];
         if (!empty($name)) {
-            $dis[] = ['b.goods_name', 'like', '%' . $name . '%'];
-            $dis[] = ['a.order_code', 'like', '%' . $name . '%'];
+            $dis[] = ['b.goods_name', 'like', '%'.$name.'%'];
+            $dis[] = ['a.order_code', 'like', '%'.$name.'%'];
         }
         $where = [
             'a.coach_id' => $this->cap_info['id'],
@@ -784,7 +807,10 @@ class IndexCoach extends ApiRest
         if (empty($input['order_code']) || empty($input['content'])) {
             return $this->error('请检查参数');
         }
-        $order = Order::where(['order_code' => $input['order_code'], 'coach_id' => $this->cap_info['id'], 'pay_type' => 7, 'is_comment' => 1])->find();
+        $order = Order::where([
+            'order_code' => $input['order_code'], 'coach_id' => $this->cap_info['id'], 'pay_type' => 7,
+            'is_comment' => 1
+        ])->find();
         if (empty($order)) {
             return $this->error('订单不存在');
         }
@@ -814,7 +840,9 @@ class IndexCoach extends ApiRest
         $where[] = ['a.coach_id', '=', $this->cap_info['id']];
         $where[] = ['a.uniacid', '=', $this->_uniacid];
         $data = Appeal::getList($where, $limit);
-        $data['wait'] = Appeal::where(['coach_id' => $this->cap_info['id'], 'uniacid' => $this->_uniacid, 'status' => 1])->count();
+        $data['wait'] = Appeal::where([
+            'coach_id' => $this->cap_info['id'], 'uniacid' => $this->_uniacid, 'status' => 1
+        ])->count();
         return $this->success($data);
     }
 
@@ -897,7 +925,7 @@ class IndexCoach extends ApiRest
     public function coachBalanceQr()
     {
         $input = $this->_param;
-        $key = 'balance_coach' . $this->cap_info['id'] . '-' . $this->is_app;
+        $key = 'balance_coach'.$this->cap_info['id'].'-'.$this->is_app;
         $qr = getCache($key, $this->_uniacid);
         if (empty($qr)) {
             //小程序
@@ -908,12 +936,12 @@ class IndexCoach extends ApiRest
                 //获取二维码
                 $qr = $user_model->orderQr($input, $this->_uniacid);
             } else {
-                $page = 'https://' . $_SERVER['HTTP_HOST'] . '/h5/#/user/pages/stored/list?coach_id=' . $this->cap_info['id'];
+                $page = 'https://'.$_SERVER['HTTP_HOST'].'/h5/#/user/pages/stored/list?coach_id='.$this->cap_info['id'];
                 $qr = base64ToPng(getCode($this->_uniacid, $page));
             }
             setCache($key, $qr, 86400, $this->_uniacid);
         }
-        $qr = !empty($qr) ? $qr : 'https://' . $_SERVER['HTTP_HOST'] . '/favicon.ico';
+        $qr = !empty($qr) ? $qr : 'https://'.$_SERVER['HTTP_HOST'].'/favicon.ico';
         return $this->success($qr);
     }
 
@@ -936,7 +964,8 @@ class IndexCoach extends ApiRest
         $cap_info['level_list'] = $level_model->where($dis)->order('top,id desc')->select()->toArray();
         if (!empty($cap_info['level_list'])) {
             foreach ($cap_info['level_list'] as $key => &$value) {
-                $value['lower'] = $level_model->where($dis)->where('time_long', '<', $value['time_long'])->max('time_long');
+                $value['lower'] = $level_model->where($dis)->where('time_long', '<',
+                    $value['time_long'])->max('time_long');
                 $level = $this->model->coachLevelInfo($value);
                 $value['data'] = $level;
             }
@@ -1042,11 +1071,13 @@ class IndexCoach extends ApiRest
                 $v['user_cash'] = $order['pay_price'];
                 $year = date('Y', $v['create_time']);
                 $month = date('m', $v['create_time']);
-                $v['month_text'] = $year . '年' . $month . '月';
+                $v['month_text'] = $year.'年'.$month.'月';
                 $v['month'] = date('Y-m', $v['create_time']);
                 $v['create_time'] = date('Y.m.d H:i:s', $v['create_time']);
-                $v['total_cash'] = $integral_model->where($dis)->where('type', '=', 1)->whereMonth('create_time', $v['month'])->sum('integral');
-                $v['total_integral'] = $integral_model->where($dis)->where('type', '=', 0)->whereMonth('create_time', $v['month'])->sum('integral');
+                $v['total_cash'] = $integral_model->where($dis)->where('type', '=', 1)->whereMonth('create_time',
+                    $v['month'])->sum('integral');
+                $v['total_integral'] = $integral_model->where($dis)->where('type', '=', 0)->whereMonth('create_time',
+                    $v['month'])->sum('integral');
                 $v['total_cash'] = round($v['total_cash'], 2);
                 $v['total_integral'] = round($v['total_integral'], 2);
             }
@@ -1077,13 +1108,14 @@ class IndexCoach extends ApiRest
                 $v['coach_cash'] = round($son_cash + $v['coach_cash'] + $v['true_car_price'], 2);
                 $year = date('Y', $v['create_time']);
                 $month = date('m', $v['create_time']);
-                $v['month_text'] = $year . '年' . $month . '月';
+                $v['month_text'] = $year.'年'.$month.'月';
                 $v['month'] = date('Y-m', $v['create_time']);
                 $v['create_time'] = date('Y.m.d H:i:s', $v['create_time']);
                 $v['total_cash'] = $order_model->where($dis)->whereMonth('create_time', $v['month'])->sum('coach_cash');
                 $v['total_count'] = $order_model->where($dis)->whereMonth('create_time', $v['month'])->count();
                 $order_id = $order_model->where($dis)->whereMonth('create_time', $v['month'])->column('id');
-                $add_order_cash = $order_model->where(['pay_type' => 7])->where('add_pid', 'in', $order_id)->sum('coach_cash');
+                $add_order_cash = $order_model->where(['pay_type' => 7])->where('add_pid', 'in',
+                    $order_id)->sum('coach_cash');
                 $car_price = $order_model->where($dis)->whereMonth('create_time', $v['month'])->sum('true_car_price');
                 $v['total_cash'] = round($v['total_cash'] + $add_order_cash + $car_price, 2);
             }
@@ -1115,7 +1147,8 @@ class IndexCoach extends ApiRest
             $car_price = $order_model->where($dis)->sum('true_car_price');
             $data['count'] = $order_model->where($dis)->count();
             $order_id = $order_model->where($dis)->column('id');
-            $add_coach_price = $order_model->where(['pay_type' => 7])->where('add_pid', 'in', $order_id)->sum('coach_cash');
+            $add_coach_price = $order_model->where(['pay_type' => 7])->where('add_pid', 'in',
+                $order_id)->sum('coach_cash');
             $data['service_cash'] = round($coach_cash + $car_price + $add_coach_price, 2);
         }
         return $this->success($data);
@@ -1139,7 +1172,7 @@ class IndexCoach extends ApiRest
             $this->errorMsg('订单不存在');
         }
         $order = $order->toArray();
-        $order['time_text'] = date('Y-m-d H:i', $order['start_time']) . '~' . date('H:i', $order['end_time']);
+        $order['time_text'] = date('Y-m-d H:i', $order['start_time']).'~'.date('H:i', $order['end_time']);
         //加钟订单
         $order['add_order'] = $order_model->where([
             'pay_type' => 7,
@@ -1149,7 +1182,7 @@ class IndexCoach extends ApiRest
         ])->field('id,order_code,true_service_price,true_car_price,coach_cash,coach_balance,service_price,discount,start_time,end_time,broker_coach_cash,broker_id')->select()->toArray();
         if (!empty($order['add_order'])) {
             foreach ($order['add_order'] as &$value) {
-                $value['time_text'] = date('Y-m-d H:i', $value['start_time']) . '~' . date('H:i', $value['end_time']);
+                $value['time_text'] = date('Y-m-d H:i', $value['start_time']).'~'.date('H:i', $value['end_time']);
             }
         }
         //退款金额
@@ -1176,11 +1209,14 @@ class IndexCoach extends ApiRest
         }
         //是否能加钟
         $data['can_add_order'] = $this->order_model->orderCanAdd($data);
-        $arr = ['create_time', 'pay_time', 'serout_time', 'arrive_time', 'receiving_time', 'start_service_time', 'order_end_time'];
+        $arr = [
+            'create_time', 'pay_time', 'serout_time', 'arrive_time', 'receiving_time', 'start_service_time',
+            'order_end_time'
+        ];
         foreach ($arr as $value) {
             $data[$value] = !empty($data[$value]) ? date('Y-m-d H:i:s', $data[$value]) : 0;
         }
-        $data['start_time'] = date('Y-m-d H:i', $data['start_time']) . '-' . date('H:i', $data['end_time']);
+        $data['start_time'] = date('Y-m-d H:i', $data['start_time']).'-'.date('H:i', $data['end_time']);
         //剩余可申请退款数量
         $can_refund_num = array_sum(array_column($data['order_goods'], 'can_refund_num'));
         //是否可以申请退款
@@ -1194,7 +1230,8 @@ class IndexCoach extends ApiRest
         $data['over_time'] = $data['over_time'] > 0 ? $data['over_time'] : 0;
         //加钟订单
         if ($data['is_add'] == 0) {
-            $data['add_order_id'] = $this->order_model->where(['add_pid' => $data['id']])->where('pay_type', '>', 1)->field('id,order_code')->select()->toArray();
+            $data['add_order_id'] = $this->order_model->where(['add_pid' => $data['id']])->where('pay_type', '>',
+                1)->field('id,order_code')->select()->toArray();
         } else {
             $data['add_pid'] = $this->order_model->where(['id' => $data['add_pid']])->field('id,order_code')->find();
         }
@@ -1204,7 +1241,9 @@ class IndexCoach extends ApiRest
         $data = array_merge($order_data, $data);
         $data['sign_time'] = !empty($data['sign_time']) ? date('Y-m-d H:i:s', $data['sign_time']) : '';
         $shield_model = new ShieldList();
-        $shield = $shield_model->dataInfo(['user_id' => $data['user_id'], 'type' => 2, 'coach_id' => $data['coach_id']]);
+        $shield = $shield_model->dataInfo([
+            'user_id' => $data['user_id'], 'type' => 2, 'coach_id' => $data['coach_id']
+        ]);
         $data['can_again'] = !empty($shield) ? 0 : 1;
         //查询是否有转派记录
         $change_log_model = new CoachChangeLog();
@@ -1413,7 +1452,8 @@ class IndexCoach extends ApiRest
         $data = DemandOrder::getList($where, $page);
         if ($data['data']) {
             $order_id = array_column($data['data'], 'id');
-            $order = DemandOrderApply::whereIn('order_id', $order_id)->where('coach_id', $this->cap_info['id'])->select()->toArray();
+            $order = DemandOrderApply::whereIn('order_id', $order_id)->where('coach_id',
+                $this->cap_info['id'])->select()->toArray();
             foreach ($data['data'] as &$datum) {
                 $datum['apply_status'] = 0;
                 if ($datum['status'] == 2) {
@@ -1453,7 +1493,9 @@ class IndexCoach extends ApiRest
         if (empty($id)) {
             return $this->error('订单不存在');
         }
-        $order = DemandOrder::getInfo(['id' => $id, 'coach_id' => $this->cap_info['id'], 'uniacid' => $this->_uniacid, 'is_pay' => 1]);
+        $order = DemandOrder::getInfo([
+            'id' => $id, 'coach_id' => $this->cap_info['id'], 'uniacid' => $this->_uniacid, 'is_pay' => 1
+        ]);
         if (empty($order)) {
             return $this->error('订单不存在');
         }
@@ -1592,8 +1634,8 @@ class IndexCoach extends ApiRest
         $dis[] = ['a.coach_id', '=', $this->cap_info['id']];
         $where = [];
         if (!empty($input['name'])) {
-            $where[] = ['b.goods_name', 'like', '%' . $input['name'] . '%'];
-            $where[] = ['a.order_code', 'like', '%' . $input['name'] . '%'];
+            $where[] = ['b.goods_name', 'like', '%'.$input['name'].'%'];
+            $where[] = ['a.order_code', 'like', '%'.$input['name'].'%'];
         }
         if (!empty($input['status'])) {
             $dis[] = ['a.status', '=', $input['status']];

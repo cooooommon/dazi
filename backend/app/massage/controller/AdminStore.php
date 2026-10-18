@@ -40,7 +40,7 @@ class AdminStore extends AdminRest
             ['status', '>', -1],
         ];
         if (!empty($name)) {
-            $where[] = ['name', 'like', '%' . $name . '%'];
+            $where[] = ['name', 'like', '%'.$name.'%'];
         }
         if (!empty($start_time) && !empty($end_time)) {
             $where[] = ['create_time', '>=', $start_time];
@@ -93,7 +93,7 @@ class AdminStore extends AdminRest
             ['status', '=', 2],
         ];
         if (!empty($name)) {
-            $where[] = ['name', 'like', '%' . $name . '%'];
+            $where[] = ['name', 'like', '%'.$name.'%'];
         }
         $data = StoreApply::getList($where, $limit);
         if (!empty($data['data'])) {
@@ -190,7 +190,9 @@ class AdminStore extends AdminRest
         $id = $info['store_id'];
         if ($data['status'] == 2) {
             $arr = [
-                'name', 'cover', 'banner', 'mobile', 'license', 'lng', 'lat', 'address', 'info', 'tag', 'intro', 'check_time', 'check_time', 'type_id', 'trade_week', 'start_time', 'end_time', 'contact_type', 'qywx_kid'
+                'name', 'cover', 'banner', 'mobile', 'license', 'lng', 'lat', 'address', 'info', 'tag', 'intro',
+                'check_time', 'check_time', 'type_id', 'trade_week', 'start_time', 'end_time', 'contact_type',
+                'qywx_kid'
             ];
             foreach ($info as $key => $item) {
                 if (!in_array($key, $arr)) {
@@ -199,7 +201,12 @@ class AdminStore extends AdminRest
             }
             $update = array_merge($update, $info);
             if (isset($update['trade_week'])) {
-                StorePackage::where([['store_id', '=', $id], ['status', '>', -1]])->update(['use_trade_week' => $update['trade_week'], 'use_start_time' => $update['start_time'], 'use_end_time' => $update['end_time']]);
+                StorePackage::where([
+                    ['store_id', '=', $id], ['status', '>', -1]
+                ])->update([
+                    'use_trade_week' => $update['trade_week'], 'use_start_time' => $update['start_time'],
+                    'use_end_time' => $update['end_time']
+                ]);
             }
         }
         StoreApply::update($update, ['id' => $id]);
@@ -227,7 +234,7 @@ class AdminStore extends AdminRest
             ];
             $order = PackageOrder::getFirst($where);
             if (!empty($order)) {
-                return $this->error('此门店还有未完成的订单，不可删除。订单id：' . $order['id']);
+                return $this->error('此门店还有未完成的订单，不可删除。订单id：'.$order['id']);
             }
             $wallet_dis = [
                 ['coach_id', '=', $data['id']],
@@ -236,7 +243,7 @@ class AdminStore extends AdminRest
             ];
             $wallet = (new Wallet())->dataInfo($wallet_dis);
             if (!empty($wallet)) {
-                $this->errorMsg('此门店还有提现申请中，无法删除。提现id：' . $wallet['id']);
+                $this->errorMsg('此门店还有提现申请中，无法删除。提现id：'.$wallet['id']);
             }
         }
         $res = StoreApply::update($data, ['id' => $data['id']]);
@@ -279,7 +286,9 @@ class AdminStore extends AdminRest
         if (isset($data['status']) && $data['status'] == -1) {
             StoreApply::cancel($data['id']);
         }
-        if (isset($data['name']) && StoreType::where([['status', '=', 1], ['name', '=', $data['name']], ['id', '<>', $data['id']]])->count() > 0) {
+        if (isset($data['name']) && StoreType::where([
+                ['status', '=', 1], ['name', '=', $data['name']], ['id', '<>', $data['id']]
+            ])->count() > 0) {
             return $this->error('此分类已存在');
         }
         $res = StoreType::update($data, ['id' => $data['id']]);
@@ -303,10 +312,10 @@ class AdminStore extends AdminRest
             ['status', '=', 1]
         ];
         if (!empty($name)) {
-            $where[] = ['name', 'like', '%' . $name . '%'];
+            $where[] = ['name', 'like', '%'.$name.'%'];
         }
         if (!empty($title)) {
-            $where[] = ['name', 'like', '%' . $title . '%'];
+            $where[] = ['name', 'like', '%'.$title.'%'];
         }
         $data = StoreType::getList($where, $limit);
         if (!empty($data['data'])) {
@@ -325,7 +334,10 @@ class AdminStore extends AdminRest
      */
     public function addStore()
     {
-        $data = request()->only(['user_id', 'name', 'cover', 'banner', 'mobile', 'license', 'lng', 'lat', 'address', 'info', 'tag', 'intro', 'type_id', 'trade_week', 'start_time', 'end_time', 'contact_type', 'qywx_kid']);
+        $data = request()->only([
+            'user_id', 'name', 'cover', 'banner', 'mobile', 'license', 'lng', 'lat', 'address', 'info', 'tag', 'intro',
+            'type_id', 'trade_week', 'start_time', 'end_time', 'contact_type', 'qywx_kid'
+        ]);
         $store = StoreApply::getInfo([['user_id', '=', $data['user_id']], ['status', 'in', [0, 1, 2, 3]]]);
         if (!empty($store)) {
             return $this->error('此用户已申请店铺，不可添加');
@@ -369,7 +381,7 @@ class AdminStore extends AdminRest
             ['status', '=', 1]
         ];
         if (!empty($name)) {
-            $where[] = ['name', 'like', '%' . $name . '%'];
+            $where[] = ['name', 'like', '%'.$name.'%'];
         }
         $data = StoreType::getListNoPage($where);
         return $this->success($data);
@@ -411,8 +423,8 @@ class AdminStore extends AdminRest
         $user_id = StoreApply::where($dis)->column('user_id');
         $where1 = [];
         if (!empty($input['nickName'])) {
-            $where1[] = ['nickName', 'like', '%' . $input['nickName'] . '%'];
-            $where1[] = ['phone', 'like', '%' . $input['nickName'] . '%'];
+            $where1[] = ['nickName', 'like', '%'.$input['nickName'].'%'];
+            $where1[] = ['phone', 'like', '%'.$input['nickName'].'%'];
         }
         $user_model = new User();
         $where[] = ['uniacid', '=', $this->_uniacid];
@@ -429,7 +441,11 @@ class AdminStore extends AdminRest
      */
     public function editStore()
     {
-        $data = request()->only(['id', 'user_id', 'name', 'cover', 'banner', 'mobile', 'license', 'lng', 'lat', 'address', 'info', 'tag', 'intro', 'type_id', 'trade_week', 'start_time', 'end_time', 'store_balance', 'share_balance', 'contact_type', 'qywx_kid']);
+        $data = request()->only([
+            'id', 'user_id', 'name', 'cover', 'banner', 'mobile', 'license', 'lng', 'lat', 'address', 'info', 'tag',
+            'intro', 'type_id', 'trade_week', 'start_time', 'end_time', 'store_balance', 'share_balance',
+            'contact_type', 'qywx_kid'
+        ]);
         if (isset($data['banner'])) {
             $data['banner'] = !empty($data['banner']) ? implode(',', $data['banner']) : '';
         }

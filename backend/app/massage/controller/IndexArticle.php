@@ -1,5 +1,7 @@
 <?php
+
 namespace app\massage\controller;
+
 use app\AdminRest;
 
 use app\ApiRest;
@@ -24,7 +26,8 @@ class IndexArticle extends ApiRest
 
     protected $field_model;
 
-    public function __construct(App $app) {
+    public function __construct(App $app)
+    {
         parent::__construct($app);
         $this->model = new ArticleList();
         $this->sub_list_model = new SubList();
@@ -37,14 +40,15 @@ class IndexArticle extends ApiRest
      * @DataTime: 2020-09-29 13:28
      * @功能说明:字段列表
      */
-    public function articleList(){
+    public function articleList()
+    {
         $input = $this->_param;
-        $dis[] = ['uniacid','=',$this->_uniacid];
-        $dis[] = ['status','=',1];
-        if(!empty($input['title'])){
-            $dis[] = ['title','like','%'.$input['title'].'%'];
+        $dis[] = ['uniacid', '=', $this->_uniacid];
+        $dis[] = ['status', '=', 1];
+        if (!empty($input['title'])) {
+            $dis[] = ['title', 'like', '%'.$input['title'].'%'];
         }
-        $data = $this->model->dataList($dis,10);
+        $data = $this->model->dataList($dis, 10);
         return $this->success($data);
     }
 
@@ -53,7 +57,8 @@ class IndexArticle extends ApiRest
      * @DataTime: 2020-09-29 13:28
      * @功能说明:字段详情
      */
-    public function articleInfo(){
+    public function articleInfo()
+    {
         $input = $this->_param;
         $dis = [
             'id' => $input['id']
@@ -67,7 +72,8 @@ class IndexArticle extends ApiRest
      * @DataTime: 2022-12-12 10:46
      * @功能说明:提交文章表单
      */
-    public function subArticleForm(){
+    public function subArticleForm()
+    {
         $input = $this->_input;
         $insert = [
             'uniacid' => $this->_uniacid,
@@ -76,13 +82,13 @@ class IndexArticle extends ApiRest
         ];
         $this->sub_list_model->dataAdd($insert);
         $id = $this->sub_list_model->getLastInsID();
-        foreach ($input['sub_data'] as $k=>$v){
+        foreach ($input['sub_data'] as $k => $v) {
             $insert_data[$k] = [
                 'uniacid' => $this->_uniacid,
-                'sub_id'  => $id,
-                'key'     => $v['key'],
-                'value'   => $v['value'],
-                'field_id'   => $v['field_id'],
+                'sub_id' => $id,
+                'key' => $v['key'],
+                'value' => $v['value'],
+                'field_id' => $v['field_id'],
                 'field_type' => $v['field_type'],
             ];
         }

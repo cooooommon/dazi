@@ -77,7 +77,7 @@ class AdminOrder extends AdminRest
         }
         //商品名字搜索
         if (!empty($input['goods_name'])) {
-            $order_goods_dis[] = ['goods_name', 'like', '%' . $input['goods_name'] . '%'];
+            $order_goods_dis[] = ['goods_name', 'like', '%'.$input['goods_name'].'%'];
             $order_goods_dis[] = ['status', '=', 1];
             $order_goods_model = new OrderGoods();
             $order_id = $order_goods_model->where($order_goods_dis)->column('order_id');
@@ -86,7 +86,7 @@ class AdminOrder extends AdminRest
         //手机号搜索
         if (!empty($input['mobile'])) {
             $order_address_model = new OrderAddress();
-            $order_address_dis[] = ['mobile', 'like', '%' . $input['mobile'] . '%'];
+            $order_address_dis[] = ['mobile', 'like', '%'.$input['mobile'].'%'];
             $order_id = $order_address_model->where($order_address_dis)->column('order_id');
             $dis[] = ['a.id', 'in', $order_id];
         }
@@ -105,12 +105,12 @@ class AdminOrder extends AdminRest
         $map = [];
         //店铺名字搜索
         if (!empty($input['coach_name'])) {
-            $map[] = ['b.coach_name', 'like', '%' . $input['coach_name'] . '%'];
-            $map[] = ['c.now_coach_name', 'like', '%' . $input['coach_name'] . '%'];
+            $map[] = ['b.coach_name', 'like', '%'.$input['coach_name'].'%'];
+            $map[] = ['c.now_coach_name', 'like', '%'.$input['coach_name'].'%'];
         }
         //订单号搜索
         if (!empty($input['order_code'])) {
-            $dis[] = ['a.order_code', 'like', '%' . $input['order_code'] . '%'];
+            $dis[] = ['a.order_code', 'like', '%'.$input['order_code'].'%'];
         }
         //代理商端查询
         if ($this->_user['is_admin'] == 0) {
@@ -130,7 +130,7 @@ class AdminOrder extends AdminRest
         }
         //渠道商搜索
         if (!empty($input['channel_name'])) {
-            $dis[] = ['e.user_name', 'like', '%' . $input['channel_name'] . '%'];
+            $dis[] = ['e.user_name', 'like', '%'.$input['channel_name'].'%'];
         }
         //是否是加钟
         if (isset($input['is_add'])) {
@@ -175,7 +175,8 @@ class AdminOrder extends AdminRest
         $data['distance'] = distance_text($data['distance']);
         //加钟订单
         if ($data['is_add'] == 0) {
-            $data['add_order_id'] = $this->model->where(['add_pid' => $data['id']])->where('pay_type', '>', 1)->field('id,order_code')->select()->toArray();
+            $data['add_order_id'] = $this->model->where(['add_pid' => $data['id']])->where('pay_type', '>',
+                1)->field('id,order_code')->select()->toArray();
         } else {
             $data['add_pid'] = $this->model->where(['id' => $data['add_pid']])->field('id,order_code')->find();
         }
@@ -244,7 +245,7 @@ class AdminOrder extends AdminRest
         $dis[] = ['a.uniacid', '=', $this->_uniacid];
         //商品名字搜索
         if (!empty($input['goods_name'])) {
-            $dis[] = ['c.goods_name', 'like', '%' . $input['goods_name'] . '%'];
+            $dis[] = ['c.goods_name', 'like', '%'.$input['goods_name'].'%'];
         }
         //订单状态搜索
         if (!empty($input['status'])) {
@@ -254,8 +255,8 @@ class AdminOrder extends AdminRest
         }
         $where = [];
         if (!empty($input['order_code'])) {
-            $where[] = ['a.order_code', 'like', '%' . $input['order_code'] . '%'];
-            $where[] = ['d.order_code', 'like', '%' . $input['order_code'] . '%'];
+            $where[] = ['a.order_code', 'like', '%'.$input['order_code'].'%'];
+            $where[] = ['d.order_code', 'like', '%'.$input['order_code'].'%'];
         }
         if ($this->_user['is_admin'] == 0) {
             $dis[] = ['a.admin_id', 'in', $this->admin_arr];
@@ -298,7 +299,8 @@ class AdminOrder extends AdminRest
         $input = $this->_input;
         $order = $this->refund_order_model->dataInfo(['id' => $input['id']]);
         $is_app = $this->model->where(['id' => $order['order_id']])->value('app_pay');
-        $res = $this->refund_order_model->passOrder($input['id'], $input['price'], $this->payConfig($is_app), $this->_user['id'], $input['text']);
+        $res = $this->refund_order_model->passOrder($input['id'], $input['price'], $this->payConfig($is_app),
+            $this->_user['id'], $input['text']);
         if (!empty($res['code'])) {
             $this->errorMsg($res['msg']);
         }
@@ -319,10 +321,10 @@ class AdminOrder extends AdminRest
             $dis[] = ['a.star', '=', $input['star']];
         }
         if (!empty($input['coach_name'])) {
-            $dis[] = ['d.coach_name', 'like', '%' . $input['coach_name'] . '%'];
+            $dis[] = ['d.coach_name', 'like', '%'.$input['coach_name'].'%'];
         }
         if (!empty($input['goods_name'])) {
-            $dis[] = ['c.goods_name', 'like', '%' . $input['goods_name'] . '%'];
+            $dis[] = ['c.goods_name', 'like', '%'.$input['goods_name'].'%'];
         }
         if ($this->_user['is_admin'] == 0) {
             $dis[] = ['a.admin_id', 'in', $this->admin_arr];
@@ -612,7 +614,8 @@ class AdminOrder extends AdminRest
         }
         $this->model->dataUpdate(['id' => $input['order_id']], $update);
         $log_model = new OrderLog();
-        $log_model->addLog($input['order_id'], $this->_uniacid, $input['type'], $order['pay_type'], 1, $this->_user['id']);
+        $log_model->addLog($input['order_id'], $this->_uniacid, $input['type'], $order['pay_type'], 1,
+            $this->_user['id']);
         Db::commit();
         return $this->success(true);
     }
@@ -641,7 +644,8 @@ class AdminOrder extends AdminRest
         $text = !empty($input['text']) ? $input['text'] : '';
         $phone = !empty($input['mobile']) ? $input['mobile'] : '';
         $admin_id = !empty($input['admin_id']) ? $input['admin_id'] : 0;
-        $res = $change_model->orderChangeCoach($order, $input['coach_id'], $this->_user['id'], $admin_id, $coach_name, $text, $phone);
+        $res = $change_model->orderChangeCoach($order, $input['coach_id'], $this->_user['id'], $admin_id, $coach_name,
+            $text, $phone);
         if (!empty($res['code'])) {
             $this->errorMsg($res['msg']);
         }
@@ -670,7 +674,7 @@ class AdminOrder extends AdminRest
             $dis[] = ['admin_id', 'in', $this->admin_arr];
         }
         if (!empty($input['coach_name'])) {
-            $dis[] = ['coach_name', 'like', '%' . $input['coach_name'] . '%'];
+            $dis[] = ['coach_name', 'like', '%'.$input['coach_name'].'%'];
         }
         //门店订单 只能转同门店的向导
         if (!empty($order['store_id'])) {
@@ -683,8 +687,10 @@ class AdminOrder extends AdminRest
         $top = !empty($input['type']) && $input['type'] == 1 ? 'distance asc,id desc' : 'near_time asc,id desc';
         $lat = $order['address_info']['lat'];
         $lng = $order['address_info']['lng'];
-        $alh = 'ACOS(SIN((' . $lat . ' * 3.1415) / 180 ) *SIN((lat * 3.1415) / 180 ) +COS((' . $lat . ' * 3.1415) / 180 ) * COS((lat * 3.1415) / 180 ) *COS((' . $lng . ' * 3.1415) / 180 - (lng * 3.1415) / 180 ) ) * 6378.137*1000 as distance';
-        $data = $coach_model->where('id', 'in', $arr)->field(['*', $alh])->order($top)->paginate($input['limit'])->toArray();
+        $alh = 'ACOS(SIN(('.$lat.' * 3.1415) / 180 ) *SIN((lat * 3.1415) / 180 ) +COS(('.$lat.' * 3.1415) / 180 ) * COS((lat * 3.1415) / 180 ) *COS(('.$lng.' * 3.1415) / 180 - (lng * 3.1415) / 180 ) ) * 6378.137*1000 as distance';
+        $data = $coach_model->where('id', 'in', $arr)->field([
+            '*', $alh
+        ])->order($top)->paginate($input['limit'])->toArray();
         if (!empty($data['data'])) {
             $admin_model = new \app\massage\model\Admin();
             $user_model = new User();
@@ -848,13 +854,13 @@ class AdminOrder extends AdminRest
         $where = [];
         $where[] = ['a.uniacid', '=', $this->_uniacid];
         if (!empty($input['ser_name'])) {
-            $where[] = ['c.name', 'like', '%' . $input['ser_name'] . '%'];
+            $where[] = ['c.name', 'like', '%'.$input['ser_name'].'%'];
         }
         if (!empty($input['order_code'])) {
-            $where[] = ['a.order_code', 'like', '%' . $input['order_code'] . '%'];
+            $where[] = ['a.order_code', 'like', '%'.$input['order_code'].'%'];
         }
         if (!empty($input['phone'])) {
-            $where[] = ['a.phone', 'like', '%' . $input['phone'] . '%'];
+            $where[] = ['a.phone', 'like', '%'.$input['phone'].'%'];
         }
         if (!empty($input['start_time'])) {
             $where[] = ['a.create_time', '>=', $input['start_time']];
@@ -887,7 +893,7 @@ class AdminOrder extends AdminRest
             $where[] = ['a.coach_id', '=', $input['coach_id']];
         }
         if (!empty($input['coach_name'])) {
-            $where[] = ['d.coach_name', 'like', '%' . $input['coach_name'] . '%'];
+            $where[] = ['d.coach_name', 'like', '%'.$input['coach_name'].'%'];
         }
         $data = DemandOrder::getList2($where, $limit);
         return $this->success($data);
@@ -924,7 +930,7 @@ class AdminOrder extends AdminRest
             $where[] = ['a.is_refund', '=', $input['status']];
         }
         if (!empty($input['order_code'])) {
-            $where[] = ['a.order_code', 'like', '%' . $input['order_code'] . '%'];
+            $where[] = ['a.order_code', 'like', '%'.$input['order_code'].'%'];
         }
         $data = DemandOrder::getList2($where, $limit);
         return $this->success($data);

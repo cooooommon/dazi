@@ -90,9 +90,9 @@ class AdminCoach extends AdminRest
         }
         $where = [];
         if (!empty($input['name'])) {
-            $where[] = ['coach_name', 'like', '%' . $input['name'] . '%'];
-            $where[] = ['mobile', 'like', '%' . $input['name'] . '%'];
-            $where[] = ['nickname', 'like', '%' . $input['name'] . '%'];
+            $where[] = ['coach_name', 'like', '%'.$input['name'].'%'];
+            $where[] = ['mobile', 'like', '%'.$input['name'].'%'];
+            $where[] = ['nickname', 'like', '%'.$input['name'].'%'];
         }
         if (!empty($input['is_user'])) {
             if ($input['is_user'] == 1) {
@@ -188,22 +188,28 @@ class AdminCoach extends AdminRest
         $dis[] = ['uniacid', '=', $this->_uniacid];
         $dis[] = ['status', 'in', [2, 3]];
         if (!empty($input['coach_name'])) {
-            $dis[] = ['coach_name', 'like', '%' . $input['coach_name'] . '%'];
+            $dis[] = ['coach_name', 'like', '%'.$input['coach_name'].'%'];
         }
         $coach = $this->model->dataList($dis, $input['limit']);
         if (!empty($coach['data'])) {
             foreach ($coach['data'] as &$v) {
-                $v['wallet_price'] = $this->wallet_model->where(['coach_id' => $v['id']])->where('status', 'in', [2])->sum('apply_price');
+                $v['wallet_price'] = $this->wallet_model->where(['coach_id' => $v['id']])->where('status', 'in',
+                    [2])->sum('apply_price');
                 //到账多少元
                 $v['wallet_price'] = round($v['wallet_price'], 2);
-                $v['total_price'] = $this->wallet_model->where(['coach_id' => $v['id']])->where('status', 'in', [1, 2])->sum('total_price');
+                $v['total_price'] = $this->wallet_model->where(['coach_id' => $v['id']])->where('status', 'in',
+                    [1, 2])->sum('total_price');
                 //申请多少元
                 $v['total_price'] = round($v['total_price'], 2);
                 //到账笔数
-                $v['wallet_count'] = $this->wallet_model->where(['coach_id' => $v['id']])->where('status', 'in', [2])->count();
+                $v['wallet_count'] = $this->wallet_model->where(['coach_id' => $v['id']])->where('status', 'in',
+                    [2])->count();
                 //申请笔数
-                $v['total_count'] = $this->wallet_model->where(['coach_id' => $v['id']])->where('status', 'in', [1, 2])->count();
-                $order_price = $order_model->where(['coach_id' => $v['id'], 'pay_type' => 7])->sum('true_service_price');
+                $v['total_count'] = $this->wallet_model->where(['coach_id' => $v['id']])->where('status', 'in',
+                    [1, 2])->count();
+                $order_price = $order_model->where([
+                    'coach_id' => $v['id'], 'pay_type' => 7
+                ])->sum('true_service_price');
                 $car_price = $order_model->where(['coach_id' => $v['id'], 'pay_type' => 7])->sum('true_car_price');
                 $v['order_count'] = $order_model->where(['coach_id' => $v['id'], 'pay_type' => 7])->count();
                 $v['order_price'] = round($order_price + $car_price, 2);
@@ -227,8 +233,8 @@ class AdminCoach extends AdminRest
         $user_id = $this->model->where($dis)->column('user_id');
         $where1 = [];
         if (!empty($input['nickName'])) {
-            $where1[] = ['nickName', 'like', '%' . $input['nickName'] . '%'];
-            $where1[] = ['phone', 'like', '%' . $input['nickName'] . '%'];
+            $where1[] = ['nickName', 'like', '%'.$input['nickName'].'%'];
+            $where1[] = ['phone', 'like', '%'.$input['nickName'].'%'];
         }
         $user_model = new User();
         $where[] = ['uniacid', '=', $this->_uniacid];
@@ -396,7 +402,12 @@ class AdminCoach extends AdminRest
      */
     public function coachUpdateAdmin()
     {
-        $input = request()->only(['id', 'order_num', 'nickname', 'weight', 'height', 'constellation', 'birthday', 'store_id', 'city_id', 'video', 'sh_time', 'sh_text', 'id_code', 'end_time', 'start_time', 'is_work', 'self_img', 'work_img', 'license', 'id_card', 'text', 'address', 'lat', 'lng', 'coach_name', 'user_id', 'coach_id', 'mobile', 'create_time', 'sex', 'tag_id', 'service']);
+        $input = request()->only([
+            'id', 'order_num', 'nickname', 'weight', 'height', 'constellation', 'birthday', 'store_id', 'city_id',
+            'video', 'sh_time', 'sh_text', 'id_code', 'end_time', 'start_time', 'is_work', 'self_img', 'work_img',
+            'license', 'id_card', 'text', 'address', 'lat', 'lng', 'coach_name', 'user_id', 'coach_id', 'mobile',
+            'create_time', 'sex', 'tag_id', 'service'
+        ]);
         $dis = [
             'id' => $input['id']
         ];
@@ -459,13 +470,18 @@ class AdminCoach extends AdminRest
             $this->model->dataUpdate(['id' => $input['id']], ['is_update' => 0]);
             return $this->success('');
         }
-        $res = $update_model->dataUpdate(['coach_id' => $input['id'], 'status' => 1], ['status' => $input['status'], 'sh_text' => $input['sh_text']]);
+        $res = $update_model->dataUpdate(['coach_id' => $input['id'], 'status' => 1],
+            ['status' => $input['status'], 'sh_text' => $input['sh_text']]);
         $update = [];
         $update['is_update'] = 0;
         //通过覆盖向导信息
         if ($input['status'] == 2) {
             $info = $info->toArray();
-            $arr = ['coach_name', 'store_id', 'sex', 'work_time', 'mobile', 'city_id', 'address', 'text', 'id_card', 'license', 'work_img', 'self_img', 'id_code', 'video', 'lng', 'lat', 'birthday', 'constellation', 'height', 'weight', 'nickname', 'tag_id', 'order_num', 'is_work', 'start_time', 'end_time', 'model_img'];
+            $arr = [
+                'coach_name', 'store_id', 'sex', 'work_time', 'mobile', 'city_id', 'address', 'text', 'id_card',
+                'license', 'work_img', 'self_img', 'id_code', 'video', 'lng', 'lat', 'birthday', 'constellation',
+                'height', 'weight', 'nickname', 'tag_id', 'order_num', 'is_work', 'start_time', 'end_time', 'model_img'
+            ];
             foreach ($arr as $value) {
                 if (!empty($info[$value]) && $value != 'order_num') {
                     $update[$value] = $info[$value];
@@ -537,7 +553,8 @@ class AdminCoach extends AdminRest
             }
         }
         if (empty($input['user_id']) && !empty($input['mobile'])) {
-            $find = $this->model->where(['mobile' => $input['mobile']])->where('status', '>', -1)->where('id', '<>', $input['id'])->find();
+            $find = $this->model->where(['mobile' => $input['mobile']])->where('status', '>', -1)->where('id', '<>',
+                $input['id'])->find();
             if (!empty($find)) {
                 $this->errorMsg('该电话号码已经注册向导');
             }
@@ -560,7 +577,7 @@ class AdminCoach extends AdminRest
             $where[] = ['pay_type', 'in', [2, 3, 4, 5, 6, 8]];
             $order = $order_model->dataInfo($where);
             if (!empty($order)) {
-                $this->errorMsg('该向导还有未完成的订单，无法删除' . $order['id']);
+                $this->errorMsg('该向导还有未完成的订单，无法删除'.$order['id']);
             }
             $wallet_dis = [
                 ['coach_id', '=', $input['id']],
@@ -587,7 +604,7 @@ class AdminCoach extends AdminRest
             ];
             $de_order = DemandOrder::getInfo($de_where);
             if (!empty($de_order)) {
-                $this->errorMsg('该向导还有邀约订单未完成，无法删除' . $de_order['id']);
+                $this->errorMsg('该向导还有邀约订单未完成，无法删除'.$de_order['id']);
             }
         }
         $log_model = new WorkLog();
@@ -605,7 +622,8 @@ class AdminCoach extends AdminRest
     public function passRefund()
     {
         $input = $this->_input;
-        $res = $this->refund_order_model->passOrder($input['id'], $input['price'], $this->payConfig(), 0, $input['text']);
+        $res = $this->refund_order_model->passOrder($input['id'], $input['price'], $this->payConfig(), 0,
+            $input['text']);
         if (!empty($res['code'])) {
             $this->errorMsg($res['msg']);
         }
@@ -630,8 +648,10 @@ class AdminCoach extends AdminRest
         $data = $this->level_model->dataList($dis, $input['limit']);
         if (!empty($data['data'])) {
             foreach ($data['data'] as &$v) {
-                $v['lower'] = $this->level_model->where($dis)->where('time_long', '<', $v['time_long'])->max('time_long');
-                $v['lower_price'] = $this->level_model->where($dis)->where('time_long', '<', $v['time_long'])->max('price');
+                $v['lower'] = $this->level_model->where($dis)->where('time_long', '<',
+                    $v['time_long'])->max('time_long');
+                $v['lower_price'] = $this->level_model->where($dis)->where('time_long', '<',
+                    $v['time_long'])->max('price');
             }
         }
         return $this->success($data);
@@ -692,7 +712,8 @@ class AdminCoach extends AdminRest
                 'price' => '最低业绩不能相同',
             ];
             foreach ($arr as $k => $value) {
-                $find = $this->level_model->where($diss)->where('id', '<>', $input['id'])->where([$k => $input[$k]])->find();
+                $find = $this->level_model->where($diss)->where('id', '<>',
+                    $input['id'])->where([$k => $input[$k]])->find();
                 if (!empty($find)) {
                     $this->errorMsg($value);
                 }
@@ -739,7 +760,7 @@ class AdminCoach extends AdminRest
             $dis[] = ['a.type', '=', $input['type']];
         }
         if (!empty($input['code'])) {
-            $dis[] = ['a.code', 'like', '%' . $input['code'] . '%'];
+            $dis[] = ['a.code', 'like', '%'.$input['code'].'%'];
         }
         if (!empty($input['status'])) {
             $dis[] = ['a.status', '=', $input['status']];
@@ -833,7 +854,8 @@ class AdminCoach extends AdminRest
             $res = $wx_pay->crteateMchPay($this->payConfig($last_login_type), $openid, $update['true_price']);
             if ($res['result_code'] == 'SUCCESS' && $res['return_code'] == 'SUCCESS') {
                 if (!empty($res['payment_no'])) {
-                    $this->wallet_model->dataUpdate(['id' => $input['id']], ['payment_no' => $res['payment_no'], 'user_num' => $openid]);
+                    $this->wallet_model->dataUpdate(['id' => $input['id']],
+                        ['payment_no' => $res['payment_no'], 'user_num' => $openid]);
                 }
             } else {
                 Db::rollback();
@@ -852,9 +874,13 @@ class AdminCoach extends AdminRest
             if (empty($alipay_number) || empty($alipay_number['alipay_number'])) {
                 return $this->error('该用户未绑定支付宝账号');
             }
-            $res = $pay_model->onPaymentByAlipay($alipay_number['alipay_number'], $update['true_price'], $alipay_number['alipay_name']);
+            $res = $pay_model->onPaymentByAlipay($alipay_number['alipay_number'], $update['true_price'],
+                $alipay_number['alipay_name']);
             if (!empty($res['alipay_fund_trans_toaccount_transfer_response']['code']) && $res['alipay_fund_trans_toaccount_transfer_response']['code'] == 10000 && $res['alipay_fund_trans_toaccount_transfer_response']['msg'] == 'Success') {
-                $this->wallet_model->dataUpdate(['id' => $input['id']], ['payment_no' => $res['alipay_fund_trans_toaccount_transfer_response']['order_id'], 'user_num' => $alipay_number['alipay_number']]);
+                $this->wallet_model->dataUpdate(['id' => $input['id']], [
+                    'payment_no' => $res['alipay_fund_trans_toaccount_transfer_response']['order_id'],
+                    'user_num' => $alipay_number['alipay_number']
+                ]);
             } else {
                 Db::rollback();
                 return $this->error(!empty($res['alipay_fund_trans_toaccount_transfer_response']['sub_msg']) ? $res['alipay_fund_trans_toaccount_transfer_response']['sub_msg'] : '你还未该权限');
@@ -895,17 +921,21 @@ class AdminCoach extends AdminRest
         }
         $cap_info = $this->model->dataInfo(['id' => $info['coach_id']]);
         if ($info['type'] == 1) {
-            $res = $this->model->dataUpdate(['id' => $info['coach_id']], ['service_price' => $cap_info['service_price'] + $info['total_price']]);
+            $res = $this->model->dataUpdate(['id' => $info['coach_id']],
+                ['service_price' => $cap_info['service_price'] + $info['total_price']]);
         } elseif ($info['type'] == 2) {
-            $res = $this->model->dataUpdate(['id' => $info['coach_id']], ['car_price' => $cap_info['car_price'] + $info['total_price']]);
+            $res = $this->model->dataUpdate(['id' => $info['coach_id']],
+                ['car_price' => $cap_info['car_price'] + $info['total_price']]);
         } elseif ($info['type'] == 3) {
             $admin_model = new \app\massage\model\Admin();
             $user_info = $admin_model->dataInfo(['id' => $info['user_id']]);
-            $res = $admin_model->dataUpdate(['id' => $info['user_id']], ['cash' => $user_info['cash'] + $info['total_price']]);
+            $res = $admin_model->dataUpdate(['id' => $info['user_id']],
+                ['cash' => $user_info['cash'] + $info['total_price']]);
         } elseif ($info['type'] == 4) {
             $user_model = new User();
             $user_info = $user_model->dataInfo(['id' => $info['user_id']]);
-            $res = $user_model->dataUpdate(['id' => $info['user_id']], ['new_cash' => $user_info['new_cash'] + $info['total_price']]);
+            $res = $user_model->dataUpdate(['id' => $info['user_id']],
+                ['new_cash' => $user_info['new_cash'] + $info['total_price']]);
         } elseif ($info['type'] == 5) {
             $model = new ChannelList();
             $channel = $model->dataInfo(['id' => $info['coach_id']]);
@@ -1059,13 +1089,15 @@ class AdminCoach extends AdminRest
     public function coachCashData()
     {
         $coach_id = request()->param('id');
-        $data = $this->model->dataInfo(['id' => $coach_id], 'id,service_price,car_price,star,attitude_star,speed_star,cash_balance');
+        $data = $this->model->dataInfo(['id' => $coach_id],
+            'id,service_price,car_price,star,attitude_star,speed_star,cash_balance');
         $data['service_price'] += $data['car_price'];
         $data['service_price'] = round($data['service_price'], 2);
         //评价
         $coach_comment_ratio = getConfigSetting($this->_uniacid, 'coach_comment_ratio');
         $coach_comment_ratio = explode(',', $coach_comment_ratio);
-        $data['true_star'] = round($data['star'] * $coach_comment_ratio[0] / 100 + $data['attitude_star'] * $coach_comment_ratio[1] / 100 + $data['speed_star'] * $coach_comment_ratio[2] / 100, 1);
+        $data['true_star'] = round($data['star'] * $coach_comment_ratio[0] / 100 + $data['attitude_star'] * $coach_comment_ratio[1] / 100 + $data['speed_star'] * $coach_comment_ratio[2] / 100,
+            1);
         $data['true_star'] = $data['true_star'] > 5 ? 5 : $data['true_star'];
         $arr = $this->model->getCurrentAchievement($coach_id, $this->_uniacid);
         $data = array_merge($data, $arr);

@@ -1,5 +1,7 @@
 <?php
+
 namespace app\massage\controller;
+
 use app\AdminRest;
 use app\ApiRest;
 use app\massage\model\FddRealnameCallback;
@@ -9,12 +11,12 @@ use think\App;
 use think\facade\Db;
 use WxPayApi;
 
-class CallBack  extends ApiRest
+class CallBack extends ApiRest
 {
 
     protected $app;
 
-    public function __construct ( App $app )
+    public function __construct(App $app)
     {
         $this->app = $app;
     }
@@ -24,7 +26,8 @@ class CallBack  extends ApiRest
      * @DataTime: 2022-12-08 15:33
      * @功能说明:发大大实名认证回调
      */
-    public function fddCallBack(){
+    public function fddCallBack()
+    {
         $inputs = $_GET;
         $model = new FddRealnameCallback();
         $insert = [
@@ -36,8 +39,9 @@ class CallBack  extends ApiRest
             'sign' => $inputs['sign'],
         ];
         $model->dataAdd($insert);
-        $res = ['code'=>0,'msg'=>'成功'];
-        echo json_encode($res);exit;
+        $res = ['code' => 0, 'msg' => '成功'];
+        echo json_encode($res);
+        exit;
     }
 
 }

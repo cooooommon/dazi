@@ -61,8 +61,8 @@ class AdminUser extends AdminRest
         }
         $where = [];
         if (!empty($input['nickName'])) {
-            $where[] = ['nickName', 'like', '%' . $input['nickName'] . '%'];
-            $where[] = ['phone', 'like', '%' . $input['nickName'] . '%'];
+            $where[] = ['nickName', 'like', '%'.$input['nickName'].'%'];
+            $where[] = ['phone', 'like', '%'.$input['nickName'].'%'];
         }
         if (!empty($input['start_time']) && !empty($input['end_time'])) {
             $start_time = $input['start_time'];
@@ -73,7 +73,7 @@ class AdminUser extends AdminRest
             $dis[] = ['id', '=', $input['id']];
         }
         if (!empty($input['phone'])) {
-            $dis[] = ['phone', 'like', '%' . $input['phone'] . '%'];
+            $dis[] = ['phone', 'like', '%'.$input['phone'].'%'];
         }
         $dis[] = ['is_blacklist', '=', 0];
         $data = $this->model->dataList($dis, $input['limit'], $where);
@@ -114,14 +114,14 @@ class AdminUser extends AdminRest
         }
         $where = [];
         if (!empty($input['top_name'])) {
-            $where[] = ['c.nickName', 'like', '%' . $input['top_name'] . '%'];
-            $where[] = ['e.agent_name', 'like', '%' . $input['top_name'] . '%'];
-            $where[] = ['f.coach_name', 'like', '%' . $input['top_name'] . '%'];
-            $where[] = ['g.now_coach_name', 'like', '%' . $input['top_name'] . '%'];
-            $where[] = ['h.user_name', 'like', '%' . $input['top_name'] . '%'];
-            $where[] = ['j.name', 'like', '%' . $input['top_name'] . '%'];
-            $where[] = ['k.name', 'like', '%' . $input['top_name'] . '%'];
-            $where[] = ['m.nickName', 'like', '%' . $input['top_name'] . '%'];
+            $where[] = ['c.nickName', 'like', '%'.$input['top_name'].'%'];
+            $where[] = ['e.agent_name', 'like', '%'.$input['top_name'].'%'];
+            $where[] = ['f.coach_name', 'like', '%'.$input['top_name'].'%'];
+            $where[] = ['g.now_coach_name', 'like', '%'.$input['top_name'].'%'];
+            $where[] = ['h.user_name', 'like', '%'.$input['top_name'].'%'];
+            $where[] = ['j.name', 'like', '%'.$input['top_name'].'%'];
+            $where[] = ['k.name', 'like', '%'.$input['top_name'].'%'];
+            $where[] = ['m.nickName', 'like', '%'.$input['top_name'].'%'];
         }
         if ($this->_user['is_admin'] == 0) {
             $dis[] = ['a.admin_id', 'in', $this->admin_arr];
@@ -137,9 +137,9 @@ class AdminUser extends AdminRest
         }
         $code = [];
         if (!empty($input['order_code'])) {
-            $code[] = ['d.order_code', 'like', '%' . $input['order_code'] . '%'];
-            $code[] = ['i.order_code', 'like', '%' . $input['order_code'] . '%'];
-            $code[] = ['l.order_code', 'like', '%' . $input['order_code'] . '%'];
+            $code[] = ['d.order_code', 'like', '%'.$input['order_code'].'%'];
+            $code[] = ['i.order_code', 'like', '%'.$input['order_code'].'%'];
+            $code[] = ['l.order_code', 'like', '%'.$input['order_code'].'%'];
         }
 //        if (!empty($input['order_type'])) {
 //            $dis[] = ['a.order_type', '=', $input['order_type']];
@@ -150,21 +150,22 @@ class AdminUser extends AdminRest
         $commission_custom = getConfigSetting($this->_uniacid, 'commission_custom');
         if (!empty($data['data'])) {
             foreach ($data['data'] as &$v) {
-                $v['balance'] = (float)$v['balance'];
+                $v['balance'] = (float) $v['balance'];
                 if ($v['order_type'] == 2) {
                     $v['cash_type'] = $v['demand_cash_type'];
                 }
-                $v['coach_cash_control'] = $v['status'] == 2 && $v['admin_id'] == 0 && in_array($v['type'], [3, 8]) && $v['top_id'] == 0 ? 1 : 0;
+                $v['coach_cash_control'] = $v['status'] == 2 && $v['admin_id'] == 0 && in_array($v['type'],
+                    [3, 8]) && $v['top_id'] == 0 ? 1 : 0;
                 $v['cash'] = round($v['cash'], 2);
                 if ($v['car_price'] > 0) {
-                    $v['pay_price'] = $v['pay_price'] . '(含车费' . $v['car_price'] . ')';
+                    $v['pay_price'] = $v['pay_price'].'(含车费'.$v['car_price'].')';
                 }
                 if (in_array($v['type'], [2, 5, 6, 11])) {
                     $v['top_name'] = $v['admin_name'];
                 } elseif (in_array($v['type'], [3, 8])) {
                     $v['top_name'] = $v['coach_name'];
                     if ($v['top_id'] == 0 && $v['car_cash'] > 0) {
-                        $v['cash'] = $v['cash'] . '(含车费' . $v['car_cash'] . ')';
+                        $v['cash'] = $v['cash'].'(含车费'.$v['car_cash'].')';
                     }
                     if (empty($v['top_id'])) {
                         $v['top_name'] = $v['now_coach_name'];
@@ -180,34 +181,43 @@ class AdminUser extends AdminRest
                 }
                 $share_cash = 0;
                 if ($v['type'] == 2) {
-                    $share_cash = CommissionShare::where(['type' => 2, 'order_id' => $v['order_id'], 'cash_type' => 1])->sum('share_cash');
+                    $share_cash = CommissionShare::where([
+                        'type' => 2, 'order_id' => $v['order_id'], 'cash_type' => 1
+                    ])->sum('share_cash');
                     if ($v['cash_type'] == 1) {
-                        $v['balance'] = '平台抽成-' . $v['balance'];
+                        $v['balance'] = '平台抽成-'.$v['balance'];
                     }
-                    $coach_cash = $v['coach_cash'] > 0 ? '包含' . $v['coach_cash'] . '线下向导服务费，' : '';
-                    $car_cash = $v['car_cash'] > 0 ? '包含' . $v['car_cash'] . '线下向导车费' : '';
-                    $v['cash'] = !empty($coach_cash) || !empty($car_cash) ? $v['cash'] . '(' . $coach_cash . $car_cash . ')' : $v['cash'];
+                    $coach_cash = $v['coach_cash'] > 0 ? '包含'.$v['coach_cash'].'线下向导服务费，' : '';
+                    $car_cash = $v['car_cash'] > 0 ? '包含'.$v['car_cash'].'线下向导车费' : '';
+                    $v['cash'] = !empty($coach_cash) || !empty($car_cash) ? $v['cash'].'('.$coach_cash.$car_cash.')' : $v['cash'];
                 }
                 if ($v['type'] == 3) {
-                    $share_cash = CommissionShare::where(['type' => 1, 'order_id' => $v['order_id'], 'cash_type' => 1])->sum('share_cash');
+                    $share_cash = CommissionShare::where([
+                        'type' => 1, 'order_id' => $v['order_id'], 'cash_type' => 1
+                    ])->sum('share_cash');
                 }
                 if (!empty($share_cash)) {
-                    $v['cash'] .= '  被分摊金额:' . $share_cash . '元';
+                    $v['cash'] .= '  被分摊金额:'.$share_cash.'元';
                 }
                 if ($v['type'] == 10 && $v['channel_staff_balance'] > 0 && $v['channel_staff_id'] > 0) {
-                    $v['cash'] = $v['cash'] . '  (包含渠道员工佣金￥' . (round($v['channel_cash'] * $v['channel_staff_balance'] / 100, 2)) . ')';
+                    $v['cash'] = $v['cash'].'  (包含渠道员工佣金￥'.(round($v['channel_cash'] * $v['channel_staff_balance'] / 100,
+                            2)).')';
                 }
                 if ($v['order_type'] == 2) {
                     $v['order_code'] = $v['demand_order_code'];
                     $v['transaction_id'] = $v['demand_transaction_id'];
                     $v['pay_price'] = $v['demand_pay_price'];
-                } else if ($v['order_type'] == 3) {
-                    $v['order_code'] = $v['package_order_code'];
-                    $v['transaction_id'] = $v['package_transaction_id'];
-                    $v['pay_price'] = $v['package_pay_price'];
+                } else {
+                    if ($v['order_type'] == 3) {
+                        $v['order_code'] = $v['package_order_code'];
+                        $v['transaction_id'] = $v['package_transaction_id'];
+                        $v['pay_price'] = $v['package_pay_price'];
+                    }
                 }
                 if ($v['order_type'] == 1) {
-                    $v['refund_price'] = Db::name('massage_service_refund_order')->where(['order_id' => $v['order_id'], 'status' => 2])->value('refund_price') ?? 0;
+                    $v['refund_price'] = Db::name('massage_service_refund_order')->where([
+                        'order_id' => $v['order_id'], 'status' => 2
+                    ])->value('refund_price') ?? 0;
                 } else {
                     $v['refund_price'] = 0;
                 }
@@ -274,12 +284,12 @@ class AdminUser extends AdminRest
         }
         $where = [];
         if (!empty($input['top_name'])) {
-            $where[] = ['c.nickName', 'like', '%' . $input['top_name'] . '%'];
-            $where[] = ['e.agent_name', 'like', '%' . $input['top_name'] . '%'];
-            $where[] = ['f.coach_name', 'like', '%' . $input['top_name'] . '%'];
-            $where[] = ['g.now_coach_name', 'like', '%' . $input['top_name'] . '%'];
-            $where[] = ['h.user_name', 'like', '%' . $input['top_name'] . '%'];
-            $where[] = ['j.name', 'like', '%' . $input['top_name'] . '%'];
+            $where[] = ['c.nickName', 'like', '%'.$input['top_name'].'%'];
+            $where[] = ['e.agent_name', 'like', '%'.$input['top_name'].'%'];
+            $where[] = ['f.coach_name', 'like', '%'.$input['top_name'].'%'];
+            $where[] = ['g.now_coach_name', 'like', '%'.$input['top_name'].'%'];
+            $where[] = ['h.user_name', 'like', '%'.$input['top_name'].'%'];
+            $where[] = ['j.name', 'like', '%'.$input['top_name'].'%'];
         }
         if ($this->_user['is_admin'] == 0) {
             $dis[] = ['a.admin_id', 'in', $this->admin_arr];
@@ -295,8 +305,8 @@ class AdminUser extends AdminRest
         }
         $code = [];
         if (!empty($input['order_code'])) {
-            $code[] = ['d.order_code', 'like', '%' . $input['order_code'] . '%'];
-            $code[] = ['i.order_code', 'like', '%' . $input['order_code'] . '%'];
+            $code[] = ['d.order_code', 'like', '%'.$input['order_code'].'%'];
+            $code[] = ['i.order_code', 'like', '%'.$input['order_code'].'%'];
         }
         $comm_model = new Commission();
         $data = $comm_model->recordListV2($dis, $where, $code, $input['limit']);
@@ -304,20 +314,20 @@ class AdminUser extends AdminRest
         $commission_custom = getConfigSetting($this->_uniacid, 'commission_custom');
         if (!empty($data['data'])) {
             foreach ($data['data'] as &$v) {
-                $v['balance'] = (float)$v['balance'];
+                $v['balance'] = (float) $v['balance'];
                 if ($v['order_type'] == 2) {
                     $v['cash_type'] = $v['demand_cash_type'];
                 }
                 $v['cash'] = round($v['cash'], 2);
                 if ($v['car_price'] > 0) {
-                    $v['pay_price'] = $v['pay_price'] . '(含车费' . $v['car_price'] . ')';
+                    $v['pay_price'] = $v['pay_price'].'(含车费'.$v['car_price'].')';
                 }
                 if (in_array($v['type'], [2, 5, 6, 11])) {
                     $v['top_name'] = $v['admin_name'];
                 } elseif (in_array($v['type'], [3, 8])) {
                     $v['top_name'] = $v['coach_name'];
                     if ($v['top_id'] == 0 && $v['car_cash'] > 0) {
-                        $v['cash'] = $v['cash'] . '(含车费' . $v['car_cash'] . ')';
+                        $v['cash'] = $v['cash'].'(含车费'.$v['car_cash'].')';
                     }
                     if (empty($v['top_id'])) {
                         $v['top_name'] = $v['now_coach_name'];
@@ -329,38 +339,48 @@ class AdminUser extends AdminRest
                 }
                 $share_cash = 0;
                 if ($v['type'] == 2) {
-                    $share_cash = CommissionShare::where(['type' => 2, 'order_id' => $v['order_id'], 'cash_type' => 1])->sum('share_cash');
+                    $share_cash = CommissionShare::where([
+                        'type' => 2, 'order_id' => $v['order_id'], 'cash_type' => 1
+                    ])->sum('share_cash');
                     if ($v['cash_type'] == 1) {
-                        $v['balance'] = '平台抽成-' . $v['balance'];
+                        $v['balance'] = '平台抽成-'.$v['balance'];
                     }
-                    $coach_cash = $v['coach_cash'] > 0 ? '包含' . $v['coach_cash'] . '线下向导服务费，' : '';
-                    $car_cash = $v['car_cash'] > 0 ? '包含' . $v['car_cash'] . '线下向导车费' : '';
-                    $v['cash'] = !empty($coach_cash) || !empty($car_cash) ? $v['cash'] . '(' . $coach_cash . $car_cash . ')' : $v['cash'];
+                    $coach_cash = $v['coach_cash'] > 0 ? '包含'.$v['coach_cash'].'线下向导服务费，' : '';
+                    $car_cash = $v['car_cash'] > 0 ? '包含'.$v['car_cash'].'线下向导车费' : '';
+                    $v['cash'] = !empty($coach_cash) || !empty($car_cash) ? $v['cash'].'('.$coach_cash.$car_cash.')' : $v['cash'];
                 }
                 if ($v['type'] == 3) {
-                    $share_cash = CommissionShare::where(['type' => 1, 'order_id' => $v['order_id'], 'cash_type' => 1])->sum('share_cash');
+                    $share_cash = CommissionShare::where([
+                        'type' => 1, 'order_id' => $v['order_id'], 'cash_type' => 1
+                    ])->sum('share_cash');
                 }
                 if (!empty($share_cash)) {
-                    $v['cash'] .= '  被分摊金额:' . $share_cash . '元';
+                    $v['cash'] .= '  被分摊金额:'.$share_cash.'元';
                 }
                 if ($v['type'] == 10 && $v['channel_staff_balance'] > 0 && $v['channel_staff_id'] > 0) {
-                    $v['cash'] = $v['cash'] . '  (包含渠道员工佣金￥' . (round($v['channel_cash'] * $v['channel_staff_balance'] / 100, 2)) . ')';
+                    $v['cash'] = $v['cash'].'  (包含渠道员工佣金￥'.(round($v['channel_cash'] * $v['channel_staff_balance'] / 100,
+                            2)).')';
                 }
                 if ($v['order_type'] == 2) {
                     $v['order_code'] = $v['demand_order_code'];
                     $v['transaction_id'] = $v['demand_transaction_id'];
                     $v['pay_price'] = $v['demand_pay_price'];
-                } else if ($v['order_type'] == 3) {
-                    $v['order_code'] = $v['package_order_code'];
-                    $v['transaction_id'] = $v['package_transaction_id'];
-                    $v['pay_price'] = $v['package_pay_price'];
+                } else {
+                    if ($v['order_type'] == 3) {
+                        $v['order_code'] = $v['package_order_code'];
+                        $v['transaction_id'] = $v['package_transaction_id'];
+                        $v['pay_price'] = $v['package_pay_price'];
+                    }
                 }
                 if ($v['order_type'] == 1) {
-                    $v['refund_price'] = Db::name('massage_service_refund_order')->where(['order_id' => $v['order_id'], 'status' => 2])->value('refund_price') ?? 0;
+                    $v['refund_price'] = Db::name('massage_service_refund_order')->where([
+                        'order_id' => $v['order_id'], 'status' => 2
+                    ])->value('refund_price') ?? 0;
                 } else {
                     $v['refund_price'] = 0;
                 }
-                $v['coach_cash_control'] = $v['status'] == 2 && $this->_user['id'] == $v['admin_id'] && in_array($v['type'], [3, 8]) && $v['top_id'] == 0 ? 1 : 0;
+                $v['coach_cash_control'] = $v['status'] == 2 && $this->_user['id'] == $v['admin_id'] && in_array($v['type'],
+                    [3, 8]) && $v['top_id'] == 0 ? 1 : 0;
             }
         }
         if ($this->_user['is_admin'] == 0) {
@@ -409,14 +429,15 @@ class AdminUser extends AdminRest
         //获取税点
         $tax_point = getConfigSetting($this->_uniacid, 'tax_point');
         $balance = 100 - $tax_point;
-        $key = 'cap_wallets' . $this->_user['id'];
+        $key = 'cap_wallets'.$this->_user['id'];
         $value = getCache($key, $this->_uniacid);
         if (!empty($value)) {
             $this->errorMsg('网络错误，请刷新重试');
         }
         Db::startTrans();
         //减佣金
-        $res = $admin_model->dataUpdate(['id' => $this->_user['id'], 'lock' => $admin_user['lock']], ['cash' => $admin_user['cash'] - $input['apply_price'], 'lock' => $admin_user['lock'] + 1]);
+        $res = $admin_model->dataUpdate(['id' => $this->_user['id'], 'lock' => $admin_user['lock']],
+            ['cash' => $admin_user['cash'] - $input['apply_price'], 'lock' => $admin_user['lock'] + 1]);
         if ($res != 1) {
             Db::rollback();
             //减掉
@@ -461,7 +482,8 @@ class AdminUser extends AdminRest
     {
         $input = $this->_input;
         $label_model = new UserLabelData();
-        $res = $label_model->dataUpdate(['user_id' => $input['user_id'], 'label_id' => $input['label_id']], ['status' => -1]);
+        $res = $label_model->dataUpdate(['user_id' => $input['user_id'], 'label_id' => $input['label_id']],
+            ['status' => -1]);
         return $this->success($res);
     }
 
@@ -500,8 +522,8 @@ class AdminUser extends AdminRest
         $dis[] = ['uniacid', '=', $this->_uniacid];
         $where = [];
         if (!empty($input['nickName'])) {
-            $where[] = ['nickName', 'like', '%' . $input['nickName'] . '%'];
-            $where[] = ['phone', 'like', '%' . $input['nickName'] . '%'];
+            $where[] = ['nickName', 'like', '%'.$input['nickName'].'%'];
+            $where[] = ['phone', 'like', '%'.$input['nickName'].'%'];
         }
         if (!empty($input['id'])) {
             $dis[] = ['id', '=', $input['id']];

@@ -182,7 +182,7 @@ class IndexUser extends ApiRest
         $data['follow_count'] = $this->follow_model->followCoachNum($this->getUserId());
         $staff = ChannelStaff::getFirst(['status' => 1, 'user_id' => $this->getUserId()]);
         //渠道商下级
-        $p = new PermissionChannelstaff((int)$this->_uniacid);
+        $p = new PermissionChannelstaff((int) $this->_uniacid);
         $staff_auth = $p->pAuth();
         if (!$staff_auth) {
             ChannelStaff::update(['status' => -1], ['user_id' => $this->getUserId()]);
@@ -196,7 +196,9 @@ class IndexUser extends ApiRest
         $data['member_info'] = MemberOrder::getUserCard($this->getUserId());
         $from_type = UserFrom::getFromValue($this->getUserId());
         $data['from_type'] = empty($from_type) ? 1 : $from_type;
-        $data['wait_integral'] = OrderIntegral::where(['user_id' => $this->getUserId(), 'status' => 1])->sum('integral');
+        $data['wait_integral'] = OrderIntegral::where([
+            'user_id' => $this->getUserId(), 'status' => 1
+        ])->sum('integral');
         return $this->success($data);
     }
 
@@ -471,7 +473,7 @@ class IndexUser extends ApiRest
         if (!empty($input['admin_id'])) {
             $input['agent_type'] = 1;
         }
-        $p = new PermissionBroker((int)$this->_uniacid);
+        $p = new PermissionBroker((int) $this->_uniacid);
         $auth = $p->pAuth();
         //如果是扫经纪人的码
         if (isset($input['broker_id']) && $auth) {
@@ -519,6 +521,7 @@ class IndexUser extends ApiRest
         }
         return $this->success($data);
     }
+
     /**
      * @author chenniang
      * @DataTime: 2021-07-07 22:57
@@ -572,7 +575,7 @@ class IndexUser extends ApiRest
         $data = $this->coupon_record_model->dataList($dis);
         if (!empty($data['data'])) {
             foreach ($data['data'] as &$v) {
-                $v['start_time'] = date('Y.m.d H:i', $v['start_time']) . ' - ' . date('Y.m.d H:i', $v['end_time']);
+                $v['start_time'] = date('Y.m.d H:i', $v['start_time']).' - '.date('Y.m.d H:i', $v['end_time']);
             }
         }
         return $this->success($data);
@@ -728,7 +731,7 @@ class IndexUser extends ApiRest
     public function atvQr()
     {
         $input = $this->_input;
-        $key = 'atv_coupon' . $input['coupon_atv_id'];
+        $key = 'atv_coupon'.$input['coupon_atv_id'];
         $qr = getCache($key, $this->_uniacid);
         if (empty($qr)) {
 //            $qr_insert = [
@@ -797,7 +800,8 @@ class IndexUser extends ApiRest
         $order_model->coachBalanceArr($this->_uniacid);
         $coach_model = new Coach();
         $data = $comm_model->recordList($dis, $limit);
-        $data['total_cash'] = $comm_model->where(['top_id' => $this->getUserId()])->where('type', 'in', [1, 9])->where('status', '>', -1)->sum('cash');
+        $data['total_cash'] = $comm_model->where(['top_id' => $this->getUserId()])->where('type', 'in',
+            [1, 9])->where('status', '>', -1)->sum('cash');
         $data['total_cash'] = round($data['total_cash'], 2);
         if (!empty($data['data'])) {
             foreach ($data['data'] as &$v) {
@@ -823,24 +827,24 @@ class IndexUser extends ApiRest
     {
         $input = $this->_input;
         $image = $input['img'];
-        $imageName = "25220_" . date("His", time()) . "_" . rand(1111, 9999) . '.png';
+        $imageName = "25220_".date("His", time())."_".rand(1111, 9999).'.png';
         if (strstr($image, ",")) {
             $image = explode(',', $image);
             $image = $image[1];
         }
-        $base_path = '/image/' . $this->uniacid . '/' . date('y') . '/' . date('m');
-        $path = FILE_UPLOAD_PATH . $base_path;
+        $base_path = '/image/'.$this->uniacid.'/'.date('y').'/'.date('m');
+        $path = FILE_UPLOAD_PATH.$base_path;
         if (!is_dir($path)) { //判断目录是否存在 不存在就创建
             mkdir($path, 0777, true);
         }
-        $imageSrc = $path . "/" . $imageName;  //图片名字
+        $imageSrc = $path."/".$imageName;  //图片名字
         $r = file_put_contents($imageSrc, base64_decode($image));//返回的是字节数
 //        if (!$r) {
 //            return json(['data'=>null,"code"=>1,"msg"=>"图片生成失败"]);
 //        }else{
 //            return json(['data'=>1,"code"=>0,"msg"=>"图片生成成功"]);
 //        }
-        $img = UPLOAD_PATH . $imageSrc;
+        $img = UPLOAD_PATH.$imageSrc;
         return $this->success($img);
     }
 
@@ -862,7 +866,7 @@ class IndexUser extends ApiRest
         if (empty($admin_user)) {
             $this->errorMsg('你还不是加盟商');
         }
-        $key = 'join_admin' . $admin_user['id'] . '-' . $this->is_app;
+        $key = 'join_admin'.$admin_user['id'].'-'.$this->is_app;
         $qr = getCache($key, $this->_uniacid);
         if (empty($qr)) {
             //小程序
@@ -873,12 +877,12 @@ class IndexUser extends ApiRest
                 //获取二维码
                 $qr = $this->model->orderQr($input, $this->_uniacid);
             } else {
-                $page = 'https://' . $_SERVER['HTTP_HOST'] . '/h5/#/technician/pages/apply?admin_id=' . $admin_user['id'];
+                $page = 'https://'.$_SERVER['HTTP_HOST'].'/h5/#/technician/pages/apply?admin_id='.$admin_user['id'];
                 $qr = base64ToPng(getCode($this->_uniacid, $page));
             }
             setCache($key, $qr, 86400, $this->_uniacid);
         }
-        $qr = !empty($qr) ? $qr : 'https://' . $_SERVER['HTTP_HOST'] . '/favicon.ico';
+        $qr = !empty($qr) ? $qr : 'https://'.$_SERVER['HTTP_HOST'].'/favicon.ico';
         return $this->success($qr);
     }
 
@@ -931,7 +935,7 @@ class IndexUser extends ApiRest
         //获取税点
         $tax_point = getConfigSetting($this->_uniacid, 'tax_point');
         $balance = 100 - $tax_point;
-        $key = 'user_wallet' . $this->getUserId();
+        $key = 'user_wallet'.$this->getUserId();
         $value = getCache($key);
         if (!empty($value)) {
             $this->errorMsg('网络错误，请刷新重试');
@@ -940,7 +944,8 @@ class IndexUser extends ApiRest
         incCache($key, 1, $this->_uniacid);
         Db::startTrans();
         //减佣金
-        $res = $this->model->dataUpdate(['id' => $this->getUserId(), 'lock' => $user_info['lock']], ['new_cash' => $user_info['new_cash'] - $input['apply_price'], 'lock' => $user_info['lock'] + 1]);
+        $res = $this->model->dataUpdate(['id' => $this->getUserId(), 'lock' => $user_info['lock']],
+            ['new_cash' => $user_info['new_cash'] - $input['apply_price'], 'lock' => $user_info['lock'] + 1]);
         if ($res != 1) {
             Db::rollback();
             //减掉
@@ -1066,7 +1071,7 @@ class IndexUser extends ApiRest
     {
         $input = $this->_param;
         $input['is_member'] = empty($input['is_member']) ? 0 : $input['is_member'];
-        $key = 'user_commss' . $this->getUserId() . '-' . $this->is_app . '-' . $input['is_member'];
+        $key = 'user_commss'.$this->getUserId().'-'.$this->is_app.'-'.$input['is_member'];
         $qr = getCache($key, $this->_uniacid);
         if (empty($qr)) {
             //小程序
@@ -1077,12 +1082,12 @@ class IndexUser extends ApiRest
                 $qr = $this->model->orderQr($input, $this->_uniacid);
             } else {
                 $page = $input['is_member'] == 1 ? '/memberdiscount/pages/index' : '/user/pages/gzh';
-                $page = 'https://' . $_SERVER['HTTP_HOST'] . '/h5/#' . $page . '?pid=' . $this->getUserId() . '&is_member=' . $input['is_member'];
+                $page = 'https://'.$_SERVER['HTTP_HOST'].'/h5/#'.$page.'?pid='.$this->getUserId().'&is_member='.$input['is_member'];
                 $qr = base64ToPng(getCode($this->_uniacid, $page));
             }
             setCache($key, $qr, 86400, $this->_uniacid);
         }
-        $qr = !empty($qr) ? $qr : 'https://' . $_SERVER['HTTP_HOST'] . '/favicon.ico';
+        $qr = !empty($qr) ? $qr : 'https://'.$_SERVER['HTTP_HOST'].'/favicon.ico';
         return $this->success($qr);
     }
 
@@ -1095,7 +1100,7 @@ class IndexUser extends ApiRest
     public function distribution()
     {
         $input = $this->_param;
-        $key = 'user_distribution' . $this->getUserId() . '-' . $this->is_app;
+        $key = 'user_distribution'.$this->getUserId().'-'.$this->is_app;
         $qr = getCache($key, $this->_uniacid);
         if (empty($qr)) {
             //小程序
@@ -1105,12 +1110,12 @@ class IndexUser extends ApiRest
                 //获取二维码
                 $qr = $this->model->orderQr($input, $this->_uniacid);
             } else {
-                $page = 'https://' . $_SERVER['HTTP_HOST'] . '/h5/#/user/pages/distribution/apply?pid=' . $this->getUserId();
+                $page = 'https://'.$_SERVER['HTTP_HOST'].'/h5/#/user/pages/distribution/apply?pid='.$this->getUserId();
                 $qr = base64ToPng(getCode($this->_uniacid, $page));
             }
             setCache($key, $qr, 86400, $this->_uniacid);
         }
-        $qr = !empty($qr) ? $qr : 'https://' . $_SERVER['HTTP_HOST'] . '/favicon.ico';
+        $qr = !empty($qr) ? $qr : 'https://'.$_SERVER['HTTP_HOST'].'/favicon.ico';
         $config = (new Config())->dataInfo(['uniacid' => $this->_uniacid]);
         if ($config['fx_check'] == 1) {
             $distribution_model = new DistributionList();
@@ -1297,7 +1302,7 @@ class IndexUser extends ApiRest
         $res = $this->model->dataUpdate(['id' => $this->getUserId()], $dis);
         $user = $this->getUserInfo();
         $user['phone'] = $input['phone'];
-        $key = 'longbing_user_autograph_' . $user['id'];
+        $key = 'longbing_user_autograph_'.$user['id'];
         $key = md5($key);
         setCache($key, $user, 7200);
         return $this->success($res);
@@ -1346,7 +1351,9 @@ class IndexUser extends ApiRest
         $where[] = ['a.coach_id', '=', $this->getUserId()];
         $where[] = ['a.uniacid', '=', $this->_uniacid];
         $data = Feedback::getList($where, $limit);
-        $data['wait'] = Feedback::where(['coach_id' => $this->getUserId(), 'uniacid' => $this->_uniacid, 'status' => 1])->count();
+        $data['wait'] = Feedback::where([
+            'coach_id' => $this->getUserId(), 'uniacid' => $this->_uniacid, 'status' => 1
+        ])->count();
         return $this->success($data);
     }
 
@@ -1389,7 +1396,7 @@ class IndexUser extends ApiRest
         if (!empty($cap_info)) {
             $this->errorMsg('向导不能注销');
         }
-        $open_id = $this->getUserInfo()['openid'] . time();
+        $open_id = $this->getUserInfo()['openid'].time();
         $res = $this->model->dataUpdate(['id' => $this->getUserId()], ['status' => -1, 'openid' => $open_id]);
         setCache($this->autograph, '', 0);
         return $this->success(true);
@@ -1464,7 +1471,8 @@ class IndexUser extends ApiRest
         $dis = [
             'id' => $this->_user_id
         ];
-        $res = $this->model->dataUpdate($dis, ['alipay_number' => $input['alipay_number'], 'alipay_name' => $input['alipay_name']]);
+        $res = $this->model->dataUpdate($dis,
+            ['alipay_number' => $input['alipay_number'], 'alipay_name' => $input['alipay_name']]);
         return $this->success($res);
     }
 
@@ -1552,10 +1560,20 @@ class IndexUser extends ApiRest
         $dis[] = ['user_id', '=', $this->getUserId()];
         $dis[] = ['status', '=', 1];
         $data = [
-            'pay' => $order_model->getOrderNum([['uniacid', '=', $this->_uniacid], ['user_id', '=', $uid], ['pay_type', '=', 1], ['is_show', '=', 1]]),
-            'service' => $order_model->getOrderNum([['uniacid', '=', $this->_uniacid], ['user_id', '=', $uid], ['pay_type', 'in', [2, 3, 4, 5]], ['is_show', '=', 1]]),
-            'ing' => $order_model->getOrderNum([['uniacid', '=', $this->_uniacid], ['user_id', '=', $uid], ['pay_type', '=', 6], ['is_show', '=', 1]]),
-            'comment' => $order_model->getOrderNum([['uniacid', '=', $this->_uniacid], ['user_id', '=', $uid], ['pay_type', '=', 7], ['is_comment', '=', 0], ['is_show', '=', 1], ['is_add', '=', 0]]),
+            'pay' => $order_model->getOrderNum([
+                ['uniacid', '=', $this->_uniacid], ['user_id', '=', $uid], ['pay_type', '=', 1], ['is_show', '=', 1]
+            ]),
+            'service' => $order_model->getOrderNum([
+                ['uniacid', '=', $this->_uniacid], ['user_id', '=', $uid], ['pay_type', 'in', [2, 3, 4, 5]],
+                ['is_show', '=', 1]
+            ]),
+            'ing' => $order_model->getOrderNum([
+                ['uniacid', '=', $this->_uniacid], ['user_id', '=', $uid], ['pay_type', '=', 6], ['is_show', '=', 1]
+            ]),
+            'comment' => $order_model->getOrderNum([
+                ['uniacid', '=', $this->_uniacid], ['user_id', '=', $uid], ['pay_type', '=', 7], ['is_comment', '=', 0],
+                ['is_show', '=', 1], ['is_add', '=', 0]
+            ]),
             'refund' => RefundOrder::getOrderNum($dis),
         ];
         return $this->success($data);
@@ -1612,7 +1630,7 @@ class IndexUser extends ApiRest
         }
         $staff = ChannelStaff::getInfo(['a.user_id' => $this->getUserId(), 'a.status' => 1]);
         if (!empty($staff)) {
-            return $this->error('您已经是' . $staff['nickName'] . '的下级，不可绑定在多个渠道商的下面');
+            return $this->error('您已经是'.$staff['nickName'].'的下级，不可绑定在多个渠道商的下面');
         }
         $data = ChannelStaff::getFirst(['id' => $id]);
         if ($data['user_id'] != 0) {
@@ -1629,7 +1647,7 @@ class IndexUser extends ApiRest
             //获取二维码
             $qr = $user_model->orderQr($input, $this->_uniacid);
         } else {
-            $page = 'https://' . $_SERVER['HTTP_HOST'] . '/h5/#/pages/service?channel_staff_id=' . $id;
+            $page = 'https://'.$_SERVER['HTTP_HOST'].'/h5/#/pages/service?channel_staff_id='.$id;
             $qr = base64ToPng(getCode($this->_uniacid, $page));
         }
         $res = ChannelStaff::update(['user_id' => $this->getUserId(), 'qr_path' => $qr], ['id' => $id]);
@@ -1699,7 +1717,7 @@ class IndexUser extends ApiRest
         $new_cash = $user_info['package_cash'];
         $cash_mini = Config::where(['uniacid' => $this->_uniacid])->value('cash_mini');
         if (empty($input['apply_price']) || $input['apply_price'] < $cash_mini || $input['apply_price'] < 0.01) {
-            $this->errorMsg('提现金额最低' . ($cash_mini > 0 ? $cash_mini : 0.01) . '元');
+            $this->errorMsg('提现金额最低'.($cash_mini > 0 ? $cash_mini : 0.01).'元');
         }
         if ($input['apply_price'] > $new_cash) {
             $this->errorMsg('余额不足');
@@ -1707,7 +1725,7 @@ class IndexUser extends ApiRest
         //获取税点
         $tax_point = getConfigSetting($this->_uniacid, 'tax_point');
         $balance = 100 - $tax_point;
-        $key = 'share_wallet' . $this->getUserId();
+        $key = 'share_wallet'.$this->getUserId();
         //加一个锁防止重复提交
         incCache($key, 1, $this->_uniacid);
         $value = getCache($key, $this->_uniacid);

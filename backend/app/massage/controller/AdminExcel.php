@@ -61,12 +61,12 @@ class AdminExcel extends AdminRest
         }
         //商品名字搜索
         if (!empty($input['goods_name'])) {
-            $dis[] = ['c.goods_name', 'like', '%' . $input['goods_name'] . '%'];
+            $dis[] = ['c.goods_name', 'like', '%'.$input['goods_name'].'%'];
         }
         //手机号搜索
         if (!empty($input['mobile'])) {
             $order_address_model = new OrderAddress();
-            $order_address_dis[] = ['mobile', 'like', '%' . $input['mobile'] . '%'];
+            $order_address_dis[] = ['mobile', 'like', '%'.$input['mobile'].'%'];
             $order_id = $order_address_model->where($order_address_dis)->column('order_id');
             $dis[] = ['a.id', 'in', $order_id];
         }
@@ -90,17 +90,17 @@ class AdminExcel extends AdminRest
         $map = [];
         //店铺名字搜索
         if (!empty($input['coach_name'])) {
-            $map[] = ['b.coach_name', 'like', '%' . $input['coach_name'] . '%'];
-            $map[] = ['d.now_coach_name', 'like', '%' . $input['coach_name'] . '%'];
+            $map[] = ['b.coach_name', 'like', '%'.$input['coach_name'].'%'];
+            $map[] = ['d.now_coach_name', 'like', '%'.$input['coach_name'].'%'];
         }
         if (!empty($input['order_code'])) {
-            $dis[] = ['a.order_code', 'like', '%' . $input['order_code'] . '%'];
+            $dis[] = ['a.order_code', 'like', '%'.$input['order_code'].'%'];
         }
         if (!empty($input['channel_cate_id'])) {
             $dis[] = ['e.cate_id', '=', $input['channel_cate_id']];
         }
         if (!empty($input['channel_name'])) {
-            $dis[] = ['e.user_name', 'like', '%' . $input['channel_name'] . '%'];
+            $dis[] = ['e.user_name', 'like', '%'.$input['channel_name'].'%'];
         }
         if (!empty($input['is_channel'])) {
             $dis[] = ['a.pay_type', '>', 1];
@@ -150,7 +150,7 @@ class AdminExcel extends AdminRest
         $header[] = '手机号';
         $header[] = $this->attendant_name;
         if (empty($input['is_add'])) {
-            $header[] = $this->attendant_name . '类型';
+            $header[] = $this->attendant_name.'类型';
         }
         if (!empty($input['is_channel'])) {
             $header[] = '渠道商';
@@ -173,7 +173,7 @@ class AdminExcel extends AdminRest
         }
         $header[] = '系统订单号';
         $header[] = '付款订单号';
-        $header[] = $this->attendant_name . '所属上级';
+        $header[] = $this->attendant_name.'所属上级';
         $header[] = '下单时间';
         $header[] = '支付方式';
         $header[] = '状态';
@@ -188,7 +188,7 @@ class AdminExcel extends AdminRest
             $info[] = $v['mobile'];
             $info[] = !empty($v['coach_info']['coach_name']) ? $v['coach_info']['coach_name'] : '';
             if (empty($input['is_add'])) {
-                $info[] = $v['coach_id'] > 0 ? '入驻' . $this->attendant_name : '非入驻' . $this->attendant_name;
+                $info[] = $v['coach_id'] > 0 ? '入驻'.$this->attendant_name : '非入驻'.$this->attendant_name;
             }
             if (!empty($input['is_channel'])) {
                 $info[] = $v['channel_name'];
@@ -259,13 +259,13 @@ class AdminExcel extends AdminRest
                 return '待服务';
                 break;
             case 3:
-                return $this->attendant_name . '接单';
+                return $this->attendant_name.'接单';
                 break;
             case 4:
-                return $this->attendant_name . '出发';
+                return $this->attendant_name.'出发';
                 break;
             case 5:
-                return $this->attendant_name . '到达';
+                return $this->attendant_name.'到达';
                 break;
             case 6:
                 return '服务中';
@@ -316,14 +316,17 @@ class AdminExcel extends AdminRest
         if (!empty($date_list['data'])) {
             foreach ($date_list['data'] as $k => $v) {
                 //订单金额
-                $date_list['data'][$k]['order_price'] = $this->model->datePrice($v['date_str'], $this->_uniacid, $cap_id);
+                $date_list['data'][$k]['order_price'] = $this->model->datePrice($v['date_str'], $this->_uniacid,
+                    $cap_id);
                 //退款金额
-                $date_list['data'][$k]['refund_price'] = $this->refund_order_model->datePrice($v['date_str'], $this->_uniacid, $cap_id);
+                $date_list['data'][$k]['refund_price'] = $this->refund_order_model->datePrice($v['date_str'],
+                    $this->_uniacid, $cap_id);
                 //提现金额
-                $date_list['data'][$k]['wallet_price'] = $wallet_model->datePrice($v['date_str'], $this->_uniacid, $cap_id);
+                $date_list['data'][$k]['wallet_price'] = $wallet_model->datePrice($v['date_str'], $this->_uniacid,
+                    $cap_id);
             }
         }
-        $name = $store_name . '财务报表';
+        $name = $store_name.'财务报表';
         $header = [
             '收支时间',
             '订单收入',
@@ -361,7 +364,7 @@ class AdminExcel extends AdminRest
         $title = ['用户ID', '微信昵称'];
         $title = array_merge($title, array_column($title_data, 'title'));
         $title[] = '提交时间';
-        $name = '文章表单数据导出-' . $article_title;
+        $name = '文章表单数据导出-'.$article_title;
         $diss[] = ['article_id', '=', $input['article_id']];
         $diss[] = ['status', '=', 1];
         if (!empty($input['start_time']) && !empty($input['end_time'])) {
@@ -404,13 +407,13 @@ class AdminExcel extends AdminRest
         $where = [];
         $where[] = ['a.uniacid', '=', $this->_uniacid];
         if (!empty($input['ser_name'])) {
-            $where[] = ['c.name', 'like', '%' . $input['ser_name'] . '%'];
+            $where[] = ['c.name', 'like', '%'.$input['ser_name'].'%'];
         }
         if (!empty($input['order_code'])) {
-            $where[] = ['a.order_code', 'like', '%' . $input['order_code'] . '%'];
+            $where[] = ['a.order_code', 'like', '%'.$input['order_code'].'%'];
         }
         if (!empty($input['phone'])) {
-            $where[] = ['a.phone', 'like', '%' . $input['phone'] . '%'];
+            $where[] = ['a.phone', 'like', '%'.$input['phone'].'%'];
         }
         if (!empty($input['start_time'])) {
             $where[] = ['a.create_time', '>=', $input['start_time']];
@@ -443,10 +446,11 @@ class AdminExcel extends AdminRest
             $where[] = ['a.coach_id', '=', $input['coach_id']];
         }
         if (!empty($input['coach_name'])) {
-            $where[] = ['d.coach_name', 'like', '%' . $input['coach_name'] . '%'];
+            $where[] = ['d.coach_name', 'like', '%'.$input['coach_name'].'%'];
         }
         $header = [
-            'ID', '服务类型', '服务时间', '邀约服务金额', '客户昵称', '手机号', '接单人', '支付方式', '系统订单号', '商户订单号', '下单时间', '状态'
+            'ID', '服务类型', '服务时间', '邀约服务金额', '客户昵称', '手机号', '接单人', '支付方式', '系统订单号',
+            '商户订单号', '下单时间', '状态'
         ];
         $data = DemandOrder::getExcelList($where);
         $new_data = [];
@@ -480,7 +484,7 @@ class AdminExcel extends AdminRest
                 $new_data[] = [
                     $item['id'],
                     $item['name'],
-                    $item['start_time'] . '-' . $item['end_time'],
+                    $item['start_time'].'-'.$item['end_time'],
                     $item['price'],
                     $item['nickName'],
                     $item['phone'],
@@ -512,16 +516,16 @@ class AdminExcel extends AdminRest
             ['a.uniacid', '=', $this->_uniacid]
         ];
         if (!empty($input['name'])) {
-            $where[] = ['a.name', 'like', '%' . $input['name'] . '%'];
+            $where[] = ['a.name', 'like', '%'.$input['name'].'%'];
         }
         if (!empty($input['store_id'])) {
             $where[] = ['a.store_id', '=', $input['store_id']];
         }
         if (!empty($input['order_code'])) {
-            $where[] = ['a.order_code', 'like', '%' . $input['order_code'] . '%'];
+            $where[] = ['a.order_code', 'like', '%'.$input['order_code'].'%'];
         }
         if (!empty($input['mobile'])) {
-            $where[] = ['a.mobile', 'like', '%' . $input['mobile'] . '%'];
+            $where[] = ['a.mobile', 'like', '%'.$input['mobile'].'%'];
         }
         if (!empty($input['start_time'])) {
             $where[] = ['a.create_time', '>=', $input['start_time']];
@@ -530,14 +534,15 @@ class AdminExcel extends AdminRest
             $where[] = ['a.create_time', '<=', $input['end_time']];
         }
         if (!empty($input['nickName'])) {
-            $where[] = ['b.nickName', 'like', '%' . $input['nickName'] . '%'];
+            $where[] = ['b.nickName', 'like', '%'.$input['nickName'].'%'];
         }
         if (!empty($input['status'])) {
             $where[] = ['a.status', '=', $input['status']];
         }
         $data = PackageOrder::getExcelList($where);
         $header = [
-            'ID', '套餐名称', '套餐保障', '套餐金额', '套餐数量', '下单人', '下单手机号', '套餐实付', '核销数量', '门店', '门店提成', '推广者', '推广提成', '系统订单号', '付款订单号', '下单时间', '支付方式', '状态'
+            'ID', '套餐名称', '套餐保障', '套餐金额', '套餐数量', '下单人', '下单手机号', '套餐实付', '核销数量',
+            '门店', '门店提成', '推广者', '推广提成', '系统订单号', '付款订单号', '下单时间', '支付方式', '状态'
         ];
         $pay_type = [
             1 => '微信',
@@ -554,7 +559,7 @@ class AdminExcel extends AdminRest
         $new_data = [];
         if ($data) {
             foreach ($data as $item) {
-                $ensure = ($item['ensure'] == 1 ? '过期自动退' : '人工审核') . ' · ' . ($item['reservation_day'] > 0 ? '提前' . $item['reservation_day'] . '天预约' : '无需预约');
+                $ensure = ($item['ensure'] == 1 ? '过期自动退' : '人工审核').' · '.($item['reservation_day'] > 0 ? '提前'.$item['reservation_day'].'天预约' : '无需预约');
                 $item['status'] = $item['status'] == 3 && $item['is_comment'] == 0 ? 4 : ($item['status'] == 3 && $item['is_comment'] == 1 ? 5 : $item['status']);
                 $new_data[] = [
                     $item['id'],
@@ -607,8 +612,8 @@ class AdminExcel extends AdminRest
         }
         $where = [];
         if (!empty($input['nickName'])) {
-            $where[] = ['nickName', 'like', '%' . $input['nickName'] . '%'];
-            $where[] = ['phone', 'like', '%' . $input['nickName'] . '%'];
+            $where[] = ['nickName', 'like', '%'.$input['nickName'].'%'];
+            $where[] = ['phone', 'like', '%'.$input['nickName'].'%'];
         }
         if (!empty($input['start_time']) && !empty($input['end_time'])) {
             $start_time = $input['start_time'];
@@ -619,7 +624,7 @@ class AdminExcel extends AdminRest
             $dis[] = ['id', '=', $input['id']];
         }
         if (!empty($input['phone'])) {
-            $dis[] = ['phone', 'like', '%' . $input['phone'] . '%'];
+            $dis[] = ['phone', 'like', '%'.$input['phone'].'%'];
         }
         $dis[] = ['is_blacklist', '=', 0];
         if (!empty($input['form_type'])) {

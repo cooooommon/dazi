@@ -51,7 +51,7 @@ class AdminChannel extends AdminRest
         $dis[] = ['uniacid', '=', $this->_uniacid];
         $dis[] = ['status', '>', -1];
         if (!empty($input['title'])) {
-            $dis[] = ['title', 'like', '%' . $input['title'] . '%'];
+            $dis[] = ['title', 'like', '%'.$input['title'].'%'];
         }
         $data = $this->cate_model->dataList($dis, $input['limit']);
         return $this->success($data);
@@ -150,8 +150,8 @@ class AdminChannel extends AdminRest
         }
         $where = [];
         if (!empty($input['name'])) {
-            $where[] = ['a.user_name', 'like', '%' . $input['name'] . '%'];
-            $where[] = ['a.mobile', 'like', '%' . $input['name'] . '%'];
+            $where[] = ['a.user_name', 'like', '%'.$input['name'].'%'];
+            $where[] = ['a.mobile', 'like', '%'.$input['name'].'%'];
         }
         if (!empty($input['ids'])) {
             $dis[] = ['a.id', 'not in', $input['ids']];
@@ -192,7 +192,8 @@ class AdminChannel extends AdminRest
         $user = $user_model->where(['id' => $info['user_id']])->find();
         $info['nickName'] = $user['nickName'];
         $info['avatarUrl'] = $user['avatarUrl'];
-        $info['staff_count'] = ChannelStaff::where(['status' => 1, 'channel_id' => $input['id']])->where('user_id', '>', 0)->count();
+        $info['staff_count'] = ChannelStaff::where(['status' => 1, 'channel_id' => $input['id']])->where('user_id', '>',
+            0)->count();
         $order = (new Order())->channelData($input['id']);
         $info['order_price'] = $order['order_price'];
         $info['extract_total_price'] = (new \app\massage\model\Wallet())->capCash($input['id'], 2, 5);
@@ -246,8 +247,8 @@ class AdminChannel extends AdminRest
         $where_ = $where;
         $dis = [];
         if (!empty($input['name'])) {
-            $dis[] = ['a.name', 'like', '%' . $input['name'] . '%'];
-            $dis[] = ['b.nickName', 'like', '%' . $input['name'] . '%'];
+            $dis[] = ['a.name', 'like', '%'.$input['name'].'%'];
+            $dis[] = ['b.nickName', 'like', '%'.$input['name'].'%'];
         }
         if (!empty($input['start_time'])) {
             $where_[] = ['c.create_time', '>', $input['start_time']];

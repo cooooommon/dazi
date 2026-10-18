@@ -125,8 +125,8 @@ class IndexOrder extends ApiRest
         $dis[] = ['a.is_show', '=', 1];
         $where = [];
         if (!empty($input['name'])) {
-            $where[] = ['b.goods_name', 'like', '%' . $input['name'] . '%'];
-            $where[] = ['a.order_code', 'like', '%' . $input['name'] . '%'];
+            $where[] = ['b.goods_name', 'like', '%'.$input['name'].'%'];
+            $where[] = ['a.order_code', 'like', '%'.$input['name'].'%'];
         }
         if (!empty($input['pay_type'])) {
             if ($input['pay_type'] == 5) {
@@ -140,7 +140,8 @@ class IndexOrder extends ApiRest
         if (!empty($data['data'])) {
             $shield_model = new ShieldList();
             foreach ($data['data'] as &$v) {
-                $can_refund_num = is_array($v['order_goods']) ? array_sum(array_column($v['order_goods'], 'can_refund_num')) : 0;
+                $can_refund_num = is_array($v['order_goods']) ? array_sum(array_column($v['order_goods'],
+                    'can_refund_num')) : 0;
                 //是否可以申请退款
                 if ((in_array($v['pay_type'], [2, 3, 4, 5]) && $can_refund_num > 0)) {
                     $v['can_refund'] = 1;
@@ -149,7 +150,9 @@ class IndexOrder extends ApiRest
                 }
                 //是否能加钟
                 $v['can_add_order'] = $this->model->orderCanAdd($v);
-                $shield = $shield_model->where(['user_id' => $v['user_id'], 'coach_id' => $v['coach_id']])->where('type', 'in', [2, 3])->find();
+                $shield = $shield_model->where([
+                    'user_id' => $v['user_id'], 'coach_id' => $v['coach_id']
+                ])->where('type', 'in', [2, 3])->find();
                 $v['can_again'] = !empty($shield) ? 0 : 1;
                 if (empty($v['coach_id'])) {
                     //查询是否有转派记录
@@ -185,11 +188,14 @@ class IndexOrder extends ApiRest
         }
         //是否能加钟
         $data['can_add_order'] = $this->model->orderCanAdd($data);
-        $arr = ['create_time', 'pay_time', 'serout_time', 'arrive_time', 'receiving_time', 'start_service_time', 'order_end_time'];
+        $arr = [
+            'create_time', 'pay_time', 'serout_time', 'arrive_time', 'receiving_time', 'start_service_time',
+            'order_end_time'
+        ];
         foreach ($arr as $value) {
             $data[$value] = !empty($data[$value]) ? date('Y-m-d H:i:s', $data[$value]) : 0;
         }
-        $data['start_time'] = date('Y-m-d H:i', $data['start_time']) . '-' . date('H:i', $data['end_time']);
+        $data['start_time'] = date('Y-m-d H:i', $data['start_time']).'-'.date('H:i', $data['end_time']);
         //剩余可申请退款数量
         $can_refund_num = array_sum(array_column($data['order_goods'], 'can_refund_num'));
         //是否可以申请退款
@@ -204,7 +210,8 @@ class IndexOrder extends ApiRest
         //加钟订单
         if ($data['is_add'] == 0) {
             $add_id = $data['id'];
-            $data['add_order_id'] = $this->model->where(['add_pid' => $data['id']])->where('pay_type', '>', 1)->field('id,order_code')->select()->toArray();
+            $data['add_order_id'] = $this->model->where(['add_pid' => $data['id']])->where('pay_type', '>',
+                1)->field('id,order_code')->select()->toArray();
         } else {
             $add_id = $data['add_pid'];
             $data['add_pid'] = $this->model->where(['id' => $data['add_pid']])->field('id,order_code')->find();
@@ -215,7 +222,8 @@ class IndexOrder extends ApiRest
         $data = array_merge($order_data, $data);
         $data['sign_time'] = !empty($data['sign_time']) ? date('Y-m-d H:i:s', $data['sign_time']) : '';
         $shield_model = new ShieldList();
-        $shield = $shield_model->where(['user_id' => $data['user_id'], 'coach_id' => $data['coach_id']])->where('type', 'in', [2, 3])->find();
+        $shield = $shield_model->where(['user_id' => $data['user_id'], 'coach_id' => $data['coach_id']])->where('type',
+            'in', [2, 3])->find();
         $data['can_again'] = !empty($shield) ? 0 : 1;
         //查询是否有转派记录
         $change_log_model = new CoachChangeLog();
@@ -226,7 +234,9 @@ class IndexOrder extends ApiRest
                 $data['coach_info'] = $this->coach_model->where(['id' => $change_log['init_coach_id']])->field('id,coach_name,mobile,work_img')->find();
             }
         }
-        $have_car_price = $change_log_model->dataInfo(['order_id' => $data['id'], 'status' => 1, 'have_car_price' => 1]);
+        $have_car_price = $change_log_model->dataInfo([
+            'order_id' => $data['id'], 'status' => 1, 'have_car_price' => 1
+        ]);
         //是否可以退车费
         $data['can_refund_car_price'] = empty($have_car_price) && $data['pay_type'] < 4 ? 1 : 0;
         $admin_model = new \app\massage\model\Admin();
@@ -260,13 +270,16 @@ class IndexOrder extends ApiRest
         if (!empty($data['data'])) {
             $shield_model = new ShieldList();
             foreach ($data['data'] as &$v) {
-                $can_refund_num = is_array($v['order_goods']) ? array_sum(array_column($v['order_goods'], 'can_refund_num')) : 0;
+                $can_refund_num = is_array($v['order_goods']) ? array_sum(array_column($v['order_goods'],
+                    'can_refund_num')) : 0;
                 if ((in_array($v['pay_type'], [2, 3, 4, 5]) && $can_refund_num > 0)) {
                     $v['can_refund'] = 1;
                 } else {
                     $v['can_refund'] = 0;
                 }
-                $shield = $shield_model->where(['user_id' => $v['user_id'], 'coach_id' => $v['coach_id']])->where('type', 'in', [2, 3])->find();
+                $shield = $shield_model->where([
+                    'user_id' => $v['user_id'], 'coach_id' => $v['coach_id']
+                ])->where('type', 'in', [2, 3])->find();
                 $v['can_again'] = !empty($shield) ? 0 : 1;
             }
         }
@@ -286,8 +299,8 @@ class IndexOrder extends ApiRest
         $dis[] = ['a.user_id', '=', $this->getUserId()];
         $where = [];
         if (!empty($input['name'])) {
-            $where[] = ['b.goods_name', 'like', '%' . $input['name'] . '%'];
-            $where[] = ['a.order_code', 'like', '%' . $input['name'] . '%'];
+            $where[] = ['b.goods_name', 'like', '%'.$input['name'].'%'];
+            $where[] = ['a.order_code', 'like', '%'.$input['name'].'%'];
         }
         if (!empty($input['status'])) {
             $dis[] = ['a.status', '=', $input['status']];
@@ -296,7 +309,9 @@ class IndexOrder extends ApiRest
         }
         $data = $this->refund_model->indexDataList($dis, $where);
         //待接单数量
-        $data['agent_order_count'] = $this->refund_model->where(['user_id' => $this->getUserId(), 'status' => 1])->count();
+        $data['agent_order_count'] = $this->refund_model->where([
+            'user_id' => $this->getUserId(), 'status' => 1
+        ])->count();
         return $this->success($data);
     }
 
@@ -330,7 +345,8 @@ class IndexOrder extends ApiRest
         if (!empty($order)) {
             //加钟订单
             if ($order['is_add'] == 0) {
-                $data['add_order_id'] = $this->model->where(['add_pid' => $order['id']])->where('pay_type', '>', 1)->field('id,order_code')->select()->toArray();
+                $data['add_order_id'] = $this->model->where(['add_pid' => $order['id']])->where('pay_type', '>',
+                    1)->field('id,order_code')->select()->toArray();
             } else {
                 $data['add_pid'] = $this->model->where(['id' => $order['add_pid']])->field('id,order_code')->find();
             }
@@ -400,7 +416,8 @@ class IndexOrder extends ApiRest
         }
         $lat = !empty($address['lat']) ? $address['lat'] : 0;
         $lng = !empty($address['lng']) ? $address['lng'] : 0;
-        $order_info = $this->model->payOrderInfo($this->getUserId(), $input['coach_id'], $lat, $lng, $input['car_type'], $coupon, $order_id);
+        $order_info = $this->model->payOrderInfo($this->getUserId(), $input['coach_id'], $lat, $lng, $input['car_type'],
+            $coupon, $order_id);
         //默认地址
         $order_info['address_info'] = $address;
         $coach_model = new Coach();
@@ -414,7 +431,9 @@ class IndexOrder extends ApiRest
         //通过向导是否绑定门店来判断是否可以下门店订单
         if (!empty($order_info['store_id'])) {
             $store_model = new StoreList();
-            $order_info['store_info'] = $store_model->where(['id' => $order_info['store_id'], 'status' => 1])->field('id,title,address,lng,lat,phone')->find();
+            $order_info['store_info'] = $store_model->where([
+                'id' => $order_info['store_id'], 'status' => 1
+            ])->field('id,title,address,lng,lat,phone')->find();
         }
         //是否支持门店服务
         $order_info['is_store'] = !empty($order_info['store_info']) ? 1 : 0;
@@ -448,7 +467,8 @@ class IndexOrder extends ApiRest
         //默认时间
         $near_time = $coach_model->getCoachEarliestTime($input['coach_id'], $config, 1);
         if (!empty($near_time)) {
-            $order_info['near_time']['text'] = date('m-d', $near_time) . ' ' . changeWeek(date('w', $near_time)) . ' ' . date('H:i', $near_time);
+            $order_info['near_time']['text'] = date('m-d', $near_time).' '.changeWeek(date('w',
+                    $near_time)).' '.date('H:i', $near_time);
             $order_info['near_time']['str'] = $near_time;
         }
         $order_info['member_auth'] = MemberOrder::getStatus($this->getUserId(), $this->_uniacid);
@@ -469,7 +489,7 @@ class IndexOrder extends ApiRest
         $data = $coupon_record_model->where('id', 'in', $coupon_id)->order('id desc')->paginate(10)->toArray();
         if (!empty($data['data'])) {
             foreach ($data['data'] as &$v) {
-                $v['start_time'] = date('Y.m.d H:i', $v['start_time']) . ' - ' . date('Y.m.d H:i', $v['end_time']);
+                $v['start_time'] = date('Y.m.d H:i', $v['start_time']).' - '.date('Y.m.d H:i', $v['end_time']);
             }
         }
         return $this->success($data);
@@ -529,9 +549,9 @@ class IndexOrder extends ApiRest
             }
         }
         //渠道商下级
-        $p = new PermissionChannelstaff((int)$this->_uniacid);
+        $p = new PermissionChannelstaff((int) $this->_uniacid);
         $staff_auth = $p->pAuth();
-        $p = new PermissionChannel((int)$this->_uniacid);
+        $p = new PermissionChannel((int) $this->_uniacid);
         $channel_auth = $p->pAuth();
         //加钟订单
         if (!empty($order_id)) {
@@ -578,7 +598,8 @@ class IndexOrder extends ApiRest
                 }
             } else {
                 //到店服务
-                $address = $address_order_model->getDefaultSetting($this->_uniacid, $input['user_name'], $input['user_phone'], $cap_info['store_id']);
+                $address = $address_order_model->getDefaultSetting($this->_uniacid, $input['user_name'],
+                    $input['user_phone'], $cap_info['store_id']);
                 if (empty($address)) {
                     $this->errorMsg('该向导未绑定门店');
                 }
@@ -616,7 +637,8 @@ class IndexOrder extends ApiRest
         if (!empty($store_check['code'])) {
             $this->errorMsg($store_check['msg']);
         }
-        $order_info = $this->model->payOrderInfo($this->getUserId(), $input['coach_id'], $address['lat'], $address['lng'], $input['car_type'], $coupon_id, $order_id);
+        $order_info = $this->model->payOrderInfo($this->getUserId(), $input['coach_id'], $address['lat'],
+            $address['lng'], $input['car_type'], $coupon_id, $order_id);
         $config_model = new Config();
         $config = $config_model->dataInfo(['uniacid' => $this->_uniacid]);
         //分销类型沿用主订单，无则用设置
@@ -625,7 +647,7 @@ class IndexOrder extends ApiRest
             $cash_type = $p_order['cash_type'];
         }
         Db::startTrans();
-        $key = $order_info['coach_id'] . 'order_key';
+        $key = $order_info['coach_id'].'order_key';
         incCache($key, 1, $this->_uniacid);
         $key_value = getCache($key, $this->_uniacid);
         if ($key_value != 1) {
@@ -673,7 +695,7 @@ class IndexOrder extends ApiRest
             //向导出发地址
             'trip_start_address' => !empty($cap_info['address']) ? $cap_info['address'] : '',
             //订单到达地址
-            'trip_end_address' => $address['address'] . ' ' . $address['address_info'],
+            'trip_end_address' => $address['address'].' '.$address['address_info'],
             //加钟fu
             'add_pid' => $order_id,
             'is_add' => !empty($order_id) ? 1 : 0,
@@ -705,7 +727,8 @@ class IndexOrder extends ApiRest
             $this->errorMsg($res['msg']);
         }
         //添加到子订单
-        $res = $this->order_goods_model->orderGoodsAdd($order_info['order_goods'], $order_id, $input['coach_id'], $this->getUserId());
+        $res = $this->order_goods_model->orderGoodsAdd($order_info['order_goods'], $order_id, $input['coach_id'],
+            $this->getUserId());
         if (!empty($res['code'])) {
             Db::rollback();
             $this->errorMsg($res['msg']);
@@ -737,20 +760,24 @@ class IndexOrder extends ApiRest
             return $this->success(true);
         } elseif ($pay_model == 3) {
             $pay_model = new PayModel($this->payConfig());
-            $jsApiParameters = $pay_model->aliPay($order_insert['order_code'], $order_insert['pay_price'], 'MassageOrder', 1);
+            $jsApiParameters = $pay_model->aliPay($order_insert['order_code'], $order_insert['pay_price'],
+                'MassageOrder', 1);
             $arr['pay_list'] = $jsApiParameters;
             $arr['order_code'] = $order_insert['order_code'];
             $arr['order_id'] = $order_id;
         } else {
             //微信支付
             //虚拟支付开启时改走虚拟支付
-            $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid, $this->getUserInfo()['openid'], 'Massage', $order_insert['order_code'], $order_insert['pay_price']);
+            $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid,
+                $this->getUserInfo()['openid'], 'Massage', $order_insert['order_code'], $order_insert['pay_price']);
             if (!empty($virtualParams)) {
                 $jsApiParameters = $virtualParams;
             } else {
                 $pay_controller = new \app\shop\controller\IndexWxPay($this->app);
                 //支付
-                $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig(), $this->getUserInfo()['openid'], $this->_uniacid, "购买商品", ['type' => 'Massage', 'out_trade_no' => $order_insert['order_code']], $order_insert['pay_price']);
+                $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig(), $this->getUserInfo()['openid'],
+                    $this->_uniacid, "购买商品", ['type' => 'Massage', 'out_trade_no' => $order_insert['order_code']],
+                    $order_insert['pay_price']);
             }
             $arr['pay_list'] = $jsApiParameters;
             $arr['order_id'] = $order_id;
@@ -796,19 +823,23 @@ class IndexOrder extends ApiRest
             return $this->success(true);
         } elseif ($order_insert['pay_model'] == 3) {
             $pay_model = new PayModel($this->payConfig());
-            $jsApiParameters = $pay_model->aliPay($order_insert['order_code'], $order_insert['pay_price'], 'MassageOrder');
+            $jsApiParameters = $pay_model->aliPay($order_insert['order_code'], $order_insert['pay_price'],
+                'MassageOrder');
             $arr['pay_list'] = $jsApiParameters;
             $arr['order_code'] = $order_insert['order_code'];
         } else {
             //微信支付
             //虚拟支付开启时改走虚拟支付
-            $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid, $this->getUserInfo()['openid'], 'Massage', $order_insert['order_code'], $order_insert['pay_price']);
+            $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid,
+                $this->getUserInfo()['openid'], 'Massage', $order_insert['order_code'], $order_insert['pay_price']);
             if (!empty($virtualParams)) {
                 $jsApiParameters = $virtualParams;
             } else {
                 $pay_controller = new \app\shop\controller\IndexWxPay($this->app);
                 //支付
-                $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig(), $this->getUserInfo()['openid'], $this->_uniacid, "购买商品", ['type' => 'Massage', 'out_trade_no' => $order_insert['order_code']], $order_insert['pay_price']);
+                $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig(), $this->getUserInfo()['openid'],
+                    $this->_uniacid, "购买商品", ['type' => 'Massage', 'out_trade_no' => $order_insert['order_code']],
+                    $order_insert['pay_price']);
             }
             $arr['pay_list'] = $jsApiParameters;
         }
@@ -1221,7 +1252,8 @@ class IndexOrder extends ApiRest
             $this->errorMsg('订单已关闭');
         }
         //获取升级的服务价格
-        $order_data = $this->order_goods_model->getUpGoodsData($input['order_goods'], $order['coupon_id'], $order['id']);
+        $order_data = $this->order_goods_model->getUpGoodsData($input['order_goods'], $order['coupon_id'],
+            $order['id']);
         if (!empty($check['code'])) {
             $this->errorMsg($check['msg']);
         }
@@ -1273,7 +1305,8 @@ class IndexOrder extends ApiRest
             $this->errorMsg('该订单正在申请退款，无法升级');
         }
         //获取升级的服务价格
-        $order_data = $this->order_goods_model->getUpGoodsData($input['order_goods'], $order['coupon_id'], $order['id']);
+        $order_data = $this->order_goods_model->getUpGoodsData($input['order_goods'], $order['coupon_id'],
+            $order['id']);
         if (!empty($check['code'])) {
             $this->errorMsg($check['msg']);
         }
@@ -1351,13 +1384,16 @@ class IndexOrder extends ApiRest
             $arr['order_code'] = $insert['order_code'];
         } else {
             //虚拟支付开启时改走虚拟支付
-            $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid, $this->getUserInfo()['openid'], 'MassageUp', $insert['order_code'], $insert['pay_price']);
+            $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid,
+                $this->getUserInfo()['openid'], 'MassageUp', $insert['order_code'], $insert['pay_price']);
             if (!empty($virtualParams)) {
                 $jsApiParameters = $virtualParams;
             } else {
                 $pay_controller = new \app\shop\controller\IndexWxPay($this->app);
                 //支付
-                $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig(), $this->getUserInfo()['openid'], $this->_uniacid, "购买商品", ['type' => 'MassageUp', 'out_trade_no' => $insert['order_code']], $insert['pay_price']);
+                $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig(), $this->getUserInfo()['openid'],
+                    $this->_uniacid, "购买商品", ['type' => 'MassageUp', 'out_trade_no' => $insert['order_code']],
+                    $insert['pay_price']);
             }
             $arr['pay_list'] = $jsApiParameters;
         }
@@ -1428,7 +1464,10 @@ class IndexOrder extends ApiRest
 //        if (!checkVip($this->getUserId())) {
 //            return $this->error('请先充值会员');
 //        }
-        $input = $this->request->only(['address', 'lat', 'lng', 'content', 'img', 'ser_id', 'is_hide', 'price', 'start_time', 'end_time', 'pay_type', 'phone', 'is_car']);
+        $input = $this->request->only([
+            'address', 'lat', 'lng', 'content', 'img', 'ser_id', 'is_hide', 'price', 'start_time', 'end_time',
+            'pay_type', 'phone', 'is_car'
+        ]);
         $config_model = new Config();
         $input['price'] = $input['price'] <= 0 ? 0 : $input['price'];
         $config = $config_model->dataInfo(['uniacid' => $this->_uniacid]);
@@ -1493,13 +1532,16 @@ class IndexOrder extends ApiRest
                 ];
             } elseif ($input['pay_type'] == 2) {
                 //虚拟支付开启时改走虚拟支付
-                $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid, $this->getUserInfo()['openid'], 'demoOrder', $input['order_code'], $input['price']);
+                $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid,
+                    $this->getUserInfo()['openid'], 'demoOrder', $input['order_code'], $input['price']);
                 if (!empty($virtualParams)) {
                     $jsApiParameters = $virtualParams;
                 } else {
                     $pay_controller = new \app\shop\controller\IndexWxPay($this->app);
                     //支付
-                    $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig($this->_uniacid, $this->is_app), $this->getUserInfo()['openid'], $this->_uniacid, "发布邀约订单", ['type' => 'demoOrder', 'out_trade_no' => $input['order_code']], $input['price']);
+                    $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig($this->_uniacid,
+                        $this->is_app), $this->getUserInfo()['openid'], $this->_uniacid, "发布邀约订单",
+                        ['type' => 'demoOrder', 'out_trade_no' => $input['order_code']], $input['price']);
                 }
                 $return_data = [
                     'is_pay' => 0,
@@ -1513,7 +1555,7 @@ class IndexOrder extends ApiRest
                     'order_code' => $input['order_code'],
                     'price' => $input['price'],
                     'body' => '发布邀约订单',
-                    'passback_params' => 'type=demoOrder&uniacid=' . $this->_uniacid,
+                    'passback_params' => 'type=demoOrder&uniacid='.$this->_uniacid,
                     'is_app' => $this->is_app
                 ];
                 $jsApiParameters = $pay->aliPay($params);
@@ -1540,7 +1582,10 @@ class IndexOrder extends ApiRest
      */
     public function payManyDemandOrder()
     {
-        $input = $this->request->only(['address', 'lat', 'lng', 'content', 'img', 'ser_data', 'is_hide', 'start_time', 'end_time', 'pay_type', 'phone', 'is_car']);
+        $input = $this->request->only([
+            'address', 'lat', 'lng', 'content', 'img', 'ser_data', 'is_hide', 'start_time', 'end_time', 'pay_type',
+            'phone', 'is_car'
+        ]);
         if (empty($input['ser_data']) || !is_array($input['ser_data'])) {
             return $this->error('请选择服务');
         }
@@ -1613,13 +1658,16 @@ class IndexOrder extends ApiRest
                 ];
             } elseif ($input['pay_type'] == 2) {
                 //虚拟支付开启时改走虚拟支付
-                $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid, $this->getUserInfo()['openid'], 'manyDemoOrder', $input['order_code'], $input['price']);
+                $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid,
+                    $this->getUserInfo()['openid'], 'manyDemoOrder', $input['order_code'], $input['price']);
                 if (!empty($virtualParams)) {
                     $jsApiParameters = $virtualParams;
                 } else {
                     $pay_controller = new \app\shop\controller\IndexWxPay($this->app);
                     //支付
-                    $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig($this->_uniacid, $this->is_app), $this->getUserInfo()['openid'], $this->_uniacid, "发布邀约订单", ['type' => 'manyDemoOrder', 'out_trade_no' => $input['order_code']], $input['price']);
+                    $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig($this->_uniacid,
+                        $this->is_app), $this->getUserInfo()['openid'], $this->_uniacid, "发布邀约订单",
+                        ['type' => 'manyDemoOrder', 'out_trade_no' => $input['order_code']], $input['price']);
                 }
                 $return_data = [
                     'is_pay' => 0,
@@ -1633,7 +1681,7 @@ class IndexOrder extends ApiRest
                     'order_code' => $input['order_code'],
                     'price' => $input['price'],
                     'body' => '发布邀约订单',
-                    'passback_params' => 'type=manyDemoOrder&uniacid=' . $this->_uniacid,
+                    'passback_params' => 'type=manyDemoOrder&uniacid='.$this->_uniacid,
                     'is_app' => $this->is_app
                 ];
                 $jsApiParameters = $pay->aliPay($params);
@@ -1692,13 +1740,16 @@ class IndexOrder extends ApiRest
             ];
         } elseif ($order['pay_type'] == 2) {
             //虚拟支付开启时改走虚拟支付
-            $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid, $this->getUserInfo()['openid'], 'demoOrder', $order['order_code'], $order['price']);
+            $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid,
+                $this->getUserInfo()['openid'], 'demoOrder', $order['order_code'], $order['price']);
             if (!empty($virtualParams)) {
                 $jsApiParameters = $virtualParams;
             } else {
                 $pay_controller = new \app\shop\controller\IndexWxPay($this->app);
                 //支付
-                $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig($this->_uniacid, $this->is_app), $this->getUserInfo()['openid'], $this->_uniacid, "发布邀约订单", ['type' => 'demoOrder', 'out_trade_no' => $order['order_code']], $order['price']);
+                $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig($this->_uniacid, $this->is_app),
+                    $this->getUserInfo()['openid'], $this->_uniacid, "发布邀约订单",
+                    ['type' => 'demoOrder', 'out_trade_no' => $order['order_code']], $order['price']);
             }
             $return_data = [
                 'is_pay' => 0,
@@ -1712,7 +1763,7 @@ class IndexOrder extends ApiRest
                 'order_code' => $order['order_code'],
                 'price' => $order['price'],
                 'body' => '发布邀约订单',
-                'passback_params' => 'type=demoOrder&uniacid=' . $this->_uniacid,
+                'passback_params' => 'type=demoOrder&uniacid='.$this->_uniacid,
                 'is_app' => $this->is_app
             ];
             $jsApiParameters = $pay->aliPay($params);
@@ -1771,13 +1822,16 @@ class IndexOrder extends ApiRest
             ];
         } elseif ($order['pay_type'] == 2) {
             //虚拟支付开启时改走虚拟支付
-            $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid, $this->getUserInfo()['openid'], 'manyDemoOrder', $order['order_code'], $order['price']);
+            $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid,
+                $this->getUserInfo()['openid'], 'manyDemoOrder', $order['order_code'], $order['price']);
             if (!empty($virtualParams)) {
                 $jsApiParameters = $virtualParams;
             } else {
                 $pay_controller = new \app\shop\controller\IndexWxPay($this->app);
                 //支付
-                $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig($this->_uniacid, $this->is_app), $this->getUserInfo()['openid'], $this->_uniacid, "发布邀约订单", ['type' => 'manyDemoOrder', 'out_trade_no' => $order['order_code']], $order['price']);
+                $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig($this->_uniacid, $this->is_app),
+                    $this->getUserInfo()['openid'], $this->_uniacid, "发布邀约订单",
+                    ['type' => 'manyDemoOrder', 'out_trade_no' => $order['order_code']], $order['price']);
             }
             $return_data = [
                 'is_pay' => 0,
@@ -1791,7 +1845,7 @@ class IndexOrder extends ApiRest
                 'order_code' => $order['order_code'],
                 'price' => $order['price'],
                 'body' => '发布邀约订单',
-                'passback_params' => 'type=manyDemoOrder&uniacid=' . $this->_uniacid,
+                'passback_params' => 'type=manyDemoOrder&uniacid='.$this->_uniacid,
                 'is_app' => $this->is_app
             ];
             $jsApiParameters = $pay->aliPay($params);

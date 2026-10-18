@@ -1,5 +1,7 @@
 <?php
+
 namespace app\massage\controller;
+
 use app\AdminRest;
 
 use think\App;
@@ -13,7 +15,8 @@ class AdminPrinter extends AdminRest
 
     protected $model;
 
-    public function __construct(App $app) {
+    public function __construct(App $app)
+    {
         parent::__construct($app);
         $this->model = new Model();
     }
@@ -23,11 +26,12 @@ class AdminPrinter extends AdminRest
      * @DataTime: 2020-09-29 13:28
      * @功能说明:详情
      */
-    public function printerList(){
+    public function printerList()
+    {
         $input = $this->_param;
-        $dis[] = ['uniacid','=',$this->_uniacid];
-        $dis[] = ['status','>',-1];
-        $data = $this->model->dataList($dis,$input['limit']);
+        $dis[] = ['uniacid', '=', $this->_uniacid];
+        $dis[] = ['status', '>', -1];
+        $data = $this->model->dataList($dis, $input['limit']);
         return $this->success($data);
     }
 
@@ -36,7 +40,8 @@ class AdminPrinter extends AdminRest
      * @DataTime: 2020-09-29 13:28
      * @功能说明:详情
      */
-    public function printerInfo(){
+    public function printerInfo()
+    {
         $input = $this->_param;
         $dis = [
             'uniacid' => $this->_uniacid
@@ -50,9 +55,10 @@ class AdminPrinter extends AdminRest
      * @DataTime: 2020-09-29 13:29
      * @功能说明:编辑
      */
-    public function printerAdd(){
+    public function printerAdd()
+    {
         $input = $this->_input;
-        $input['uniacid']  = $this->_uniacid;
+        $input['uniacid'] = $this->_uniacid;
         $data = $this->model->dataAdd($input);
         return $this->success($data);
     }
@@ -62,12 +68,13 @@ class AdminPrinter extends AdminRest
      * @DataTime: 2020-09-29 13:29
      * @功能说明:编辑
      */
-    public function printerUpdate(){
+    public function printerUpdate()
+    {
         $input = $this->_input;
         $dis = [
             'uniacid' => $this->_uniacid
         ];
-        $data = $this->model->dataUpdate($dis,$input);
+        $data = $this->model->dataUpdate($dis, $input);
         return $this->success($data);
     }
 

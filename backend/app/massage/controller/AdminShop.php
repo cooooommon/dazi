@@ -98,23 +98,23 @@ class AdminShop extends AdminRest
     public function carteList()
     {
         //company_ 03AD8E9932AABA4EB6DC56C3B21ADCC0
-    //    $a = new Fdd($this->_uniacid);
-      //  $com_uuid = 'f84451b1ac78438c960de1c6808532b7';
+        //    $a = new Fdd($this->_uniacid);
+        //  $com_uuid = 'f84451b1ac78438c960de1c6808532b7';
 //        $res = $a->registerAccount(707,2);
 //
 //        dump($res);exit;
-       // $res = $a->getCompanyVerifyUrl('6FF4D10773B9653991BAC07C275B8637');
+        // $res = $a->getCompanyVerifyUrl('6FF4D10773B9653991BAC07C275B8637');
         //$res = $a->FindCompanyCertInfo('32e07ffd00524f5ea0777e56b6735ca8');
-       // $res = $a->Uploaddocs('03AD8E9932AABA4EB6DC56C3B21ADCC0','测试','https://massage.cncnconnect.com/test.doc');
+        // $res = $a->Uploaddocs('03AD8E9932AABA4EB6DC56C3B21ADCC0','测试','https://massage.cncnconnect.com/test.doc');
 //        $res = $a->Extsign('03AD8E9932AABA4EB6DC56C3B21ADCC01','03AD8E9932AABA4EB6DC56C3B21ADCC0','8047562ECE1898D33D67A1FAAAC0A8CF','测试');
 //
 //        dump($res);exit;
         //transactionNo 9fb3d7371c6f4741b41fba6e4c44f7e4
         //photoUuid fb3e21cb465642a4886c36906c4d8286
 //
-      //  $res = $a->getPersonVerifyUrl('8047562ECE1898D33D67A1FAAAC0A8CF');
-       // $res = $a->FindPersonCertInfo('9fb3d7371c6f4741b41fba6e4c44f7e4');
-       // $res = $a->getFile('fb3e21cb465642a4886c36906c4d8286');
+        //  $res = $a->getPersonVerifyUrl('8047562ECE1898D33D67A1FAAAC0A8CF');
+        // $res = $a->FindPersonCertInfo('9fb3d7371c6f4741b41fba6e4c44f7e4');
+        // $res = $a->getFile('fb3e21cb465642a4886c36906c4d8286');
 //        $res = $a->ApplyCert('8047562ECE1898D33D67A1FAAAC0A8CF','9fb3d7371c6f4741b41fba6e4c44f7e4');
 //
 //        dump($res);exit;
@@ -194,7 +194,9 @@ class AdminShop extends AdminRest
      */
     public function addGoods()
     {
-        $input = $this->request->only(['name', 'carte', 'cover', 'images', 'image_url', 'video_url', 'phone', 'desc', 'sort', 'price']);
+        $input = $this->request->only([
+            'name', 'carte', 'cover', 'images', 'image_url', 'video_url', 'phone', 'desc', 'sort', 'price'
+        ]);
         $rule = [
             'name' => 'require',
             'carte' => 'require',
@@ -228,7 +230,9 @@ class AdminShop extends AdminRest
      */
     public function editGoods()
     {
-        $input = $this->request->only(['id', 'name', 'carte', 'cover', 'images', 'image_url', 'video_url', 'phone', 'desc', 'sort', 'price']);
+        $input = $this->request->only([
+            'id', 'name', 'carte', 'cover', 'images', 'image_url', 'video_url', 'phone', 'desc', 'sort', 'price'
+        ]);
         if ($this->request->isPost()) {
             $rule = [
                 'id' => 'require',
@@ -275,7 +279,7 @@ class AdminShop extends AdminRest
         $where[] = ['status', '<>', -1];
         $where[] = ['uniacid', '=', $this->_uniacid];
         if (!empty($input['name'])) {
-            $where[] = ['name', 'like', '%' . $input['name'] . '%'];
+            $where[] = ['name', 'like', '%'.$input['name'].'%'];
         }
         if (!empty($input['carte'])) {
             $where[] = ['', 'exp', Db::raw("find_in_set({$input['carte']},carte)")];

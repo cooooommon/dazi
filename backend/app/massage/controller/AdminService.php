@@ -51,7 +51,7 @@ class AdminService extends AdminRest
             $dis[] = ['status', '>', -1];
         }
         if (!empty($input['name'])) {
-            $dis[] = ['title', 'like', '%' . $input['name'] . '%'];
+            $dis[] = ['title', 'like', '%'.$input['name'].'%'];
         }
         if ($type == 1) {
             $dis[] = ['check_status', '=', 2];
@@ -205,7 +205,9 @@ class AdminService extends AdminRest
     public function typeUpdate()
     {
         $data = request()->only(['id', 'name', 'top', 'status']);
-        if (isset($data['name']) && ServiceType::where([['status', '=', 1], ['name', '=', $data['name']], ['id', '<>', $data['id']]])->count() > 0) {
+        if (isset($data['name']) && ServiceType::where([
+                ['status', '=', 1], ['name', '=', $data['name']], ['id', '<>', $data['id']]
+            ])->count() > 0) {
             return $this->error('此分类已存在');
         }
         if (isset($data['status']) && $data['status'] == -1) {
@@ -233,10 +235,10 @@ class AdminService extends AdminRest
             ['status', '>', -1]
         ];
         if (!empty($name)) {
-            $where[] = ['name', 'like', '%' . $name . '%'];
+            $where[] = ['name', 'like', '%'.$name.'%'];
         }
         if (!empty($title)) {
-            $where[] = ['name', 'like', '%' . $title . '%'];
+            $where[] = ['name', 'like', '%'.$title.'%'];
         }
         if (!empty($status)) {
             $where[] = ['status', '=', $status];
@@ -267,7 +269,7 @@ class AdminService extends AdminRest
             ['status', '=', 1]
         ];
         if (!empty($name)) {
-            $where[] = ['name', 'like', '%' . $name . '%'];
+            $where[] = ['name', 'like', '%'.$name.'%'];
         }
         $data = ServiceType::getListNoPage($where);
         return $this->success($data);

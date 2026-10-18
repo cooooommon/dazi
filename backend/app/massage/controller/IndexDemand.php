@@ -16,16 +16,8 @@ class IndexDemand extends ApiRest
         parent::__construct($app);
     }
 
-//    protected $middleware = [
-//        'user_login'
-//    ];
-
     /**
      * 列表
-     * @return \think\Response
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
      */
     public function getList()
     {
@@ -112,7 +104,9 @@ class IndexDemand extends ApiRest
         if ($order['is_refund'] == 1) {
             return $this->error('申请退款中,不可邀约');
         }
-        $count = DemandOrderApply::num(['order_id' => $data['order_id'], 'coach_id' => $data['coach_id'], 'status' => 1]);
+        $count = DemandOrderApply::num([
+            'order_id' => $data['order_id'], 'coach_id' => $data['coach_id'], 'status' => 1
+        ]);
         if (empty($count)) {
             return $this->error('不可接单');
         }
@@ -143,11 +137,14 @@ class IndexDemand extends ApiRest
         if (empty($id)) {
             return $this->error('订单不存在');
         }
-        $order = DemandOrder::getInfo(['id' => $id, 'user_id' => $this->getUserId(), 'uniacid' => $this->_uniacid, 'is_pay' => 1]);
+        $order = DemandOrder::getInfo([
+            'id' => $id, 'user_id' => $this->getUserId(), 'uniacid' => $this->_uniacid, 'is_pay' => 1
+        ]);
         if (empty($order)) {
             return $this->error('订单不存在');
         }
-        if (!in_array($order['status'], [1, 2, 3]) || $order['start_time'] < time() || in_array($order['is_refund'], [1, 2])) {
+        if (!in_array($order['status'], [1, 2, 3]) || $order['start_time'] < time() || in_array($order['is_refund'],
+                [1, 2])) {
             return $this->error('此订单不可取消');
         }
 //        if ($order['pay_type'] = 1) {
@@ -190,7 +187,9 @@ class IndexDemand extends ApiRest
         if (empty($id)) {
             return $this->error('订单不存在');
         }
-        $order = DemandOrder::getInfo(['id' => $id, 'user_id' => $this->getUserId(), 'uniacid' => $this->_uniacid, 'is_pay' => 1]);
+        $order = DemandOrder::getInfo([
+            'id' => $id, 'user_id' => $this->getUserId(), 'uniacid' => $this->_uniacid, 'is_pay' => 1
+        ]);
         if (empty($order)) {
             return $this->error('订单不存在');
         }

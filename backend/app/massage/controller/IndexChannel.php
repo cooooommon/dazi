@@ -77,7 +77,7 @@ class IndexChannel extends ApiRest
     public function channelQr()
     {
         $input = $this->_param;
-        $key = 'channel_qr' . $this->channel_info['id'] . '-' . $this->is_app;
+        $key = 'channel_qr'.$this->channel_info['id'].'-'.$this->is_app;
         $qr = getCache($key, $this->_uniacid);
         if (empty($qr)) {
             //小程序
@@ -87,12 +87,12 @@ class IndexChannel extends ApiRest
                 //获取二维码
                 $qr = $this->user_model->orderQr($input, $this->_uniacid);
             } else {
-                $page = 'https://' . $_SERVER['HTTP_HOST'] . '/h5/#/pages/service?channel_id=' . $this->channel_info['id'];
+                $page = 'https://'.$_SERVER['HTTP_HOST'].'/h5/#/pages/service?channel_id='.$this->channel_info['id'];
                 $qr = base64ToPng(getCode($this->_uniacid, $page));
             }
             setCache($key, $qr, 86400, $this->_uniacid);
         }
-        $qr = !empty($qr) ? $qr : 'https://' . $_SERVER['HTTP_HOST'] . '/favicon.ico';
+        $qr = !empty($qr) ? $qr : 'https://'.$_SERVER['HTTP_HOST'].'/favicon.ico';
         return $this->success($qr);
     }
 
@@ -112,8 +112,8 @@ class IndexChannel extends ApiRest
         }
         $where = [];
         if (!empty($input['name'])) {
-            $where[] = ['b.goods_name', 'like', '%' . $input['name'] . '%'];
-            $where[] = ['a.order_code', 'like', '%' . $input['name'] . '%'];
+            $where[] = ['b.goods_name', 'like', '%'.$input['name'].'%'];
+            $where[] = ['a.order_code', 'like', '%'.$input['name'].'%'];
         }
         $data = $this->order_model->indexDataList($dis, $where);
         if (!empty($data['data'])) {
@@ -122,7 +122,8 @@ class IndexChannel extends ApiRest
             foreach ($data['data'] as &$v) {
                 $v['refund_price'] = $refund_model->where(['order_id' => $v['id'], 'status' => 2])->sum('refund_price');
                 //渠道商佣金
-                $v['channel_cash'] = $com_model->where(['order_id' => $v['id'], 'type' => 10])->where('status', '>', -1)->value('cash');
+                $v['channel_cash'] = $com_model->where(['order_id' => $v['id'], 'type' => 10])->where('status', '>',
+                    -1)->value('cash');
             }
         }
         return $this->success($data);
@@ -146,7 +147,7 @@ class IndexChannel extends ApiRest
         //获取税点
         $tax_point = getConfigSetting($this->_uniacid, 'tax_point');
         $balance = 100 - $tax_point;
-        $key = 'channel_wallet' . $this->getUserId();
+        $key = 'channel_wallet'.$this->getUserId();
         //加一个锁防止重复提交
         incCache($key, 1, $this->_uniacid);
         $value = getCache($key, $this->_uniacid);
@@ -156,7 +157,8 @@ class IndexChannel extends ApiRest
         }
         Db::startTrans();
         //减佣金
-        $res = $this->model->dataUpdate(['id' => $this->channel_info['id']], ['cash' => $this->channel_info['cash'] - $input['apply_price']]);
+        $res = $this->model->dataUpdate(['id' => $this->channel_info['id']],
+            ['cash' => $this->channel_info['cash'] - $input['apply_price']]);
         if ($res != 1) {
             Db::rollback();
             //减掉
@@ -244,7 +246,7 @@ class IndexChannel extends ApiRest
             //获取二维码
             $qr = $this->user_model->orderQr($input, $this->_uniacid);
         } else {
-            $page = 'https://' . $_SERVER['HTTP_HOST'] . '/h5/#/user/pages/channel/bind-staff?channel_invite_id=' . $qr_id;
+            $page = 'https://'.$_SERVER['HTTP_HOST'].'/h5/#/user/pages/channel/bind-staff?channel_invite_id='.$qr_id;
             $qr = base64ToPng(getCode($this->_uniacid, $page));
         }
         return $this->success(['path' => $qr]);
@@ -268,8 +270,8 @@ class IndexChannel extends ApiRest
         ];
         $dis = [];
         if (!empty($input['name'])) {
-            $dis[] = ['e.name', 'like', '%' . $input['name'] . '%'];
-            $dis[] = ['d.user_name', 'like', '%' . $input['name'] . '%'];
+            $dis[] = ['e.name', 'like', '%'.$input['name'].'%'];
+            $dis[] = ['d.user_name', 'like', '%'.$input['name'].'%'];
         }
         if (!empty($input['status'])) {
             $where[] = ['a.status', '=', $input['status']];
@@ -278,7 +280,7 @@ class IndexChannel extends ApiRest
             $where[] = ['a.create_time', '>', $input['start_time']];
         }
         if (!empty($input['end_time'])) {
-            $where[] = ['a.create_time', '<=', strtotime(handleTime($input['end_time'], 'Y-m-d') . ' 23:59:59')];
+            $where[] = ['a.create_time', '<=', strtotime(handleTime($input['end_time'], 'Y-m-d').' 23:59:59')];
         }
         $data = Commission::getChannelCommList($where, $dis, $input['limit'] ?? 10);
         $arr = Commission::getChannelStat($where, $dis);
@@ -303,8 +305,8 @@ class IndexChannel extends ApiRest
         ];
         $dis = [];
         if (!empty($input['name'])) {
-            $dis[] = ['a.name', 'like', '%' . $input['name'] . '%'];
-            $dis[] = ['b.nickName', 'like', '%' . $input['name'] . '%'];
+            $dis[] = ['a.name', 'like', '%'.$input['name'].'%'];
+            $dis[] = ['b.nickName', 'like', '%'.$input['name'].'%'];
         }
         $where_ = $where;
         if (!empty($input['start_time'])) {
