@@ -333,7 +333,14 @@ class IndexOrder extends ApiRest
         if (empty($order_id)) {
             $this->errorMsg('请选择订单');
         }
-        $order = PackageOrder::find($order_id);
+        $order = PackageOrder::where([
+            'id' => $order_id,
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ])->find();
+        if (empty($order)) {
+            $this->errorMsg('订单不存在');
+        }
         if ($order['status'] != 1 || $order['is_del'] == 1) {
             $this->errorMsg('此订单不可支付');
         }
@@ -419,7 +426,14 @@ class IndexOrder extends ApiRest
         if (empty($order_id)) {
             $this->errorMsg('请选择订单');
         }
-        $order = PackageOrder::find($order_id);
+        $order = PackageOrder::where([
+            'id' => $order_id,
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ])->find();
+        if (empty($order)) {
+            $this->errorMsg('订单不存在');
+        }
         if (!in_array($order['status'], [-1, 1, 3])) {
             $this->errorMsg('只有取消、待支付、完成的订单才能删除');
         }
@@ -430,7 +444,11 @@ class IndexOrder extends ApiRest
         if ($order['is_seckill'] == 1 && $order['status'] == 1) {
             PackageSeckill::updateSale($order['seckill_id'], $order['num'], 2);
         }
-        $res = PackageOrder::update($update, ['id' => $order_id]);
+        $res = PackageOrder::update($update, [
+            'id' => $order_id,
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ]);
         return $this->success($res);
     }
 
@@ -451,6 +469,7 @@ class IndexOrder extends ApiRest
         }
         $where = [
             ['a.uniacid', '=', $this->_uniacid],
+            ['a.user_id', '=', $this->getUserId()],
             ['a.id', '=', $order_id]
         ];
         $data = PackageOrder::getInfo($where);
@@ -515,7 +534,14 @@ class IndexOrder extends ApiRest
     public function addComment()
     {
         $data = request()->only(['order_id', 'star', 'text', 'img', 'is_hide']);
-        $order = PackageOrder::find($data['order_id']);
+        $order = PackageOrder::where([
+            'id' => $data['order_id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ])->find();
+        if (empty($order)) {
+            $this->errorMsg('订单不存在');
+        }
         if ($order['is_comment'] == 1) {
             $this->errorMsg('你已经评价过了');
         }
@@ -559,6 +585,14 @@ class IndexOrder extends ApiRest
     public function refundInfo()
     {
         $id = request()->param('id', '');
+        $refund = PackageOrderRefund::where([
+            'id' => $id,
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ])->find();
+        if (empty($refund)) {
+            $this->errorMsg('退款单不存在');
+        }
         $data = PackageOrderRefund::getInfo($id);
         return $this->success($data);
     }
@@ -572,6 +606,14 @@ class IndexOrder extends ApiRest
     public function refundCancel()
     {
         $id = request()->param('id', '');
+        $refund = PackageOrderRefund::where([
+            'id' => $id,
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ])->find();
+        if (empty($refund)) {
+            $this->errorMsg('退款单不存在');
+        }
         $code = PackageOrderRefund::cancel($id);
         if ($code['code'] == 1) {
             $this->errorMsg($code['msg']);
@@ -591,14 +633,25 @@ class IndexOrder extends ApiRest
     public function refundDel()
     {
         $id = request()->param('id', '');
-        $refund = PackageOrderRefund::find($id);
+        $refund = PackageOrderRefund::where([
+            'id' => $id,
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ])->find();
+        if (empty($refund)) {
+            $this->errorMsg('退款单不存在');
+        }
         if ($refund['status'] == 1) {
             $this->errorMsg('申请中的订单，不可删除');
         }
         if ($refund['status'] == -1) {
             $this->errorMsg('已取消');
         }
-        $res = PackageOrderRefund::update(['is_del' => 1], ['id' => $id]);
+        $res = PackageOrderRefund::update(['is_del' => 1], [
+            'id' => $id,
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ]);
         PackageOrderRefundGoods::where('refund_id', $id)->update(['status' => -1]);
         return $this->success($res);
     }
@@ -646,10 +699,38 @@ class IndexOrder extends ApiRest
     public function getVirtualPhone()
     {
         $input = $this->_param;
-        $type = !empty($input['order_id']) ? 1 : 2;
-        $order = PackageOrder::getVirtualPhoneData($input['order_id'], $type);
+        $order_id = !empty($input['order_id']) ? (int) $input['order_id'] : 0;
+        if (empty($order_id)) {
+            $this->errorMsg('订单不存在');
+        }
+        //只能获取自己订单的虚拟电话
+        $order = PackageOrder::where([
+            'id' => $order_id,
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ])->find();
+        if (empty($order)) {
+            //兼容传入退款单 id 的情况
+            $refund = PackageOrderRefund::where([
+                'id' => $order_id,
+                'user_id' => $this->getUserId(),
+                'uniacid' => $this->_uniacid,
+            ])->find();
+            if (empty($refund)) {
+                $this->errorMsg('订单不存在');
+            }
+            $order = PackageOrder::where([
+                'id' => $refund['order_id'],
+                'user_id' => $this->getUserId(),
+                'uniacid' => $this->_uniacid,
+            ])->find();
+            if (empty($order)) {
+                $this->errorMsg('订单不存在');
+            }
+        }
+        $data = PackageOrder::getVirtualPhoneData($order['id'], 1);
         $called = new \app\virtual\model\Config();
-        $res = $called->getVirtual($order, 2, 3);
+        $res = $called->getVirtual($data, 2, 3);
         return $this->success($res);
     }
 }

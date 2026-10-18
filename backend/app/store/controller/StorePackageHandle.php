@@ -65,8 +65,17 @@ class StorePackageHandle extends ApiRest
         $data['imgs'] = !empty($data['imgs']) ? implode(',', $data['imgs']) : '';
         $data['introduce_text'] = !empty($data['introduce_text']) ? json_encode($data['introduce_text']) : '';
         $data['use_trade_week'] = !empty($data['use_trade_week']) ? implode(',', $data['use_trade_week']) : '';
-        $true_sale = StorePackage::where('id', $data['id'])->value('true_sale');
-        $data['total_sale'] = $data['sale'] + $true_sale;
+        //只能编辑自己门店的套餐
+        $package = StorePackage::where([
+            'id' => $data['id'],
+            'store_id' => $this->store['id'],
+            'uniacid' => $this->_uniacid,
+        ])->find();
+        if (empty($package)) {
+            return $this->error('套餐不存在');
+        }
+        $data['total_sale'] = $data['sale'] + $package['true_sale'];
+        $data['store_id'] = $this->store['id'];
         $data['uniacid'] = $this->_uniacid;
         $res = StorePackage::edit($data);
         if (isset($res['code'])) {
@@ -87,6 +96,14 @@ class StorePackageHandle extends ApiRest
     public function getInfo()
     {
         $id = request()->param('id', '');
+        $package = StorePackage::where([
+            'id' => $id,
+            'store_id' => $this->store['id'],
+            'uniacid' => $this->_uniacid,
+        ])->find();
+        if (empty($package)) {
+            $this->errorMsg('套餐不存在');
+        }
         $data = StorePackage::getInfo($id);
         return $this->success($data);
     }
@@ -137,6 +154,15 @@ class StorePackageHandle extends ApiRest
     public function updateStatus()
     {
         $data = request()->only(['id', 'status']);
+        //只能操作自己门店的套餐
+        $package = StorePackage::where([
+            'id' => $data['id'],
+            'store_id' => $this->store['id'],
+            'uniacid' => $this->_uniacid,
+        ])->find();
+        if (empty($package)) {
+            $this->errorMsg('套餐不存在');
+        }
         if ($data['status'] == 1) {
             $bool = StorePackage::checkStatus($data['id']);
             if (!$bool) {
@@ -151,7 +177,11 @@ class StorePackageHandle extends ApiRest
                 return $this->error('套餐正在参与秒杀，不可' . ($data['status'] == -1 ? '删除' : '下架'));
             }
         }
-        $res = StorePackage::update(['status' => $data['status']], ['id' => $data['id']]);
+        $res = StorePackage::update(['status' => $data['status']], [
+            'id' => $data['id'],
+            'store_id' => $this->store['id'],
+            'uniacid' => $this->_uniacid,
+        ]);
         return $this->success($res);
     }
 
@@ -164,7 +194,15 @@ class StorePackageHandle extends ApiRest
     public function seckillAdd()
     {
         $data = request()->only(['package_id', 'stock', 'price', 'start_time', 'end_time', 'limit']);
-        $info = StorePackage::find($data['package_id']);
+        //只能给自己门店的套餐添加秒杀
+        $info = StorePackage::where([
+            'id' => $data['package_id'],
+            'store_id' => $this->store['id'],
+            'uniacid' => $this->_uniacid,
+        ])->find();
+        if (empty($info)) {
+            return $this->error('套餐不存在');
+        }
         if ($info['status'] != 1) {
             return $this->error('套餐' . ($info['status'] == 0 ? '已下架' : '已删除') . ',不能添加秒杀');
         }
@@ -220,16 +258,39 @@ class StorePackageHandle extends ApiRest
         if (empty($data['id'])) {
             return $this->error('参数错误');
         }
-        $info = PackageSeckill::find($data['id']);
-        $info = StorePackage::find($info['package_id']);
+        //只能操作自己门店的秒杀
+        $seckill = PackageSeckill::where([
+            'id' => $data['id'],
+            'store_id' => $this->store['id'],
+            'uniacid' => $this->_uniacid,
+        ])->find();
+        if (empty($seckill)) {
+            return $this->error('秒杀不存在');
+        }
+        $info = StorePackage::where([
+            'id' => $seckill['package_id'],
+            'store_id' => $this->store['id'],
+            'uniacid' => $this->_uniacid,
+        ])->find();
+        if (empty($info)) {
+            return $this->error('套餐不存在');
+        }
         if ($info['status'] != 1 && isset($data['status']) && $data['status'] != -1) {
             return $this->error('套餐' . ($info['status'] == 0 ? '已下架' : '已删除') . ',不能设为秒杀');
         }
         if (request()->isPost()) {
-            $res = PackageSeckill::edit(['id' => $data['id']], $data);
+            $res = PackageSeckill::edit([
+                'id' => $data['id'],
+                'store_id' => $this->store['id'],
+                'uniacid' => $this->_uniacid,
+            ], $data);
             return $this->success($res);
         }
-        $info = PackageSeckill::getInfo(['a.id' => $data['id']]);
+        $info = PackageSeckill::getInfo([
+            'a.id' => $data['id'],
+            'a.store_id' => $this->store['id'],
+            'a.uniacid' => $this->_uniacid,
+        ]);
         return $this->success($info);
     }
 }

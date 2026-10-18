@@ -222,7 +222,9 @@ class IndexUser extends ApiRest
     {
         $input = $this->_param;
         $dis = [
-            'id' => $input['id']
+            'id' => $input['id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
         ];
         $data = $this->address_model->dataInfo($dis);
         return $this->success($data);
@@ -254,9 +256,17 @@ class IndexUser extends ApiRest
     public function addressUpdate()
     {
         $input = $this->_input;
+        //禁止通过请求体修改地址归属
+        unset($input['user_id'], $input['uniacid']);
         $dis = [
-            'id' => $input['id']
+            'id' => $input['id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
         ];
+        //先确认地址归属，避免通过他人地址 id 触发 updateOne 副作用
+        if (empty($this->address_model->dataInfo($dis))) {
+            $this->errorMsg('地址不存在');
+        }
         $res = $this->address_model->dataUpdate($dis, $input);
         if (!empty($input['status']) && $input['status'] == 1) {
             $this->address_model->updateOne($input['id']);
@@ -285,7 +295,9 @@ class IndexUser extends ApiRest
     {
         $input = $this->_input;
         $dis = [
-            'id' => $input['id']
+            'id' => $input['id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
         ];
         $res = $this->address_model->where($dis)->delete();
         return $this->success($res);
@@ -574,11 +586,19 @@ class IndexUser extends ApiRest
     public function couponDel()
     {
         $input = $this->_input;
-        $coupon = $this->coupon_record_model->dataInfo(['id' => $input['coupon_id']]);
+        $dis = [
+            'id' => $input['coupon_id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ];
+        $coupon = $this->coupon_record_model->dataInfo($dis);
+        if (empty($coupon)) {
+            $this->errorMsg('卡券不存在');
+        }
         if ($coupon['status'] == 1) {
             $this->errorMsg('待使用待卡券不能删除');
         }
-        $res = $this->coupon_record_model->dataUpdate(['id' => $input['coupon_id']], ['is_show' => 0]);
+        $res = $this->coupon_record_model->dataUpdate($dis, ['is_show' => 0]);
         return $this->success($res);
     }
 
@@ -1340,7 +1360,11 @@ class IndexUser extends ApiRest
         if (empty($id)) {
             return $this->error('参数错误');
         }
-        $data = Feedback::getInfo(['a.id' => $id]);
+        $data = Feedback::getInfo([
+            'a.id' => $id,
+            'a.coach_id' => $this->getUserId(),
+            'a.uniacid' => $this->_uniacid,
+        ]);
         return $this->success($data);
     }
 
@@ -1404,6 +1428,8 @@ class IndexUser extends ApiRest
         $input = $this->_input;
         $dis = [
             'id' => $input['id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
         ];
         $shield_model = new ShieldList();
         $res = $shield_model->where($dis)->delete();
@@ -1451,7 +1477,15 @@ class IndexUser extends ApiRest
     {
         $input = $this->_param;
         $order_model = new Order();
-        $order = $order_model->dataInfo(['id' => $input['order_id']]);
+        //只能获取自己订单的虚拟电话
+        $order = $order_model->dataInfo([
+            'id' => $input['order_id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order)) {
+            $this->errorMsg('订单不存在');
+        }
         $called = new \app\virtual\model\Config();
         $res = $called->getVirtual($order, 2);
         return $this->success($res);
@@ -1465,7 +1499,15 @@ class IndexUser extends ApiRest
     {
         $input = $this->_param;
         $order_model = new DemandOrder();
-        $order = $order_model->getFirst(['id' => $input['order_id']]);
+        //只能获取自己邀约订单的虚拟电话
+        $order = $order_model->getFirst([
+            'id' => $input['order_id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order)) {
+            $this->errorMsg('订单不存在');
+        }
         $called = new \app\virtual\model\Config();
         $res = $called->getVirtual($order, 2, 2);
         return $this->success($res);

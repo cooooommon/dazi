@@ -36,7 +36,8 @@
     "tp5er/tp5-databackup": "dev-main",
     "ext-json": "*",
     "ext-openssl": "*",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "ext-gd": "*"
   },
   "require-dev": {
     "symfony/var-dumper": "^4.2",

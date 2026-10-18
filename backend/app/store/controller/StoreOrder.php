@@ -298,6 +298,14 @@ class StoreOrder extends ApiRest
     public function refundInfo()
     {
         $id = request()->param('id', '');
+        $refund = PackageOrderRefund::where([
+            'id' => $id,
+            'store_id' => $this->store['id'],
+            'uniacid' => $this->_uniacid,
+        ])->find();
+        if (empty($refund)) {
+            $this->errorMsg('退款单不存在');
+        }
         $data = PackageOrderRefund::getInfo($id);
         return $this->success($data);
     }
@@ -314,6 +322,15 @@ class StoreOrder extends ApiRest
     public function refundCheck()
     {
         $data = request()->only(['id', 'status']);
+        //只能审核自己门店的退款单
+        $refund = PackageOrderRefund::where([
+            'id' => isset($data['id']) ? $data['id'] : 0,
+            'store_id' => $this->store['id'],
+            'uniacid' => $this->_uniacid,
+        ])->find();
+        if (empty($refund)) {
+            $this->errorMsg('退款单不存在');
+        }
         $pay_config = [
             1 => $this->payConfig($this->_uniacid, $this->is_app),
             2 => [],
@@ -357,7 +374,12 @@ class StoreOrder extends ApiRest
     public function seeComment()
     {
         $order_id = request()->param('order_id', '');
-        $order = PackageOrder::getFirst(['id' => $order_id]);
+        //只能查看自己门店的订单评价
+        $order = PackageOrder::getFirst([
+            'id' => $order_id,
+            'store_id' => $this->store['id'],
+            'uniacid' => $this->_uniacid,
+        ]);
         if (empty($order) || $order['is_comment'] == 0) {
             $this->errorMsg('此订单未评价');
         }
@@ -374,10 +396,38 @@ class StoreOrder extends ApiRest
     public function getVirtualPhone()
     {
         $input = $this->_param;
-        $type = !empty($input['order_id']) ? 1 : 2;
-        $order = PackageOrder::getVirtualPhoneData($input['order_id'], $type);
+        $order_id = !empty($input['order_id']) ? (int) $input['order_id'] : 0;
+        if (empty($order_id)) {
+            $this->errorMsg('订单不存在');
+        }
+        //只能获取自己门店订单的虚拟电话
+        $order = PackageOrder::getFirst([
+            'id' => $order_id,
+            'store_id' => $this->store['id'],
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order)) {
+            //兼容传入退款单 id 的情况
+            $refund = PackageOrderRefund::where([
+                'id' => $order_id,
+                'store_id' => $this->store['id'],
+                'uniacid' => $this->_uniacid,
+            ])->find();
+            if (empty($refund)) {
+                $this->errorMsg('订单不存在');
+            }
+            $order = PackageOrder::getFirst([
+                'id' => $refund['order_id'],
+                'store_id' => $this->store['id'],
+                'uniacid' => $this->_uniacid,
+            ]);
+            if (empty($order)) {
+                $this->errorMsg('订单不存在');
+            }
+        }
+        $data = PackageOrder::getVirtualPhoneData($order['id'], 1);
         $called = new \app\virtual\model\Config();
-        $res = $called->getVirtual($order, 1, 3);
+        $res = $called->getVirtual($data, 1, 3);
         return $this->success($res);
     }
 }

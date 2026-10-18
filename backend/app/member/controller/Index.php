@@ -181,7 +181,15 @@ class Index extends ApiRest
     public function rePayOrder()
     {
         $input = $this->_input;
-        $order_insert = MemberOrder::where(['id' => $input['id']])->find();
+        //只能重新支付自己的会员订单
+        $order_insert = MemberOrder::where([
+            'id' => $input['id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ])->find();
+        if (empty($order_insert)) {
+            $this->errorMsg('订单不存在');
+        }
         if ($order_insert['status'] != 1) {
             $this->errorMsg('订单状态错误');
         }

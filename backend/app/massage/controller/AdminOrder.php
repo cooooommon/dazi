@@ -65,14 +65,6 @@ class AdminOrder extends AdminRest
      */
     public function orderList()
     {
-//        $a = imagecreatefrompng( 'http://longbinghuoke.migugu.com/image/9351/23/04/ghgYNXxPBT5GWdpZXGfHfVAFznB3RSTt.png' );
-//
-//        dump($a);exit;
-//        $p = new PermissionVirtual(666);
-//
-//        $auth = $p->pAuth();
-//
-//        dump(1);exit;
         $input = $this->_param;
         //超时自动取消订单
         $this->model->autoCancelOrder($this->_uniacid);

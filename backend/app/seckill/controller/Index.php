@@ -43,14 +43,15 @@ class Index extends ApiRest
         if (!empty($input['name'])) {
             $where[] = ['b.name', 'like', '%' . $input['name'] . '%'];
         }
-        if (!empty($input['type_id'])) {
+        $type_id = !empty($input['type_id']) ? intval($input['type_id']) : 0;
+        if ($type_id > 0) {
             $dis[] = ['status', '=', 1];
-            $dis[] = ['', 'exp', Db::raw("find_in_set({$input['type_id']},type_id)")];
+            $dis[] = ['', 'exp', Db::raw("find_in_set({$type_id},type_id)")];
             $store_ids = StoreApply::where($dis)->column('id');
             $where[] = ['c.id', 'in', $store_ids];
         }
-        $lat = !empty($input['lat']) ? $input['lat'] : 0;
-        $lng = !empty($input['lng']) ? $input['lng'] : 0;
+        $lat = !empty($input['lat']) ? floatval($input['lat']) : 0;
+        $lng = !empty($input['lng']) ? floatval($input['lng']) : 0;
         $alh = 'ACOS(SIN((' . $lat . ' * 3.1415) / 180 ) *SIN((c.lat * 3.1415) / 180 ) +COS((' . $lat . ' * 3.1415) / 180 ) * COS((c.lat * 3.1415) / 180 ) *COS((' . $lng . ' * 3.1415) / 180 - (c.lng * 3.1415) / 180 ) ) * 6378.137 as distance';
         $order = 'a.is_ad desc,a.create_time desc';
         if (!empty($input['order'])) {
@@ -62,7 +63,8 @@ class Index extends ApiRest
                 $order = 'a.is_ad desc,distance asc';
             }
         }
-        $data = PackageSeckill::getIndexList($where, $alh, $order, $input['limit'] ?? 10);
+        $limit = !empty($input['limit']) ? intval($input['limit']) : 10;
+        $data = PackageSeckill::getIndexList($where, $alh, $order, $limit);
         if ($data['data']) {
             foreach ($data['data'] as &$item) {
                 $item['distance'] = !empty($item['distance']) ? round($item['distance'], 1) : 0;

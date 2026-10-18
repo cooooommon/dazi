@@ -74,6 +74,15 @@ class IndexDemand extends ApiRest
         if (empty($order_id)) {
             return $this->error('订单不存在');
         }
+        //只能查看自己订单的报名
+        $order = DemandOrder::getInfo([
+            'id' => $order_id,
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order)) {
+            return $this->error('订单不存在');
+        }
         $data = DemandOrderApply::seeApply([['a.order_id', '=', $order_id], ['b.status', '<>', -1]], $order_id, $limit);
         return $this->success($data);
     }
@@ -91,8 +100,13 @@ class IndexDemand extends ApiRest
         if (empty($data['order_id']) || empty($data['coach_id'])) {
             return $this->error('请选择向导');
         }
-        $order = DemandOrder::getInfo(['id' => $data['order_id']]);
-        if ($order['status'] != 2 || $order['start_time'] < time()) {
+        //只能操作自己的邀约订单
+        $order = DemandOrder::getInfo([
+            'id' => $data['order_id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order) || $order['status'] != 2 || $order['start_time'] < time()) {
             return $this->error('此订单不可接单');
         }
         if ($order['is_refund'] == 1) {
@@ -200,7 +214,11 @@ class IndexDemand extends ApiRest
         if (empty($id)) {
             return $this->error('订单不存在');
         }
-        $order = DemandOrder::getDetail(['a.id' => $id]);
+        $order = DemandOrder::getDetail([
+            'a.id' => $id,
+            'a.user_id' => $this->getUserId(),
+            'a.uniacid' => $this->_uniacid,
+        ]);
         if (empty($order)) {
             return $this->error('订单不存在');
         }

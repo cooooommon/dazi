@@ -426,7 +426,15 @@ class IndexCoach extends ApiRest
     public function updateOrder()
     {
         $input = $this->_input;
-        $order = $this->order_model->dataInfo(['id' => $input['order_id']]);
+        //只能操作分配给自己的订单
+        $order = $this->order_model->dataInfo([
+            'id' => $input['order_id'],
+            'coach_id' => $this->cap_info['id'],
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order)) {
+            $this->errorMsg('订单不存在');
+        }
         $update = $this->order_model->coachOrdertext($input);
         $refund_model = new RefundOrder();
         //判断有无申请中的退款订单
@@ -489,7 +497,11 @@ class IndexCoach extends ApiRest
                 }
             }
         }
-        $this->order_model->dataUpdate(['id' => $input['order_id']], $update);
+        $this->order_model->dataUpdate([
+            'id' => $input['order_id'],
+            'coach_id' => $this->cap_info['id'],
+            'uniacid' => $this->_uniacid,
+        ], $update);
         $log_model = new OrderLog();
         $log_model->addLog($input['order_id'], $this->_uniacid, $input['type'], $order['pay_type'], 2, $this->_user['id']);
         Db::commit();
@@ -847,13 +859,26 @@ class IndexCoach extends ApiRest
         $label_model = new UserLabelData();
         $list_model = new UserLabelList();
         $order_mdoel = new Order();
-        $order_mdoel->dataUpdate(['id' => $input['order_id']], ['label_time' => time()]);
+        //只能给自己订单关联的用户打标签
+        $order = $order_mdoel->dataInfo([
+            'id' => $input['order_id'],
+            'coach_id' => $this->cap_info['id'],
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order)) {
+            $this->errorMsg('订单不存在');
+        }
+        $order_mdoel->dataUpdate([
+            'id' => $order['id'],
+            'coach_id' => $this->cap_info['id'],
+            'uniacid' => $this->_uniacid,
+        ], ['label_time' => time()]);
         foreach ($input['label'] as $k => $value) {
             $title = $list_model->where(['id' => $value])->value('title');
             $arr[$k] = [
                 'uniacid' => $this->_uniacid,
                 'label_id' => $value,
-                'user_id' => $input['user_id'],
+                'user_id' => $order['user_id'],
                 'title' => $title,
                 'create_time' => time(),
             ];
@@ -931,7 +956,15 @@ class IndexCoach extends ApiRest
     public function getVirtualPhone()
     {
         $input = $this->_input;
-        $order = $this->order_model->dataInfo(['id' => $input['order_id']]);
+        //只能获取自己订单的虚拟电话
+        $order = $this->order_model->dataInfo([
+            'id' => $input['order_id'],
+            'coach_id' => $this->cap_info['id'],
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order)) {
+            $this->errorMsg('订单不存在');
+        }
         $called = new \app\virtual\model\Config();
         $res = $called->getVirtual($order);
         return $this->success($res);
@@ -945,7 +978,15 @@ class IndexCoach extends ApiRest
     {
         $input = $this->_param;
         $order_model = new DemandOrder();
-        $order = $order_model->getFirst(['id' => $input['order_id']]);
+        //只能获取自己邀约订单的虚拟电话
+        $order = $order_model->getFirst([
+            'id' => $input['order_id'],
+            'coach_id' => $this->cap_info['id'],
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order)) {
+            $this->errorMsg('订单不存在');
+        }
         $called = new \app\virtual\model\Config();
         $res = $called->getVirtual($order, 1, 2);
         return $this->success($res);
@@ -1089,10 +1130,23 @@ class IndexCoach extends ApiRest
     {
         $input = $this->_param;
         $order_model = new Order();
-        $order = $order_model->where(['id' => $input['id']])->field('id,order_code,true_service_price,true_car_price,coach_cash,coach_balance,service_price,discount,start_time,end_time,broker_coach_cash,broker_id')->find()->toArray();
+        $order = $order_model->where([
+            'id' => $input['id'],
+            'coach_id' => $this->cap_info['id'],
+            'uniacid' => $this->_uniacid,
+        ])->field('id,order_code,true_service_price,true_car_price,coach_cash,coach_balance,service_price,discount,start_time,end_time,broker_coach_cash,broker_id')->find();
+        if (empty($order)) {
+            $this->errorMsg('订单不存在');
+        }
+        $order = $order->toArray();
         $order['time_text'] = date('Y-m-d H:i', $order['start_time']) . '~' . date('H:i', $order['end_time']);
         //加钟订单
-        $order['add_order'] = $order_model->where(['pay_type' => 7, 'add_pid' => $input['id']])->field('id,order_code,true_service_price,true_car_price,coach_cash,coach_balance,service_price,discount,start_time,end_time,broker_coach_cash,broker_id')->select()->toArray();
+        $order['add_order'] = $order_model->where([
+            'pay_type' => 7,
+            'add_pid' => $input['id'],
+            'coach_id' => $this->cap_info['id'],
+            'uniacid' => $this->_uniacid,
+        ])->field('id,order_code,true_service_price,true_car_price,coach_cash,coach_balance,service_price,discount,start_time,end_time,broker_coach_cash,broker_id')->select()->toArray();
         if (!empty($order['add_order'])) {
             foreach ($order['add_order'] as &$value) {
                 $value['time_text'] = date('Y-m-d H:i', $value['start_time']) . '~' . date('H:i', $value['end_time']);
@@ -1113,7 +1167,8 @@ class IndexCoach extends ApiRest
         $input = $this->_param;
         $dis = [
             'id' => $input['id'],
-//            'coach_id' => $this->cap_info['id']
+            'coach_id' => $this->cap_info['id'],
+            'uniacid' => $this->_uniacid,
         ];
         $data = $this->order_model->dataInfo($dis);
         if (empty($data)) {
@@ -1204,6 +1259,8 @@ class IndexCoach extends ApiRest
         $input = $this->_input;
         $dis = [
             'id' => $input['id'],
+            'coach_id' => $this->cap_info['id'],
+            'uniacid' => $this->_uniacid,
         ];
         $shield_model = new ShieldList();
         $res = $shield_model->where($dis)->delete();
@@ -1455,8 +1512,11 @@ class IndexCoach extends ApiRest
         if ($count > 0) {
             return $this->error('请勿重复报名');
         }
-        $order = DemandOrder::getInfo(['id' => $order_id]);
-        if ($order['status'] != 2) {
+        $order = DemandOrder::getInfo([
+            'id' => $order_id,
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order) || $order['status'] != 2) {
             return $this->error('此订单不可报名');
         }
         if ($order['start_time'] < time()) {
@@ -1485,11 +1545,20 @@ class IndexCoach extends ApiRest
         if (empty($order_id)) {
             return $this->error('请选择订单');
         }
-        $count = DemandOrderApply::num(['order_id' => $order_id, 'coach_id' => $this->cap_info['id'], 'status' => 1]);
+        $count = DemandOrderApply::num([
+            'order_id' => $order_id,
+            'coach_id' => $this->cap_info['id'],
+            'uniacid' => $this->_uniacid,
+            'status' => 1,
+        ]);
         if ($count == 0) {
             return $this->error('不可取消');
         }
-        $res = DemandOrderApply::del(['order_id' => $order_id, 'coach_id' => $this->cap_info['id']]);
+        $res = DemandOrderApply::del([
+            'order_id' => $order_id,
+            'coach_id' => $this->cap_info['id'],
+            'uniacid' => $this->_uniacid,
+        ]);
         return $this->success($res);
     }
 

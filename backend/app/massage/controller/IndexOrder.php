@@ -175,6 +175,8 @@ class IndexOrder extends ApiRest
         $input = $this->_param;
         $dis = [
             'id' => $input['id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
             'is_show' => 1
         ];
         $data = $this->model->dataInfo($dis);
@@ -250,6 +252,8 @@ class IndexOrder extends ApiRest
     {
         $input = $this->_param;
         $dis[] = ['a.add_pid', '=', $input['order_id']];
+        $dis[] = ['a.user_id', '=', $this->getUserId()];
+        $dis[] = ['a.uniacid', '=', $this->_uniacid];
         $dis[] = ['a.pay_type', '>', 1];
         $dis[] = ['a.is_show', '=', 1];
         $data = $this->model->indexDataList($dis, []);
@@ -306,7 +310,9 @@ class IndexOrder extends ApiRest
     {
         $input = $this->_param;
         $dis = [
-            'id' => $input['id']
+            'id' => $input['id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
         ];
         $data = $this->refund_model->dataInfo($dis);
         // 找不到退款单时 dataInfo 返回空数组，继续取 $data['order_id'] 会抛
@@ -316,7 +322,11 @@ class IndexOrder extends ApiRest
         }
         $data['create_time'] = date('Y-m-d H:i:s', $data['create_time']);
         $data['refund_time'] = date('Y-m-d H:i:s', $data['refund_time']);
-        $order = $this->model->dataInfo(['id' => $data['order_id']]);
+        $order = $this->model->dataInfo([
+            'id' => $data['order_id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ]);
         if (!empty($order)) {
             //加钟订单
             if ($order['is_add'] == 0) {
@@ -348,13 +358,35 @@ class IndexOrder extends ApiRest
         $address_model = new Address();
         $coupon_modle = new Coupon();
         $coupon_record_model = new CouponRecord();
+        //校验优惠券归属，避免使用他人卡券
+        if (!empty($input['coupon_id'])) {
+            $coupon_record = $coupon_record_model->dataInfo([
+                'id' => $coupon,
+                'user_id' => $this->getUserId(),
+                'uniacid' => $this->_uniacid,
+            ]);
+            if (empty($coupon_record)) {
+                $this->errorMsg('优惠券不存在');
+            }
+        }
         if (!empty($input['address_id'])) {
-            $address = $address_model->dataInfo(['id' => $input['address_id']]);
+            $address = $address_model->dataInfo([
+                'id' => $input['address_id'],
+                'user_id' => $this->getUserId(),
+                'uniacid' => $this->_uniacid,
+            ]);
         }
         //加钟订单
         if (!empty($order_id)) {
             $input['car_type'] = 0;
-            $p_order = $this->model->dataInfo(['id' => $order_id]);
+            $p_order = $this->model->dataInfo([
+                'id' => $order_id,
+                'user_id' => $this->getUserId(),
+                'uniacid' => $this->_uniacid,
+            ]);
+            if (empty($p_order)) {
+                $this->errorMsg('订单不存在');
+            }
             $address = $p_order['address_info'];
         }
         //可用优惠券数量
@@ -451,7 +483,11 @@ class IndexOrder extends ApiRest
     public function checkAddOrder()
     {
         $input = $this->_input;
-        $add_order = $this->model->where(['add_pid' => $input['order_id']])->where('pay_type', 'in', [2, 3, 4, 5, 6, 8])->field('id,start_time,end_time')->find();
+        $add_order = $this->model->where([
+            'add_pid' => $input['order_id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ])->where('pay_type', 'in', [2, 3, 4, 5, 6, 8])->field('id,start_time,end_time')->find();
         if (!empty($add_order)) {
             $this->errorMsg('请先完成上一次续单订单，才能继续续单');
         }
@@ -481,6 +517,17 @@ class IndexOrder extends ApiRest
             $this->errorMsg('该向导已下架');
         }
         $coupon_id = !empty($input['coupon_id']) ? $input['coupon_id'] : 0;
+        //校验优惠券归属，避免使用他人卡券
+        if (!empty($coupon_id)) {
+            $coupon_record = $coupon_record_model->dataInfo([
+                'id' => $coupon_id,
+                'user_id' => $this->getUserId(),
+                'uniacid' => $this->_uniacid,
+            ]);
+            if (empty($coupon_record)) {
+                $this->errorMsg('优惠券不存在');
+            }
+        }
         //渠道商下级
         $p = new PermissionChannelstaff((int)$this->_uniacid);
         $staff_auth = $p->pAuth();
@@ -488,12 +535,23 @@ class IndexOrder extends ApiRest
         $channel_auth = $p->pAuth();
         //加钟订单
         if (!empty($order_id)) {
-            $p_order = $this->model->dataInfo(['id' => $order_id]);
+            $p_order = $this->model->dataInfo([
+                'id' => $order_id,
+                'user_id' => $this->getUserId(),
+                'uniacid' => $this->_uniacid,
+            ]);
+            if (empty($p_order)) {
+                $this->errorMsg('订单不存在');
+            }
             $can_add = $this->model->orderCanAdd($p_order);
             if ($can_add == 0) {
                 $this->errorMsg('该订单不能续单');
             }
-            $add_order = $this->model->where(['add_pid' => $order_id])->where('pay_type', 'in', [2, 3, 4, 5, 6, 8])->field('id,start_time,end_time')->find();
+            $add_order = $this->model->where([
+                'add_pid' => $order_id,
+                'user_id' => $this->getUserId(),
+                'uniacid' => $this->_uniacid,
+            ])->where('pay_type', 'in', [2, 3, 4, 5, 6, 8])->field('id,start_time,end_time')->find();
             if (!empty($add_order)) {
                 $this->errorMsg('请先完成上一次续单订单，才能继续续单');
             }
@@ -510,7 +568,11 @@ class IndexOrder extends ApiRest
             $input['channel_staff_balance'] = $p_order['channel_staff_balance'];
         } else {
             if (empty($input['is_store'])) {
-                $address = $address_model->dataInfo(['id' => $input['address_id']]);
+                $address = $address_model->dataInfo([
+                    'id' => $input['address_id'],
+                    'user_id' => $this->getUserId(),
+                    'uniacid' => $this->_uniacid,
+                ]);
                 if (empty($address)) {
                     $this->errorMsg('请添加地址');
                 }
@@ -704,7 +766,14 @@ class IndexOrder extends ApiRest
     public function rePayOrder()
     {
         $input = $this->_input;
-        $order_insert = $this->model->dataInfo(['id' => $input['id']]);
+        $order_insert = $this->model->dataInfo([
+            'id' => $input['id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order_insert)) {
+            $this->errorMsg('订单不存在');
+        }
         if ($order_insert['pay_type'] != 1) {
             $this->errorMsg('订单状态错误'.$order_insert['pay_type']);
         }
@@ -755,7 +824,16 @@ class IndexOrder extends ApiRest
     public function cancelOrder()
     {
         $input = $this->_input;
-        $order_insert = $this->model->dataInfo(['id' => $input['id']]);
+        $user_id = $this->getUserId();
+        //只能取消自己的订单，避免越权取消他人待支付订单
+        $order_insert = $this->model->dataInfo([
+            'id' => $input['id'],
+            'user_id' => $user_id,
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order_insert)) {
+            $this->errorMsg('订单不存在');
+        }
         if ($order_insert['pay_type'] != 1) {
             $this->errorMsg('订单状态错误');
         }
@@ -764,7 +842,7 @@ class IndexOrder extends ApiRest
             $this->errorMsg($res['msg']);
         }
         $log_model = new OrderLog();
-        $log_model->addLog($input['id'], $this->_uniacid, -1, $order_insert['pay_type'], 2, $this->_user['id']);
+        $log_model->addLog($input['id'], $this->_uniacid, -1, $order_insert['pay_type'], 2, $user_id);
         return $this->success($res);
     }
 
@@ -776,7 +854,13 @@ class IndexOrder extends ApiRest
     public function applyOrder()
     {
         $input = $this->_input;
-        $order = $this->model->dataInfo(['id' => $input['order_id']]);
+        $user_id = $this->getUserId();
+        //只能对自己的订单申请退款，避免越权操作他人订单
+        $order = $this->model->dataInfo([
+            'id' => $input['order_id'],
+            'user_id' => $user_id,
+            'uniacid' => $this->_uniacid,
+        ]);
         if (empty($order)) {
             $this->errorMsg('订单未找到');
         }
@@ -798,11 +882,18 @@ class IndexOrder extends ApiRest
         if ($order['is_add'] == 0) {
             $where[] = ['add_pid', '=', $order['id']];
             $where[] = ['pay_type', '>', 1];
+            $where[] = ['user_id', '=', $user_id];
+            $where[] = ['uniacid', '=', $this->_uniacid];
             $add_order = $this->model->dataInfo($where);
             if (!empty($add_order)) {
                 $this->errorMsg('请先申请续单订单退款');
             }
-            $add_order = $this->model->where(['add_pid' => $order['id'], 'pay_type' => 1])->select()->toArray();
+            $add_order = $this->model->where([
+                'add_pid' => $order['id'],
+                'pay_type' => 1,
+                'user_id' => $user_id,
+                'uniacid' => $this->_uniacid,
+            ])->select()->toArray();
             if (!empty($add_order)) {
                 foreach ($add_order as $value) {
                     $this->model->cancelOrder($value);
@@ -825,12 +916,25 @@ class IndexOrder extends ApiRest
     public function cancelRefundOrder()
     {
         $input = $this->_input;
-        $order = $this->refund_model->dataInfo(['id' => $input['id']]);
+        $user_id = $this->getUserId();
+        //只能取消自己的退款申请
+        $order = $this->refund_model->dataInfo([
+            'id' => $input['id'],
+            'user_id' => $user_id,
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order)) {
+            $this->errorMsg('退款申请不存在');
+        }
         if ($order['status'] != 1) {
             $this->errorMsg('订单已经审核');
         }
         Db::startTrans();
-        $res = $this->refund_model->dataUpdate(['id' => $input['id']], ['status' => -1, 'cancel_time' => time()]);
+        $res = $this->refund_model->dataUpdate([
+            'id' => $input['id'],
+            'user_id' => $user_id,
+            'uniacid' => $this->_uniacid,
+        ], ['status' => -1, 'cancel_time' => time()]);
         if ($res != 1) {
             Db::rollback();
             $this->errorMsg('取消失败');
@@ -863,13 +967,22 @@ class IndexOrder extends ApiRest
     public function refreshQr()
     {
         $input = $this->_input;
+        $dis = [
+            'id' => $input['id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ];
+        $order = $this->model->dataInfo($dis);
+        if (empty($order)) {
+            $this->errorMsg('订单不存在');
+        }
         $qr_insert = [
             'id' => $input['id']
         ];
         //获取二维码
         $qr = $this->model->orderQr($qr_insert, $this->_uniacid);
         if (!empty($qr)) {
-            $this->model->dataUpdate(['id' => $input['id']], ['qr' => $qr]);
+            $this->model->dataUpdate($dis, ['qr' => $qr]);
         }
         return $this->success($qr);
     }
@@ -898,7 +1011,14 @@ class IndexOrder extends ApiRest
     public function addComment()
     {
         $input = $this->_input;
-        $order = $this->model->dataInfo(['id' => $input['order_id']]);
+        $order = $this->model->dataInfo([
+            'id' => $input['order_id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order)) {
+            $this->errorMsg('订单不存在');
+        }
         if ($order['is_comment'] == 1) {
             $this->errorMsg('你已经评价过了');
         }
@@ -958,7 +1078,14 @@ class IndexOrder extends ApiRest
     public function addCommentV2()
     {
         $input = $this->_input;
-        $order = $this->model->dataInfo(['id' => $input['order_id']]);
+        $order = $this->model->dataInfo([
+            'id' => $input['order_id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order)) {
+            $this->errorMsg('订单不存在');
+        }
         if ($order['is_comment'] == 1) {
             $this->errorMsg('你已经评价过了');
         }
@@ -999,11 +1126,19 @@ class IndexOrder extends ApiRest
     public function delOrder()
     {
         $input = $this->_input;
-        $order = $this->model->dataInfo(['id' => $input['id']]);
+        $dis = [
+            'id' => $input['id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ];
+        $order = $this->model->dataInfo($dis);
+        if (empty($order)) {
+            $this->errorMsg('订单不存在');
+        }
         if (!in_array($order['pay_type'], [-1, 7])) {
             $this->errorMsg('只有取消或完成的订单才能删除');
         }
-        $res = $this->model->dataUpdate(['id' => $input['id']], ['is_show' => 0]);
+        $res = $this->model->dataUpdate($dis, ['is_show' => 0]);
         return $this->success($res);
     }
 
@@ -1046,8 +1181,16 @@ class IndexOrder extends ApiRest
         if (empty($order_goods)) {
             $this->errorMsg('未找到升级项目');
         }
-//        $is_add = $this->model->where(['id' => $order_goods['order_id']])->value('is_add');
-        $coach_id = $this->model->where(['id' => $order_goods['order_id']])->value('coach_id');
+        //校验商品所属订单是否属于当前用户
+        $order = $this->model->dataInfo([
+            'id' => $order_goods['order_id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order)) {
+            $this->errorMsg('未找到升级项目');
+        }
+        $coach_id = $order['coach_id'];
         $dis[] = ['a.uniacid', '=', $this->_uniacid];
         $dis[] = ['a.status', '=', 1];
         if (!empty($coach_id)) {
@@ -1069,7 +1212,11 @@ class IndexOrder extends ApiRest
     public function upOrderInfo()
     {
         $input = $this->_input;
-        $order = $this->model->dataInfo(['id' => $input['order_id']]);
+        $order = $this->model->dataInfo([
+            'id' => $input['order_id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ]);
         if (empty($order) || !in_array($order['pay_type'], [2, 3, 4, 5, 6])) {
             $this->errorMsg('订单已关闭');
         }
@@ -1106,14 +1253,18 @@ class IndexOrder extends ApiRest
     public function upOrderGoods()
     {
         $input = $this->_input;
+        $order = $this->model->dataInfo([
+            'id' => $input['order_id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order) || !in_array($order['pay_type'], [2, 3, 4, 5, 6])) {
+            $this->errorMsg('订单已关闭');
+        }
         $order_price_log = new OrderPrice();
         $price_log = $order_price_log->dataInfo(['top_order_id' => $input['order_id']]);
         if (empty($price_log)) {
             $this->error('该订单无法升级,请重新下单');
-        }
-        $order = $this->model->dataInfo(['id' => $input['order_id']]);
-        if (empty($order) || !in_array($order['pay_type'], [2, 3, 4, 5, 6])) {
-            $this->errorMsg('订单已关闭');
         }
         $refund_model = new RefundOrder();
         //判断有无申请中的退款订单
@@ -1131,6 +1282,8 @@ class IndexOrder extends ApiRest
             $where[] = ['pay_type', 'not in', [-1, 7]];
             $where[] = ['add_pid', '=', $order['add_pid']];
             $where[] = ['is_add', '=', 1];
+            $where[] = ['user_id', '=', $this->getUserId()];
+            $where[] = ['uniacid', '=', $this->_uniacid];
             $start_time = $this->model->where($where)->max('end_time');
             $start_time = $start_time - ($order_data['total_time_long'] - $order_data['time_long']) * 60;
         }
@@ -1219,6 +1372,14 @@ class IndexOrder extends ApiRest
     public function userSignOrder()
     {
         $input = $this->_input;
+        $order = $this->model->dataInfo([
+            'id' => $input['id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order)) {
+            $this->errorMsg('订单不存在');
+        }
         $dis = [
             'uniacid' => $this->_uniacid,
             'order_id' => $input['id']
@@ -1241,6 +1402,14 @@ class IndexOrder extends ApiRest
     public function orderUpRecord()
     {
         $input = $this->_param;
+        $order = $this->model->dataInfo([
+            'id' => $input['order_id'],
+            'user_id' => $this->getUserId(),
+            'uniacid' => $this->_uniacid,
+        ]);
+        if (empty($order)) {
+            $this->errorMsg('订单不存在');
+        }
         $order_model = new UpOrderList();
         $data = $order_model->orderUpRecord($input['order_id']);
         return $this->success($data);
