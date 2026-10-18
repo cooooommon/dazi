@@ -669,15 +669,29 @@ class Order extends BaseModel
     public function orderResult($order_code, $transaction_id)
     {
         $order = $this->dataInfo(['order_code' => $order_code, 'transaction_id' => '']);
-        $coach = Coach::find($order['coach_id']);
         if (!empty($order)) {
+            //只有待支付订单才能入账；超时/手动取消后收到的支付不复活订单
+            if ($order['pay_type'] != 1) {
+                $this->dataUpdate(
+                    ['id' => $order['id'], 'transaction_id' => ''],
+                    ['transaction_id' => $transaction_id, 'auto_refund' => 1]
+                );
+                \think\facade\Log::error(
+                    '订单取消后收到支付，需人工退款：order_code=' . $order_code .
+                    ' transaction_id=' . $transaction_id .
+                    ' pay_type=' . $order['pay_type']
+                );
+                return true;
+            }
+            $coach = Coach::find($order['coach_id']);
+            $coach_user_id = !empty($coach['user_id']) ? $coach['user_id'] : 0;
             Db::startTrans();
             $update = [
                 'transaction_id' => $transaction_id,
-                'pay_type' => $coach['user_id'] > 0 ? 2 : 8,
+                'pay_type' => $coach_user_id > 0 ? 2 : 8,
                 'pay_time' => time(),
             ];
-            $res = $this->dataUpdate(['id' => $order['id'], 'transaction_id' => ''], $update);
+            $res = $this->dataUpdate(['id' => $order['id'], 'transaction_id' => '', 'pay_type' => 1], $update);
             if ($res == 0) {
                 Db::rollback();
                 return false;

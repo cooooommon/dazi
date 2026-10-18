@@ -85,13 +85,26 @@ class UpOrderList extends BaseModel
     {
         $order = $this->dataInfo(['order_code' => $order_code, 'transaction_id' => '']);
         if (!empty($order)) {
+            //只有待支付续单才能入账；已取消的续单不复活
+            if ($order['pay_type'] != 1) {
+                $this->dataUpdate(
+                    ['id' => $order['id'], 'transaction_id' => ''],
+                    ['transaction_id' => $transaction_id]
+                );
+                \think\facade\Log::error(
+                    '续单取消后收到支付，需人工退款：order_code=' . $order_code .
+                    ' transaction_id=' . $transaction_id .
+                    ' pay_type=' . $order['pay_type']
+                );
+                return true;
+            }
             Db::startTrans();
             $update = [
                 'transaction_id' => $transaction_id,
                 'pay_type' => 2,
                 'pay_time' => time(),
             ];
-            $res = $this->dataUpdate(['id' => $order['id'], 'transaction_id' => ''], $update);
+            $res = $this->dataUpdate(['id' => $order['id'], 'transaction_id' => '', 'pay_type' => 1], $update);
             if ($res == 0) {
                 Db::rollback();
                 return false;
