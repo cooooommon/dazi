@@ -13,7 +13,7 @@ return [
     //行业模块名称
     'app_model_name' => 'longbing_playwith',
     //行业模块标题
-    'app_model_title' => '龙兵陪玩',
+    'app_model_title' => '陪玩',
     //DIY默认数据
     'diy_default_data' =>[
     ] ,

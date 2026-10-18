@@ -32,8 +32,9 @@ class CardCacheKey
      * @author shuixian
      * @DataTime: 2019/12/26 14:21
      */
-    public static function cardAppConfig($uniacid){
-        return  longbing_get_cache_key('card_app_config' , $uniacid) ;
+    public static function cardAppConfig($uniacid)
+    {
+        return longbing_get_cache_key('card_app_config', $uniacid);
     }
 
 }

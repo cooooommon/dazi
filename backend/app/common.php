@@ -48,6 +48,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use think\facade\Log;
 use think\facade\Env;
+
 //判断是否是微擎
 function longbingIsWeiqin()
 {
@@ -56,6 +57,7 @@ function longbingIsWeiqin()
     $result = file_exists($is_wiqing_path);
     return empty($result);
 }
+
 /**
  * 判断Schema文件是否存在
  * @param $schemaMethod
@@ -65,6 +67,7 @@ function jsonSchemaExist($schemaMethod): bool
 {
     return file_exists(APP_PATH.$schemaMethod.'.json');
 }
+
 //根据Rsamy uuid 生成32位uuid
 function uuid()
 {
@@ -78,6 +81,7 @@ function uuid()
         error_log('Caught exception: '.$e->getMessage(), 1100);
     }
 }
+
 //设置缓存
 function setCache($key, $value, $expire = 0, $uniacid = '7777', $tag_data = ''): bool
 {
@@ -86,6 +90,7 @@ function setCache($key, $value, $expire = 0, $uniacid = '7777', $tag_data = ''):
     $key = $key.'_'.$uniacid;
     return Cache::tag($tag)->set($key, $value, $expire);
 }
+
 //获取缓存
 function getCache($key, $uniacid = '7777')
 {
@@ -96,6 +101,7 @@ function getCache($key, $uniacid = '7777')
     $key = $key.'_'.$uniacid;
     return Cache::get($key);
 }
+
 //设置缓存
 function setCacheAll($key, $value, $expire = 0, $uniacid = '7777')
 {
@@ -103,6 +109,7 @@ function setCacheAll($key, $value, $expire = 0, $uniacid = '7777')
     $key = $key.'_'.$uniacid;
     return Cache::tag($tag)->set($key, $value, $expire);
 }
+
 function getCacheAll($key, $uniacid = '7777')
 {
     if (!hasCacheAll($key, $uniacid)) {
@@ -111,6 +118,7 @@ function getCacheAll($key, $uniacid = '7777')
     $key = $key.'_'.$uniacid;
     return Cache::get($key);
 }
+
 //追加缓存
 function pushCache($key, $value, $uniacid = '7777')
 {
@@ -118,6 +126,7 @@ function pushCache($key, $value, $uniacid = '7777')
     $key = $key.'_'.$uniacid;
     return Cache::push($key, $value);
 }
+
 //删除缓存
 function delCache($key, $uniacid = '7777')
 {
@@ -125,6 +134,7 @@ function delCache($key, $uniacid = '7777')
     $key = $key.'_'.$uniacid;
     return Cache::delete($key);
 }
+
 //获取并删除缓存
 function pullCache($key, $uniacid = '7777')
 {
@@ -132,6 +142,7 @@ function pullCache($key, $uniacid = '7777')
     $key = $key.'_'.$uniacid;
     return Cache::pull($key);
 }
+
 //不存在则写入缓存数据后返回
 function rememberCache($key, $value, $uniacid = '7777')
 {
@@ -139,12 +150,14 @@ function rememberCache($key, $value, $uniacid = '7777')
     $key = $key.'_'.$uniacid;
     return Cache::remember($key, $value);
 }
+
 //清空缓存
 function clearCache($uniacid = '7777', $tag_data = '')
 {
     $tag = 'longbing_card_'.$uniacid.$tag_data;
     return Cache::tag($tag)->clear();
 }
+
 //缓存自增
 function incCache($key, $step = 1, $uniacid = '7777', $time = null)
 {
@@ -161,6 +174,7 @@ function incCache($key, $step = 1, $uniacid = '7777', $time = null)
     Cache::tag($tag)->append($key);
     return $result;
 }
+
 //缓存自减
 function decCache($key, $step = 1, $uniacid = '7777')
 {
@@ -172,6 +186,7 @@ function decCache($key, $step = 1, $uniacid = '7777')
     Cache::tag($tag)->append($key);
     return $result;
 }
+
 //判断缓存是否存在
 function hasCache($key, $uniacid = '7777')
 {
@@ -179,23 +194,27 @@ function hasCache($key, $uniacid = '7777')
     $key = $key.'_'.$uniacid;
     return Cache::has($key);
 }
+
 function hasCacheAll($key, $uniacid = '7777')
 {
     // $key.=$_SERVER['HTTP_HOST'];
     $key = $key.'_'.$uniacid;
     return Cache::has($key);
 }
+
 //获取controller 和 action
 function getRouteMessage($route)
 {
     $data = explode("\\", $route);
     return explode("@", $data[count($data) - 1]);
 }
+
 //通过Token获取用户信息
 function getUserForToken($token)
 {
     return getCache("Token_".$token);
 }
+
 /**
  * 生成RSA2类获取秘钥
  */
@@ -204,6 +223,7 @@ function getRsa2Keys()
     $rsa2 = new Rsa2();
     return $rsa2->getKeys();
 }
+
 /**
  * 获取两组交叉keys
  */
@@ -218,6 +238,7 @@ function get2keys()
     }
     return false;
 }
+
 /**
  * 获取RSA2秘钥（测试）
  */
@@ -235,30 +256,35 @@ function setRsa2Key()
     $jiemi = $rsa2_sign->decrypt($jiami);
     return $data;
 }
+
 //签名
 function rsa2CreateSign($keys, $data)
 {
     $rsa2_sign = new Rsa2Sign($keys);
     return $rsa2_sign->createSign($data);
 }
+
 //验证签名
 function rsa2VerifySign($keys, $data, $sign)
 {
     $rsa2_sign = new Rsa2Sign($keys);
     return $rsa2_sign->verifySign($data, $sign);
 }
+
 //加密
 function rsa2Encrypt($keys, $data)
 {
     $rsa2_sign = new Rsa2Sign($keys);
     return $rsa2_sign->encrypt($data);
 }
+
 //解密
 function rsa2Decrypt($keys, $cipher)
 {
     $rsa2_sign = new Rsa2Sign($keys);
     return $rsa2_sign->decrypt($cipher);
 }
+
 //批量加密
 function rsa2Encrypts($keys, $arrs)
 {
@@ -273,6 +299,7 @@ function rsa2Encrypts($keys, $arrs)
     }
     return $result;
 }
+
 //批量解密
 function rsa2Decrypts($keys, $ciphers)
 {
@@ -286,11 +313,13 @@ function rsa2Decrypts($keys, $ciphers)
     }
     return $result;
 }
+
 //创建签名 (一个超级简单的签名)
 function createSimpleSign($token, $data)
 {
     return md5($token.$data.$token);
 }
+
 //异步消息控制
 function messagesProcess($msg)
 {
@@ -362,6 +391,7 @@ function messagesProcess($msg)
         $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
     }
 }
+
 //消费者
 
 function consumer()
@@ -370,6 +400,7 @@ function consumer()
     $messages = $consumer_api->consumerMessage();
     messagesProcess($messages);
 }
+
 //生成者
 
 function publisher($messages, $delayTime = null)
@@ -380,12 +411,14 @@ function publisher($messages, $delayTime = null)
     $url = $url.'?'.http_build_query($param);
 //    return longbing_do_request($url, ['message' => $messages]);
 }
+
 //获取毫秒级时间戳
 function getMillisecond()
 {
     list($s1, $s2) = explode(' ', microtime());
     return (float) sprintf('%.0f', (floatval($s1) + floatval($s2)) * 1000);
 }
+
 /**
  * 发送邮件
  * @param  string  $address  需要发送的邮箱地址 发送给多个地址需要写成数组形式
@@ -449,6 +482,7 @@ function send_email($address, $subject, $content)
         return array("status" => 'success');
     }
 }
+
 /**
  * @Purpose: 处理数组中的图片为完整能访问的URL
  *
@@ -584,6 +618,7 @@ function longbingHasLocalFile($file_name)
     $file_path = FILE_UPLOAD_PATH.$file_name;
     return file_exists($file_path);
 }
+
 /**
  * @Purpose: 打印并终止程序
  *
@@ -1018,6 +1053,7 @@ function longbingMkdirs($path)
     }
     return is_dir($path);
 }
+
 //复制文件
 function longbingFileCopy($src, $des, $filter)
 {
@@ -1034,6 +1070,7 @@ function longbingFileCopy($src, $des, $filter)
     }
     closedir($dir);
 }
+
 //删除文件
 function longbingRmdirs($path, $clean = false)
 {
@@ -1048,10 +1085,12 @@ function longbingRmdirs($path, $clean = false)
     }
     return $clean ? true : @rmdir($path);
 }
+
 function longbingStrexists($string, $find)
 {
     return !(strpos($string, $find) === false);
 }
+
 //获取文件地址
 function longbingGetFilePath($path, $web_url, $uniacid = '7777', $type = null)
 {
@@ -1065,6 +1104,7 @@ function longbingGetFilePath($path, $web_url, $uniacid = '7777', $type = null)
     }
     return $website_url.'/'.$path;
 }
+
 //获取配置
 function longbingGetOssConfig($uniacid = '7777', $is_update = false)
 {
@@ -1147,6 +1187,7 @@ function longbingGetOssConfig($uniacid = '7777', $is_update = false)
     }
     return $result;
 }
+
 //微信接口返回数据处理
 function LongbingGetWxApiReturnData($result)
 {
@@ -1167,6 +1208,7 @@ function LongbingGetWxApiReturnData($result)
     unset($result['total_page']);
     return $result;
 }
+
 function getStr($str)
 {
     $vid = strstr($str, 'vid=');
@@ -1180,6 +1222,7 @@ function getStr($str)
     }
     return $dd;
 }
+
 function getAcs($str)
 {
     $a = '';
@@ -1193,6 +1236,7 @@ function getAcs($str)
     }
     return $a;
 }
+
 function getAcsStr($arr)
 {
     $arr = explode(' ', $arr);
@@ -1202,6 +1246,7 @@ function getAcsStr($arr)
     }
     return $a;
 }
+
 //获取html src里面的内容替换
 function getimgs($str)
 {
@@ -1223,6 +1268,7 @@ function getimgs($str)
     $ssf = str_replace($arr1, $arr2, $str);
     return htmlspecialchars($ssf);
 }
+
 function getimgsV2($str)
 {
     $arr1 = [];
@@ -1244,6 +1290,7 @@ function getimgsV2($str)
     $ssf = str_replace('lbType=vid', 'lbType="vid"', $ssf);
     return ($ssf);
 }
+
 function datachange($data, $field = 'create_time')
 {
 //    dump($data);exit;
@@ -1277,6 +1324,7 @@ function datachange($data, $field = 'create_time')
     }
     return $data;
 }
+
 //设置用户信息
 function longbingSetUser($user_id, $uniacid, $data)
 {
@@ -1287,6 +1335,7 @@ function longbingSetUser($user_id, $uniacid, $data)
     }
     return setCache($key, $data, 3600, $uniacid);
 }
+
 //设置缓存数据
 function longbingSetUserInfo($user_id, $uniacid, $data)
 {
@@ -1297,6 +1346,7 @@ function longbingSetUserInfo($user_id, $uniacid, $data)
     }
     return setCache($key, $data, 600, $uniacid);
 }
+
 //获取小程序配置信息
 function longbingGetAppConfig($uniacid, $is_update = false)
 {
@@ -1313,12 +1363,14 @@ function longbingGetAppConfig($uniacid, $is_update = false)
     //返回数据
     return $result;
 }
+
 //生成curl方法
 function longbingCurl($url, $post, $method = 'GET')
 {
     $curl_model = new LongbingCurl();
     return $curl_model->curlPublic($url, $post, $method);
 }
+
 /**
  * 友好的时间显示
  *
@@ -1400,6 +1452,7 @@ function longbingGetAccessToken($uniacid, $is_update = false)
     $token = $setting->lbSingleGetAccessToken();
     return $token;
 }
+
 function getImageExt($src = '')
 {
     $src = explode('.', $src);
@@ -1419,6 +1472,7 @@ function getImageExt($src = '')
     }
     return false;
 }
+
 function longbingSortStr($str, $len)
 {
     if (mb_strlen($str, 'utf8') > $len) {
@@ -1426,6 +1480,7 @@ function longbingSortStr($str, $len)
     }
     return $str;
 }
+
 /**
  * @Purpose: 获取文件后缀名
  *
@@ -1452,6 +1507,7 @@ function longbingSingleGetImageExt($src = '')
     }
     return false;
 }
+
 function longbingSingleGetImageExtWx($src = '')
 {
     $src = explode('.', $src);
@@ -1471,6 +1527,7 @@ function longbingSingleGetImageExtWx($src = '')
     }
     return 'jpg';
 }
+
 function longbingchmodr($path)
 {
     $filemode = 0777;
@@ -1499,6 +1556,7 @@ function longbingchmodr($path)
         return false;
     }
 }
+
 /**
  * @author yangqi
  * 2019年11月29日11:43:26
@@ -1516,6 +1574,7 @@ function longbingGetArrToOne($arr)
     }
     return $result;
 }
+
 /**
  * By.jingshuixian
  * 2019年11月24日19:37:43
@@ -1527,6 +1586,7 @@ function longbing_get_cache_key($key, $uniacid)
     //贝润网络前缀_区分端口_key_平台ID
     return 'longbing_'.$key.'_'.$uniacid;
 }
+
 /**
  * By.jingshuixian
  * 2019年11月24日19:46:35
@@ -1536,6 +1596,7 @@ function longbing_auto_cahe()
 {
     //自动获取模块/查件名称、类名称、方法名称、来组合缓存key
 }
+
 /**
  * By.jingshuixian
  * 2019年11月26日13:57:16
@@ -1875,11 +1936,13 @@ function createOffset()
 {
     return substr(uuid(), 8, 10);
 }
+
 //生成密码
 function createPasswd($passwd, $offset)
 {
     return password_hash($offset.$passwd.$offset, PASSWORD_DEFAULT);
 }
+
 //多维数组排序
 if (!function_exists('arraySort')) {
     function arraySort($array, $keys, $sort = 'asc')
@@ -2449,6 +2512,7 @@ function longbingCreateWxCode($uniacid, $data, $page = '', $type = 3)
     //数据转换
     return ['qr_path' => $path, 'path' => $path];
 }
+
 //获取微信小程序二维码数据
 function longbingGetWxCode($code_id, $uniacid, $is_update = false)
 {
@@ -2461,6 +2525,7 @@ function longbingGetWxCode($code_id, $uniacid, $is_update = false)
     }
     return $data;
 }
+
 /**
  * 创建多级目录
  * @param $path string 要创建的目录
@@ -2481,6 +2546,7 @@ function create_dir($path, $mode = 0777)
         }
     }
 }
+
 /**
  * 处理时间戳
  * @param $time
@@ -2490,6 +2556,7 @@ function handleTime($time, $format = 'Y-m-d H:i:s')
 {
     return date($format, $time);
 }
+
 /**
  * 获取年龄
  */
@@ -2595,6 +2662,7 @@ function getTradeStatus($data)
     }
     return $arr;
 }
+
 if (!function_exists('curlSend')) {
     function curlSend($host)
     {

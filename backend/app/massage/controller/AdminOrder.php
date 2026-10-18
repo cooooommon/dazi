@@ -17,7 +17,7 @@ use app\massage\model\CouponRecord;
 use app\massage\model\DemandOrder;
 use app\massage\model\DemandType;
 use app\massage\model\HelpConfig;
-use app\massage\model\Lable;
+use app\massage\model\Label;
 use app\massage\model\NoticeList;
 use app\massage\model\Order;
 
@@ -361,13 +361,13 @@ class AdminOrder extends AdminRest
      * @DataTime: 2021-07-04 18:53
      * @功能说明:评价标签列表
      */
-    public function commentLableList()
+    public function commentLabelList()
     {
         $input = $this->_param;
-        $lable_model = new Lable();
+        $label_model = new Label();
         $dis[] = ['uniacid', '=', $this->_uniacid];
         $dis[] = ['status', '>', -1];
-        $data = $lable_model->dataList($dis, $input['limit']);
+        $data = $label_model->dataList($dis, $input['limit']);
         return $this->success($data);
     }
 
@@ -380,7 +380,7 @@ class AdminOrder extends AdminRest
     {
         $input = $this->_input;
         $input['uniacid'] = $this->_uniacid;
-        $lable_model = new Lable();
+        $lable_model = new Label();
         $res = $lable_model->dataAdd($input);
         return $this->success($res);
     }
@@ -396,7 +396,7 @@ class AdminOrder extends AdminRest
         $dis = [
             'id' => $input['id']
         ];
-        $lable_model = new Lable();
+        $lable_model = new Label();
         $res = $lable_model->dataUpdate($dis, $input);
         return $this->success($res);
     }
@@ -412,7 +412,7 @@ class AdminOrder extends AdminRest
         $dis = [
             'id' => $input['id']
         ];
-        $lable_model = new Lable();
+        $lable_model = new Label();
         $res = $lable_model->dataInfo($dis);
         return $this->success($res);
     }
@@ -723,7 +723,7 @@ class AdminOrder extends AdminRest
         Db::startTrans();
         $comment_model = new Comment();
         $comment_lable_model = new CommentLable();
-        $lable_model = new Lable();
+        $lable_model = new Label();
         $res = $comment_model->dataAdd($insert);
         if ($res == 0) {
             Db::rollback();
@@ -758,7 +758,7 @@ class AdminOrder extends AdminRest
             'uniacid' => $this->_uniacid,
             'status' => 1
         ];
-        $lable_model = new Lable();
+        $lable_model = new Label();
         $res = $lable_model->where($dis)->order('top desc,id desc')->select()->toArray();
         return $this->success($res);
     }

@@ -85,8 +85,8 @@ abstract class ApiRest extends BaseController
         //默认图使用本地 assets，避免依赖外部域名
         $assetDomain = $this->request->domain();
         $this->defaultImage = [
-            'avatar' => $assetDomain . '/assets/defaultAvatar.png',
-            'image' => $assetDomain . '/assets/lbCardDefaultImage.png',
+            'avatar' => $assetDomain.'/assets/defaultAvatar.png',
+            'image' => $assetDomain.'/assets/lbCardDefaultImage.png',
         ];
         if (in_array($this->_method, ['options', 'Options', 'OPTIONS'])) {
             echo true;

@@ -1,5 +1,5 @@
 <?php
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\virtualpay\controller;
 
@@ -20,18 +20,18 @@ class Notify extends BaseController
     /**
      * 接收平台推送：xpay_goods_deliver_notify（发货）、xpay_refund_notify（退款）
      */
-    public function receive ()
+    public function receive()
     {
-        $xml  = file_get_contents('php://input');
-        $data = simplexml_load_string((string)$xml);
-        VirtualPayService::log(0, 'notify_raw', '', (string)$xml);
+        $xml = file_get_contents('php://input');
+        $data = simplexml_load_string((string) $xml);
+        VirtualPayService::log(0, 'notify_raw', '', (string) $xml);
         if ($data === false) {
             return $this->xmlReply(-1, 'xml error');
         }
-        $event      = isset($data->Event) ? (string)$data->Event : '';
-        $outTradeNo = isset($data->OutTradeNo) ? (string)$data->OutTradeNo : '';
-        $wxOrderId  = isset($data->WeChatPayInfo->MchOrderNo) ? (string)$data->WeChatPayInfo->MchOrderNo : '';
-        $quantity   = isset($data->GoodsInfo->Quantity) ? intval($data->GoodsInfo->Quantity) : 0;
+        $event = isset($data->Event) ? (string) $data->Event : '';
+        $outTradeNo = isset($data->OutTradeNo) ? (string) $data->OutTradeNo : '';
+        $wxOrderId = isset($data->WeChatPayInfo->MchOrderNo) ? (string) $data->WeChatPayInfo->MchOrderNo : '';
+        $quantity = isset($data->GoodsInfo->Quantity) ? intval($data->GoodsInfo->Quantity) : 0;
         if (empty($outTradeNo)) {
             return $this->xmlReply(-1, 'empty OutTradeNo');
         }
@@ -54,25 +54,25 @@ class Notify extends BaseController
             }
             //已记录平台单号时必须与推送一致，避免伪造退款
             if (!empty($order['wx_order_id'])) {
-                if (empty($wxOrderId) || !hash_equals((string)$order['wx_order_id'], (string)$wxOrderId)) {
+                if (empty($wxOrderId) || !hash_equals((string) $order['wx_order_id'], (string) $wxOrderId)) {
                     return $this->xmlReply(-1, 'order mismatch');
                 }
             }
             //退款推送：仅标记虚拟支付单状态，业务侧权益回退需人工处理
             Db::name('virtualpay_order')->where(['out_trade_no' => $outTradeNo, 'status' => 1])
                 ->update(['status' => 2, 'update_time' => time()]);
-            VirtualPayService::log(0, 'refund_notify', $outTradeNo, (string)$wxOrderId);
+            VirtualPayService::log(0, 'refund_notify', $outTradeNo, (string) $wxOrderId);
             return $this->xmlReply(0, 'success');
         }
-        return $this->xmlReply(0, 'ignore event ' . $event);
+        return $this->xmlReply(0, 'ignore event '.$event);
     }
 
     /**
      * 平台要求的 XML 应答格式
      */
-    protected function xmlReply ($code, $msg)
+    protected function xmlReply($code, $msg)
     {
-        $msg = htmlspecialchars((string)$msg);
+        $msg = htmlspecialchars((string) $msg);
         return \think\Response::create(
             "<xml><ErrCode>{$code}</ErrCode><ErrMsg><![CDATA[{$msg}]]></ErrMsg></xml>",
             'html', 200, ['Content-Type' => 'text/xml']

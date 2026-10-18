@@ -46,7 +46,7 @@ class PackageOrder extends BaseModel
      */
     public static function orderResult($data)
     {
-        LogUtils::log('门店订单回调，回调参数：' . json_encode($data), 'package_order');
+        LogUtils::log('门店订单回调，回调参数：'.json_encode($data), 'package_order');
         $order = self::where('order_code', $data['out_trade_no'])->find();
         if (empty($order)) {
             return false;
@@ -91,7 +91,7 @@ class PackageOrder extends BaseModel
             Db::commit();
         } catch (\Exception $exception) {
             Db::rollback();
-            LogUtils::log('门店订单回调失败，失败信息：' . $exception->getMessage(), 'package_order');
+            LogUtils::log('门店订单回调失败，失败信息：'.$exception->getMessage(), 'package_order');
             return false;
         }
         return true;
@@ -100,7 +100,7 @@ class PackageOrder extends BaseModel
     /**
      * @Desc: 各类分销
      * @param $order
-     * @param $type 1下单 2退款
+     * @param $type  1下单 2退款
      * @return array
      * @Auther: shurong
      * @Time: 2023/11/29 16:03
@@ -110,7 +110,9 @@ class PackageOrder extends BaseModel
         $comm_model = new Commission();
         $order = $comm_model->packageCashData($order, $type);
         if ($type != 1) {
-            $comm_model->where([['type', 'in', [14, 15]], ['order_type', '=', 3], ['order_id', '=', $order['id']]])->delete();
+            $comm_model->where([
+                ['type', 'in', [14, 15]], ['order_type', '=', 3], ['order_id', '=', $order['id']]
+            ])->delete();
         }
         //门店佣金
         $comm_model->storeCommission($order, $type);
@@ -167,8 +169,8 @@ class PackageOrder extends BaseModel
             ->toArray();
         if ($data['data']) {
             foreach ($data['data'] as &$item) {
-                $item['store_balance'] = (float)$item['store_balance'];
-                $item['share_balance'] = (float)$item['share_balance'];
+                $item['store_balance'] = (float) $item['store_balance'];
+                $item['share_balance'] = (float) $item['share_balance'];
             }
         }
         return $data;
@@ -352,7 +354,7 @@ class PackageOrder extends BaseModel
         //修改订单状态  退款  修改券码状态
         //查看有没有退款订单  有则取消退款订单
         //自动退款  不受保障方式限制  都自动退款
-        $key = 'package_order_auto_chancel' . $order['id'];
+        $key = 'package_order_auto_chancel'.$order['id'];
         incCache($key, 1, $order['uniacid']);
         $key_value = getCache($key, $order['uniacid']);
         if ($key_value == 1) {
@@ -364,10 +366,15 @@ class PackageOrder extends BaseModel
                 //退款
                 switch ($order['pay_model']) {
                     case 1:
-                        $response = orderRefundApi($pay_config, $order['pay_price'], $can_refund_price, $order['transaction_id']);
+                        $response = orderRefundApi($pay_config, $order['pay_price'], $can_refund_price,
+                            $order['transaction_id']);
                         if (isset($response['return_code']) && isset($response['result_code']) && $response['return_code'] == 'SUCCESS' && $response['result_code'] == 'SUCCESS') {
                             $response['out_refund_no'] = !empty($response['out_refund_no']) ? $response['out_refund_no'] : $order['order_code'];
-                            $update = ['out_refund_code' => $response['out_refund_no'], 'refund_price' => $order['refund_price'] + $can_refund_price, 'can_refund_num' => $can_refund_num - $num];
+                            $update = [
+                                'out_refund_code' => $response['out_refund_no'],
+                                'refund_price' => $order['refund_price'] + $can_refund_price,
+                                'can_refund_num' => $can_refund_num - $num
+                            ];
                         } else {
                             $discption = !empty($response['err_code_des']) ? $response['err_code_des'] : $response['return_msg'];
                             throw new \Exception($discption);
@@ -393,7 +400,11 @@ class PackageOrder extends BaseModel
                         $pay = new IndexAliPay(\app());
                         $res = $pay->aliRefund($order['transaction_id'], $can_refund_price);
                         if (isset($res['alipay_trade_refund_response']['code']) && $res['alipay_trade_refund_response']['code'] == 10000) {
-                            $update = ['out_refund_code' => $res['alipay_trade_refund_response']['out_trade_no'], 'refund_price' => $order['refund_price'] + $can_refund_price, 'can_refund_num' => $can_refund_num - $num];
+                            $update = [
+                                'out_refund_code' => $res['alipay_trade_refund_response']['out_trade_no'],
+                                'refund_price' => $order['refund_price'] + $can_refund_price,
+                                'can_refund_num' => $can_refund_num - $num
+                            ];
                         } else {
                             throw new \Exception($res['alipay_trade_refund_response']['sub_msg']);
                         }
@@ -404,11 +415,17 @@ class PackageOrder extends BaseModel
                     self::update($update, ['id' => $order['id']]);
                 }
                 //订单明细修改
-                PackageOrderGoods::where([['order_id', '=', $order['id']], ['status', 'in', [1, 3]]])->update(['status' => 4]);
+                PackageOrderGoods::where([
+                    ['order_id', '=', $order['id']], ['status', 'in', [1, 3]]
+                ])->update(['status' => 4]);
                 //退款明细有申请中 修改退款订单和退款明细
-                $refund_id = PackageOrderRefund::where([['order_id', '=', $order['id']], ['status', '=', 1]])->column('id');
+                $refund_id = PackageOrderRefund::where([
+                    ['order_id', '=', $order['id']], ['status', '=', 1]
+                ])->column('id');
                 if (!empty($refund_id)) {
-                    PackageOrderRefund::where([['order_id', '=', $order['id']], ['status', '=', 1]])->update(['status' => 2, 'refund_type' => 1]);
+                    PackageOrderRefund::where([
+                        ['order_id', '=', $order['id']], ['status', '=', 1]
+                    ])->update(['status' => 2, 'refund_type' => 1]);
                     PackageOrderRefundGoods::where('refund_id', 'in', $refund_id)->update(['status' => 2]);
                 }
                 //重新计算佣金
@@ -488,7 +505,7 @@ class PackageOrder extends BaseModel
     /**
      * @Desc: 获取虚拟手机号需要的数据
      * @param $order_id
-     * @param $type 1套餐订单 2套餐退款订单
+     * @param $type  1套餐订单 2套餐退款订单
      * @return array
      * @Auther: shurong
      * @Time: 2023/12/1 15:57
@@ -550,7 +567,7 @@ class PackageOrder extends BaseModel
         ];
         if (!empty($data)) {
             foreach ($data as $datum) {
-                $arr['status_' . $datum['status']] = $datum['num'];
+                $arr['status_'.$datum['status']] = $datum['num'];
             }
         }
         $arr['refund_count'] = PackageOrderRefund::where($refund_where)->count();
@@ -651,18 +668,32 @@ class PackageOrder extends BaseModel
         $startTime = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
         $endTime = mktime(23, 59, 59, date("m"), date("d"), date("Y"));
         //门店收入
-        $price = self::field(Db::raw("SUM(`pay_price` - `refund_price`) as price"))->where([['store_id', '=', $data['id']], ['status', '>', 1]])->whereBetween('create_time', [$start, $end])->find();
+        $price = self::field(Db::raw("SUM(`pay_price` - `refund_price`) as price"))->where([
+            [
+                'store_id', '=', $data['id']
+            ], ['status', '>', 1]
+        ])->whereBetween('create_time', [$start, $end])->find();
         $arr['all_price'] = $price['price'] ?? 0;
         //未核销订单
-        $arr['no_hx_order_num'] = self::where([['store_id', '=', $data['id']], ['status', '=', 2]])->whereBetween('create_time', [$start, $end])->count();
+        $arr['no_hx_order_num'] = self::where([
+            ['store_id', '=', $data['id']], ['status', '=', 2]
+        ])->whereBetween('create_time', [$start, $end])->count();
         //订单量
-        $arr['order_num'] = self::where([['store_id', '=', $data['id']], ['pay_time', '>', 0]])->whereBetween('create_time', [$start, $end])->count();
+        $arr['order_num'] = self::where([
+            ['store_id', '=', $data['id']], ['pay_time', '>', 0]
+        ])->whereBetween('create_time', [$start, $end])->count();
         //今日营收 金额
-        $arr['today_price'] = self::where([['store_id', '=', $data['id']], ['status', '>', 1]])->whereBetween('create_time', [$startTime, $endTime])->sum('pay_price');
+        $arr['today_price'] = self::where([
+            ['store_id', '=', $data['id']], ['status', '>', 1]
+        ])->whereBetween('create_time', [$startTime, $endTime])->sum('pay_price');
         //今日单量
-        $arr['today_order_num'] = self::where([['store_id', '=', $data['id']], ['pay_time', '>', 0]])->whereBetween('create_time', [$startTime, $endTime])->count();
+        $arr['today_order_num'] = self::where([
+            ['store_id', '=', $data['id']], ['pay_time', '>', 0]
+        ])->whereBetween('create_time', [$startTime, $endTime])->count();
         //今日退款金额
-        $arr['today_refund'] = PackageOrderRefund::where([['store_id', '=', $data['id']], ['status', '=', 2]])->whereBetween('create_time', [$startTime, $endTime])->sum('refund_price');
+        $arr['today_refund'] = PackageOrderRefund::where([
+            ['store_id', '=', $data['id']], ['status', '=', 2]
+        ])->whereBetween('create_time', [$startTime, $endTime])->sum('refund_price');
         $data['sale'] = $arr;
         return $data;
     }
@@ -729,7 +760,9 @@ class PackageOrder extends BaseModel
             //插入退款明细
             PackageOrderRefundGoods::insertAll($insert_goods);
             //修改原订单标识当前有售后
-            self::where('id', $data['order_id'])->update(['is_refund' => 1, 'can_refund_num' => $order['can_refund_num'] - $data['num']]);
+            self::where('id', $data['order_id'])->update([
+                'is_refund' => 1, 'can_refund_num' => $order['can_refund_num'] - $data['num']
+            ]);
             //修改原订单明细状态
             PackageOrderGoods::where('id', 'in', array_column($goods, 'id'))->update(['status' => 3]);
             //自动退款

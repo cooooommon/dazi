@@ -38,7 +38,12 @@ class StorePackageHandle extends ApiRest
      */
     public function add()
     {
-        $data = request()->only(['name', 'sub_name', 'cover', 'price', 'init_price', 'sale', 'imgs', 'introduce', 'term_type', 'term_start_time', 'term_end_time', 'days', 'use_type', 'use_trade_week', 'use_start_time', 'use_end_time', 'reservation_day', 'rule_text', 'ensure', 'sku', 'status', 'introduce_text', 'is_integral', 'integral', 'integral_to_money']);
+        $data = request()->only([
+            'name', 'sub_name', 'cover', 'price', 'init_price', 'sale', 'imgs', 'introduce', 'term_type',
+            'term_start_time', 'term_end_time', 'days', 'use_type', 'use_trade_week', 'use_start_time', 'use_end_time',
+            'reservation_day', 'rule_text', 'ensure', 'sku', 'status', 'introduce_text', 'is_integral', 'integral',
+            'integral_to_money'
+        ]);
         $data['uniacid'] = $this->_uniacid;
         $data['is_admin'] = 0;
         $data['imgs'] = !empty($data['imgs']) ? implode(',', $data['imgs']) : '';
@@ -61,7 +66,12 @@ class StorePackageHandle extends ApiRest
      */
     public function edit()
     {
-        $data = request()->only(['id', 'name', 'sub_name', 'cover', 'price', 'init_price', 'sale', 'imgs', 'introduce', 'term_type', 'term_start_time', 'term_end_time', 'days', 'use_type', 'use_trade_week', 'use_start_time', 'use_end_time', 'reservation_day', 'rule_text', 'ensure', 'sku', 'status', 'introduce_text', 'is_integral', 'integral', 'integral_to_money']);
+        $data = request()->only([
+            'id', 'name', 'sub_name', 'cover', 'price', 'init_price', 'sale', 'imgs', 'introduce', 'term_type',
+            'term_start_time', 'term_end_time', 'days', 'use_type', 'use_trade_week', 'use_start_time', 'use_end_time',
+            'reservation_day', 'rule_text', 'ensure', 'sku', 'status', 'introduce_text', 'is_integral', 'integral',
+            'integral_to_money'
+        ]);
         $data['imgs'] = !empty($data['imgs']) ? implode(',', $data['imgs']) : '';
         $data['introduce_text'] = !empty($data['introduce_text']) ? json_encode($data['introduce_text']) : '';
         $data['use_trade_week'] = !empty($data['use_trade_week']) ? implode(',', $data['use_trade_week']) : '';
@@ -124,7 +134,7 @@ class StorePackageHandle extends ApiRest
             ['a.store_id', '=', $this->store['id']]
         ];
         if (!empty($input['name'])) {
-            $where[] = ['a.name', 'like', '%' . $input['name'] . '%'];
+            $where[] = ['a.name', 'like', '%'.$input['name'].'%'];
         }
         if (!empty($input['status'])) {
             $where[] = ['a.status', '=', $input['status'] == 1 ? 1 : 0];
@@ -170,11 +180,13 @@ class StorePackageHandle extends ApiRest
             }
         }
         if ($data['status'] == -1 || $data['status'] == 0) {
-            $seckill = PackageSeckill::where(['package_id' => $data['id'], 'status' => 1])->order('end_time desc')->find();
-            $model = new PermissionSeckill((int)$this->_uniacid);
+            $seckill = PackageSeckill::where([
+                'package_id' => $data['id'], 'status' => 1
+            ])->order('end_time desc')->find();
+            $model = new PermissionSeckill((int) $this->_uniacid);
             $auth = $model->pAuth();
             if (!empty($seckill) && $seckill['end_time'] > time() && $auth) {
-                return $this->error('套餐正在参与秒杀，不可' . ($data['status'] == -1 ? '删除' : '下架'));
+                return $this->error('套餐正在参与秒杀，不可'.($data['status'] == -1 ? '删除' : '下架'));
             }
         }
         $res = StorePackage::update(['status' => $data['status']], [
@@ -204,9 +216,11 @@ class StorePackageHandle extends ApiRest
             return $this->error('套餐不存在');
         }
         if ($info['status'] != 1) {
-            return $this->error('套餐' . ($info['status'] == 0 ? '已下架' : '已删除') . ',不能添加秒杀');
+            return $this->error('套餐'.($info['status'] == 0 ? '已下架' : '已删除').',不能添加秒杀');
         }
-        $seckill = PackageSeckill::where([['package_id', '=', $data['package_id']], ['status', '=', 1], ['end_time', '>', time()]])->find();
+        $seckill = PackageSeckill::where([
+            ['package_id', '=', $data['package_id']], ['status', '=', 1], ['end_time', '>', time()]
+        ])->find();
         if (!empty($seckill)) {
             return $this->error('此套餐已设为秒杀，不可重复设置');
         }
@@ -231,12 +245,12 @@ class StorePackageHandle extends ApiRest
             ['b.store_id', '=', $this->store['id']]
         ];
         if (!empty($input['name'])) {
-            $where[] = ['b.name', 'like', '%' . $input['name'] . '%'];
+            $where[] = ['b.name', 'like', '%'.$input['name'].'%'];
         }
         $data = PackageSeckill::getList($where, $input['limit'] ?? 10);
         if ($data['data']) {
             foreach ($data['data'] as &$item) {
-                $item['stock_rate'] = (round($item['use_stock'] / $item['stock'] * 100, 2)) . '%';
+                $item['stock_rate'] = (round($item['use_stock'] / $item['stock'] * 100, 2)).'%';
                 $item['price'] = $item['price'] + 0;
             }
         }
@@ -254,7 +268,9 @@ class StorePackageHandle extends ApiRest
      */
     public function seckillEdit()
     {
-        $data = request()->only(['id', 'status', 'stock', 'use_stock', 'price', 'start_time', 'end_time', 'limit', 'is_ad']);
+        $data = request()->only([
+            'id', 'status', 'stock', 'use_stock', 'price', 'start_time', 'end_time', 'limit', 'is_ad'
+        ]);
         if (empty($data['id'])) {
             return $this->error('参数错误');
         }
@@ -276,7 +292,7 @@ class StorePackageHandle extends ApiRest
             return $this->error('套餐不存在');
         }
         if ($info['status'] != 1 && isset($data['status']) && $data['status'] != -1) {
-            return $this->error('套餐' . ($info['status'] == 0 ? '已下架' : '已删除') . ',不能设为秒杀');
+            return $this->error('套餐'.($info['status'] == 0 ? '已下架' : '已删除').',不能设为秒杀');
         }
         if (request()->isPost()) {
             $res = PackageSeckill::edit([

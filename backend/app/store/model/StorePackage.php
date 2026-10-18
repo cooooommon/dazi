@@ -103,7 +103,8 @@ class StorePackage extends BaseModel
         $data = self::where('id', $id)->find();
         $sku = PackageSku::getList(['package_id' => $id]);
         $price = SkuPrice::getList(['package_id' => $id]);
-        $data['store'] = StoreApply::where('id', $data['store_id'])->field('id,name,trade_week,start_time,end_time,store_balance,share_balance,mobile')->find();
+        $data['store'] = StoreApply::where('id',
+            $data['store_id'])->field('id,name,trade_week,start_time,end_time,store_balance,share_balance,mobile')->find();
         $arr = [];
         foreach ($sku as $key => $item) {
             $arr[$key] = [
@@ -140,7 +141,9 @@ class StorePackage extends BaseModel
             ->order('a.id desc')
             ->paginate($limit)
             ->each(function ($item) {
-                $seckill_id = PackageSeckill::where([['package_id', '=', $item['id']], ['end_time', '>', time()], ['status', '=', 1]])->value('id');
+                $seckill_id = PackageSeckill::where([
+                    ['package_id', '=', $item['id']], ['end_time', '>', time()], ['status', '=', 1]
+                ])->value('id');
                 $item['seckill_id'] = empty($seckill_id) ? 0 : $seckill_id;
             })
             ->toArray();
@@ -165,8 +168,11 @@ class StorePackage extends BaseModel
             ->toArray();
         if (!empty($data['data'])) {
             foreach ($data['data'] as &$item) {
-                $item['sale'] = $item['total_sale'] > 10 ? (int)($item['total_sale'] / 10) * 10 : $item['total_sale'];
-                $seckill = PackageSeckill::where([['package_id', '=', $item['id']], ['status', '=', 1], ['end_time', '>', time()], ['start_time', '<=', time()]])->find();
+                $item['sale'] = $item['total_sale'] > 10 ? (int) ($item['total_sale'] / 10) * 10 : $item['total_sale'];
+                $seckill = PackageSeckill::where([
+                    ['package_id', '=', $item['id']], ['status', '=', 1], ['end_time', '>', time()],
+                    ['start_time', '<=', time()]
+                ])->find();
                 $is_seckill = !empty($seckill) && $auth ? 1 : 0;
                 if ($is_seckill) {
                     $item['init_price'] = $item['price'] + 0;
@@ -191,7 +197,7 @@ class StorePackage extends BaseModel
      */
     public static function cancel($uniacid)
     {
-        $key = 'package_cancel_' . $uniacid;
+        $key = 'package_cancel_'.$uniacid;
         incCache($key, 1, $uniacid);
         $value = getCache($key, $uniacid);
         if ($value != 1) {
@@ -212,7 +218,7 @@ class StorePackage extends BaseModel
     /**
      * @Desc: 验证是否过期
      * @param $id
-     * @param $is_down 1 是否验证状态
+     * @param $is_down  1 是否验证状态
      * @return bool
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
@@ -255,11 +261,11 @@ class StorePackage extends BaseModel
             $data['end_time'] = $goods['term_end_time'];
         } else {
             $data['start_time'] = time();
-            $data['end_time'] = strtotime('+ ' . $goods['days'] . 'days');
+            $data['end_time'] = strtotime('+ '.$goods['days'].'days');
         }
         $data['over_time'] = time() + $over_time * 60;
         $data = array_merge($data, $goods);
-        $p = new PermissionIntegral((int)$data['uniacid']);
+        $p = new PermissionIntegral((int) $data['uniacid']);
         $auth = $p->pAuth();
         //积分抵扣
         if ($goods['is_integral'] == 1 && $auth) {

@@ -46,12 +46,15 @@ class IndexOrder extends ApiRest
     public function payOrder()
     {
         $data = request()->only(['package_id', 'num', 'mobile', 'pay_model', 'share_user_id', 'is_seckill']);
-        $seckill = PackageSeckill::where([['package_id', '=', $data['package_id']], ['status', '=', 1], ['end_time', '>', time()], ['start_time', '<=', time()]])->find();
-        $model = new PermissionSeckill((int)$this->_uniacid);
+        $seckill = PackageSeckill::where([
+            ['package_id', '=', $data['package_id']], ['status', '=', 1], ['end_time', '>', time()],
+            ['start_time', '<=', time()]
+        ])->find();
+        $model = new PermissionSeckill((int) $this->_uniacid);
         $auth = $model->pAuth();
         $data['is_seckill'] = !empty($seckill) && $auth ? 1 : 0;
         if (!empty($data['is_seckill'])) {
-            $key = 'package_seckill_' . $data['package_id'];
+            $key = 'package_seckill_'.$data['package_id'];
             incCache($key, 1, $this->_uniacid);
             $value = getCache($key, $this->_uniacid);
             if ($value != 1) {
@@ -60,9 +63,9 @@ class IndexOrder extends ApiRest
             }
         }
         //门店权限
-        $p = new PermissionStore((int)$this->_uniacid);
+        $p = new PermissionStore((int) $this->_uniacid);
         $auth = $p->pAuth();
-        $p = new PermissionStoreplus((int)$this->_uniacid);
+        $p = new PermissionStoreplus((int) $this->_uniacid);
         $plus_auth = $p->pAuth();
         if (!$auth || !$plus_auth) {
             $this->errorMsg('暂无权限');
@@ -151,12 +154,12 @@ class IndexOrder extends ApiRest
             //获取二维码
             $qr = (new User())->orderQr($data, $this->_uniacid);
         } else {
-            $page = 'https://' . $_SERVER['HTTP_HOST'] . '/h5/#/business/pages/manage/order/detail?order_id=' . $order_id . '&port=store';
+            $page = 'https://'.$_SERVER['HTTP_HOST'].'/h5/#/business/pages/manage/order/detail?order_id='.$order_id.'&port=store';
             $qr = base64ToPng(getCode($this->_uniacid, $page));
         }
         PackageOrder::update(['qr_path' => $qr], ['id' => $order_id]);
         $goods_list = [];
-        $code_num = date('ymd' . rand(1000, 9999));
+        $code_num = date('ymd'.rand(1000, 9999));
         for ($i = 0; $i < $data['num']; $i++) {
             $goods_list[] = [
                 'uniacid' => $this->_uniacid,
@@ -216,13 +219,16 @@ class IndexOrder extends ApiRest
                 ];
             } elseif ($data['pay_model'] == 1) {
                 //虚拟支付开启时改走虚拟支付
-                $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid, $this->getUserInfo()['openid'], 'packageOrder', $order['order_code'], $true_package_price_);
+                $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid,
+                    $this->getUserInfo()['openid'], 'packageOrder', $order['order_code'], $true_package_price_);
                 if (!empty($virtualParams)) {
                     $jsApiParameters = $virtualParams;
                 } else {
                     $pay_controller = new \app\shop\controller\IndexWxPay($this->app);
                     //支付
-                    $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig($this->_uniacid, $this->is_app), $this->getUserInfo()['openid'], $this->_uniacid, "购买套餐", ['type' => 'packageOrder', 'out_trade_no' => $order['order_code']], $true_package_price_);
+                    $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig($this->_uniacid,
+                        $this->is_app), $this->getUserInfo()['openid'], $this->_uniacid, "购买套餐",
+                        ['type' => 'packageOrder', 'out_trade_no' => $order['order_code']], $true_package_price_);
                 }
                 $return_data = [
                     'is_pay' => 0,
@@ -271,7 +277,10 @@ class IndexOrder extends ApiRest
         $data = PackageSeckill::getPayInfo($data);
         $data['init_price'] = $data['price'];
         $data['price'] = $data['seckill_price'];
-        $count = PackageOrder::where([['seckill_id', '=', $data['seckill_id']], ['is_seckill', '=', 1], ['status', '>', -1], ['user_id', '=', $this->getUserId()]])->count();
+        $count = PackageOrder::where([
+            ['seckill_id', '=', $data['seckill_id']], ['is_seckill', '=', 1], ['status', '>', -1],
+            ['user_id', '=', $this->getUserId()]
+        ])->count();
         if ($count >= $data['limit'] || ($count + $data['num']) > $data['limit']) {
             decCache($key, 1, $this->_uniacid);
             $this->errorMsg('加购数量超过限购数量，不可下单');
@@ -376,13 +385,16 @@ class IndexOrder extends ApiRest
                 ];
             } elseif ($order['pay_model'] == 1) {
                 //虚拟支付开启时改走虚拟支付
-                $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid, $this->getUserInfo()['openid'], 'packageOrder', $order['order_code'], $true_package_price);
+                $virtualParams = \app\virtualpay\library\VirtualPayService::tryCreate($this->_uniacid,
+                    $this->getUserInfo()['openid'], 'packageOrder', $order['order_code'], $true_package_price);
                 if (!empty($virtualParams)) {
                     $jsApiParameters = $virtualParams;
                 } else {
                     $pay_controller = new \app\shop\controller\IndexWxPay($this->app);
                     //支付
-                    $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig($this->_uniacid, $this->is_app), $this->getUserInfo()['openid'], $this->_uniacid, "购买套餐", ['type' => 'packageOrder', 'out_trade_no' => $order['order_code']], $true_package_price);
+                    $jsApiParameters = $pay_controller->createWeixinPay($this->payConfig($this->_uniacid,
+                        $this->is_app), $this->getUserInfo()['openid'], $this->_uniacid, "购买套餐",
+                        ['type' => 'packageOrder', 'out_trade_no' => $order['order_code']], $true_package_price);
                 }
                 $return_data = [
                     'is_pay' => 0,

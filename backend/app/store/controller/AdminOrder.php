@@ -41,16 +41,16 @@ class AdminOrder extends AdminRest
             ['a.uniacid', '=', $this->_uniacid]
         ];
         if (!empty($input['name'])) {
-            $where[] = ['a.name', 'like', '%' . $input['name'] . '%'];
+            $where[] = ['a.name', 'like', '%'.$input['name'].'%'];
         }
         if (!empty($input['store_id'])) {
             $where[] = ['a.store_id', '=', $input['store_id']];
         }
         if (!empty($input['order_code'])) {
-            $where[] = ['a.order_code', 'like', '%' . $input['order_code'] . '%'];
+            $where[] = ['a.order_code', 'like', '%'.$input['order_code'].'%'];
         }
         if (!empty($input['mobile'])) {
-            $where[] = ['a.mobile', 'like', '%' . $input['mobile'] . '%'];
+            $where[] = ['a.mobile', 'like', '%'.$input['mobile'].'%'];
         }
         if (!empty($input['start_time'])) {
             $where[] = ['a.create_time', '>=', $input['start_time']];
@@ -59,7 +59,7 @@ class AdminOrder extends AdminRest
             $where[] = ['a.create_time', '<=', $input['end_time']];
         }
         if (!empty($input['nickName'])) {
-            $where[] = ['d.nickName', 'like', '%' . $input['nickName'] . '%'];
+            $where[] = ['d.nickName', 'like', '%'.$input['nickName'].'%'];
         }
         if (!empty($input['status'])) {
             if (in_array($input['status'], [4, 5])) {
@@ -111,7 +111,7 @@ class AdminOrder extends AdminRest
         ];
         $dis = [];
         if (!empty($input['name'])) {
-            $where[] = ['b.name', 'like', '%' . $input['name'] . '%'];
+            $where[] = ['b.name', 'like', '%'.$input['name'].'%'];
         }
         if (!empty($input['store_id'])) {
             $where[] = ['a.store_id', '=', $input['store_id']];
@@ -120,8 +120,8 @@ class AdminOrder extends AdminRest
             $where[] = ['a.status', '=', $input['status']];
         }
         if (!empty($input['refund_code'])) {
-            $dis[] = ['a.refund_code', 'like', '%' . $input['refund_code'] . '%'];
-            $dis[] = ['b.order_code', 'like', '%' . $input['refund_code'] . '%'];
+            $dis[] = ['a.refund_code', 'like', '%'.$input['refund_code'].'%'];
+            $dis[] = ['b.order_code', 'like', '%'.$input['refund_code'].'%'];
         }
         $data = PackageOrderRefund::getAdminList($where, $dis, $input['limit'] ?? 10);
         return $this->success($data);
@@ -186,10 +186,10 @@ class AdminOrder extends AdminRest
             $where[] = ['a.star', '=', $input['star']];
         }
         if (!empty($input['store_name'])) {
-            $where[] = ['c.name', 'like', '%' . $input['store_name'] . '%'];
+            $where[] = ['c.name', 'like', '%'.$input['store_name'].'%'];
         }
         if (!empty($input['package_name'])) {
-            $where[] = ['b.name', 'like', '%' . $input['package_name'] . '%'];
+            $where[] = ['b.name', 'like', '%'.$input['package_name'].'%'];
         }
         $data = PackageOrderComment::getAdminList($where, $input['limit'] ?? 10);
         return $this->success($data);

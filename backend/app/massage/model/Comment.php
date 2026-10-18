@@ -51,7 +51,7 @@ class Comment extends BaseModel
      */
     public function getLableTextAttr($vaule,$data){
         if(!empty($data['id'])){
-            $lable_model = new Lable();
+            $lable_model = new Label();
             $dis = [
                 'b.comment_id' => $data['id'],
                 'a.status'     => 1

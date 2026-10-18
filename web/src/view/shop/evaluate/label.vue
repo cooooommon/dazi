@@ -172,7 +172,7 @@ export default {
     getTableDataList (flag) {
       if (flag) this.searchForm.page = 1
       this.loading = true
-      this.$api.shop.commentLableList(this.searchForm).then(res => {
+      this.$api.shop.commentLabelList(this.searchForm).then(res => {
         this.loading = false
         if (res.code === 200) {
           this.tableData = res.data.data
@@ -197,7 +197,7 @@ export default {
      * @method: 上下架
      */
     async updateItem (id, status) {
-      this.$api.shop.commentLableUpdate({ id, status }).then(res => {
+      this.$api.shop.commentLabelUpdate({ id, status }).then(res => {
         if (res.code === 200) {
           this.$message.success(this.$t(status === -1 ? 'tips.successDel' : 'tips.successOper'))
           if (status !== -1) return
@@ -221,7 +221,7 @@ export default {
         if (!valid) flag = false
       })
       if (flag) {
-        let methodModel = this.subForm.id ? 'commentLableUpdate' : 'commentLableAdd'
+        let methodModel = this.subForm.id ? 'commentLabelUpdate' : 'commentLabelAdd'
         let { code } = await this.$api.shop[methodModel](this.subForm)
         if (code !== 200) return
         this.$message.success(this.$t(this.subForm.id ? 'tips.successRev' : 'tips.successSub'))

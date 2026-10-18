@@ -4,10 +4,10 @@ namespace app\massage\model;
 use app\BaseModel;
 use think\facade\Db;
 
-class Lable extends BaseModel
+class Label extends BaseModel
 {
     //定义表名
-    protected $name = 'massage_service_lable';
+    protected $name = 'massage_service_label';
 
 //
 //    public function getCreateTimeAttr($value,$data){

@@ -166,7 +166,11 @@ class StoreOrder extends ApiRest
         $comm_model = new Commission();
         $data['unrecorded_cash'] = $comm_model->where($dis)->sum('cash');
         //累计抽成金额
-        $price = PackageOrder::field(Db::raw("SUM(`share_cash` + `company_cash`) as price"))->where([['store_id', '=', $this->store['id']], ['status', '=', 3]])->find();
+        $price = PackageOrder::field(Db::raw("SUM(`share_cash` + `company_cash`) as price"))->where([
+            [
+                'store_id', '=', $this->store['id']
+            ], ['status', '=', 3]
+        ])->find();
         $data['extract_give_price'] = $price['price'] ?? 0;
         //税点
         $data['tax_point'] = getConfigSetting($this->_uniacid, 'tax_point');
@@ -184,7 +188,7 @@ class StoreOrder extends ApiRest
         $input = $this->_input;
         $cash_mini = Config::where(['uniacid' => $this->_uniacid])->value('cash_mini');
         if (empty($input['apply_price']) || $input['apply_price'] < $cash_mini || $input['apply_price'] < 0.01) {
-            $this->errorMsg('提现金额最低' . $cash_mini > 0 ? $cash_mini : 0.01 . '元');
+            $this->errorMsg('提现金额最低'.$cash_mini > 0 ? $cash_mini : 0.01 .'元');
         }
         if ($input['apply_price'] > $this->store['cash']) {
             $this->errorMsg('余额不足');
@@ -192,7 +196,7 @@ class StoreOrder extends ApiRest
         //获取税点
         $tax_point = getConfigSetting($this->_uniacid, 'tax_point');
         $balance = 100 - $tax_point;
-        $key = 'store_wallet' . $this->getUserId();
+        $key = 'store_wallet'.$this->getUserId();
         //加一个锁防止重复提交
         incCache($key, 1, $this->_uniacid);
         $value = getCache($key, $this->_uniacid);
@@ -202,7 +206,8 @@ class StoreOrder extends ApiRest
         }
         Db::startTrans();
         //减佣金
-        $res = StoreApply::update(['cash' => $this->store['cash'] - $input['apply_price']], ['id' => $this->store['id']]);
+        $res = StoreApply::update(['cash' => $this->store['cash'] - $input['apply_price']],
+            ['id' => $this->store['id']]);
         if ($res === false) {
             Db::rollback();
             //减掉

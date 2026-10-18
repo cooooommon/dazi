@@ -170,13 +170,13 @@ Route::group('admin', function () {
         //编辑订单评价
         Route::post('commentUpdate', 'AdminOrder/commentUpdate');
         //评价标签列表
-        Route::get('commentLableList', 'AdminOrder/commentLableList');
+        Route::get('commentLabelList', 'AdminOrder/commentLabelList');
         //评价标签详情
-        Route::get('commentLableInfo', 'AdminOrder/commentLableInfo');
+        Route::get('commentLabelInfo', 'AdminOrder/commentLabelInfo');
         //添加评价标签
-        Route::post('commentLableAdd', 'AdminOrder/commentLableAdd');
+        Route::post('commentLabelAdd', 'AdminOrder/commentLabelAdd');
         //编辑评价标签
-        Route::post('commentLableUpdate', 'AdminOrder/commentLableUpdate');
+        Route::post('commentLabelUpdate', 'AdminOrder/commentLabelUpdate');
         //提示列表(type,have_look,start_time,end_time)
         Route::get('noticeList', 'AdminOrder/noticeList');
         //编辑提示()

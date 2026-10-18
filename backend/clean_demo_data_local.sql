@@ -87,7 +87,7 @@ TRUNCATE TABLE ims_massage_service_coach_tag;                 -- 向导标签（
 TRUNCATE TABLE ims_massage_store_list;                        -- 演示门店（1条）
 TRUNCATE TABLE ims_shequshop_school_attachment;               -- 演示图片元数据（2776条；磁盘文件不删）
 TRUNCATE TABLE ims_shequshop_school_wechat_code;              -- 小程序码记录（86条演示）
--- TRUNCATE TABLE ims_massage_service_lable;                     -- 服务标签（4条演示）
+-- TRUNCATE TABLE ims_massage_service_label;                     -- 服务标签（4条演示）
 
 -- =====================================================================
 -- 执行后验证：以下查询应全部返回 0

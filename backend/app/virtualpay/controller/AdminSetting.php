@@ -1,5 +1,5 @@
 <?php
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\virtualpay\controller;
 
@@ -16,7 +16,7 @@ class AdminSetting extends AdminRest
 
     protected $app;
 
-    public function __construct ( App $app )
+    public function __construct(App $app)
     {
         parent::__construct($app);
         $this->app = $app;
@@ -25,11 +25,11 @@ class AdminSetting extends AdminRest
     /**
      * 配置详情
      */
-    public function configInfo ()
+    public function configInfo()
     {
         $config = Db::name('virtualpay_config')->where(['uniacid' => $this->_uniacid])->find();
         if (!empty($config['app_key'])) {
-            $config['app_key'] = substr($config['app_key'], 0, 4) . '****';
+            $config['app_key'] = substr($config['app_key'], 0, 4).'****';
         }
         return $this->success(['config' => $config ?: null]);
     }
@@ -37,18 +37,18 @@ class AdminSetting extends AdminRest
     /**
      * 配置保存（app_key 留空表示不修改）
      */
-    public function configUpdate ()
+    public function configUpdate()
     {
         $input = $this->request->only(['offer_id', 'app_key', 'env', 'enabled', 'coin_rate']);
         $data = [
-            'offer_id'    => trim((string)($input['offer_id'] ?? '')),
-            'env'         => intval($input['env'] ?? 0),
-            'enabled'     => intval($input['enabled'] ?? 1),
-            'coin_rate'   => intval($input['coin_rate'] ?? 1),
+            'offer_id' => trim((string) ($input['offer_id'] ?? '')),
+            'env' => intval($input['env'] ?? 0),
+            'enabled' => intval($input['enabled'] ?? 1),
+            'coin_rate' => intval($input['coin_rate'] ?? 1),
             'update_time' => time(),
         ];
         if (!empty($input['app_key'])) {
-            $data['app_key'] = trim((string)$input['app_key']);
+            $data['app_key'] = trim((string) $input['app_key']);
         }
         if (!empty($data['offer_id']) && empty($data['app_key'])) {
             $exists = Db::name('virtualpay_config')->where(['uniacid' => $this->_uniacid])->value('app_key');
@@ -60,7 +60,7 @@ class AdminSetting extends AdminRest
         if (!empty($exists)) {
             Db::name('virtualpay_config')->where(['uniacid' => $this->_uniacid])->update($data);
         } else {
-            $data['uniacid']     = $this->_uniacid;
+            $data['uniacid'] = $this->_uniacid;
             $data['create_time'] = time();
             //开启态必须有密钥才能落库；关闭态允许先保存，密钥后续补填
             if (!empty($data['enabled']) && empty($data['app_key'])) {

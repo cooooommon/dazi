@@ -1,5 +1,5 @@
 <?php
-declare ( strict_types = 1 );
+declare (strict_types=1);
 
 namespace app;
 
@@ -45,12 +45,12 @@ abstract class Rest extends BaseController
     //定义检查中间件（app\middleware\CheckInput 已不存在，移除避免启动 500）
     protected $middleware = [];
 
-    public function __construct ( App $app )
+    public function __construct(App $app)
     {
-        parent::__construct( $app );
-        if ( defined( 'IS_WEIQIN' ) ) {
+        parent::__construct($app);
+        if (defined('IS_WEIQIN')) {
             global $_GPC, $_W;
-            $this->_uniacid = $_W[ 'uniacid' ];
+            $this->_uniacid = $_W['uniacid'];
         }
         //获取app名称
         $this->_app = $this->request->app();
@@ -59,11 +59,11 @@ abstract class Rest extends BaseController
         //获取action名称
         $this->_action = $this->request->action();
         //获取method
-        $this->_method = $this->request->method( true );
+        $this->_method = $this->request->method(true);
         //获取param
         $this->_param = $this->request->param();
         //获取body参数
-        $this->_input = json_decode( $this->request->getInput(), true );
+        $this->_input = json_decode($this->request->getInput(), true);
         //获取头部信息
         $this->_header = $this->request->header();
         //		//判断是否为json
@@ -72,26 +72,36 @@ abstract class Rest extends BaseController
         //			$this->app->request->withHeader($this->_header);
         //		}
         //获取token
-        if ( isset( $this->_header[ 'token' ] ) ) $this->_token = $this->_header[ 'token' ];
-        if ( empty( $this->_token ) && !empty( $this->_param[ 'token' ] ) ) $this->_token = $this->_param[ 'token' ];
+        if (isset($this->_header['token'])) {
+            $this->_token = $this->_header['token'];
+        }
+        if (empty($this->_token) && !empty($this->_param['token'])) {
+            $this->_token = $this->_param['token'];
+        }
         //语言
-        if ( isset( $this->_header[ 'lang' ] ) ) $this->_lang = $this->_header[ 'lang' ];
+        if (isset($this->_header['lang'])) {
+            $this->_lang = $this->_header['lang'];
+        }
         //获取请求host
-        $this->_host = $this->_header[ 'host' ];
+        $this->_host = $this->_header['host'];
         //获取访问ip
-        $this->_ip = $_SERVER[ 'REMOTE_ADDR' ];
+        $this->_ip = $_SERVER['REMOTE_ADDR'];
         // 控制器初始化
         $this->initialize();
         //获取用户信息
-        if ( !empty( $this->_token ) ) $this->_user = getUserForToken( $this->_token );
+        if (!empty($this->_token)) {
+            $this->_user = getUserForToken($this->_token);
+        }
         //统一鉴权：Rest 子类均为后台接口，必须携带有效 token
-        if ( empty( $this->_user ) ) {
-            http_response_code( 401 );
-            echo json_encode( [ 'code' => 401, 'error' => '请重新登录!' ] );
+        if (empty($this->_user)) {
+            http_response_code(401);
+            echo json_encode(['code' => 401, 'error' => '请重新登录!']);
             exit;
         }
         //获取角色名称
-        if ( !empty( $this->_user ) && isset( $this->_user[ 'role_name' ] ) ) $this->_role = $this->_user[ 'role_name' ];
+        if (!empty($this->_user) && isset($this->_user['role_name'])) {
+            $this->_role = $this->_user['role_name'];
+        }
         //数据检查
         //		if (!empty($this->_input)) {
         //          $schemaMethod =ucfirst($this->_app) . ucfirst($this->_controller) . ucfirst($this->_action) . 'Request';
@@ -116,70 +126,69 @@ abstract class Rest extends BaseController
     }
 
     //返回请求成功的数据
-    public function success ( $data, $code = 200 )
+    public function success($data, $code = 200)
     {
-        $result[ 'data' ] = $data;
-        $result[ 'code' ] = $code;
-        $result[ 'sign' ] = null;
+        $result['data'] = $data;
+        $result['code'] = $code;
+        $result['sign'] = null;
         //复杂的签名
         //		if(isset($this->_user['keys'])){
         //			$result['sign'] = rsa2CreateSign($this->_user['keys'] ,json_encode($data));
         //		}
         //简单的签名
-        if ( !empty( $this->_token ) ) $result[ 'sign' ] = createSimpleSign( $this->_token, is_string( $data ) ? $data : json_encode( $data ) );
-        return $this->response( $result, 'json', $code  );
+        if (!empty($this->_token)) {
+            $result['sign'] = createSimpleSign($this->_token, is_string($data) ? $data : json_encode($data));
+        }
+        return $this->response($result, 'json', $code);
     }
 
     //返回错误数据
-    public function error ( $msg, $code = 400 )
+    public function error($msg, $code = 400)
     {
-        $result[ 'error' ] = $msg;
-        $result[ 'code' ]  = $code;
-        return $this->response( $result, 'json', $code );
+        $result['error'] = $msg;
+        $result['code'] = $code;
+        return $this->response($result, 'json', $code);
     }
 
     /**
      * 输出返回数据
      * @access protected
-     * @param mixed $data 要返回的数据
-     * @param String $type 返回类型 JSON XML
-     * @param integer $code HTTP状态码
+     * @param  mixed  $data  要返回的数据
+     * @param  String  $type  返回类型 JSON XML
+     * @param  integer  $code  HTTP状态码
      * @return Response
      */
-    protected function response ( $data, $type = 'json', $code = 200 )
+    protected function response($data, $type = 'json', $code = 200)
     {
-        return Response::create( $data, $type )->code( $code );
+        return Response::create($data, $type)->code($code);
     }
 
     /**
      * REST 调用
      * @access public
-     * @param string $method 方法名
+     * @param  string  $method  方法名
      * @return mixed
      * @throws \Exception
      */
-    public function _empty ( $method )
+    public function _empty($method)
     {
-        if ( method_exists( $this, $method . '_' . $this->method . '_' . $this->type ) ) {
+        if (method_exists($this, $method.'_'.$this->method.'_'.$this->type)) {
             // RESTFul方法支持
-            $fun = $method . '_' . $this->method . '_' . $this->type;
+            $fun = $method.'_'.$this->method.'_'.$this->type;
+        } elseif ($this->method == $this->restDefaultMethod && method_exists($this, $method.'_'.$this->type)) {
+            $fun = $method.'_'.$this->type;
+        } elseif ($this->type == $this->restDefaultType && method_exists($this, $method.'_'.$this->method)) {
+            $fun = $method.'_'.$this->method;
         }
-        elseif ( $this->method == $this->restDefaultMethod && method_exists( $this, $method . '_' . $this->type ) ) {
-            $fun = $method . '_' . $this->type;
-        }
-        elseif ( $this->type == $this->restDefaultType && method_exists( $this, $method . '_' . $this->method ) ) {
-            $fun = $method . '_' . $this->method;
-        }
-        if ( isset( $fun ) ) {
-            return App::invokeMethod( [
-                $this,
-                $fun
-            ]
+        if (isset($fun)) {
+            return App::invokeMethod([
+                    $this,
+                    $fun
+                ]
             );
-        }
-        else {
+        } else {
             // 抛出异常
-            throw new \Exception( 'error action :' . $method );
+            throw new \Exception('error action :'.$method);
         }
     }
 }

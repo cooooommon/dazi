@@ -47,15 +47,15 @@ class IndexV2 extends ApiRest
     protected $app;
 
     // 继承 验证用户登陆
-    public function __construct ( App $app )
+    public function __construct(App $app)
     {
-        parent::__construct( $app );
+        parent::__construct($app);
         $this->app = $app;
-        $this->modelUser       = new User();
-        $this->modelUserInfo   = new UserInfo();
+        $this->modelUser = new User();
+        $this->modelUserInfo = new UserInfo();
         $this->modelCollection = new Collection();
-        $this->modelCompany    = new Company();
-        $this->modelConfig     = new Config();
+        $this->modelCompany = new Company();
+        $this->modelConfig = new Config();
         //$this->_user_id        = '2';
     }
 
@@ -68,11 +68,11 @@ class IndexV2 extends ApiRest
      *
      * @Return: mixed 查询返回值（结果集对象）
      */
-    public function config ()
+    public function config()
     {
         $data = longbingGetAppConfig($this->_uniacid);
-        unset( $data[ 'auth_code' ] );
-        $exist = Db::query( 'show tables like "%longbing_card_config%"' );
+        unset($data['auth_code']);
+        $exist = Db::query('show tables like "%longbing_card_config%"');
         $auth_info = false;
         $cardauth2_config_exist = Db::query('show tables like "%longbing_cardauth2_config%"');
         if (!empty($exist) && !empty($cardauth2_config_exist)) {
@@ -80,34 +80,35 @@ class IndexV2 extends ApiRest
                 ->where([['modular_id', '=', $this->_uniacid]])
                 ->find();
         }
-        $data[ 'is_pay_shop' ] = 1;
+        $data['is_pay_shop'] = 1;
         //  判断能不能使用商城的支付功能
-        if ( $auth_info && isset( $auth_info[ 'pay_shop' ] ) && $auth_info[ 'pay_shop' ] == 0 )
-        {
-            $data[ 'is_pay_shop' ] = 0;
+        if ($auth_info && isset($auth_info['pay_shop']) && $auth_info['pay_shop'] == 0) {
+            $data['is_pay_shop'] = 0;
         }
-        if ( isset( $data[ 'btn_talk' ] ) && !$data[ 'btn_talk' ] )
-        {
-            $data[ 'btn_talk' ] = '面议';
+        if (isset($data['btn_talk']) && !$data['btn_talk']) {
+            $data['btn_talk'] = '面议';
         }
         $data['tabBar1'] = [];
         //tabbar用新的方式返回
-        $data['tabBar1'] =  Tabbar::all($this->_uniacid, $this->_user_id);
+        $data['tabBar1'] = Tabbar::all($this->_uniacid, $this->_user_id);
         $pluginAuth = longbingGetPluginAuth($this->_uniacid, $this->_user_id, $auth_info);
         $data = array_merge($data, $pluginAuth);
-        $data = LongbingArr::delBykey($data , ['web_manage_meta_config','wx_appid','wx_tplid'
-            ,'update_time','create_time','app_secret','appid',
-            'aliyun_sms_access_key_id','aliyun_sms_access_key_secret'
-            ,'coupon_pass','corpsecret',
-            'coupon_pass','order_pwd','mini_template_id']) ;
-        $config_model   = new DefaultSetting();
+        $data = LongbingArr::delBykey($data, [
+            'web_manage_meta_config', 'wx_appid', 'wx_tplid'
+            , 'update_time', 'create_time', 'app_secret', 'appid',
+            'aliyun_sms_access_key_id', 'aliyun_sms_access_key_secret'
+            , 'coupon_pass', 'corpsecret',
+            'coupon_pass', 'order_pwd', 'mini_template_id'
+        ]);
+        $config_model = new DefaultSetting();
         //默认配置
-        $DefaultSetting = $config_model->settingInfo(['uniacid'=>$this->_uniacid],'primaryColor,subColor,share_more');
+        $DefaultSetting = $config_model->settingInfo(['uniacid' => $this->_uniacid],
+            'primaryColor,subColor,share_more');
         //主色
-        $data['primaryColor'] = !empty($DefaultSetting['primaryColor'])?$DefaultSetting['primaryColor']:'#19c865';
+        $data['primaryColor'] = !empty($DefaultSetting['primaryColor']) ? $DefaultSetting['primaryColor'] : '#19c865';
         //辅色
-        $data['subColor']     = !empty($DefaultSetting['subColor'])?$DefaultSetting['subColor']:'#f86c53';
-        $data['share_more']   = $DefaultSetting['share_more'];
+        $data['subColor'] = !empty($DefaultSetting['subColor']) ? $DefaultSetting['subColor'] : '#f86c53';
+        $data['share_more'] = $DefaultSetting['share_more'];
         return $this->success($data);
     }
 
@@ -116,10 +117,11 @@ class IndexV2 extends ApiRest
      * @DataTime: 2020-08-25 09:44
      * @功能说明:
      */
-    public function configV2(){
+    public function configV2()
+    {
         $data = longbingGetAppConfig($this->_uniacid);
-        unset( $data[ 'auth_code' ] );
-        $exist = Db::query( 'show tables like "%longbing_card_config%"' );
+        unset($data['auth_code']);
+        $exist = Db::query('show tables like "%longbing_card_config%"');
         $auth_info = false;
         $cardauth2_config_exist = Db::query('show tables like "%longbing_cardauth2_config%"');
         if (!empty($exist) && !empty($cardauth2_config_exist)) {
@@ -127,27 +129,26 @@ class IndexV2 extends ApiRest
                 ->where([['modular_id', '=', $this->_uniacid]])
                 ->find();
         }
-        $data[ 'is_pay_shop' ] = 1;
+        $data['is_pay_shop'] = 1;
         //  判断能不能使用商城的支付功能
-        if ( $auth_info && isset( $auth_info[ 'pay_shop' ] ) && $auth_info[ 'pay_shop' ] == 0 )
-        {
-            $data[ 'is_pay_shop' ] = 0;
+        if ($auth_info && isset($auth_info['pay_shop']) && $auth_info['pay_shop'] == 0) {
+            $data['is_pay_shop'] = 0;
         }
-        if ( isset( $data[ 'btn_talk' ] ) && !$data[ 'btn_talk' ] )
-        {
-            $data[ 'btn_talk' ] = '面议';
+        if (isset($data['btn_talk']) && !$data['btn_talk']) {
+            $data['btn_talk'] = '面议';
         }
         $data['tabBar1'] = [];
         //tabbar用新的方式返回
         //$data['tabBar1'] =  Tabbar::all($this->_uniacid, $this->_user_id);
-        $config_model   = new DefaultSetting();
+        $config_model = new DefaultSetting();
         //默认配置
-        $DefaultSetting = $config_model->settingInfo(['uniacid'=>$this->_uniacid],'primaryColor,subColor,share_more');
+        $DefaultSetting = $config_model->settingInfo(['uniacid' => $this->_uniacid],
+            'primaryColor,subColor,share_more');
         //主色
-        $data['primaryColor'] = !empty($DefaultSetting['primaryColor'])?$DefaultSetting['primaryColor']:'#19c865';
+        $data['primaryColor'] = !empty($DefaultSetting['primaryColor']) ? $DefaultSetting['primaryColor'] : '#19c865';
         //辅色
-        $data['subColor']     = !empty($DefaultSetting['subColor'])?$DefaultSetting['subColor']:'#f86c53';
-        $data['share_more']   = $DefaultSetting['share_more'];
+        $data['subColor'] = !empty($DefaultSetting['subColor']) ? $DefaultSetting['subColor'] : '#f86c53';
+        $data['share_more'] = $DefaultSetting['share_more'];
         return $this->success($data);
     }
 

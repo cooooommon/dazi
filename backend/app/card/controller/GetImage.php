@@ -10,7 +10,7 @@ class GetImage extends BaseController
     /**
      * 将线上图片转为本地图片用于前端cavans画图
      */
-    public function getImage ()
+    public function getImage()
     {
         $param = $this->request->param();
         $path = isset($param['path']) ? trim((string) $param['path']) : '';

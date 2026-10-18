@@ -39,7 +39,7 @@ class PackageOrderRefund extends BaseModel
         if ($order) {
             $order = $order->toArray();
         }
-        $key = 'package_order_refund_order' . $refund_id;
+        $key = 'package_order_refund_order'.$refund_id;
         incCache($key, 1, $refund['uniacid']);
         $key_value = getCache($key, $refund['uniacid']);
         if ($key_value != 1) {
@@ -53,7 +53,8 @@ class PackageOrderRefund extends BaseModel
                 //退款
                 switch ($refund['pay_model']) {
                     case 1:
-                        $response = orderRefundApi($pay_config, $order['pay_price'], $refund['apply_price'], $order['transaction_id']);
+                        $response = orderRefundApi($pay_config, $order['pay_price'], $refund['apply_price'],
+                            $order['transaction_id']);
                         if (isset($response['return_code']) && isset($response['result_code']) && $response['return_code'] == 'SUCCESS' && $response['result_code'] == 'SUCCESS') {
                             $response['out_refund_no'] = !empty($response['out_refund_no']) ? $response['out_refund_no'] : $order['order_code'];
                             self::update(['out_refund_code' => $response['out_refund_no']], ['id' => $refund_id]);
@@ -78,7 +79,8 @@ class PackageOrderRefund extends BaseModel
                         $pay = new IndexAliPay(\app());
                         $res = $pay->aliRefund($order['transaction_id'], $refund['apply_price']);
                         if (isset($res['alipay_trade_refund_response']['code']) && $res['alipay_trade_refund_response']['code'] == 10000) {
-                            self::update(['out_refund_code' => $res['alipay_trade_refund_response']['out_trade_no']], ['id' => $refund_id]);
+                            self::update(['out_refund_code' => $res['alipay_trade_refund_response']['out_trade_no']],
+                                ['id' => $refund_id]);
                         } else {
                             throw new \Exception($res['alipay_trade_refund_response']['sub_msg']);
                         }
@@ -99,7 +101,10 @@ class PackageOrderRefund extends BaseModel
                 }
             }
             //修改退款订单
-            self::where('id', $refund_id)->update(['status' => 2, 'refund_price' => $refund['apply_price'], 'refund_time' => time(), 'refund_type' => $refund_type, 'refund_text' => $text]);
+            self::where('id', $refund_id)->update([
+                'status' => 2, 'refund_price' => $refund['apply_price'], 'refund_time' => time(),
+                'refund_type' => $refund_type, 'refund_text' => $text
+            ]);
             //退款订单明细
             PackageOrderRefundGoods::where('refund_id', $refund_id)->update(['status' => 2]);
             //订单明细
@@ -148,9 +153,12 @@ class PackageOrderRefund extends BaseModel
             $refund = self::find($refund_id);
             $order = PackageOrder::where('id', $refund['order_id'])->find();
             $goods_id = PackageOrderRefundGoods::where('refund_id', $refund_id)->column('order_goods_id');
-            self::where('id', $refund_id)->update(['status' => 3, 'refund_time' => time(), 'refund_type' => 2, 'refund_text' => $text]);
+            self::where('id', $refund_id)->update([
+                'status' => 3, 'refund_time' => time(), 'refund_type' => 2, 'refund_text' => $text
+            ]);
             PackageOrderRefundGoods::where('refund_id', $refund_id)->update(['status' => 3]);
-            PackageOrder::where('id', $refund['order_id'])->update(['can_refund_num' => $order['can_refund_num'] + $refund['num']]);
+            PackageOrder::where('id',
+                $refund['order_id'])->update(['can_refund_num' => $order['can_refund_num'] + $refund['num']]);
             PackageOrderGoods::where('id', 'in', $goods_id)->update(['status' => 1]);
             Db::commit();
         } catch (\Exception $exception) {
@@ -276,7 +284,9 @@ class PackageOrderRefund extends BaseModel
             self::where('id', $refund_id)->update(['status' => -1]);
             PackageOrderRefundGoods::where('refund_id', $refund_id)->update(['status' => -1]);
             $count = self::where(['order_id' => $refund['order_id'], 'status' => 1])->count();
-            PackageOrder::where('id', $refund['order_id'])->update(['is_refund' => $count > 0 ? 1 : 0, 'can_refund_num' => $order['can_refund_num'] + $refund['num']]);
+            PackageOrder::where('id', $refund['order_id'])->update([
+                'is_refund' => $count > 0 ? 1 : 0, 'can_refund_num' => $order['can_refund_num'] + $refund['num']
+            ]);
             PackageOrderGoods::whereIn('id', $goods_id)->update(['status' => 1]);
             Db::commit();
         } catch (\Exception $exception) {

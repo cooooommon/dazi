@@ -21,18 +21,20 @@ use longbingcore\permissions\PermissionAbstract;
  * 商城模块功能权限
  * Class PermissionAppstore
  */
-class PermissionStore extends PermissionAbstract {
+class PermissionStore extends PermissionAbstract
+{
 
     const tabbarKey = null;
     //后台管理菜单对应key[必填] , 当前模块文件夹名称
     const adminMenuKey = 'store';
-    public $saasKey ;
+    public $saasKey;
     const apiPaths = [];
 
-    public function __construct($uniacid,$infoConfigOptions=[],$saasKey='STORE')
+    public function __construct($uniacid, $infoConfigOptions = [], $saasKey = 'STORE')
     {
-        $this->saasKey  = longbing_get_auth_prefix($saasKey) ;
-        parent::__construct($uniacid, self::tabbarKey, self::adminMenuKey, $this->saasKey, self::apiPaths , $infoConfigOptions);
+        $this->saasKey = longbing_get_auth_prefix($saasKey);
+        parent::__construct($uniacid, self::tabbarKey, self::adminMenuKey, $this->saasKey, self::apiPaths,
+            $infoConfigOptions);
     }
 
     /**
@@ -56,7 +58,7 @@ class PermissionStore extends PermissionAbstract {
     /**
      * 返回c端授权结果
      *
-     * @param int $user_id
+     * @param  int  $user_id
      * @return bool
      * @author ArtizanZhang
      * @DataTime: 2019/12/9 17:13

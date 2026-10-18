@@ -2494,13 +2494,13 @@ LOCK TABLES `ims_massage_service_demand_type` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `ims_massage_service_lable`
+-- Table structure for table `ims_massage_service_label`
 --
 
-DROP TABLE IF EXISTS `ims_massage_service_lable`;
+DROP TABLE IF EXISTS `ims_massage_service_label`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ims_massage_service_lable` (
+CREATE TABLE `ims_massage_service_label` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) DEFAULT NULL,
   `title` varchar(255) DEFAULT '',
@@ -2512,12 +2512,12 @@ CREATE TABLE `ims_massage_service_lable` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ims_massage_service_lable`
+-- Dumping data for table `ims_massage_service_label`
 --
 
-LOCK TABLES `ims_massage_service_lable` WRITE;
-/*!40000 ALTER TABLE `ims_massage_service_lable` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ims_massage_service_lable` ENABLE KEYS */;
+LOCK TABLES `ims_massage_service_label` WRITE;
+/*!40000 ALTER TABLE `ims_massage_service_label` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ims_massage_service_label` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

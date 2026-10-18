@@ -59,20 +59,20 @@ export default {
     return post('massage/admin/AdminOrder/noPassRefund', querys)
   },
   // 评价标签列表
-  commentLableList (querys) {
-    return get('massage/admin/AdminOrder/commentLableList', querys)
+  commentLabelList (querys) {
+    return get('massage/admin/AdminOrder/commentLabelList', querys)
   },
   // 评价标签详情
-  commentLableInfo (querys) {
-    return get('massage/admin/AdminOrder/commentLableInfo', querys)
+  commentLabelInfo (querys) {
+    return get('massage/admin/AdminOrder/commentLabelInfo', querys)
   },
   // 新增评价标签
-  commentLableAdd (querys) {
-    return post('massage/admin/AdminOrder/commentLableAdd', querys)
+  commentLabelAdd (querys) {
+    return post('massage/admin/AdminOrder/commentLabelAdd', querys)
   },
   // 编辑评价标签
-  commentLableUpdate (querys) {
-    return post('massage/admin/AdminOrder/commentLableUpdate', querys)
+  commentLabelUpdate (querys) {
+    return post('massage/admin/AdminOrder/commentLabelUpdate', querys)
   },
   // 评价列表
   commentList (querys) {

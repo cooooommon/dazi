@@ -23,7 +23,7 @@ use app\massage\model\Coupon;
 use app\massage\model\CouponRecord;
 use app\massage\model\DemandOrder;
 use app\massage\model\DemandType;
-use app\massage\model\Lable;
+use app\massage\model\Label;
 use app\massage\model\ManyDemandOrder;
 use app\massage\model\MsgConfig;
 use app\massage\model\NoticeList;
@@ -1029,7 +1029,7 @@ class IndexOrder extends ApiRest
             'uniacid' => $this->_uniacid,
             'status' => 1
         ];
-        $lable_model = new Lable();
+        $lable_model = new Label();
         $res = $lable_model->where($dis)->order('top desc,id desc')->select()->toArray();
         return $this->success($res);
     }
@@ -1065,7 +1065,7 @@ class IndexOrder extends ApiRest
         Db::startTrans();
         $comment_model = new Comment();
         $comment_lable_model = new CommentLable();
-        $lable_model = new Lable();
+        $lable_model = new Label();
         $res = $comment_model->dataAdd($insert);
         if ($res == 0) {
             Db::rollback();

@@ -158,7 +158,7 @@ TRUNCATE TABLE ims_massage_service_user_label_list;            -- 客户标签�
 TRUNCATE TABLE ims_massage_member_card_list;                   -- 会员卡
 TRUNCATE TABLE ims_massage_service_balance_card;               -- 余额卡
 TRUNCATE TABLE ims_massage_service_coach_tag;                  -- 向导标签
-TRUNCATE TABLE ims_massage_service_lable;                      -- 服务标签
+TRUNCATE TABLE ims_massage_service_label;                      -- 服务标签
 TRUNCATE TABLE ims_massage_store_list;                         -- 演示门店
 TRUNCATE TABLE ims_shequshop_school_attachment;                -- 图片元数据（磁盘文件不删）
 TRUNCATE TABLE ims_massage_channel_cate;                	   -- 渠道商分类

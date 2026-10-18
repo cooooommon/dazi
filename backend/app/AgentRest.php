@@ -91,8 +91,8 @@ abstract class AgentRest extends BaseController
         //默认图使用本地 assets，避免依赖外部域名
         $assetDomain = $this->request->domain();
         $this->defaultImage = [
-            'avatar' => $assetDomain . '/assets/defaultAvatar.png',
-            'image' => $assetDomain . '/assets/lbCardDefaultImage.png',
+            'avatar' => $assetDomain.'/assets/defaultAvatar.png',
+            'image' => $assetDomain.'/assets/lbCardDefaultImage.png',
         ];
         if (in_array($this->_method, ['options', 'Options', 'OPTIONS'])) {
             echo true;
@@ -128,7 +128,9 @@ abstract class AgentRest extends BaseController
         //获取配置信息
         $this->_config = longbingGetAppConfig($this->_uniacid);
         //语言
-        if (isset($this->_header['lang'])) $this->_token = $this->_header['lang'];
+        if (isset($this->_header['lang'])) {
+            $this->_token = $this->_header['lang'];
+        }
         if (!empty($this->autograph) && !$this->match($this->noNeedLogin)) {
             $this->_user_id = $this->getUserId();
             $this->_user = $this->getUserInfo();
@@ -147,7 +149,8 @@ abstract class AgentRest extends BaseController
             'im/app/getCustomerUnReadMessageCount',
             'decorate/IndexCase/caseInfo'
         ];
-        if (!empty($input['timeline']) && $input['timeline'] == 1 && !empty($input['s']) && in_array($input['s'], $arr)) {
+        if (!empty($input['timeline']) && $input['timeline'] == 1 && !empty($input['s']) && in_array($input['s'],
+                $arr)) {
             $input['s'] = trim(strrchr($input['s'], '/'), '/');
             $this->noNeedLogin[] = $input['s'];
         }
@@ -163,40 +166,40 @@ abstract class AgentRest extends BaseController
     {
         $arr = is_array($arr) ? $arr : explode(',', $arr);
         if (!$arr) {
-            return FALSE;
+            return false;
         }
         $arr = array_map('strtolower', $arr);
         // 是否存在
         if (in_array(strtolower($this->request->action()), $arr) || in_array('*', $arr)) {
-            return TRUE;
+            return true;
         }
         // 没找到匹配
-        return FALSE;
+        return false;
     }
 
     /**
      * REST 调用
      * @access public
-     * @param string $method 方法名
+     * @param  string  $method  方法名
      * @return mixed
      * @throws \Exception
      */
     public function _empty($method)
     {
-        if (method_exists($this, $method . '_' . $this->method . '_' . $this->type)) {
+        if (method_exists($this, $method.'_'.$this->method.'_'.$this->type)) {
             // RESTFul方法支持
-            $fun = $method . '_' . $this->method . '_' . $this->type;
-        } elseif ($this->method == $this->restDefaultMethod && method_exists($this, $method . '_' . $this->type)) {
-            $fun = $method . '_' . $this->type;
-        } elseif ($this->type == $this->restDefaultType && method_exists($this, $method . '_' . $this->method)) {
-            $fun = $method . '_' . $this->method;
+            $fun = $method.'_'.$this->method.'_'.$this->type;
+        } elseif ($this->method == $this->restDefaultMethod && method_exists($this, $method.'_'.$this->type)) {
+            $fun = $method.'_'.$this->type;
+        } elseif ($this->type == $this->restDefaultType && method_exists($this, $method.'_'.$this->method)) {
+            $fun = $method.'_'.$this->method;
         }
         if (isset($fun)) {
             return App::invokeMethod([$this, $fun]
             );
         } else {
             // 抛出异常
-            throw new \Exception('error action :' . $method);
+            throw new \Exception('error action :'.$method);
         }
     }
 
@@ -294,10 +297,10 @@ abstract class AgentRest extends BaseController
         $setting['payment']['key'] = $pay['pay_key'];
         $setting['payment']['cert_path'] = $pay['cert_path'];
         $setting['payment']['key_path'] = $pay['key_path'];
-        $setting[ 'payment' ][ 'ali_appid' ]   = $pay[ 'ali_appid' ];
-        $setting[ 'payment' ][ 'ali_privatekey' ] = $pay[ 'ali_privatekey' ];
-        $setting[ 'payment' ][ 'ali_publickey' ]  = $pay[ 'ali_publickey' ];
-        $setting['company_pay']                = $config['company_pay'];
+        $setting['payment']['ali_appid'] = $pay['ali_appid'];
+        $setting['payment']['ali_privatekey'] = $pay['ali_privatekey'];
+        $setting['payment']['ali_publickey'] = $pay['ali_publickey'];
+        $setting['company_pay'] = $config['company_pay'];
         if ($is_app == 0) {
             $setting['app_id'] = $config['appid'];
             $setting['secret'] = $config['appsecret'];
@@ -322,23 +325,23 @@ abstract class AgentRest extends BaseController
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    protected function getTimeData($start_time, $end_time, $coach_id, $time_,$is_coach=0)
+    protected function getTimeData($start_time, $end_time, $coach_id, $time_, $is_coach = 0)
     {
-        $time_ = (int)$time_;
+        $time_ = (int) $time_;
         $config_model = new Config();
         $config = $config_model->dataInfo(['uniacid' => $this->_uniacid]);
-        $end_time   = strtotime($end_time) - strtotime(date("Y-m-d", time())) + strtotime(date("Y-m-d", $time_));
+        $end_time = strtotime($end_time) - strtotime(date("Y-m-d", time())) + strtotime(date("Y-m-d", $time_));
         $start_time = strtotime($start_time) - strtotime(date("Y-m-d", time())) + strtotime(date("Y-m-d", $time_));
         $coach_model = new Coach();
-        $coach = $coach_model->dataInfo(['id'=>$coach_id]);
-        $rest_arr = $coach_model->getCoachRestTime($coach,$start_time,$end_time,$config);
-        $end_time = $end_time>$start_time?$end_time:$end_time+86400;
+        $coach = $coach_model->dataInfo(['id' => $coach_id]);
+        $rest_arr = $coach_model->getCoachRestTime($coach, $start_time, $end_time, $config);
+        $end_time = $end_time > $start_time ? $end_time : $end_time + 86400;
         $i = 0;
         $data = [];
         $time = $start_time;
         // dump(date('Y-m-d H',$start_time),date('Y-m-d H',$end_time));exit;
-        $is_eve = $end_time==$start_time?1:0;
-        $time_interval = $is_coach==1?0:$config['time_interval'];
+        $is_eve = $end_time == $start_time ? 1 : 0;
+        $time_interval = $is_coach == 1 ? 0 : $config['time_interval'];
         while ($time < $end_time) {
             $time = $start_time + $config['time_unit'] * $i * 60;
             $times = date("Y-m-d", $time) == date("Y-m-d", $time_) ? $time : $time - 86400;
@@ -357,35 +360,35 @@ abstract class AgentRest extends BaseController
             $data[$i]['status'] = 1;
             $where = [];
             $where[] = ['coach_id', '=', $coach_id];
-            $where[] = ['start_time', '<=', $times+$time_interval];
-            $where[] = ['end_time', '>=', $times-$time_interval];
+            $where[] = ['start_time', '<=', $times + $time_interval];
+            $where[] = ['end_time', '>=', $times - $time_interval];
             $where[] = ['pay_type', 'not in', [-1]];
             $order = Db::name('massage_service_order_list')->where($where)->field('start_time')->find();
             if (!empty($order)) {
                 $data[$i]['is_order'] = 1;
                 $data[$i]['status'] = 0;
             }
-            if(!empty($rest_arr)&&$data[$i]['status']==1){
-                foreach ($rest_arr as $values){
-                    if($times==$values['time_str']){
+            if (!empty($rest_arr) && $data[$i]['status'] == 1) {
+                foreach ($rest_arr as $values) {
+                    if ($times == $values['time_str']) {
                         $data[$i]['status'] = 0;
                     }
                 }
             }
             $t = time();
-            $data[$i]['status'] = $times <$t ? 0 : $data[$i]['status'];
-            if(empty($is_eve)){
+            $data[$i]['status'] = $times < $t ? 0 : $data[$i]['status'];
+            if (empty($is_eve)) {
                 $data[$i]['status'] = $time == $end_time ? 0 : $data[$i]['status'];
             }
             $i++;
         }
-        $data = !empty($data)?arraySort($data,'time_str'):$data;
+        $data = !empty($data) ? arraySort($data, 'time_str') : $data;
         return $data;
     }
 
     protected function getTimeDataV2($start_time, $end_time, $coach_id, $time_)
     {
-        $time_ = (int)$time_;
+        $time_ = (int) $time_;
         $config_model = new Config();
         $config = $config_model->dataInfo(['uniacid' => $this->_uniacid]);
         $where = [
@@ -450,7 +453,7 @@ abstract class AgentRest extends BaseController
                 $data[$i]['status'] = 1;
             }
             $t = '1666281540';
-            $data[$i]['status'] = $times <$t ? 0 : $data[$i]['status'];
+            $data[$i]['status'] = $times < $t ? 0 : $data[$i]['status'];
             $i++;
         }
         $data = !empty($data) ? arraySort($data, 'time_str') : $data;
